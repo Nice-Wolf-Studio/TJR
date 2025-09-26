@@ -1,6 +1,7 @@
 # Trading Bot Configuration Reference
 
-This comprehensive guide covers all configuration options available in the Trading Bot, from basic setup to advanced customizations.
+This guide now focuses on the streamlined daily plan workflow (slash commands `/bias`, `/profile`, `/levels`).
+Legacy pipeline/alert sections are being deprecated; see `docs/design/daily-bias-and-profile.md` for the authoritative product spec.
 
 ## 📋 Table of Contents
 
@@ -22,22 +23,43 @@ This comprehensive guide covers all configuration options available in the Tradi
 
 Environment variables are the primary method for configuring the Trading Bot. They can be set in the system environment, `.env` files, or container orchestration platforms.
 
+### Quick Start Variables
+
+Only a handful of environment variables are required for the daily plan flow:
+
+```env
+# Discord bot
+DISCORD_TOKEN=...              # REQUIRED
+DISCORD_CLIENT_ID=...          # REQUIRED to register slash commands
+DISCORD_GUILD_ID=...           # Optional, limits command registration to a guild during testing
+
+# Market data providers
+ALPHAVANTAGE_API_KEY=...       # Preferred provider (rate limited)
+POLYGON_API_KEY=...            # Optional, used as a secondary provider when present
+# Yahoo Finance is used automatically as a fallback with no key
+
+# Runtime mode
+NODE_ENV=development           # development | production | test
+```
+
+The remaining configuration options from the legacy pipeline are documented below for reference but are no longer required for `/bias`, `/profile`, or `/levels`.
+
 ### Core Application Variables
 
 #### Node.js Environment
 ```env
-# Runtime environment (required)
-NODE_ENV=production                    # production | development | test
+# Runtime environment (optional, defaults to development)
+NODE_ENV=production
 
-# Server configuration
-PORT=3000                             # HTTP server port
-HOST=0.0.0.0                          # Bind address (0.0.0.0 for all interfaces)
-CLUSTER_MODE=true                     # Enable cluster mode for scaling
-WORKER_COUNT=0                        # Number of workers (0 = auto-detect CPU cores)
+# Server configuration (only needed if running the old HTTP listeners)
+PORT=3000
+HOST=0.0.0.0
+CLUSTER_MODE=false
+WORKER_COUNT=1
 
 # Application metadata
-APP_NAME=trading-bot                  # Application identifier
-APP_VERSION=1.0.0                     # Version number
+APP_NAME=trading-bot
+APP_VERSION=1.0.0
 ```
 
 #### Security Variables
@@ -371,7 +393,7 @@ BLOCKED_ROLE_NAMES=Muted,Banned                 # Blocked role names
 ### Bot Behavior Configuration
 
 ```javascript
-// config/bot.js
+// src/config/bot.ts
 module.exports = {
   // Command handling
   commands: {

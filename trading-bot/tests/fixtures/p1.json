@@ -1,0 +1,37 @@
+{
+  "symbol": "ES",
+  "asOf": "2024-02-06T09:29:00-05:00",
+  "bars4h": [
+    { "timestamp": "2024-02-02T08:00:00Z", "open": 5000, "high": 5020, "low": 4980, "close": 5015, "volume": 900 },
+    { "timestamp": "2024-02-02T12:00:00Z", "open": 5015, "high": 5055, "low": 5000, "close": 5045, "volume": 1000 },
+    { "timestamp": "2024-02-02T16:00:00Z", "open": 5045, "high": 5050, "low": 4985, "close": 4995, "volume": 950 },
+    { "timestamp": "2024-02-03T00:00:00Z", "open": 4995, "high": 5070, "low": 4990, "close": 5060, "volume": 980 },
+    { "timestamp": "2024-02-03T04:00:00Z", "open": 5060, "high": 5065, "low": 5025, "close": 5035, "volume": 920 },
+    { "timestamp": "2024-02-03T08:00:00Z", "open": 5035, "high": 5080, "low": 5030, "close": 5075, "volume": 970 }
+  ],
+  "bars1h": [
+    { "timestamp": "2024-02-06T03:00:00Z", "open": 5050, "high": 5060, "low": 5040, "close": 5055, "volume": 700 },
+    { "timestamp": "2024-02-06T04:00:00Z", "open": 5055, "high": 5065, "low": 5045, "close": 5060, "volume": 720 },
+    { "timestamp": "2024-02-06T05:00:00Z", "open": 5060, "high": 5072, "low": 5050, "close": 5068, "volume": 730 },
+    { "timestamp": "2024-02-06T06:00:00Z", "open": 5068, "high": 5078, "low": 5058, "close": 5070, "volume": 740 },
+    { "timestamp": "2024-02-06T07:00:00Z", "open": 5070, "high": 5085, "low": 5065, "close": 5080, "volume": 750 }
+  ],
+  "bars10m": [
+    { "timestamp": "2024-02-06T01:10:00Z", "open": 5060, "high": 5065, "low": 5055, "close": 5062, "volume": 300 },
+    { "timestamp": "2024-02-06T01:20:00Z", "open": 5062, "high": 5068, "low": 5058, "close": 5065, "volume": 290 },
+    { "timestamp": "2024-02-06T01:30:00Z", "open": 5065, "high": 5069, "low": 5060, "close": 5066, "volume": 280 },
+    { "timestamp": "2024-02-06T02:30:00Z", "open": 5068, "high": 5072, "low": 5062, "close": 5069, "volume": 260 },
+    { "timestamp": "2024-02-06T04:30:00Z", "open": 5070, "high": 5075, "low": 5065, "close": 5072, "volume": 240 },
+    { "timestamp": "2024-02-06T06:30:00Z", "open": 5073, "high": 5078, "low": 5068, "close": 5075, "volume": 220 }
+  ],
+  "expectedBias": {
+    "bias": "long",
+    "trendTF": "4H",
+    "range": { "low": 4985, "eq": 5027.5, "high": 5070 },
+    "structure": { "state": "bullish", "lastBos": "up" }
+  },
+  "expectedProfile": {
+    "profile": "P1",
+    "targets": { "primary": "prior day high", "secondary": "prior session high" }
+  }
+}

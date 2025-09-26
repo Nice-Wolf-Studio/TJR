@@ -2,31 +2,30 @@
   "name": "trading-bot",
   "version": "1.0.0",
   "description": "Professional Trading Discord Bot with advanced market analysis features",
-  "main": "src/bot/index.js",
+  "main": "dist/index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "build": "echo '✅ Build complete - JavaScript project ready'",
-    "build:ts": "tsc",
-    "build:watch": "tsc --watch",
-    "bot": "node start-simple.js",
-    "bot:register": "node src/bot/register.js",
-    "bot:register:guild": "node src/bot/register.js guild",
-    "bot:clear": "node src/bot/register.js clear",
-    "bot:list": "node src/bot/register.js list",
-    "migrate": "node src/database/simple-migrate.js",
-    "migrate:rollback": "node src/database/migrate.js rollback",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json --watch",
+    "dev": "ts-node --transpile-only src/index.ts",
+    "start": "node dist/index.js",
+    "bot": "ts-node --transpile-only start-simple.ts",
+    "bot:register": "ts-node --transpile-only src/bot/register.ts",
+    "bot:register:guild": "ts-node --transpile-only src/bot/register.ts guild",
+    "bot:clear": "ts-node --transpile-only src/bot/register.ts clear",
+    "bot:list": "ts-node --transpile-only src/bot/register.ts list",
+    "migrate": "ts-node --transpile-only src/database/simple-migrate.ts",
+    "migrate:rollback": "ts-node --transpile-only src/database/migrate.ts rollback",
     "test": "jest",
-    "test:integration": "node tests/test-runner.js",
-    "test:integration:verbose": "node tests/test-runner.js --verbose",
-    "test:integration:coverage": "node tests/test-runner.js --coverage --html",
-    "test:performance": "node tests/test-runner.js --suites=performance",
-    "test:security": "node tests/test-runner.js --suites=security",
-    "test:all": "node tests/test-runner.js --html --json --coverage",
+    "test:integration": "ts-node --transpile-only tests/test-runner.ts",
+    "test:integration:verbose": "ts-node --transpile-only tests/test-runner.ts --verbose",
+    "test:integration:coverage": "ts-node --transpile-only tests/test-runner.ts --coverage --html",
+    "test:performance": "ts-node --transpile-only tests/test-runner.ts --suites=performance",
+    "test:security": "ts-node --transpile-only tests/test-runner.ts --suites=security",
+    "test:all": "ts-node --transpile-only tests/test-runner.ts --html --json --coverage",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
   },
@@ -74,28 +73,30 @@
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "ts-jest": "^29.1.1",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0"
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests/unit"
+    ],
     "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/**/*.test.js",
+      "src/**/*.ts",
+      "!src/**/*.test.ts",
       "!src/**/__mocks__/**"
     ],
     "coverageReporters": [
       "text",
-      "lcov",
-      "html"
+      "lcov"
     ],
     "coverageDirectory": "coverage",
     "testMatch": [
-      "**/tests/**/*.test.js"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setup.js"
-    ],
-    "globalSetup": "<rootDir>/tests/globalSetup.js",
-    "globalTeardown": "<rootDir>/tests/globalTeardown.js"
+      "**/tests/unit/**/*.test.ts"
+    ]
   }
 }

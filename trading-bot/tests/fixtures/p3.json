@@ -1,0 +1,35 @@
+{
+  "symbol": "ES",
+  "asOf": "2024-04-06T09:29:00-05:00",
+  "bars4h": [
+    { "timestamp": "2024-04-04T08:00:00Z", "open": 4900, "high": 4920, "low": 4885, "close": 4910, "volume": 900 },
+    { "timestamp": "2024-04-04T12:00:00Z", "open": 4910, "high": 4925, "low": 4895, "close": 4905, "volume": 950 },
+    { "timestamp": "2024-04-04T16:00:00Z", "open": 4905, "high": 4915, "low": 4890, "close": 4900, "volume": 920 },
+    { "timestamp": "2024-04-05T00:00:00Z", "open": 4900, "high": 4910, "low": 4888, "close": 4895, "volume": 910 },
+    { "timestamp": "2024-04-05T04:00:00Z", "open": 4895, "high": 4905, "low": 4890, "close": 4898, "volume": 905 }
+  ],
+  "bars1h": [
+    { "timestamp": "2024-04-06T03:00:00Z", "open": 4898, "high": 4901, "low": 4890, "close": 4893, "volume": 500 },
+    { "timestamp": "2024-04-06T04:00:00Z", "open": 4893, "high": 4898, "low": 4890, "close": 4891, "volume": 520 },
+    { "timestamp": "2024-04-06T05:00:00Z", "open": 4891, "high": 4895, "low": 4888, "close": 4890, "volume": 530 },
+    { "timestamp": "2024-04-06T06:00:00Z", "open": 4890, "high": 4892, "low": 4886, "close": 4890, "volume": 540 },
+    { "timestamp": "2024-04-06T07:00:00Z", "open": 4890, "high": 4894, "low": 4889, "close": 4892, "volume": 550 }
+  ],
+  "bars10m": [
+    { "timestamp": "2024-04-06T01:10:00Z", "open": 4890, "high": 4892, "low": 4888, "close": 4891, "volume": 200 },
+    { "timestamp": "2024-04-06T01:20:00Z", "open": 4891, "high": 4894, "low": 4889, "close": 4890, "volume": 195 },
+    { "timestamp": "2024-04-06T01:30:00Z", "open": 4890, "high": 4892, "low": 4888, "close": 4891, "volume": 190 },
+    { "timestamp": "2024-04-06T03:30:00Z", "open": 4891, "high": 4893, "low": 4889, "close": 4892, "volume": 185 },
+    { "timestamp": "2024-04-06T05:30:00Z", "open": 4892, "high": 4894, "low": 4890, "close": 4893, "volume": 180 },
+    { "timestamp": "2024-04-06T07:30:00Z", "open": 4893, "high": 4895, "low": 4891, "close": 4894, "volume": 175 }
+  ],
+  "expectedBias": {
+    "bias": "neutral",
+    "trendTF": "4H",
+    "structure": { "state": "neutral", "lastBos": null }
+  },
+  "expectedProfile": {
+    "profile": "P3",
+    "targets": { "primary": "prior day equilibrium", "secondary": "opposite session extreme" }
+  }
+}

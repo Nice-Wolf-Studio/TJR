@@ -1,0 +1,182 @@
+{
+  "symbol": "ES",
+  "asOf": "2024-03-06T09:29:00-05:00",
+  "bars4h": [
+    {
+      "timestamp": "2024-03-04T08:00:00Z",
+      "open": 5050,
+      "high": 5065,
+      "low": 5035,
+      "close": 5058,
+      "volume": 880
+    },
+    {
+      "timestamp": "2024-03-04T12:00:00Z",
+      "open": 5058,
+      "high": 5080,
+      "low": 5045,
+      "close": 5072,
+      "volume": 900
+    },
+    {
+      "timestamp": "2024-03-04T16:00:00Z",
+      "open": 5072,
+      "high": 5055,
+      "low": 5038,
+      "close": 5046,
+      "volume": 890
+    },
+    {
+      "timestamp": "2024-03-05T00:00:00Z",
+      "open": 5046,
+      "high": 5060,
+      "low": 5042,
+      "close": 5052,
+      "volume": 910
+    },
+    {
+      "timestamp": "2024-03-05T04:00:00Z",
+      "open": 5052,
+      "high": 5045,
+      "low": 5005,
+      "close": 5020,
+      "volume": 930
+    },
+    {
+      "timestamp": "2024-03-05T08:00:00Z",
+      "open": 5020,
+      "high": 5035,
+      "low": 4990,
+      "close": 5000,
+      "volume": 920
+    },
+    {
+      "timestamp": "2024-03-05T12:00:00Z",
+      "open": 5000,
+      "high": 5025,
+      "low": 4980,
+      "close": 4992,
+      "volume": 910
+    },
+    {
+      "timestamp": "2024-03-05T16:00:00Z",
+      "open": 4992,
+      "high": 5010,
+      "low": 4995,
+      "close": 5002,
+      "volume": 905
+    }
+  ],
+  "bars1h": [
+    {
+      "timestamp": "2024-03-06T03:00:00Z",
+      "open": 5015,
+      "high": 5045,
+      "low": 5005,
+      "close": 5035,
+      "volume": 650
+    },
+    {
+      "timestamp": "2024-03-06T04:00:00Z",
+      "open": 5035,
+      "high": 5050,
+      "low": 5025,
+      "close": 5042,
+      "volume": 640
+    },
+    {
+      "timestamp": "2024-03-06T05:00:00Z",
+      "open": 5042,
+      "high": 5055,
+      "low": 5030,
+      "close": 5048,
+      "volume": 630
+    },
+    {
+      "timestamp": "2024-03-06T06:00:00Z",
+      "open": 5048,
+      "high": 5058,
+      "low": 5035,
+      "close": 5052,
+      "volume": 620
+    },
+    {
+      "timestamp": "2024-03-06T07:00:00Z",
+      "open": 5052,
+      "high": 5060,
+      "low": 5040,
+      "close": 5050,
+      "volume": 610
+    }
+  ],
+  "bars10m": [
+    {
+      "timestamp": "2024-03-06T01:10:00Z",
+      "open": 5040,
+      "high": 5045,
+      "low": 5035,
+      "close": 5042,
+      "volume": 260
+    },
+    {
+      "timestamp": "2024-03-06T01:20:00Z",
+      "open": 5042,
+      "high": 5048,
+      "low": 5038,
+      "close": 5045,
+      "volume": 250
+    },
+    {
+      "timestamp": "2024-03-06T01:30:00Z",
+      "open": 5045,
+      "high": 5050,
+      "low": 5040,
+      "close": 5046,
+      "volume": 245
+    },
+    {
+      "timestamp": "2024-03-06T02:30:00Z",
+      "open": 5046,
+      "high": 5052,
+      "low": 5040,
+      "close": 5048,
+      "volume": 240
+    },
+    {
+      "timestamp": "2024-03-06T04:30:00Z",
+      "open": 5048,
+      "high": 5054,
+      "low": 5042,
+      "close": 5050,
+      "volume": 230
+    },
+    {
+      "timestamp": "2024-03-06T06:30:00Z",
+      "open": 5050,
+      "high": 5056,
+      "low": 5045,
+      "close": 5052,
+      "volume": 220
+    }
+  ],
+  "expectedBias": {
+    "bias": "short-into-eq",
+    "trendTF": "4H",
+    "range": {
+      "low": 4980,
+      "eq": 5020,
+      "high": 5060
+    },
+    "structure": {
+      "state": "bearish",
+      "lastBos": "down"
+    }
+  },
+  "expectedProfile": {
+    "profile": "P2",
+    "targets": {
+      "primary": "current EQ retest",
+      "secondary": "prior session high"
+    }
+  }
+}

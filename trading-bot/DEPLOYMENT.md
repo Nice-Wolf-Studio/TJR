@@ -1,4 +1,6 @@
-# Deployment Guide
+# Deployment Guide (Daily Plan Edition)
+
+> **Heads up:** The runtime now focuses on slash commands `/bias`, `/profile`, and `/levels` powered by the daily plan pipeline. Legacy components (alert manager, trading webhooks, analysis engine) are deprecated and no longer required for deployment.
 
 This guide covers various deployment options for the Trading Bot, from development to production environments.
 
@@ -17,11 +19,10 @@ This guide covers various deployment options for the Trading Bot, from developme
 
 ### System Requirements
 
-- **Node.js**: v18.0.0 or higher
+- **Node.js**: v18.0.0 or higher (required)
 - **npm**: v8.0.0 or higher (or yarn v1.22.0+)
-- **PostgreSQL**: v13 or higher (optional but recommended)
-- **Redis**: v6 or higher (optional but recommended for caching)
-- **Docker**: v20.10+ and Docker Compose v2.0+ (for containerized deployment)
+- **PostgreSQL / Redis**: optional; the current daily plan flow runs without them
+- **Docker**: optional, if you prefer containerized deployments
 
 ### Discord Setup
 
@@ -69,13 +70,15 @@ nano .env
 DISCORD_TOKEN=your_discord_bot_token
 DISCORD_CLIENT_ID=your_discord_client_id
 
-# Database (Required if using PostgreSQL)
-DB_PASSWORD=your_secure_database_password
+# Market data providers
+ALPHAVANTAGE_API_KEY=your_alpha_vantage_key   # Optional but recommended
+POLYGON_API_KEY=your_polygon_key              # Optional secondary provider
 
-# Basic Configuration
-COMMAND_PREFIX=!
-NODE_ENV=production
+# Runtime mode
+NODE_ENV=development
 ```
+
+> PostgreSQL/Redis credentials are only needed if you re-enable the legacy pipeline or want persistent storage.
 
 ## Local Development
 
@@ -453,7 +456,7 @@ find /backups -name "*.gz" -mtime +30 -delete
 pm2 logs trading-bot
 
 # Check configuration
-node -e "console.log(require('./config/bot'))"
+node -r ts-node/register -e "console.log(require('./src/config/bot'))"
 
 # Test Discord token
 curl -H "Authorization: Bot YOUR_BOT_TOKEN" \

@@ -1,0 +1,101 @@
+{
+  "name": "trading-bot",
+  "version": "1.0.0",
+  "description": "Professional Trading Discord Bot with advanced market analysis features",
+  "main": "src/bot/index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo '✅ Build complete - JavaScript project ready'",
+    "build:ts": "tsc",
+    "build:watch": "tsc --watch",
+    "bot": "node start-simple.js",
+    "bot:register": "node src/bot/register.js",
+    "bot:register:guild": "node src/bot/register.js guild",
+    "bot:clear": "node src/bot/register.js clear",
+    "bot:list": "node src/bot/register.js list",
+    "migrate": "node src/database/simple-migrate.js",
+    "migrate:rollback": "node src/database/migrate.js rollback",
+    "test": "jest",
+    "test:integration": "node tests/test-runner.js",
+    "test:integration:verbose": "node tests/test-runner.js --verbose",
+    "test:integration:coverage": "node tests/test-runner.js --coverage --html",
+    "test:performance": "node tests/test-runner.js --suites=performance",
+    "test:security": "node tests/test-runner.js --suites=security",
+    "test:all": "node tests/test-runner.js --html --json --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "trading",
+    "forex",
+    "crypto",
+    "analysis",
+    "nodejs"
+  ],
+  "author": "Trading Bot Team",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^7.1.0",
+    "moment-timezone": "^0.5.43",
+    "node-cron": "^3.0.3",
+    "pg": "^8.11.3",
+    "rate-limiter-flexible": "^4.0.1",
+    "redis": "^4.6.12",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.10.4",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.10.9",
+    "chalk": "^4.1.2",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3",
+    "typescript": "^5.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js",
+      "!src/**/__mocks__/**"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "coverageDirectory": "coverage",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "globalSetup": "<rootDir>/tests/globalSetup.js",
+    "globalTeardown": "<rootDir>/tests/globalTeardown.js"
+  }
+}

@@ -1,0 +1,650 @@
+//@version=5
+indicator("TJR Structure & BOS Detector", "TJR_BOS", overlay=true, max_lines_count=100, max_labels_count=100)
+
+// ================================
+// INPUT PARAMETERS
+// ================================
+
+// Structure Settings
+structure_group = "STRUCTURE SETTINGS"
+swing_length = input.int(5, "Swing Point Length", minval=3, maxval=20, group=structure_group)
+min_structure_points = input.int(3, "Min Structure Points", minval=2, maxval=10, group=structure_group)
+structure_timeframe_filter = input.bool(true, "Filter by Higher Timeframe", group=structure_group)
+
+// BOS Detection
+bos_group = "BREAK OF STRUCTURE"
+bos_confirmation_bars = input.int(2, "BOS Confirmation Bars", minval=1, maxval=10, group=bos_group)
+require_body_close = input.bool(true, "Require Body Close Beyond Level", group=bos_group)
+min_bos_strength = input.float(0.01, "Min BOS Strength %", minval=0.001, maxval=0.1, group=bos_group)
+
+// Change of Character
+choch_group = "CHANGE OF CHARACTER"
+detect_choch = input.bool(true, "Detect Change of Character", group=choch_group)
+choch_swing_count = input.int(3, "CHOCH Swing Count", minval=2, maxval=5, group=choch_group)
+
+// Market Structure Shift
+mss_group = "MARKET STRUCTURE SHIFT"
+detect_mss = input.bool(true, "Detect Market Structure Shift", group=mss_group)
+mss_confirmation_period = input.int(10, "MSS Confirmation Period", minval=5, maxval=30, group=mss_group)
+
+// Internal Structure
+internal_group = "INTERNAL STRUCTURE"
+track_internal = input.bool(true, "Track Internal Structure", group=internal_group)
+internal_swing_length = input.int(3, "Internal Swing Length", minval=2, maxval=10, group=internal_group)
+
+// Visual Settings
+visual_group = "VISUAL SETTINGS"
+show_structure_lines = input.bool(true, "Show Structure Lines", group=visual_group)
+show_bos_signals = input.bool(true, "Show BOS Signals", group=visual_group)
+show_choch_signals = input.bool(true, "Show CHOCH Signals", group=visual_group)
+extend_structure_lines = input.int(20, "Extend Lines", minval=5, maxval=100, group=visual_group)
+
+// Alert Settings
+alert_group = "ALERT SETTINGS"
+enable_bos_alerts = input.bool(true, "Enable BOS Alerts", group=alert_group)
+enable_choch_alerts = input.bool(true, "Enable CHOCH Alerts", group=alert_group)
+enable_mss_alerts = input.bool(true, "Enable MSS Alerts", group=alert_group)
+alert_frequency = input.string("once_per_bar", "Alert Frequency", options=["all", "once_per_bar", "once_per_bar_close"], group=alert_group)
+
+// ================================
+// TYPES AND VARIABLES
+// ================================
+
+type StructurePoint
+    float price
+    int bar_index
+    string point_type  // "high" or "low"
+    bool confirmed
+    bool internal
+
+type StructureLevel
+    float price
+    int start_bar
+    int end_bar
+    string level_type
+    bool broken
+    int break_bar
+    string break_direction
+    float break_strength
+
+type BOSEvent
+    float level
+    int break_bar
+    string direction
+    string bos_type  // "bos", "choch", "mss"
+    float strength
+    bool confirmed
+
+// Arrays and variables
+var array<StructurePoint> structure_points = array.new<StructurePoint>()
+var array<StructurePoint> internal_points = array.new<StructurePoint>()
+var array<StructureLevel> structure_levels = array.new<StructureLevel>()
+var array<BOSEvent> bos_events = array.new<BOSEvent>()
+var array<line> structure_lines = array.new<line>()
+
+// Current trend tracking
+var string current_trend = "neutral"
+var float last_structure_high = na
+var float last_structure_low = na
+var int trend_change_bar = na
+
+// Colors
+color_bullish_structure = color.new(color.green, 70)
+color_bearish_structure = color.new(color.red, 70)
+color_bos = color.new(color.orange, 0)
+color_choch = color.new(color.purple, 0)
+color_mss = color.new(color.blue, 0)
+color_internal = color.new(color.gray, 80)
+
+// ================================
+// UTILITY FUNCTIONS
+// ================================
+
+// Calculate percentage difference
+pct_diff(price1, price2) =>
+    math.abs(price1 - price2) / math.min(price1, price2) * 100
+
+// Check if close beyond level (for body close requirement)
+close_beyond_level(level, direction) =>
+    if direction == "bullish"
+        close > level
+    else
+        close < level
+
+// Get structure point type at index
+get_structure_point_type(index) =>
+    high_pivot = ta.pivothigh(high, swing_length, swing_length)
+    low_pivot = ta.pivotlow(low, swing_length, swing_length)
+
+    if not na(high_pivot[index])
+        "high"
+    else if not na(low_pivot[index])
+        "low"
+    else
+        na
+
+// ================================
+// STRUCTURE POINT DETECTION
+// ================================
+
+detect_structure_points() =>
+    // Main structure points
+    high_pivot = ta.pivothigh(high, swing_length, swing_length)
+    low_pivot = ta.pivotlow(low, swing_length, swing_length)
+
+    // Add confirmed structure points
+    if not na(high_pivot)
+        new_point = StructurePoint.new(
+            price = high_pivot,
+            bar_index = bar_index - swing_length,
+            point_type = "high",
+            confirmed = true,
+            internal = false
+        )
+        array.push(structure_points, new_point)
+
+        # Keep only recent points
+        if array.size(structure_points) > 50
+            array.shift(structure_points)
+
+    if not na(low_pivot)
+        new_point = StructurePoint.new(
+            price = low_pivot,
+            bar_index = bar_index - swing_length,
+            point_type = "low",
+            confirmed = true,
+            internal = false
+        )
+        array.push(structure_points, new_point)
+
+        # Keep only recent points
+        if array.size(structure_points) > 50
+            array.shift(structure_points)
+
+    // Internal structure points
+    if track_internal
+        internal_high = ta.pivothigh(high, internal_swing_length, internal_swing_length)
+        internal_low = ta.pivotlow(low, internal_swing_length, internal_swing_length)
+
+        if not na(internal_high)
+            internal_point = StructurePoint.new(
+                price = internal_high,
+                bar_index = bar_index - internal_swing_length,
+                point_type = "high",
+                confirmed = true,
+                internal = true
+            )
+            array.push(internal_points, internal_point)
+
+            if array.size(internal_points) > 30
+                array.shift(internal_points)
+
+        if not na(internal_low)
+            internal_point = StructurePoint.new(
+                price = internal_low,
+                bar_index = bar_index - internal_swing_length,
+                point_type = "low",
+                confirmed = true,
+                internal = true
+            )
+            array.push(internal_points, internal_point)
+
+            if array.size(internal_points) > 30
+                array.shift(internal_points)
+
+// ================================
+// TREND ANALYSIS
+// ================================
+
+analyze_market_trend() =>
+    if array.size(structure_points) < min_structure_points
+        current_trend := "neutral"
+    else
+        // Get recent highs and lows
+        recent_highs = array.new<float>()
+        recent_lows = array.new<float>()
+
+        for i = math.max(0, array.size(structure_points) - 10) to array.size(structure_points) - 1
+            point = array.get(structure_points, i)
+            if point.point_type == "high"
+                array.push(recent_highs, point.price)
+            else
+                array.push(recent_lows, point.price)
+
+        // Analyze trend based on recent highs and lows
+        higher_highs = false
+        higher_lows = false
+        lower_highs = false
+        lower_lows = false
+
+        if array.size(recent_highs) >= 2
+            last_high = array.get(recent_highs, array.size(recent_highs) - 1)
+            prev_high = array.get(recent_highs, array.size(recent_highs) - 2)
+            higher_highs := last_high > prev_high
+            lower_highs := last_high < prev_high
+
+        if array.size(recent_lows) >= 2
+            last_low = array.get(recent_lows, array.size(recent_lows) - 1)
+            prev_low = array.get(recent_lows, array.size(recent_lows) - 2)
+            higher_lows := last_low > prev_low
+            lower_lows := last_low < prev_low
+
+        // Determine trend
+        if higher_highs and higher_lows
+            if current_trend != "bullish"
+                trend_change_bar := bar_index
+            current_trend := "bullish"
+        else if lower_highs and lower_lows
+            if current_trend != "bearish"
+                trend_change_bar := bar_index
+            current_trend := "bearish"
+        else
+            current_trend := "neutral"
+
+    current_trend
+
+// ================================
+// BOS DETECTION
+// ================================
+
+detect_bos() =>
+    var bool bos_detected = false
+    var string bos_direction = ""
+    var float bos_level = na
+    var float bos_strength = 0.0
+    var string bos_type = ""
+
+    bos_detected := false
+
+    if array.size(structure_points) >= 2
+        // Get recent structure levels
+        for i = array.size(structure_points) - 1 to math.max(0, array.size(structure_points) - 10)
+            point = array.get(structure_points, i)
+
+            # Skip very recent points (need confirmation bars)
+            if bar_index - point.bar_index < bos_confirmation_bars
+                continue
+
+            # Check for bullish BOS (break above structure high)
+            if point.point_type == "high" and not bos_detected
+                level_broken = require_body_close ? close > point.price : high > point.price
+                strength = (high - point.price) / point.price * 100
+
+                if level_broken and strength >= min_bos_strength
+                    # Confirm this is a significant break
+                    bars_since_break = bar_index - point.bar_index
+                    if bars_since_break >= bos_confirmation_bars
+                        bos_detected := true
+                        bos_direction := "bullish"
+                        bos_level := point.price
+                        bos_strength := strength
+
+                        # Determine BOS type
+                        if current_trend == "bearish"
+                            bos_type := "choch"  # Change of Character
+                        else if current_trend == "neutral"
+                            bos_type := "mss"   # Market Structure Shift
+                        else
+                            bos_type := "bos"   # Regular BOS
+
+            # Check for bearish BOS (break below structure low)
+            elif point.point_type == "low" and not bos_detected
+                level_broken = require_body_close ? close < point.price : low < point.price
+                strength = (point.price - low) / point.price * 100
+
+                if level_broken and strength >= min_bos_strength
+                    # Confirm this is a significant break
+                    bars_since_break = bar_index - point.bar_index
+                    if bars_since_break >= bos_confirmation_bars
+                        bos_detected := true
+                        bos_direction := "bearish"
+                        bos_level := point.price
+                        bos_strength := strength
+
+                        # Determine BOS type
+                        if current_trend == "bullish"
+                            bos_type := "choch"  # Change of Character
+                        else if current_trend == "neutral"
+                            bos_type := "mss"   # Market Structure Shift
+                        else
+                            bos_type := "bos"   # Regular BOS
+
+    # Record BOS event
+    if bos_detected
+        bos_event = BOSEvent.new(
+            level = bos_level,
+            break_bar = bar_index,
+            direction = bos_direction,
+            bos_type = bos_type,
+            strength = bos_strength,
+            confirmed = true
+        )
+        array.push(bos_events, bos_event)
+
+        # Keep only recent events
+        if array.size(bos_events) > 20
+            array.shift(bos_events)
+
+    [bos_detected, bos_direction, bos_level, bos_strength, bos_type]
+
+// ================================
+// CHANGE OF CHARACTER (CHOCH)
+// ================================
+
+detect_choch_specific() =>
+    var bool choch_detected = false
+    var string choch_direction = ""
+    var float choch_level = na
+
+    if not detect_choch
+        [false, "", na]
+    else
+        choch_detected := false
+
+        # CHOCH occurs when structure breaks in opposite direction of trend
+        if current_trend == "bullish" and array.size(structure_points) >= choch_swing_count
+            # Look for break below recent swing low
+            for i = array.size(structure_points) - 1 to math.max(0, array.size(structure_points) - choch_swing_count)
+                point = array.get(structure_points, i)
+                if point.point_type == "low"
+                    if low < point.price and (not require_body_close or close < point.price)
+                        choch_detected := true
+                        choch_direction := "bearish"
+                        choch_level := point.price
+                        break
+
+        elif current_trend == "bearish" and array.size(structure_points) >= choch_swing_count
+            # Look for break above recent swing high
+            for i = array.size(structure_points) - 1 to math.max(0, array.size(structure_points) - choch_swing_count)
+                point = array.get(structure_points, i)
+                if point.point_type == "high"
+                    if high > point.price and (not require_body_close or close > point.price)
+                        choch_detected := true
+                        choch_direction := "bullish"
+                        choch_level := point.price
+                        break
+
+        [choch_detected, choch_direction, choch_level]
+
+// ================================
+// MARKET STRUCTURE SHIFT (MSS)
+// ================================
+
+detect_mss_specific() =>
+    var bool mss_detected = false
+    var string mss_direction = ""
+    var float mss_level = na
+
+    if not detect_mss
+        [false, "", na]
+    else
+        mss_detected := false
+
+        # MSS occurs after trend change confirmation
+        if not na(trend_change_bar) and bar_index - trend_change_bar <= mss_confirmation_period
+            # Check if we just had a confirmed trend change
+            if current_trend != "neutral" and array.size(structure_points) >= 2
+                last_point = array.get(structure_points, array.size(structure_points) - 1)
+
+                # Confirm MSS based on structure break in new trend direction
+                if current_trend == "bullish" and last_point.point_type == "high"
+                    mss_detected := true
+                    mss_direction := "bullish"
+                    mss_level := last_point.price
+                elif current_trend == "bearish" and last_point.point_type == "low"
+                    mss_detected := true
+                    mss_direction := "bearish"
+                    mss_level := last_point.price
+
+        [mss_detected, mss_direction, mss_level]
+
+// ================================
+// MAIN EXECUTION
+// ================================
+
+# Detect structure points
+detect_structure_points()
+
+# Analyze market trend
+current_market_trend = analyze_market_trend()
+
+# Detect BOS
+[bos_detected, bos_direction, bos_level, bos_strength, bos_type] = detect_bos()
+
+# Detect specific CHOCH
+[choch_detected, choch_direction, choch_level] = detect_choch_specific()
+
+# Detect specific MSS
+[mss_detected, mss_direction, mss_level] = detect_mss_specific()
+
+// ================================
+// VISUALIZATION
+// ================================
+
+# Clean old lines
+if bar_index % 50 == 0
+    for i = array.size(structure_lines) - 1 to 0
+        line.delete(array.get(structure_lines, i))
+    array.clear(structure_lines)
+
+# Draw structure lines
+if show_structure_lines and array.size(structure_points) >= 2
+    for i = 1 to array.size(structure_points) - 1
+        current_point = array.get(structure_points, i)
+        prev_point = array.get(structure_points, i - 1)
+
+        if current_point.point_type != prev_point.point_type
+            line_color = current_market_trend == "bullish" ? color_bullish_structure :
+                        current_market_trend == "bearish" ? color_bearish_structure :
+                        color.gray
+
+            structure_line = line.new(
+                x1 = prev_point.bar_index,
+                y1 = prev_point.price,
+                x2 = current_point.bar_index,
+                y2 = current_point.price,
+                color = line_color,
+                width = 2,
+                style = line.style_solid
+            )
+            array.push(structure_lines, structure_line)
+
+# Plot BOS signals
+if show_bos_signals
+    plotshape(
+        bos_detected and bos_direction == "bullish",
+        "BOS Bullish",
+        shape.triangleup,
+        location.belowbar,
+        color_bos,
+        size = size.normal,
+        text = bos_type
+    )
+
+    plotshape(
+        bos_detected and bos_direction == "bearish",
+        "BOS Bearish",
+        shape.triangledown,
+        location.abovebar,
+        color_bos,
+        size = size.normal,
+        text = bos_type
+    )
+
+# Plot CHOCH signals
+if show_choch_signals
+    plotshape(
+        choch_detected and choch_direction == "bullish",
+        "CHOCH Bullish",
+        shape.arrowup,
+        location.belowbar,
+        color_choch,
+        size = size.normal,
+        text = "CHOCH"
+    )
+
+    plotshape(
+        choch_detected and choch_direction == "bearish",
+        "CHOCH Bearish",
+        shape.arrowdown,
+        location.abovebar,
+        color_choch,
+        size = size.normal,
+        text = "CHOCH"
+    )
+
+# Plot MSS signals
+plotshape(
+    mss_detected and mss_direction == "bullish",
+    "MSS Bullish",
+    shape.diamond,
+    location.belowbar,
+    color_mss,
+    size = size.large,
+    text = "MSS"
+)
+
+plotshape(
+    mss_detected and mss_direction == "bearish",
+    "MSS Bearish",
+    shape.diamond,
+    location.abovebar,
+    color_mss,
+    size = size.large,
+    text = "MSS"
+)
+
+# Plot trend background
+bgcolor_color = current_market_trend == "bullish" ? color.new(color.green, 95) :
+                current_market_trend == "bearish" ? color.new(color.red, 95) :
+                na
+bgcolor(bgcolor_color, title="Trend Background")
+
+// ================================
+// ALERT FUNCTIONS
+// ================================
+
+generate_bos_alert_payload(direction, level, strength, bos_type) =>
+    var string payload = ""
+
+    payload += '{'
+    payload += '"ticker": "' + syminfo.ticker + '",'
+    payload += '"exchange": "' + syminfo.exchange + '",'
+    payload += '"type": "' + bos_type + '",'
+    payload += '"timeframe": "' + timeframe.period + '",'
+    payload += '"time": "' + str.tostring(time) + '",'
+
+    # Price data
+    payload += '"price": ' + str.tostring(close) + ','
+    payload += '"open": ' + str.tostring(open) + ','
+    payload += '"high": ' + str.tostring(high) + ','
+    payload += '"low": ' + str.tostring(low) + ','
+    payload += '"volume": ' + str.tostring(volume) + ','
+
+    # BOS data
+    payload += '"direction": "' + direction + '",'
+    payload += '"bos_level": ' + str.tostring(level) + ','
+    payload += '"bos_strength": ' + str.tostring(strength) + ','
+    payload += '"bos_type": "' + bos_type + '",'
+
+    # Market structure
+    payload += '"current_trend": "' + current_market_trend + '",'
+    payload += '"structure_break": true,'
+
+    # Technical indicators
+    rsi_value = ta.rsi(close, 14)
+    payload += '"rsi": ' + str.tostring(rsi_value) + ','
+
+    # Confidence based on BOS type and strength
+    confidence = bos_type == "choch" ? 0.9 :
+                bos_type == "mss" ? 0.85 :
+                bos_type == "bos" ? 0.8 : 0.7
+
+    confidence *= math.min(strength / 2.0, 1.0)  # Adjust for strength
+    payload += '"confidence": ' + str.tostring(math.min(confidence, 1.0)) + ','
+
+    # Strategy info
+    payload += '"strategy": "TJR_Structure_BOS",'
+    payload += '"version": "1.0"'
+    payload += '}'
+
+    payload
+
+// ================================
+// ALERTS
+// ================================
+
+# BOS Alerts
+if enable_bos_alerts and bos_detected
+    alert_message = generate_bos_alert_payload(bos_direction, bos_level, bos_strength, bos_type)
+    alert(alert_message, alert.freq_once_per_bar)
+
+# CHOCH Alerts
+if enable_choch_alerts and choch_detected
+    alert_message = generate_bos_alert_payload(choch_direction, choch_level, 0.0, "choch")
+    alert(alert_message, alert.freq_once_per_bar)
+
+# MSS Alerts
+if enable_mss_alerts and mss_detected
+    alert_message = generate_bos_alert_payload(mss_direction, mss_level, 0.0, "mss")
+    alert(alert_message, alert.freq_once_per_bar)
+
+// ================================
+// INFORMATION TABLE
+// ================================
+
+if barstate.islast
+    var table structure_table = table.new(position.bottom_right, 2, 6, bgcolor=color.white, border_width=1)
+
+    # Current trend
+    table.cell(structure_table, 0, 0, "Trend", text_color=color.black, bgcolor=color.gray)
+    table.cell(structure_table, 1, 0, current_market_trend,
+              text_color=current_market_trend == "bullish" ? color.green :
+                        current_market_trend == "bearish" ? color.red :
+                        color.black)
+
+    # Structure points count
+    table.cell(structure_table, 0, 1, "Structure Points", text_color=color.black, bgcolor=color.gray)
+    table.cell(structure_table, 1, 1, str.tostring(array.size(structure_points)), text_color=color.black)
+
+    # Recent BOS count
+    recent_bos = 0
+    if array.size(bos_events) > 0
+        for i = 0 to array.size(bos_events) - 1
+            event = array.get(bos_events, i)
+            if bar_index - event.break_bar <= 20  # Recent events
+                recent_bos += 1
+
+    table.cell(structure_table, 0, 2, "Recent BOS", text_color=color.black, bgcolor=color.gray)
+    table.cell(structure_table, 1, 2, str.tostring(recent_bos), text_color=color.black)
+
+    # Last structure high/low
+    if array.size(structure_points) > 0
+        last_high = na
+        last_low = na
+        for i = array.size(structure_points) - 1 to 0
+            point = array.get(structure_points, i)
+            if point.point_type == "high" and na(last_high)
+                last_high := point.price
+            elif point.point_type == "low" and na(last_low)
+                last_low := point.price
+            if not na(last_high) and not na(last_low)
+                break
+
+        table.cell(structure_table, 0, 3, "Last High", text_color=color.black, bgcolor=color.gray)
+        table.cell(structure_table, 1, 3, na(last_high) ? "N/A" : str.tostring(last_high, "#.####"), text_color=color.black)
+
+        table.cell(structure_table, 0, 4, "Last Low", text_color=color.black, bgcolor=color.gray)
+        table.cell(structure_table, 1, 4, na(last_low) ? "N/A" : str.tostring(last_low, "#.####"), text_color=color.black)
+
+    # Current signal
+    current_signal = bos_detected ? (bos_type + " " + bos_direction) :
+                    choch_detected ? ("CHOCH " + choch_direction) :
+                    mss_detected ? ("MSS " + mss_direction) :
+                    "No Signal"
+
+    table.cell(structure_table, 0, 5, "Current Signal", text_color=color.black, bgcolor=color.gray)
+    table.cell(structure_table, 1, 5, current_signal,
+              text_color=current_signal == "No Signal" ? color.black :
+                        str.pos(current_signal, "bullish") >= 0 ? color.green :
+                        color.red)

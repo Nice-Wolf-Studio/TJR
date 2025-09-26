@@ -1,0 +1,562 @@
+//@version=5
+indicator("TJR Session Alerts", "TJR_SESSION", overlay=true, max_boxes_count=50)
+
+// ================================
+// INPUT PARAMETERS
+// ================================
+
+// Session Definitions
+session_group = "SESSION SETTINGS"
+asia_session = input.session("2200-0700", "Asia Session", group=session_group)
+london_session = input.session("0700-1600", "London Session", group=session_group)
+ny_session = input.session("1300-2200", "New York Session", group=session_group)
+
+// Session Features
+features_group = "SESSION FEATURES"
+track_session_breaks = input.bool(true, "Track Session Breaks", group=features_group)
+track_overlaps = input.bool(true, "Track Session Overlaps", group=features_group)
+track_first_15min = input.bool(true, "Track First 15min of Sessions", group=features_group)
+track_last_hour = input.bool(true, "Track Last Hour of Sessions", group=features_group)
+
+// Breakout Detection
+breakout_group = "BREAKOUT DETECTION"
+enable_breakouts = input.bool(true, "Enable Breakout Detection", group=breakout_group)
+breakout_threshold = input.float(0.02, "Breakout Threshold %", minval=0.01, maxval=0.1, group=breakout_group)
+min_consolidation_bars = input.int(10, "Min Consolidation Bars", minval=5, maxval=50, group=breakout_group)
+
+// ICT Concepts
+ict_group = "ICT CONCEPTS"
+detect_smt = input.bool(true, "Detect SMT Divergence", group=ict_group)
+detect_liquidity_runs = input.bool(true, "Detect Liquidity Runs", group=ict_group)
+detect_turtle_soup = input.bool(true, "Detect Turtle Soup", group=ict_group)
+
+// Alert Settings
+alert_group = "ALERTS"
+enable_session_alerts = input.bool(true, "Enable Session Alerts", group=alert_group)
+enable_breakout_alerts = input.bool(true, "Enable Breakout Alerts", group=alert_group)
+enable_overlap_alerts = input.bool(true, "Enable Overlap Alerts", group=alert_group)
+alert_frequency = input.string("once_per_bar", "Alert Frequency", options=["all", "once_per_bar", "once_per_bar_close"], group=alert_group)
+
+// Visual Settings
+visual_group = "VISUAL SETTINGS"
+show_session_boxes = input.bool(true, "Show Session Boxes", group=visual_group)
+show_session_labels = input.bool(true, "Show Session Labels", group=visual_group)
+session_transparency = input.int(85, "Session Box Transparency", minval=50, maxval=95, group=visual_group)
+
+// ================================
+// TYPES AND VARIABLES
+// ================================
+
+type SessionData
+    string name
+    int start_bar
+    int end_bar
+    float high
+    float low
+    float open
+    float close
+    float range
+    bool is_active
+    bool breakout_detected
+    string breakout_direction
+
+type SessionOverlap
+    string session1
+    string session2
+    int start_bar
+    int end_bar
+    bool is_active
+
+// Variables
+var array<SessionData> session_history = array.new<SessionData>()
+var array<SessionOverlap> overlap_history = array.new<SessionOverlap>()
+var array<box> session_boxes = array.new<box>()
+
+// Current session tracking
+var SessionData current_asia = na
+var SessionData current_london = na
+var SessionData current_ny = na
+
+// Session colors
+color_asia = color.new(color.yellow, session_transparency)
+color_london = color.new(color.blue, session_transparency)
+color_ny = color.new(color.green, session_transparency)
+color_overlap = color.new(color.purple, session_transparency)
+
+// ================================
+// UTILITY FUNCTIONS
+// ================================
+
+// Get current session
+get_current_session() =>
+    asia_active = time(timeframe.period, asia_session)
+    london_active = time(timeframe.period, london_session)
+    ny_active = time(timeframe.period, ny_session)
+
+    if asia_active
+        "Asia"
+    else if london_active
+        "London"
+    else if ny_active
+        "NewYork"
+    else
+        "None"
+
+// Check session transitions
+check_session_transition() =>
+    current = get_current_session()
+    previous = get_current_session()[1]
+
+    session_started = current != "None" and (previous == "None" or previous != current)
+    session_ended = current == "None" and previous != "None"
+
+    [session_started, session_ended, current, previous]
+
+// Calculate session range
+calculate_session_range(session_high, session_low) =>
+    (session_high - session_low) / session_low * 100
+
+// Detect breakouts from session ranges
+detect_session_breakout(session_data) =>
+    if na(session_data)
+        [false, "none"]
+    else
+        range_pct = (session_data.high - session_data.low) / session_data.low * 100
+        breakout_up = close > session_data.high * (1 + breakout_threshold / 100)
+        breakout_down = close < session_data.low * (1 - breakout_threshold / 100)
+
+        breakout_detected = breakout_up or breakout_down
+        direction = breakout_up ? "bullish" : (breakout_down ? "bearish" : "none")
+
+        [breakout_detected, direction]
+
+// ================================
+// SESSION TRACKING
+// ================================
+
+track_sessions() =>
+    [session_started, session_ended, current_session, previous_session] = check_session_transition()
+
+    // Handle session starts
+    if session_started
+        if current_session == "Asia"
+            current_asia := SessionData.new(
+                name = "Asia",
+                start_bar = bar_index,
+                end_bar = na,
+                high = high,
+                low = low,
+                open = open,
+                close = close,
+                range = 0.0,
+                is_active = true,
+                breakout_detected = false,
+                breakout_direction = "none"
+            )
+
+        else if current_session == "London"
+            current_london := SessionData.new(
+                name = "London",
+                start_bar = bar_index,
+                end_bar = na,
+                high = high,
+                low = low,
+                open = open,
+                close = close,
+                range = 0.0,
+                is_active = true,
+                breakout_detected = false,
+                breakout_direction = "none"
+            )
+
+        else if current_session == "NewYork"
+            current_ny := SessionData.new(
+                name = "NewYork",
+                start_bar = bar_index,
+                end_bar = na,
+                high = high,
+                low = low,
+                open = open,
+                close = close,
+                range = 0.0,
+                is_active = true,
+                breakout_detected = false,
+                breakout_direction = "none"
+            )
+
+    // Update active sessions
+    if current_session == "Asia" and not na(current_asia)
+        current_asia.high := math.max(current_asia.high, high)
+        current_asia.low := math.min(current_asia.low, low)
+        current_asia.close := close
+        current_asia.range := calculate_session_range(current_asia.high, current_asia.low)
+
+    else if current_session == "London" and not na(current_london)
+        current_london.high := math.max(current_london.high, high)
+        current_london.low := math.min(current_london.low, low)
+        current_london.close := close
+        current_london.range := calculate_session_range(current_london.high, current_london.low)
+
+    else if current_session == "NewYork" and not na(current_ny)
+        current_ny.high := math.max(current_ny.high, high)
+        current_ny.low := math.min(current_ny.low, low)
+        current_ny.close := close
+        current_ny.range := calculate_session_range(current_ny.high, current_ny.low)
+
+    // Handle session ends
+    if session_ended and previous_session != "None"
+        if previous_session == "Asia" and not na(current_asia)
+            current_asia.end_bar := bar_index
+            current_asia.is_active := false
+            array.push(session_history, current_asia)
+
+            # Create session box
+            if show_session_boxes
+                session_box = box.new(
+                    left = current_asia.start_bar,
+                    top = current_asia.high,
+                    right = current_asia.end_bar,
+                    bottom = current_asia.low,
+                    bgcolor = color_asia,
+                    border_color = color.new(color.yellow, 50),
+                    border_width = 1
+                )
+                array.push(session_boxes, session_box)
+
+        else if previous_session == "London" and not na(current_london)
+            current_london.end_bar := bar_index
+            current_london.is_active := false
+            array.push(session_history, current_london)
+
+            # Create session box
+            if show_session_boxes
+                session_box = box.new(
+                    left = current_london.start_bar,
+                    top = current_london.high,
+                    right = current_london.end_bar,
+                    bottom = current_london.low,
+                    bgcolor = color_london,
+                    border_color = color.new(color.blue, 50),
+                    border_width = 1
+                )
+                array.push(session_boxes, session_box)
+
+        else if previous_session == "NewYork" and not na(current_ny)
+            current_ny.end_bar := bar_index
+            current_ny.is_active := false
+            array.push(session_history, current_ny)
+
+            # Create session box
+            if show_session_boxes
+                session_box = box.new(
+                    left = current_ny.start_bar,
+                    top = current_ny.high,
+                    right = current_ny.end_bar,
+                    bottom = current_ny.low,
+                    bgcolor = color_ny,
+                    border_color = color.new(color.green, 50),
+                    border_width = 1
+                )
+                array.push(session_boxes, session_box)
+
+// ================================
+// OVERLAP DETECTION
+// ================================
+
+detect_session_overlaps() =>
+    asia_active = time(timeframe.period, asia_session)
+    london_active = time(timeframe.period, london_session)
+    ny_active = time(timeframe.period, ny_session)
+
+    // London-NY overlap
+    london_ny_overlap = london_active and ny_active
+
+    # Mark overlap periods
+    bgcolor(london_ny_overlap and track_overlaps ? color_overlap : na, title="London-NY Overlap")
+
+    london_ny_overlap
+
+// ================================
+// BREAKOUT DETECTION
+// ================================
+
+detect_breakouts() =>
+    var bool asia_breakout = false
+    var bool london_breakout = false
+    var bool ny_breakout = false
+    var string breakout_direction = "none"
+    var float breakout_level = na
+
+    if enable_breakouts
+        # Check Asia session breakout
+        if not na(current_asia) and current_asia.is_active
+            [asia_break, asia_dir] = detect_session_breakout(current_asia)
+            if asia_break and not current_asia.breakout_detected
+                current_asia.breakout_detected := true
+                current_asia.breakout_direction := asia_dir
+                asia_breakout := true
+                breakout_direction := asia_dir
+                breakout_level := asia_dir == "bullish" ? current_asia.high : current_asia.low
+
+        # Check London session breakout
+        if not na(current_london) and current_london.is_active
+            [london_break, london_dir] = detect_session_breakout(current_london)
+            if london_break and not current_london.breakout_detected
+                current_london.breakout_detected := true
+                current_london.breakout_direction := london_dir
+                london_breakout := true
+                breakout_direction := london_dir
+                breakout_level := london_dir == "bullish" ? current_london.high : current_london.low
+
+        # Check NY session breakout
+        if not na(current_ny) and current_ny.is_active
+            [ny_break, ny_dir] = detect_session_breakout(current_ny)
+            if ny_break and not current_ny.breakout_detected
+                current_ny.breakout_detected := true
+                current_ny.breakout_direction := ny_dir
+                ny_breakout := true
+                breakout_direction := ny_dir
+                breakout_level := ny_dir == "bullish" ? current_ny.high : current_ny.low
+
+    breakout_detected = asia_breakout or london_breakout or ny_breakout
+    [breakout_detected, breakout_direction, breakout_level]
+
+// ================================
+// ICT CONCEPT DETECTION
+// ================================
+
+detect_ict_concepts() =>
+    var bool smt_detected = false
+    var bool liquidity_run_detected = false
+    var bool turtle_soup_detected = false
+
+    # SMT Divergence detection (simplified)
+    if detect_smt and array.size(session_history) >= 2
+        last_session = array.get(session_history, array.size(session_history) - 1)
+        prev_session = array.get(session_history, array.size(session_history) - 2)
+
+        # Check if price made new high but momentum didn't
+        price_higher = last_session.high > prev_session.high
+        range_smaller = last_session.range < prev_session.range
+
+        smt_detected := price_higher and range_smaller
+
+    # Liquidity Run detection
+    if detect_liquidity_runs
+        # Look for quick moves to session extremes followed by reversals
+        current_session_data = current_session == "Asia" ? current_asia :
+                              current_session == "London" ? current_london :
+                              current_session == "NewYork" ? current_ny : na
+
+        if not na(current_session_data)
+            near_high = close >= current_session_data.high * 0.999
+            near_low = close <= current_session_data.low * 1.001
+            quick_reversal = math.abs(close - open) / open > 0.001
+
+            liquidity_run_detected := (near_high or near_low) and quick_reversal
+
+    # Turtle Soup (false breakout) detection
+    if detect_turtle_soup and array.size(session_history) >= 1
+        last_completed_session = array.get(session_history, array.size(session_history) - 1)
+
+        # Check for break above session high followed by close back in range
+        false_break_up = high > last_completed_session.high and close < last_completed_session.high
+        false_break_down = low < last_completed_session.low and close > last_completed_session.low
+
+        turtle_soup_detected := false_break_up or false_break_down
+
+    [smt_detected, liquidity_run_detected, turtle_soup_detected]
+
+// ================================
+// MAIN EXECUTION
+// ================================
+
+# Track sessions
+track_sessions()
+
+# Detect overlaps
+overlap_active = detect_session_overlaps()
+
+# Detect breakouts
+[breakout_detected, breakout_direction, breakout_level] = detect_breakouts()
+
+# Detect ICT concepts
+[smt_detected, liquidity_run, turtle_soup] = detect_ict_concepts()
+
+# Get current session info
+current_session = get_current_session()
+[session_started, session_ended, _, _] = check_session_transition()
+
+// ================================
+// VISUALIZATION
+// ================================
+
+# Clean old boxes
+if array.size(session_boxes) > 20
+    for i = 0 to 5
+        old_box = array.shift(session_boxes)
+        box.delete(old_box)
+
+# Plot session transitions
+plotshape(session_started, "Session Start", shape.diamond, location.belowbar, color.new(color.white, 0), size=size.tiny)
+plotshape(session_ended, "Session End", shape.diamond, location.abovebar, color.new(color.gray, 0), size=size.tiny)
+
+# Plot breakouts
+plotshape(breakout_detected and breakout_direction == "bullish", "Session Breakout Up", shape.triangleup, location.belowbar, color.new(color.lime, 0), size=size.small)
+plotshape(breakout_detected and breakout_direction == "bearish", "Session Breakout Down", shape.triangledown, location.abovebar, color.new(color.red, 0), size=size.small)
+
+# Plot ICT concepts
+plotshape(smt_detected, "SMT Divergence", shape.xcross, location.abovebar, color.new(color.orange, 0), size=size.small)
+plotshape(liquidity_run, "Liquidity Run", shape.circle, location.abovebar, color.new(color.purple, 0), size=size.tiny)
+plotshape(turtle_soup, "Turtle Soup", shape.square, location.belowbar, color.new(color.maroon, 0), size=size.tiny)
+
+# Session labels
+if show_session_labels and session_started
+    label.new(
+        x = bar_index,
+        y = high,
+        text = current_session + " Start",
+        style = label.style_label_down,
+        color = current_session == "Asia" ? color.yellow :
+                current_session == "London" ? color.blue :
+                current_session == "NewYork" ? color.green : color.gray,
+        textcolor = color.black,
+        size = size.small
+    )
+
+// ================================
+// ALERT FUNCTIONS
+// ================================
+
+generate_session_alert_payload(alert_type, session_name, additional_data = "") =>
+    var string payload = ""
+
+    payload += '{'
+    payload += '"ticker": "' + syminfo.ticker + '",'
+    payload += '"exchange": "' + syminfo.exchange + '",'
+    payload += '"type": "' + alert_type + '",'
+    payload += '"timeframe": "' + timeframe.period + '",'
+    payload += '"time": "' + str.tostring(time) + '",'
+
+    # Price data
+    payload += '"price": ' + str.tostring(close) + ','
+    payload += '"open": ' + str.tostring(open) + ','
+    payload += '"high": ' + str.tostring(high) + ','
+    payload += '"low": ' + str.tostring(low) + ','
+    payload += '"volume": ' + str.tostring(volume) + ','
+
+    # Session data
+    payload += '"session": "' + session_name + '",'
+
+    # Current session data
+    current_session_data = current_session == "Asia" ? current_asia :
+                          current_session == "London" ? current_london :
+                          current_session == "NewYork" ? current_ny : na
+
+    if not na(current_session_data)
+        payload += '"session_high": ' + str.tostring(current_session_data.high) + ','
+        payload += '"session_low": ' + str.tostring(current_session_data.low) + ','
+        payload += '"session_range": ' + str.tostring(current_session_data.range) + ','
+
+    # Additional data
+    if additional_data != ""
+        payload += additional_data + ','
+
+    # Technical indicators
+    rsi_value = ta.rsi(close, 14)
+    payload += '"rsi": ' + str.tostring(rsi_value) + ','
+
+    # Confidence
+    confidence = alert_type == "breakout" ? 0.8 :
+                alert_type == "session_start" ? 0.6 :
+                alert_type == "overlap" ? 0.7 :
+                0.5
+
+    payload += '"confidence": ' + str.tostring(confidence) + ','
+
+    # Strategy info
+    payload += '"strategy": "TJR_Session_Alerts",'
+    payload += '"version": "1.0"'
+    payload += '}'
+
+    payload
+
+// ================================
+// ALERTS
+// ================================
+
+# Session start alerts
+if enable_session_alerts and session_started
+    alert_message = generate_session_alert_payload("session_start", current_session)
+    alert(alert_message, alert.freq_once_per_bar)
+
+# Session end alerts
+if enable_session_alerts and session_ended
+    alert_message = generate_session_alert_payload("session_end", get_current_session()[1])
+    alert(alert_message, alert.freq_once_per_bar)
+
+# Breakout alerts
+if enable_breakout_alerts and breakout_detected
+    additional_data = '"breakout_direction": "' + breakout_direction + '", "breakout_level": ' + str.tostring(breakout_level)
+    alert_message = generate_session_alert_payload("breakout", current_session, additional_data)
+    alert(alert_message, alert.freq_once_per_bar)
+
+# Overlap alerts
+if enable_overlap_alerts and overlap_active and not overlap_active[1]
+    alert_message = generate_session_alert_payload("overlap", "London_NY")
+    alert(alert_message, alert.freq_once_per_bar)
+
+# ICT concept alerts
+if smt_detected
+    alert_message = generate_session_alert_payload("smt_divergence", current_session)
+    alert(alert_message, alert.freq_once_per_bar)
+
+if liquidity_run
+    alert_message = generate_session_alert_payload("liquidity_run", current_session)
+    alert(alert_message, alert.freq_once_per_bar)
+
+if turtle_soup
+    alert_message = generate_session_alert_payload("turtle_soup", current_session)
+    alert(alert_message, alert.freq_once_per_bar)
+
+// ================================
+// INFORMATION TABLE
+// ================================
+
+if barstate.islast
+    var table session_table = table.new(position.top_right, 3, 6, bgcolor=color.white, border_width=1)
+
+    # Headers
+    table.cell(session_table, 0, 0, "Session", text_color=color.black, bgcolor=color.gray)
+    table.cell(session_table, 1, 0, "Range %", text_color=color.black, bgcolor=color.gray)
+    table.cell(session_table, 2, 0, "Status", text_color=color.black, bgcolor=color.gray)
+
+    # Asia session
+    table.cell(session_table, 0, 1, "Asia", text_color=color.black)
+    asia_range = not na(current_asia) ? str.tostring(current_asia.range, "#.##") : "N/A"
+    asia_status = not na(current_asia) and current_asia.is_active ? "ACTIVE" : "CLOSED"
+    table.cell(session_table, 1, 1, asia_range, text_color=color.black)
+    table.cell(session_table, 2, 1, asia_status, text_color=asia_status == "ACTIVE" ? color.green : color.red)
+
+    # London session
+    table.cell(session_table, 0, 2, "London", text_color=color.black)
+    london_range = not na(current_london) ? str.tostring(current_london.range, "#.##") : "N/A"
+    london_status = not na(current_london) and current_london.is_active ? "ACTIVE" : "CLOSED"
+    table.cell(session_table, 1, 2, london_range, text_color=color.black)
+    table.cell(session_table, 2, 2, london_status, text_color=london_status == "ACTIVE" ? color.green : color.red)
+
+    # NY session
+    table.cell(session_table, 0, 3, "New York", text_color=color.black)
+    ny_range = not na(current_ny) ? str.tostring(current_ny.range, "#.##") : "N/A"
+    ny_status = not na(current_ny) and current_ny.is_active ? "ACTIVE" : "CLOSED"
+    table.cell(session_table, 1, 3, ny_range, text_color=color.black)
+    table.cell(session_table, 2, 3, ny_status, text_color=ny_status == "ACTIVE" ? color.green : color.red)
+
+    # Current session
+    table.cell(session_table, 0, 4, "Current", text_color=color.black, bgcolor=color.gray)
+    table.cell(session_table, 1, 4, current_session, text_color=color.black, bgcolor=color.gray)
+
+    # Overlap
+    table.cell(session_table, 0, 5, "Overlap", text_color=color.black, bgcolor=color.gray)
+    table.cell(session_table, 1, 5, overlap_active ? "ACTIVE" : "None",
+              text_color=overlap_active ? color.purple : color.black, bgcolor=color.gray)

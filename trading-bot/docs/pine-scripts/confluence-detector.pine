@@ -1,0 +1,453 @@
+//@version=5
+indicator("TJR Confluence Detector", "TJR_CONFLUENCE", overlay=true, max_lines_count=100, max_boxes_count=100)
+
+// ================================
+// INPUT PARAMETERS
+// ================================
+
+// Liquidity Settings
+liquidity_group = "LIQUIDITY DETECTION"
+enable_liquidity = input.bool(true, "Enable Liquidity Detection", group=liquidity_group)
+liquidity_lookback = input.int(50, "Liquidity Lookback Period", minval=10, maxval=200, group=liquidity_group)
+min_liquidity_touches = input.int(2, "Min Touches for Liquidity", minval=2, maxval=10, group=liquidity_group)
+liquidity_deviation = input.float(0.02, "Liquidity Level Deviation %", minval=0.01, maxval=0.1, group=liquidity_group)
+
+// Structure Settings
+structure_group = "MARKET STRUCTURE"
+enable_structure = input.bool(true, "Enable Structure Analysis", group=structure_group)
+structure_swing_length = input.int(5, "Structure Swing Length", minval=3, maxval=20, group=structure_group)
+bos_confirmation_bars = input.int(3, "BOS Confirmation Bars", minval=1, maxval=10, group=structure_group)
+
+// FVG Settings
+fvg_group = "FAIR VALUE GAPS"
+enable_fvg = input.bool(true, "Enable FVG Detection", group=fvg_group)
+fvg_threshold = input.float(0.001, "FVG Threshold %", minval=0.0001, maxval=0.01, group=fvg_group)
+max_fvg_bars = input.int(20, "Max FVG Age (bars)", minval=5, maxval=100, group=fvg_group)
+
+// Session Settings
+session_group = "SESSION ANALYSIS"
+enable_sessions = input.bool(true, "Enable Session Analysis", group=session_group)
+asia_session = input.session("2200-0700", "Asia Session", group=session_group)
+london_session = input.session("0700-1600", "London Session", group=session_group)
+ny_session = input.session("1300-2200", "New York Session", group=session_group)
+
+// Confluence Settings
+confluence_group = "CONFLUENCE SCORING"
+min_confluence_score = input.float(5.0, "Min Confluence Score for Alert", minval=1.0, maxval=20.0, group=confluence_group)
+confluence_zone_width = input.float(0.005, "Confluence Zone Width %", minval=0.001, maxval=0.02, group=confluence_group)
+
+// Alert Settings
+alert_group = "ALERT CONFIGURATION"
+webhook_url = input.string("", "Webhook URL", group=alert_group)
+enable_alerts = input.bool(true, "Enable Alerts", group=alert_group)
+alert_frequency = input.string("once_per_bar", "Alert Frequency", options=["all", "once_per_bar", "once_per_bar_close"], group=alert_group)
+
+// ================================
+// VARIABLES AND ARRAYS
+// ================================
+
+var liquidity_levels = array.new<float>()
+var liquidity_strengths = array.new<float>()
+var structure_highs = array.new<float>()
+var structure_lows = array.new<float>()
+var fvg_zones = array.new<box>()
+var confluence_zones = map.new<string, float>()
+
+// Colors
+color_bullish = color.new(color.green, 70)
+color_bearish = color.new(color.red, 70)
+color_liquidity = color.new(color.blue, 80)
+color_fvg = color.new(color.yellow, 85)
+color_confluence = color.new(color.purple, 60)
+
+// ================================
+// UTILITY FUNCTIONS
+// ================================
+
+// Calculate percentage difference between two prices
+pct_diff(price1, price2) =>
+    math.abs(price1 - price2) / math.min(price1, price2) * 100
+
+// Get current session
+get_current_session() =>
+    if time(timeframe.period, asia_session)
+        "Asia"
+    else if time(timeframe.period, london_session)
+        "London"
+    else if time(timeframe.period, ny_session)
+        "NewYork"
+    else
+        "Other"
+
+// Calculate ATR for dynamic thresholds
+atr_value = ta.atr(14)
+
+// ================================
+// LIQUIDITY DETECTION
+// ================================
+
+detect_liquidity_levels() =>
+    if not enable_liquidity
+        array.clear(liquidity_levels)
+        array.clear(liquidity_strengths)
+    else
+        // Clear old levels
+        array.clear(liquidity_levels)
+        array.clear(liquidity_strengths)
+
+        // Find significant highs and lows
+        for i = liquidity_lookback to 1
+            if barstate.isconfirmed[i]
+                high_price = high[i]
+                low_price = low[i]
+
+                // Count touches near this level
+                high_touches = 0
+                low_touches = 0
+
+                for j = i + 1 to math.min(i + liquidity_lookback, bar_index)
+                    if math.abs(high[bar_index - j] - high_price) / high_price <= liquidity_deviation / 100
+                        high_touches += 1
+
+                    if math.abs(low[bar_index - j] - low_price) / low_price <= liquidity_deviation / 100
+                        low_touches += 1
+
+                // Add significant levels
+                if high_touches >= min_liquidity_touches
+                    array.push(liquidity_levels, high_price)
+                    array.push(liquidity_strengths, high_touches)
+
+                if low_touches >= min_liquidity_touches
+                    array.push(liquidity_levels, low_price)
+                    array.push(liquidity_strengths, low_touches)
+
+// ================================
+// MARKET STRUCTURE ANALYSIS
+// ================================
+
+detect_structure_breaks() =>
+    var float last_high = na
+    var float last_low = na
+    var bool bos_bullish = false
+    var bool bos_bearish = false
+
+    if enable_structure
+        // Detect swing highs and lows
+        swing_high = ta.pivothigh(high, structure_swing_length, structure_swing_length)
+        swing_low = ta.pivotlow(low, structure_swing_length, structure_swing_length)
+
+        // Track structure levels
+        if not na(swing_high)
+            array.push(structure_highs, swing_high)
+            if array.size(structure_highs) > 10
+                array.shift(structure_highs)
+            last_high := swing_high
+
+        if not na(swing_low)
+            array.push(structure_lows, swing_low)
+            if array.size(structure_lows) > 10
+                array.shift(structure_lows)
+            last_low := swing_low
+
+        // Detect BOS
+        if not na(last_high) and close > last_high
+            bos_bullish := true
+
+        if not na(last_low) and close < last_low
+            bos_bearish := true
+
+    [bos_bullish, bos_bearish, last_high, last_low]
+
+// ================================
+// FVG DETECTION
+// ================================
+
+detect_fvg() =>
+    var bool bullish_fvg = false
+    var bool bearish_fvg = false
+    var float fvg_top = na
+    var float fvg_bottom = na
+
+    if enable_fvg and barstate.isconfirmed
+        // Bullish FVG: low[0] > high[2], with gap in between
+        if low > high[2] and pct_diff(low, high[2]) >= fvg_threshold
+            bullish_fvg := true
+            fvg_bottom := high[2]
+            fvg_top := low
+
+            // Create FVG box
+            fvg_box = box.new(bar_index[2], fvg_top, bar_index + max_fvg_bars, fvg_bottom,
+                             border_color=color_fvg, bgcolor=color_fvg, border_width=1)
+            array.push(fvg_zones, fvg_box)
+
+        // Bearish FVG: high[0] < low[2], with gap in between
+        if high < low[2] and pct_diff(high, low[2]) >= fvg_threshold
+            bearish_fvg := true
+            fvg_top := low[2]
+            fvg_bottom := high
+
+            // Create FVG box
+            fvg_box = box.new(bar_index[2], fvg_top, bar_index + max_fvg_bars, fvg_bottom,
+                             border_color=color_fvg, bgcolor=color_fvg, border_width=1)
+            array.push(fvg_zones, fvg_box)
+
+        // Clean old FVG boxes
+        if array.size(fvg_zones) > 50
+            old_box = array.shift(fvg_zones)
+            box.delete(old_box)
+
+    [bullish_fvg, bearish_fvg, fvg_top, fvg_bottom]
+
+// ================================
+// CONFLUENCE CALCULATION
+// ================================
+
+calculate_confluence(price) =>
+    var float confluence_score = 0.0
+    var array<string> confluence_factors = array.new<string>()
+
+    confluence_score := 0.0
+    array.clear(confluence_factors)
+
+    // Check liquidity confluence
+    if enable_liquidity and array.size(liquidity_levels) > 0
+        for i = 0 to array.size(liquidity_levels) - 1
+            level = array.get(liquidity_levels, i)
+            strength = array.get(liquidity_strengths, i)
+
+            if math.abs(price - level) / price <= confluence_zone_width
+                confluence_score += strength * 0.5
+                array.push(confluence_factors, "Liquidity_" + str.tostring(strength))
+
+    // Check structure confluence
+    if enable_structure
+        if array.size(structure_highs) > 0
+            for i = 0 to array.size(structure_highs) - 1
+                level = array.get(structure_highs, i)
+                if math.abs(price - level) / price <= confluence_zone_width
+                    confluence_score += 1.5
+                    array.push(confluence_factors, "Structure_High")
+
+        if array.size(structure_lows) > 0
+            for i = 0 to array.size(structure_lows) - 1
+                level = array.get(structure_lows, i)
+                if math.abs(price - level) / price <= confluence_zone_width
+                    confluence_score += 1.5
+                    array.push(confluence_factors, "Structure_Low")
+
+    // Check FVG confluence
+    if enable_fvg and array.size(fvg_zones) > 0
+        for i = 0 to array.size(fvg_zones) - 1
+            fvg_box = array.get(fvg_zones, i)
+            box_top = box.get_top(fvg_box)
+            box_bottom = box.get_bottom(fvg_box)
+
+            if price >= box_bottom and price <= box_top
+                confluence_score += 2.0
+                array.push(confluence_factors, "FVG")
+
+    // Session confluence bonus
+    current_session = get_current_session()
+    if current_session != "Other"
+        confluence_score += 0.5
+        array.push(confluence_factors, "Session_" + current_session)
+
+    // Technical indicators confluence
+    rsi_value = ta.rsi(close, 14)
+    if rsi_value <= 30 or rsi_value >= 70
+        confluence_score += 1.0
+        array.push(confluence_factors, "RSI_Extreme")
+
+    [confluence_score, confluence_factors]
+
+// ================================
+// MAIN EXECUTION
+// ================================
+
+// Detect components
+detect_liquidity_levels()
+[bos_bullish, bos_bearish, last_structure_high, last_structure_low] = detect_structure_breaks()
+[fvg_bullish, fvg_bearish, fvg_top, fvg_bottom] = detect_fvg()
+
+// Calculate confluence at key levels
+current_price = close
+[current_confluence_score, current_confluence_factors] = calculate_confluence(current_price)
+
+// Check confluence at nearby levels
+high_confluence_score = 0.0
+high_confluence_price = 0.0
+var string high_confluence_factors_str = ""
+
+// Test confluence at price levels around current price
+test_prices = array.new<float>()
+array.push(test_prices, current_price * 1.002)  // +0.2%
+array.push(test_prices, current_price * 0.998)  // -0.2%
+array.push(test_prices, current_price * 1.005)  // +0.5%
+array.push(test_prices, current_price * 0.995)  // -0.5%
+
+for i = 0 to array.size(test_prices) - 1
+    test_price = array.get(test_prices, i)
+    [test_score, test_factors] = calculate_confluence(test_price)
+
+    if test_score > high_confluence_score
+        high_confluence_score := test_score
+        high_confluence_price := test_price
+
+        // Convert factors array to string
+        factors_str = ""
+        if array.size(test_factors) > 0
+            for j = 0 to array.size(test_factors) - 1
+                if j > 0
+                    factors_str += ","
+                factors_str += array.get(test_factors, j)
+        high_confluence_factors_str := factors_str
+
+// ================================
+// VISUALIZATION
+// ================================
+
+// Plot confluence zones
+bgcolor(current_confluence_score >= min_confluence_score ? color_confluence : na, title="Confluence Zone")
+
+// Plot liquidity levels
+if enable_liquidity and array.size(liquidity_levels) > 0
+    for i = 0 to math.min(array.size(liquidity_levels) - 1, 9)
+        level = array.get(liquidity_levels, i)
+        line.new(bar_index - 10, level, bar_index + 10, level,
+                color=color_liquidity, width=1, style=line.style_dashed)
+
+// Plot structure levels
+plotshape(bos_bullish, "BOS Bullish", shape.triangleup, location.belowbar, color_bullish, size=size.small)
+plotshape(bos_bearish, "BOS Bearish", shape.triangledown, location.abovebar, color_bearish, size=size.small)
+
+// Plot FVG
+plotshape(fvg_bullish, "FVG Bullish", shape.square, location.belowbar, color_fvg, size=size.tiny)
+plotshape(fvg_bearish, "FVG Bearish", shape.square, location.abovebar, color_fvg, size=size.tiny)
+
+// ================================
+// ALERT CONDITIONS
+// ================================
+
+// High confluence alert condition
+high_confluence_detected = high_confluence_score >= min_confluence_score
+significant_structure_break = bos_bullish or bos_bearish
+significant_fvg = fvg_bullish or fvg_bearish
+
+// Generate webhook payload
+generate_webhook_payload() =>
+    var string payload = ""
+
+    // Basic information
+    payload += '{'
+    payload += '"ticker": "' + syminfo.ticker + '",'
+    payload += '"exchange": "' + syminfo.exchange + '",'
+    payload += '"type": "confluence",'
+    payload += '"timeframe": "' + timeframe.period + '",'
+    payload += '"time": "' + str.tostring(time) + '",'
+
+    // Price data
+    payload += '"price": ' + str.tostring(close) + ','
+    payload += '"open": ' + str.tostring(open) + ','
+    payload += '"high": ' + str.tostring(high) + ','
+    payload += '"low": ' + str.tostring(low) + ','
+    payload += '"volume": ' + str.tostring(volume) + ','
+
+    // Confluence data
+    payload += '"confluence_score": ' + str.tostring(high_confluence_score) + ','
+    payload += '"confluence_price": ' + str.tostring(high_confluence_price) + ','
+    payload += '"confluence_factors": "' + high_confluence_factors_str + '",'
+
+    // Structure data
+    payload += '"structure_break": ' + str.tostring(bos_bullish or bos_bearish) + ','
+    payload += '"bos_type": "' + (bos_bullish ? "bullish" : (bos_bearish ? "bearish" : "none")) + '",'
+
+    // FVG data
+    payload += '"fvg_detected": ' + str.tostring(fvg_bullish or fvg_bearish) + ','
+    payload += '"fvg_type": "' + (fvg_bullish ? "bullish" : (fvg_bearish ? "bearish" : "none")) + '",'
+    payload += '"fvg_top": ' + str.tostring(fvg_top) + ','
+    payload += '"fvg_bottom": ' + str.tostring(fvg_bottom) + ','
+
+    // Session data
+    current_session = get_current_session()
+    payload += '"session": "' + current_session + '",'
+
+    // Technical indicators
+    rsi_value = ta.rsi(close, 14)
+    payload += '"rsi": ' + str.tostring(rsi_value) + ','
+
+    // MACD
+    [macd_line, signal_line, _] = ta.macd(close, 12, 26, 9)
+    payload += '"macd_line": ' + str.tostring(macd_line) + ','
+    payload += '"macd_signal": ' + str.tostring(signal_line) + ','
+
+    // Confidence and strength
+    confidence = math.min(high_confluence_score / 10.0, 1.0)  // Normalize to 0-1
+    payload += '"confidence": ' + str.tostring(confidence) + ','
+    payload += '"strength": ' + str.tostring(high_confluence_score) + ','
+
+    // Direction
+    direction = close > open ? "bullish" : (close < open ? "bearish" : "neutral")
+    payload += '"direction": "' + direction + '",'
+
+    // Strategy info
+    payload += '"strategy": "TJR_Confluence_Detector",'
+    payload += '"version": "1.0"'
+    payload += '}'
+
+    payload
+
+// ================================
+// ALERTS
+// ================================
+
+if enable_alerts and high_confluence_detected
+    alert_message = generate_webhook_payload()
+
+    alert(alert_message, alert.freq_once_per_bar)
+
+// Also create specific alerts for different conditions
+if enable_alerts and significant_structure_break
+    bos_payload = '{"ticker": "' + syminfo.ticker + '", "type": "structure_break", "bos_type": "' +
+                  (bos_bullish ? "bullish" : "bearish") + '", "price": ' + str.tostring(close) +
+                  ', "timeframe": "' + timeframe.period + '", "confidence": 0.8}'
+
+    alert(bos_payload, alert.freq_once_per_bar)
+
+if enable_alerts and significant_fvg
+    fvg_payload = '{"ticker": "' + syminfo.ticker + '", "type": "fvg", "fvg_type": "' +
+                  (fvg_bullish ? "bullish" : "bearish") + '", "price": ' + str.tostring(close) +
+                  ', "fvg_top": ' + str.tostring(fvg_top) + ', "fvg_bottom": ' + str.tostring(fvg_bottom) +
+                  ', "timeframe": "' + timeframe.period + '", "confidence": 0.75}'
+
+    alert(fvg_payload, alert.freq_once_per_bar)
+
+// ================================
+// PLOTS AND LABELS
+// ================================
+
+// Plot confluence score
+plot(current_confluence_score, "Confluence Score", color=color.new(color.purple, 0), linewidth=2)
+hline(min_confluence_score, "Min Confluence Threshold", color=color.gray, linestyle=hline.style_dashed)
+
+// Display information table
+if barstate.islast and enable_alerts
+    var table info_table = table.new(position.top_right, 2, 6, bgcolor=color.white, border_width=1)
+
+    table.cell(info_table, 0, 0, "Confluence Score", text_color=color.black)
+    table.cell(info_table, 1, 0, str.tostring(current_confluence_score, "#.##"), text_color=color.black)
+
+    table.cell(info_table, 0, 1, "Session", text_color=color.black)
+    table.cell(info_table, 1, 1, get_current_session(), text_color=color.black)
+
+    table.cell(info_table, 0, 2, "BOS", text_color=color.black)
+    table.cell(info_table, 1, 2, bos_bullish ? "Bullish" : (bos_bearish ? "Bearish" : "None"), text_color=color.black)
+
+    table.cell(info_table, 0, 3, "FVG", text_color=color.black)
+    table.cell(info_table, 1, 3, fvg_bullish ? "Bullish" : (fvg_bearish ? "Bearish" : "None"), text_color=color.black)
+
+    table.cell(info_table, 0, 4, "RSI", text_color=color.black)
+    table.cell(info_table, 1, 4, str.tostring(ta.rsi(close, 14), "#.#"), text_color=color.black)
+
+    table.cell(info_table, 0, 5, "Alert Status", text_color=color.black)
+    table.cell(info_table, 1, 5, high_confluence_detected ? "ACTIVE" : "Monitoring",
+              text_color=high_confluence_detected ? color.red : color.green)

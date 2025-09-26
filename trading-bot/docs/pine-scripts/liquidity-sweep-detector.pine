@@ -1,0 +1,544 @@
+//@version=5
+indicator("TJR Liquidity Sweep Detector", "TJR_LIQUIDITY", overlay=true, max_lines_count=200)
+
+// ================================
+// INPUT PARAMETERS
+// ================================
+
+// Liquidity Detection Settings
+liquidity_group = "LIQUIDITY DETECTION"
+sweep_lookback = input.int(100, "Sweep Detection Lookback", minval=20, maxval=500, group=liquidity_group)
+min_liquidity_strength = input.float(3.0, "Min Liquidity Strength", minval=1.0, maxval=10.0, group=liquidity_group)
+liquidity_buffer = input.float(0.02, "Liquidity Buffer %", minval=0.01, maxval=0.1, group=liquidity_group)
+show_swept_levels = input.bool(true, "Show Swept Levels", group=liquidity_group)
+
+// Session Highs/Lows
+session_group = "SESSION LEVELS"
+track_session_extremes = input.bool(true, "Track Session Extremes", group=session_group)
+asia_session = input.session("2200-0700", "Asia Session", group=session_group)
+london_session = input.session("0700-1600", "London Session", group=session_group)
+ny_session = input.session("1300-2200", "New York Session", group=session_group)
+
+// Equal Highs/Lows
+eql_group = "EQUAL HIGHS/LOWS"
+detect_equal_levels = input.bool(true, "Detect Equal H/L", group=eql_group)
+equal_threshold = input.float(0.01, "Equal Level Threshold %", minval=0.001, maxval=0.05, group=eql_group)
+min_equal_touches = input.int(3, "Min Equal Touches", minval=2, maxval=10, group=eql_group)
+
+// Sweep Confirmation
+sweep_group = "SWEEP CONFIRMATION"
+require_retest = input.bool(true, "Require Retest for Confirmation", group=sweep_group)
+retest_bars = input.int(5, "Retest Within N Bars", minval=1, maxval=20, group=sweep_group)
+min_sweep_size = input.float(0.001, "Min Sweep Size %", minval=0.0001, maxval=0.01, group=sweep_group)
+
+// Alert Settings
+alert_group = "ALERT SETTINGS"
+enable_alerts = input.bool(true, "Enable Alerts", group=alert_group)
+alert_frequency = input.string("once_per_bar", "Alert Frequency", options=["all", "once_per_bar", "once_per_bar_close"], group=alert_group)
+only_significant_sweeps = input.bool(true, "Only Significant Sweeps", group=alert_group)
+
+// Visual Settings
+visual_group = "VISUAL SETTINGS"
+show_liquidity_lines = input.bool(true, "Show Liquidity Lines", group=visual_group)
+show_sweep_signals = input.bool(true, "Show Sweep Signals", group=visual_group)
+extend_lines = input.int(20, "Extend Lines N Bars", minval=5, maxval=100, group=visual_group)
+
+// ================================
+// TYPES AND VARIABLES
+// ================================
+
+type LiquidityLevel
+    float price
+    int bar_index
+    int touches
+    string level_type
+    string session
+    bool is_swept
+    int sweep_bar
+    float strength
+
+type SweptLevel
+    float price
+    int sweep_bar
+    string direction
+    float strength
+    bool confirmed
+
+// Arrays and variables
+var array<LiquidityLevel> liquidity_levels = array.new<LiquidityLevel>()
+var array<SweptLevel> swept_levels = array.new<SweptLevel>()
+var array<line> liquidity_lines = array.new<line>()
+var array<line> swept_lines = array.new<line>()
+
+// Session tracking
+var float asia_high = na
+var float asia_low = na
+var float london_high = na
+var float london_low = na
+var float ny_high = na
+var float ny_low = na
+
+// Colors
+color_liquidity_high = color.new(color.red, 70)
+color_liquidity_low = color.new(color.blue, 70)
+color_swept = color.new(color.orange, 80)
+color_equal_levels = color.new(color.purple, 60)
+
+// ================================
+// UTILITY FUNCTIONS
+// ================================
+
+// Calculate percentage difference
+pct_diff(price1, price2) =>
+    math.abs(price1 - price2) / math.min(price1, price2) * 100
+
+// Get current session
+get_current_session() =>
+    if time(timeframe.period, asia_session)
+        "Asia"
+    else if time(timeframe.period, london_session)
+        "London"
+    else if time(timeframe.period, ny_session)
+        "NewYork"
+    else
+        "Other"
+
+// Check if price is near level
+is_near_level(price, level, threshold_pct) =>
+    pct_diff(price, level) <= threshold_pct
+
+// Calculate liquidity strength based on touches and age
+calculate_liquidity_strength(touches, age_bars) =>
+    base_strength = touches * 0.5
+    age_factor = math.max(0.1, 1.0 - (age_bars / 200.0))  // Reduce strength over time
+    base_strength * age_factor
+
+// ================================
+// SESSION EXTREME TRACKING
+// ================================
+
+track_session_extremes() =>
+    current_session = get_current_session()
+
+    // Update session extremes
+    if current_session == "Asia"
+        if na(asia_high) or high > asia_high
+            asia_high := high
+        if na(asia_low) or low < asia_low
+            asia_low := low
+    else if current_session == "London"
+        if na(london_high) or high > london_high
+            london_high := high
+        if na(london_low) or low < london_low
+            london_low := low
+    else if current_session == "NewYork"
+        if na(ny_high) or high > ny_high
+            ny_high := high
+        if na(ny_low) or low < ny_low
+            ny_low := low
+
+    // Reset for new sessions
+    if current_session == "Asia" and current_session[1] != "Asia"
+        asia_high := high
+        asia_low := low
+    else if current_session == "London" and current_session[1] != "London"
+        london_high := high
+        london_low := low
+    else if current_session == "NewYork" and current_session[1] != "NewYork"
+        ny_high := high
+        ny_low := low
+
+// ================================
+// LIQUIDITY LEVEL DETECTION
+// ================================
+
+detect_liquidity_levels() =>
+    // Clear old levels periodically
+    if bar_index % 50 == 0
+        // Remove levels older than sweep_lookback bars
+        for i = array.size(liquidity_levels) - 1 to 0
+            level = array.get(liquidity_levels, i)
+            if bar_index - level.bar_index > sweep_lookback * 2
+                array.remove(liquidity_levels, i)
+
+    // Find significant highs and lows
+    pivot_high = ta.pivothigh(high, 5, 5)
+    pivot_low = ta.pivotlow(low, 5, 5)
+
+    // Process pivot high
+    if not na(pivot_high)
+        // Check if this level already exists or is similar to existing
+        found_similar = false
+        for i = 0 to array.size(liquidity_levels) - 1
+            level = array.get(liquidity_levels, i)
+            if level.level_type == "high" and is_near_level(pivot_high, level.price, equal_threshold)
+                // Update existing level
+                level.touches += 1
+                level.strength := calculate_liquidity_strength(level.touches, bar_index - level.bar_index)
+                array.set(liquidity_levels, i, level)
+                found_similar := true
+                break
+
+        // Add new level if not similar to existing
+        if not found_similar
+            new_level = LiquidityLevel.new(
+                price = pivot_high,
+                bar_index = bar_index[5],
+                touches = 1,
+                level_type = "high",
+                session = get_current_session(),
+                is_swept = false,
+                sweep_bar = na,
+                strength = 1.0
+            )
+            array.push(liquidity_levels, new_level)
+
+    // Process pivot low
+    if not na(pivot_low)
+        // Check if this level already exists or is similar to existing
+        found_similar = false
+        for i = 0 to array.size(liquidity_levels) - 1
+            level = array.get(liquidity_levels, i)
+            if level.level_type == "low" and is_near_level(pivot_low, level.price, equal_threshold)
+                // Update existing level
+                level.touches += 1
+                level.strength := calculate_liquidity_strength(level.touches, bar_index - level.bar_index)
+                array.set(liquidity_levels, i, level)
+                found_similar := true
+                break
+
+        // Add new level if not similar to existing
+        if not found_similar
+            new_level = LiquidityLevel.new(
+                price = pivot_low,
+                bar_index = bar_index[5],
+                touches = 1,
+                level_type = "low",
+                session = get_current_session(),
+                is_swept = false,
+                sweep_bar = na,
+                strength = 1.0
+            )
+            array.push(liquidity_levels, new_level)
+
+    // Add session extremes as liquidity levels
+    if track_session_extremes
+        current_session = get_current_session()
+
+        // Add session highs/lows as liquidity levels
+        if not na(asia_high) and current_session != "Asia"
+            add_session_extreme(asia_high, "high", "Asia")
+        if not na(asia_low) and current_session != "Asia"
+            add_session_extreme(asia_low, "low", "Asia")
+
+        if not na(london_high) and current_session != "London"
+            add_session_extreme(london_high, "high", "London")
+        if not na(london_low) and current_session != "London"
+            add_session_extreme(london_low, "low", "London")
+
+        if not na(ny_high) and current_session != "NewYork"
+            add_session_extreme(ny_high, "high", "NewYork")
+        if not na(ny_low) and current_session != "NewYork"
+            add_session_extreme(ny_low, "low", "NewYork")
+
+// Helper function to add session extremes
+add_session_extreme(price, level_type, session) =>
+    // Check if already exists
+    found = false
+    for i = 0 to array.size(liquidity_levels) - 1
+        level = array.get(liquidity_levels, i)
+        if level.level_type == level_type and level.session == session and
+           is_near_level(price, level.price, equal_threshold * 2)
+            found := true
+            break
+
+    if not found
+        new_level = LiquidityLevel.new(
+            price = price,
+            bar_index = bar_index,
+            touches = 3,  // Session extremes get higher initial strength
+            level_type = level_type,
+            session = session,
+            is_swept = false,
+            sweep_bar = na,
+            strength = 3.0
+        )
+        array.push(liquidity_levels, new_level)
+
+// ================================
+// SWEEP DETECTION
+// ================================
+
+detect_liquidity_sweeps() =>
+    var bool sweep_detected = false
+    var string sweep_direction = ""
+    var float swept_price = na
+    var float sweep_strength = 0.0
+    var string swept_level_info = ""
+
+    sweep_detected := false
+
+    // Check for sweeps on current bar
+    if array.size(liquidity_levels) > 0
+        for i = array.size(liquidity_levels) - 1 to 0
+            level = array.get(liquidity_levels, i)
+
+            if not level.is_swept and level.strength >= min_liquidity_strength
+                swept = false
+                sweep_size = 0.0
+
+                // Check for high sweep (price breaks above and closes below)
+                if level.level_type == "high"
+                    if high > level.price
+                        sweep_size := (high - level.price) / level.price * 100
+                        if sweep_size >= min_sweep_size
+                            # Check for failed break or retest
+                            if require_retest
+                                # Look for close back below level or subsequent retest
+                                if close < level.price or
+                                   (close > level.price and close < level.price + (level.price * liquidity_buffer / 100))
+                                    swept := true
+                            else
+                                swept := true
+
+                # Check for low sweep (price breaks below and closes above)
+                elif level.level_type == "low"
+                    if low < level.price
+                        sweep_size := (level.price - low) / level.price * 100
+                        if sweep_size >= min_sweep_size
+                            # Check for failed break or retest
+                            if require_retest
+                                # Look for close back above level or subsequent retest
+                                if close > level.price or
+                                   (close < level.price and close > level.price - (level.price * liquidity_buffer / 100))
+                                    swept := true
+                            else
+                                swept := true
+
+                # Mark as swept and record the sweep
+                if swept
+                    level.is_swept := true
+                    level.sweep_bar := bar_index
+                    array.set(liquidity_levels, i, level)
+
+                    # Create swept level record
+                    swept_level = SweptLevel.new(
+                        price = level.price,
+                        sweep_bar = bar_index,
+                        direction = level.level_type == "high" ? "bearish" : "bullish",
+                        strength = level.strength,
+                        confirmed = not require_retest
+                    )
+                    array.push(swept_levels, swept_level)
+
+                    # Set detection variables for alerts
+                    if not sweep_detected or level.strength > sweep_strength
+                        sweep_detected := true
+                        sweep_direction := swept_level.direction
+                        swept_price := level.price
+                        sweep_strength := level.strength
+                        swept_level_info := level.level_type + "_" + level.session + "_" +
+                                           str.tostring(level.touches) + "touches"
+
+    [sweep_detected, sweep_direction, swept_price, sweep_strength, swept_level_info]
+
+// ================================
+// EQUAL HIGHS/LOWS DETECTION
+// ================================
+
+detect_equal_levels() =>
+    var array<float> equal_highs = array.new<float>()
+    var array<float> equal_lows = array.new<float>()
+
+    if detect_equal_levels
+        # Find levels with multiple touches
+        for i = 0 to array.size(liquidity_levels) - 1
+            level = array.get(liquidity_levels, i)
+            if level.touches >= min_equal_touches and not level.is_swept
+                if level.level_type == "high"
+                    array.push(equal_highs, level.price)
+                else
+                    array.push(equal_lows, level.price)
+
+    [equal_highs, equal_lows]
+
+// ================================
+// MAIN EXECUTION
+// ================================
+
+# Track session extremes
+track_session_extremes()
+
+# Detect liquidity levels
+detect_liquidity_levels()
+
+# Detect sweeps
+[sweep_detected, sweep_direction, swept_price, sweep_strength, swept_level_info] = detect_liquidity_sweeps()
+
+# Detect equal levels
+[equal_highs, equal_lows] = detect_equal_levels()
+
+# Determine if this is a significant sweep
+significant_sweep = sweep_detected and (sweep_strength >= min_liquidity_strength * 1.5 or not only_significant_sweeps)
+
+// ================================
+// VISUALIZATION
+// ================================
+
+# Clear old lines periodically
+if bar_index % 100 == 0
+    for i = array.size(liquidity_lines) - 1 to 0
+        line.delete(array.get(liquidity_lines, i))
+    array.clear(liquidity_lines)
+
+    for i = array.size(swept_lines) - 1 to 0
+        line.delete(array.get(swept_lines, i))
+    array.clear(swept_lines)
+
+# Draw liquidity levels
+if show_liquidity_lines and array.size(liquidity_levels) > 0
+    for i = 0 to array.size(liquidity_levels) - 1
+        level = array.get(liquidity_levels, i)
+        if bar_index - level.bar_index <= extend_lines * 2 and level.strength >= min_liquidity_strength
+
+            line_color = level.is_swept ? color_swept :
+                        (level.level_type == "high" ? color_liquidity_high : color_liquidity_low)
+
+            line_style = level.is_swept ? line.style_dotted :
+                        (level.touches >= min_equal_touches ? line.style_solid : line.style_dashed)
+
+            level_line = line.new(
+                x1 = level.bar_index,
+                y1 = level.price,
+                x2 = bar_index + extend_lines,
+                y2 = level.price,
+                color = line_color,
+                width = math.max(1, math.floor(level.strength)),
+                style = line_style
+            )
+            array.push(liquidity_lines, level_line)
+
+# Show sweep signals
+if show_sweep_signals
+    plotshape(
+        sweep_detected and sweep_direction == "bullish",
+        "Liquidity Sweep Bullish",
+        shape.triangleup,
+        location.belowbar,
+        color.new(color.green, 0),
+        size = significant_sweep ? size.normal : size.small
+    )
+
+    plotshape(
+        sweep_detected and sweep_direction == "bearish",
+        "Liquidity Sweep Bearish",
+        shape.triangledown,
+        location.abovebar,
+        color.new(color.red, 0),
+        size = significant_sweep ? size.normal : size.small
+    )
+
+// ================================
+// ALERT GENERATION
+// ================================
+
+generate_sweep_payload(sweep_direction, swept_price, sweep_strength, level_info) =>
+    var string payload = ""
+
+    payload += '{'
+    payload += '"ticker": "' + syminfo.ticker + '",'
+    payload += '"exchange": "' + syminfo.exchange + '",'
+    payload += '"type": "liquidity_sweep",'
+    payload += '"timeframe": "' + timeframe.period + '",'
+    payload += '"time": "' + str.tostring(time) + '",'
+
+    # Price data
+    payload += '"price": ' + str.tostring(close) + ','
+    payload += '"open": ' + str.tostring(open) + ','
+    payload += '"high": ' + str.tostring(high) + ','
+    payload += '"low": ' + str.tostring(low) + ','
+    payload += '"volume": ' + str.tostring(volume) + ','
+
+    # Sweep data
+    payload += '"direction": "' + sweep_direction + '",'
+    payload += '"swept_price": ' + str.tostring(swept_price) + ','
+    payload += '"sweep_strength": ' + str.tostring(sweep_strength) + ','
+    payload += '"level_info": "' + level_info + '",'
+    payload += '"significant": ' + str.tostring(significant_sweep) + ','
+
+    # Session data
+    current_session = get_current_session()
+    payload += '"session": "' + current_session + '",'
+    payload += '"session_high": ' + str.tostring(
+        current_session == "Asia" ? asia_high :
+        current_session == "London" ? london_high :
+        current_session == "NewYork" ? ny_high : na
+    ) + ','
+    payload += '"session_low": ' + str.tostring(
+        current_session == "Asia" ? asia_low :
+        current_session == "London" ? london_low :
+        current_session == "NewYork" ? ny_low : na
+    ) + ','
+
+    # Technical context
+    rsi_value = ta.rsi(close, 14)
+    payload += '"rsi": ' + str.tostring(rsi_value) + ','
+
+    # Confidence based on sweep strength and confirmation
+    confidence = math.min(sweep_strength / 10.0, 1.0)
+    if require_retest
+        confidence *= 1.2  # Higher confidence for confirmed sweeps
+    payload += '"confidence": ' + str.tostring(math.min(confidence, 1.0)) + ','
+
+    # Strategy info
+    payload += '"strategy": "TJR_Liquidity_Sweep",'
+    payload += '"version": "1.0"'
+    payload += '}'
+
+    payload
+
+# Generate alerts
+if enable_alerts and sweep_detected and (significant_sweep or not only_significant_sweeps)
+    alert_message = generate_sweep_payload(sweep_direction, swept_price, sweep_strength, swept_level_info)
+    alert(alert_message, alert.freq_once_per_bar)
+
+// ================================
+// INFORMATION TABLE
+// ================================
+
+if barstate.islast
+    var table info_table = table.new(position.top_left, 2, 7, bgcolor=color.white, border_width=1)
+
+    table.cell(info_table, 0, 0, "Active Levels", text_color=color.black, bgcolor=color.gray)
+    active_levels = 0
+    if array.size(liquidity_levels) > 0
+        for i = 0 to array.size(liquidity_levels) - 1
+            level = array.get(liquidity_levels, i)
+            if not level.is_swept and level.strength >= min_liquidity_strength
+                active_levels += 1
+    table.cell(info_table, 1, 0, str.tostring(active_levels), text_color=color.black)
+
+    table.cell(info_table, 0, 1, "Swept Today", text_color=color.black, bgcolor=color.gray)
+    swept_today = 0
+    if array.size(swept_levels) > 0
+        for i = 0 to array.size(swept_levels) - 1
+            swept = array.get(swept_levels, i)
+            if bar_index - swept.sweep_bar <= 100  # Approximate daily bars
+                swept_today += 1
+    table.cell(info_table, 1, 1, str.tostring(swept_today), text_color=color.black)
+
+    table.cell(info_table, 0, 2, "Session", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 2, get_current_session(), text_color=color.black)
+
+    table.cell(info_table, 0, 3, "Asia H/L", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 3, str.tostring(asia_high, "#.####") + "/" + str.tostring(asia_low, "#.####"), text_color=color.black)
+
+    table.cell(info_table, 0, 4, "London H/L", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 4, str.tostring(london_high, "#.####") + "/" + str.tostring(london_low, "#.####"), text_color=color.black)
+
+    table.cell(info_table, 0, 5, "NY H/L", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 5, str.tostring(ny_high, "#.####") + "/" + str.tostring(ny_low, "#.####"), text_color=color.black)
+
+    table.cell(info_table, 0, 6, "Last Sweep", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 6, sweep_detected ? (sweep_direction + " " + str.tostring(swept_price, "#.####")) : "None",
+              text_color=sweep_detected ? (sweep_direction == "bullish" ? color.green : color.red) : color.black)

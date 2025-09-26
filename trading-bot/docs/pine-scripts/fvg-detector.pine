@@ -1,0 +1,597 @@
+//@version=5
+indicator("TJR Fair Value Gap Detector", "TJR_FVG", overlay=true, max_boxes_count=200)
+
+// ================================
+// INPUT PARAMETERS
+// ================================
+
+// FVG Detection Settings
+fvg_group = "FVG DETECTION"
+fvg_threshold = input.float(0.001, "FVG Threshold %", minval=0.0001, maxval=0.01, group=fvg_group)
+min_fvg_size = input.float(0.0005, "Min FVG Size %", minval=0.0001, maxval=0.005, group=fvg_group)
+max_fvg_age = input.int(50, "Max FVG Age (bars)", minval=10, maxval=200, group=fvg_group)
+
+// FVG Types
+types_group = "FVG TYPES"
+detect_regular_fvg = input.bool(true, "Detect Regular FVG", group=types_group)
+detect_breaker_fvg = input.bool(true, "Detect Breaker FVG", group=types_group)
+detect_mitigation_block = input.bool(true, "Detect Mitigation Blocks", group=types_group)
+
+// Filtering
+filter_group = "FVG FILTERING"
+require_volume_confirmation = input.bool(true, "Require Volume Confirmation", group=filter_group)
+volume_threshold = input.float(1.5, "Volume Threshold Multiplier", minval=1.0, maxval=3.0, group=filter_group)
+filter_by_timeframe = input.bool(true, "Filter by Timeframe Context", group=filter_group)
+
+// Invalidation Rules
+invalidation_group = "FVG INVALIDATION"
+partial_fill_invalidation = input.bool(false, "Partial Fill Invalidation", group=invalidation_group)
+full_fill_required = input.bool(true, "Require Full Fill for Invalidation", group=invalidation_group)
+invalidation_confirmation_bars = input.int(2, "Invalidation Confirmation Bars", minval=1, maxval=5, group=invalidation_group)
+
+// ICT Concepts
+ict_group = "ICT CONCEPTS"
+detect_fair_value_gaps = input.bool(true, "Standard Fair Value Gaps", group=ict_group)
+detect_sibi = input.bool(true, "Sell Side Imbalance (SIBI)", group=ict_group)
+detect_bisi = input.bool(true, "Buy Side Imbalance (BISI)", group=ict_group)
+detect_rejection_blocks = input.bool(true, "Rejection Blocks", group=ict_group)
+
+// Visual Settings
+visual_group = "VISUAL SETTINGS"
+show_active_fvg = input.bool(true, "Show Active FVG", group=visual_group)
+show_filled_fvg = input.bool(false, "Show Filled FVG", group=visual_group)
+fvg_transparency = input.int(80, "FVG Transparency", minval=50, maxval=95, group=visual_group)
+show_fvg_labels = input.bool(true, "Show FVG Labels", group=visual_group)
+
+// Alert Settings
+alert_group = "ALERT SETTINGS"
+enable_fvg_alerts = input.bool(true, "Enable FVG Formation Alerts", group=alert_group)
+enable_fill_alerts = input.bool(true, "Enable FVG Fill Alerts", group=alert_group)
+enable_rejection_alerts = input.bool(true, "Enable Rejection Alerts", group=alert_group)
+only_significant_fvg = input.bool(true, "Only Significant FVG", group=alert_group)
+
+// ================================
+// TYPES AND VARIABLES
+// ================================
+
+type FairValueGap
+    float top
+    float bottom
+    int start_bar
+    int formation_bar
+    string fvg_type  // "bullish", "bearish", "sibi", "bisi"
+    string gap_classification  // "regular", "breaker", "mitigation"
+    bool is_filled
+    int fill_bar
+    bool is_active
+    float fill_percentage
+    float size_percentage
+    bool has_volume_confirmation
+    float strength
+
+// Arrays and tracking
+var array<FairValueGap> active_fvgs = array.new<FairValueGap>()
+var array<FairValueGap> filled_fvgs = array.new<FairValueGap>()
+var array<box> fvg_boxes = array.new<box>()
+var array<label> fvg_labels = array.new<label>()
+
+// Colors
+color_bullish_fvg = color.new(color.green, fvg_transparency)
+color_bearish_fvg = color.new(color.red, fvg_transparency)
+color_sibi = color.new(color.orange, fvg_transparency)
+color_bisi = color.new(color.blue, fvg_transparency)
+color_filled = color.new(color.gray, 90)
+
+// Volume analysis
+volume_sma = ta.sma(volume, 20)
+
+// ================================
+// UTILITY FUNCTIONS
+// ================================
+
+// Calculate percentage size of FVG
+calc_fvg_size_pct(top, bottom) =>
+    (top - bottom) / bottom * 100
+
+// Check if price has filled FVG
+check_fvg_fill(fvg, current_high, current_low) =>
+    if fvg.fvg_type == "bullish" or fvg.fvg_type == "bisi"
+        # Bullish FVG filled when price comes back down
+        if full_fill_required
+            current_low <= fvg.bottom
+        else
+            current_low <= fvg.top  # Partial fill
+    else
+        # Bearish FVG filled when price comes back up
+        if full_fill_required
+            current_high >= fvg.top
+        else
+            current_high >= fvg.bottom  # Partial fill
+
+// Calculate FVG strength based on size, volume, and context
+calc_fvg_strength(fvg) =>
+    strength = 0.0
+
+    # Size factor
+    if fvg.size_percentage > 0.002  # 0.2%
+        strength += 2.0
+    elif fvg.size_percentage > 0.001
+        strength += 1.0
+
+    # Volume factor
+    if fvg.has_volume_confirmation
+        strength += 1.5
+
+    # Classification factor
+    if fvg.gap_classification == "breaker"
+        strength += 2.0
+    elif fvg.gap_classification == "mitigation"
+        strength += 1.0
+
+    strength
+
+// Get FVG color based on type
+get_fvg_color(fvg) =>
+    switch fvg.fvg_type
+        "bullish" => color_bullish_fvg
+        "bearish" => color_bearish_fvg
+        "sibi" => color_sibi
+        "bisi" => color_bisi
+        => color.gray
+
+// ================================
+// FVG DETECTION
+// ================================
+
+detect_fair_value_gaps() =>
+    var FairValueGap new_fvg = na
+
+    # Regular FVG Detection
+    if detect_regular_fvg and barstate.isconfirmed
+
+        # Bullish FVG: low[0] > high[2] (gap between candles)
+        if low > high[2]
+            gap_size_pct = calc_fvg_size_pct(low, high[2])
+
+            if gap_size_pct >= fvg_threshold
+                # Volume confirmation
+                volume_confirmed = not require_volume_confirmation or volume[1] > volume_sma * volume_threshold
+
+                new_fvg := FairValueGap.new(
+                    top = low,
+                    bottom = high[2],
+                    start_bar = bar_index[2],
+                    formation_bar = bar_index,
+                    fvg_type = "bullish",
+                    gap_classification = "regular",
+                    is_filled = false,
+                    fill_bar = na,
+                    is_active = true,
+                    fill_percentage = 0.0,
+                    size_percentage = gap_size_pct,
+                    has_volume_confirmation = volume_confirmed,
+                    strength = 0.0
+                )
+                new_fvg.strength := calc_fvg_strength(new_fvg)
+
+        # Bearish FVG: high[0] < low[2] (gap between candles)
+        elif high < low[2]
+            gap_size_pct = calc_fvg_size_pct(low[2], high)
+
+            if gap_size_pct >= fvg_threshold
+                # Volume confirmation
+                volume_confirmed = not require_volume_confirmation or volume[1] > volume_sma * volume_threshold
+
+                new_fvg := FairValueGap.new(
+                    top = low[2],
+                    bottom = high,
+                    start_bar = bar_index[2],
+                    formation_bar = bar_index,
+                    fvg_type = "bearish",
+                    gap_classification = "regular",
+                    is_filled = false,
+                    fill_bar = na,
+                    is_active = true,
+                    fill_percentage = 0.0,
+                    size_percentage = gap_size_pct,
+                    has_volume_confirmation = volume_confirmed,
+                    strength = 0.0
+                )
+                new_fvg.strength := calc_fvg_strength(new_fvg)
+
+    new_fvg
+
+// ================================
+// IMBALANCE DETECTION (ICT CONCEPTS)
+// ================================
+
+detect_imbalances() =>
+    var FairValueGap sibi_fvg = na
+    var FairValueGap bisi_fvg = na
+
+    # SIBI - Sell Side Imbalance (Bearish Imbalance)
+    if detect_sibi
+        # Look for down candle followed by gap down
+        if close[1] < open[1] and open < close[1] and high < low[1]
+            gap_size_pct = calc_fvg_size_pct(low[1], high)
+
+            if gap_size_pct >= fvg_threshold
+                sibi_fvg := FairValueGap.new(
+                    top = low[1],
+                    bottom = high,
+                    start_bar = bar_index[1],
+                    formation_bar = bar_index,
+                    fvg_type = "sibi",
+                    gap_classification = "regular",
+                    is_filled = false,
+                    fill_bar = na,
+                    is_active = true,
+                    fill_percentage = 0.0,
+                    size_percentage = gap_size_pct,
+                    has_volume_confirmation = volume > volume_sma * volume_threshold,
+                    strength = 0.0
+                )
+                sibi_fvg.strength := calc_fvg_strength(sibi_fvg)
+
+    # BISI - Buy Side Imbalance (Bullish Imbalance)
+    if detect_bisi
+        # Look for up candle followed by gap up
+        if close[1] > open[1] and open > close[1] and low > high[1]
+            gap_size_pct = calc_fvg_size_pct(low, high[1])
+
+            if gap_size_pct >= fvg_threshold
+                bisi_fvg := FairValueGap.new(
+                    top = low,
+                    bottom = high[1],
+                    start_bar = bar_index[1],
+                    formation_bar = bar_index,
+                    fvg_type = "bisi",
+                    gap_classification = "regular",
+                    is_filled = false,
+                    fill_bar = na,
+                    is_active = true,
+                    fill_percentage = 0.0,
+                    size_percentage = gap_size_pct,
+                    has_volume_confirmation = volume > volume_sma * volume_threshold,
+                    strength = 0.0
+                )
+                bisi_fvg.strength := calc_fvg_strength(bisi_fvg)
+
+    [sibi_fvg, bisi_fvg]
+
+// ================================
+// FVG MANAGEMENT
+// ================================
+
+manage_fvgs() =>
+    var bool new_fill = false
+    var FairValueGap filled_fvg = na
+
+    # Check for FVG fills
+    for i = array.size(active_fvgs) - 1 to 0
+        fvg = array.get(active_fvgs, i)
+
+        # Check if FVG is filled
+        if check_fvg_fill(fvg, high, low)
+            fvg.is_filled := true
+            fvg.is_active := false
+            fvg.fill_bar := bar_index
+
+            # Move to filled FVGs
+            array.remove(active_fvgs, i)
+            array.push(filled_fvgs, fvg)
+
+            new_fill := true
+            filled_fvg := fvg
+
+        # Check for age expiry
+        elif bar_index - fvg.formation_bar > max_fvg_age
+            fvg.is_active := false
+            array.remove(active_fvgs, i)
+
+    # Clean up old filled FVGs
+    if array.size(filled_fvgs) > 50
+        for i = 0 to 10
+            array.shift(filled_fvgs)
+
+    [new_fill, filled_fvg]
+
+// ================================
+// BREAKER AND MITIGATION BLOCKS
+// ================================
+
+detect_breaker_blocks() =>
+    var FairValueGap breaker_fvg = na
+
+    if detect_breaker_fvg and array.size(filled_fvgs) > 0
+        # Look for recently filled FVG that gets retested and rejected
+        last_filled = array.get(filled_fvgs, array.size(filled_fvgs) - 1)
+
+        if bar_index - last_filled.fill_bar <= 10  # Recent fill
+            # Check for retest and rejection
+            if last_filled.fvg_type == "bullish"
+                # Price came back to test filled bullish FVG from above
+                if low <= last_filled.top and close > last_filled.top
+                    breaker_fvg := FairValueGap.new(
+                        top = last_filled.top,
+                        bottom = last_filled.bottom,
+                        start_bar = last_filled.start_bar,
+                        formation_bar = bar_index,
+                        fvg_type = "bullish",
+                        gap_classification = "breaker",
+                        is_filled = false,
+                        fill_bar = na,
+                        is_active = true,
+                        fill_percentage = 0.0,
+                        size_percentage = last_filled.size_percentage,
+                        has_volume_confirmation = true,
+                        strength = 0.0
+                    )
+                    breaker_fvg.strength := calc_fvg_strength(breaker_fvg) + 1.0  # Breaker bonus
+
+            elif last_filled.fvg_type == "bearish"
+                # Price came back to test filled bearish FVG from below
+                if high >= last_filled.bottom and close < last_filled.bottom
+                    breaker_fvg := FairValueGap.new(
+                        top = last_filled.top,
+                        bottom = last_filled.bottom,
+                        start_bar = last_filled.start_bar,
+                        formation_bar = bar_index,
+                        fvg_type = "bearish",
+                        gap_classification = "breaker",
+                        is_filled = false,
+                        fill_bar = na,
+                        is_active = true,
+                        fill_percentage = 0.0,
+                        size_percentage = last_filled.size_percentage,
+                        has_volume_confirmation = true,
+                        strength = 0.0
+                    )
+                    breaker_fvg.strength := calc_fvg_strength(breaker_fvg) + 1.0  # Breaker bonus
+
+    breaker_fvg
+
+// ================================
+// MAIN EXECUTION
+// ================================
+
+# Detect standard FVGs
+new_fvg = detect_fair_value_gaps()
+
+# Detect imbalances (SIBI/BISI)
+[sibi_fvg, bisi_fvg] = detect_imbalances()
+
+# Detect breaker blocks
+breaker_fvg = detect_breaker_blocks()
+
+# Add new FVGs to active array
+if not na(new_fvg) and new_fvg.size_percentage >= min_fvg_size
+    array.push(active_fvgs, new_fvg)
+
+if not na(sibi_fvg) and sibi_fvg.size_percentage >= min_fvg_size
+    array.push(active_fvgs, sibi_fvg)
+
+if not na(bisi_fvg) and bisi_fvg.size_percentage >= min_fvg_size
+    array.push(active_fvgs, bisi_fvg)
+
+if not na(breaker_fvg)
+    array.push(active_fvgs, breaker_fvg)
+
+# Manage existing FVGs
+[fvg_filled, filled_fvg] = manage_fvgs()
+
+# Determine significant events for alerts
+significant_fvg = not na(new_fvg) and (not only_significant_fvg or new_fvg.strength >= 3.0)
+significant_sibi = not na(sibi_fvg) and (not only_significant_fvg or sibi_fvg.strength >= 2.0)
+significant_bisi = not na(bisi_fvg) and (not only_significant_fvg or bisi_fvg.strength >= 2.0)
+significant_breaker = not na(breaker_fvg)
+
+// ================================
+// VISUALIZATION
+// ================================
+
+# Clean old boxes and labels
+if bar_index % 50 == 0
+    for i = array.size(fvg_boxes) - 1 to 0
+        box.delete(array.get(fvg_boxes, i))
+    array.clear(fvg_boxes)
+
+    for i = array.size(fvg_labels) - 1 to 0
+        label.delete(array.get(fvg_labels, i))
+    array.clear(fvg_labels)
+
+# Draw active FVGs
+if show_active_fvg
+    for i = 0 to array.size(active_fvgs) - 1
+        fvg = array.get(active_fvgs, i)
+
+        fvg_box = box.new(
+            left = fvg.start_bar,
+            top = fvg.top,
+            right = bar_index + 20,
+            bottom = fvg.bottom,
+            bgcolor = get_fvg_color(fvg),
+            border_color = color.new(get_fvg_color(fvg), 20),
+            border_width = fvg.gap_classification == "breaker" ? 2 : 1,
+            border_style = fvg.gap_classification == "breaker" ? line.style_solid : line.style_dashed
+        )
+        array.push(fvg_boxes, fvg_box)
+
+        # Add labels
+        if show_fvg_labels
+            label_text = fvg.fvg_type + "\n" +
+                        (fvg.gap_classification == "breaker" ? "BREAKER" : "") +
+                        "\n" + str.tostring(fvg.size_percentage * 100, "#.##") + "%"
+
+            fvg_label = label.new(
+                x = fvg.formation_bar,
+                y = (fvg.top + fvg.bottom) / 2,
+                text = label_text,
+                style = label.style_label_left,
+                color = get_fvg_color(fvg),
+                textcolor = color.white,
+                size = size.small
+            )
+            array.push(fvg_labels, fvg_label)
+
+# Draw filled FVGs if enabled
+if show_filled_fvg and array.size(filled_fvgs) > 0
+    for i = math.max(0, array.size(filled_fvgs) - 10) to array.size(filled_fvgs) - 1
+        fvg = array.get(filled_fvgs, i)
+
+        filled_box = box.new(
+            left = fvg.start_bar,
+            top = fvg.top,
+            right = fvg.fill_bar,
+            bottom = fvg.bottom,
+            bgcolor = color_filled,
+            border_color = color.new(color.gray, 50),
+            border_width = 1,
+            border_style = line.style_dotted
+        )
+        array.push(fvg_boxes, filled_box)
+
+# Plot FVG formation signals
+plotshape(significant_fvg, "FVG Bullish", shape.square, location.belowbar, color.new(color.green, 0), size=size.small)
+plotshape(significant_sibi, "SIBI", shape.triangledown, location.abovebar, color.new(color.orange, 0), size=size.small, text="SIBI")
+plotshape(significant_bisi, "BISI", shape.triangleup, location.belowbar, color.new(color.blue, 0), size=size.small, text="BISI")
+plotshape(significant_breaker, "Breaker", shape.diamond, location.abovebar, color.new(color.purple, 0), size=size.normal, text="BREAKER")
+
+# Plot FVG fills
+plotshape(fvg_filled, "FVG Filled", shape.xcross, location.abovebar, color.new(color.gray, 0), size=size.tiny)
+
+// ================================
+// ALERT FUNCTIONS
+// ================================
+
+generate_fvg_alert_payload(fvg, alert_type) =>
+    var string payload = ""
+
+    payload += '{'
+    payload += '"ticker": "' + syminfo.ticker + '",'
+    payload += '"exchange": "' + syminfo.exchange + '",'
+    payload += '"type": "' + alert_type + '",'
+    payload += '"timeframe": "' + timeframe.period + '",'
+    payload += '"time": "' + str.tostring(time) + '",'
+
+    # Price data
+    payload += '"price": ' + str.tostring(close) + ','
+    payload += '"open": ' + str.tostring(open) + ','
+    payload += '"high": ' + str.tostring(high) + ','
+    payload += '"low": ' + str.tostring(low) + ','
+    payload += '"volume": ' + str.tostring(volume) + ','
+
+    # FVG data
+    if not na(fvg)
+        payload += '"fvg_type": "' + fvg.fvg_type + '",'
+        payload += '"fvg_top": ' + str.tostring(fvg.top) + ','
+        payload += '"fvg_bottom": ' + str.tostring(fvg.bottom) + ','
+        payload += '"fvg_size_pct": ' + str.tostring(fvg.size_percentage) + ','
+        payload += '"fvg_classification": "' + fvg.gap_classification + '",'
+        payload += '"fvg_strength": ' + str.tostring(fvg.strength) + ','
+        payload += '"volume_confirmed": ' + str.tostring(fvg.has_volume_confirmation) + ','
+
+    # Direction
+    direction = not na(fvg) ?
+               (fvg.fvg_type == "bullish" or fvg.fvg_type == "bisi" ? "bullish" : "bearish") :
+               "neutral"
+    payload += '"direction": "' + direction + '",'
+
+    # Confidence
+    confidence = not na(fvg) ?
+                math.min(fvg.strength / 5.0, 1.0) :
+                0.5
+    payload += '"confidence": ' + str.tostring(confidence) + ','
+
+    # Strategy info
+    payload += '"strategy": "TJR_FVG_Detector",'
+    payload += '"version": "1.0"'
+    payload += '}'
+
+    payload
+
+// ================================
+// ALERTS
+// ================================
+
+# FVG Formation Alerts
+if enable_fvg_alerts
+    if significant_fvg
+        alert_message = generate_fvg_alert_payload(new_fvg, "fvg_formation")
+        alert(alert_message, alert.freq_once_per_bar)
+
+    if significant_sibi
+        alert_message = generate_fvg_alert_payload(sibi_fvg, "sibi_formation")
+        alert(alert_message, alert.freq_once_per_bar)
+
+    if significant_bisi
+        alert_message = generate_fvg_alert_payload(bisi_fvg, "bisi_formation")
+        alert(alert_message, alert.freq_once_per_bar)
+
+    if significant_breaker
+        alert_message = generate_fvg_alert_payload(breaker_fvg, "breaker_formation")
+        alert(alert_message, alert.freq_once_per_bar)
+
+# FVG Fill Alerts
+if enable_fill_alerts and fvg_filled and not na(filled_fvg)
+    alert_message = generate_fvg_alert_payload(filled_fvg, "fvg_filled")
+    alert(alert_message, alert.freq_once_per_bar)
+
+// ================================
+// INFORMATION TABLE
+// ================================
+
+if barstate.islast
+    var table fvg_table = table.new(position.bottom_left, 2, 7, bgcolor=color.white, border_width=1)
+
+    # Active FVGs
+    table.cell(fvg_table, 0, 0, "Active FVGs", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 0, str.tostring(array.size(active_fvgs)), text_color=color.black)
+
+    # Bullish FVGs
+    bullish_count = 0
+    bearish_count = 0
+    for i = 0 to array.size(active_fvgs) - 1
+        fvg = array.get(active_fvgs, i)
+        if fvg.fvg_type == "bullish" or fvg.fvg_type == "bisi"
+            bullish_count += 1
+        else
+            bearish_count += 1
+
+    table.cell(fvg_table, 0, 1, "Bullish FVGs", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 1, str.tostring(bullish_count), text_color=color.green)
+
+    table.cell(fvg_table, 0, 2, "Bearish FVGs", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 2, str.tostring(bearish_count), text_color=color.red)
+
+    # Recent formations
+    recent_formations = (significant_fvg ? 1 : 0) + (significant_sibi ? 1 : 0) +
+                       (significant_bisi ? 1 : 0) + (significant_breaker ? 1 : 0)
+
+    table.cell(fvg_table, 0, 3, "New Formations", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 3, str.tostring(recent_formations),
+              text_color=recent_formations > 0 ? color.orange : color.black)
+
+    # Filled today
+    table.cell(fvg_table, 0, 4, "Filled Today", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 4, fvg_filled ? "1" : "0",
+              text_color=fvg_filled ? color.blue : color.black)
+
+    # Volume status
+    volume_status = volume > volume_sma * volume_threshold ? "HIGH" : "NORMAL"
+    table.cell(fvg_table, 0, 5, "Volume", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 5, volume_status,
+              text_color=volume_status == "HIGH" ? color.orange : color.black)
+
+    # Latest FVG type
+    latest_fvg_type = significant_fvg ? new_fvg.fvg_type :
+                     significant_sibi ? "SIBI" :
+                     significant_bisi ? "BISI" :
+                     significant_breaker ? "BREAKER" :
+                     "None"
+
+    table.cell(fvg_table, 0, 6, "Latest FVG", text_color=color.black, bgcolor=color.gray)
+    table.cell(fvg_table, 1, 6, latest_fvg_type,
+              text_color=latest_fvg_type == "None" ? color.black :
+                        str.pos(latest_fvg_type, "bullish") >= 0 or latest_fvg_type == "BISI" ? color.green :
+                        color.red)

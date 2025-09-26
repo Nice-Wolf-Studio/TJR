@@ -1,0 +1,19 @@
+Discord Bot Invite URL for TJR Trading Bot:
+
+https://discord.com/api/oauth2/authorize?client_id=1420844721227563078&permissions=2147485696&scope=bot%20applications.commands
+
+This URL includes:
+✅ Bot scope
+✅ Application Commands scope (for slash commands)
+✅ Necessary permissions:
+   - Send Messages
+   - Use Slash Commands
+   - Embed Links
+   - Read Message History
+
+After clicking this URL:
+1. Select your server
+2. Click "Authorize"
+3. Verify permissions
+4. Bot should appear online as "TJR#1066" (or the name configured in the Developer Portal)
+5. Type "/" in any channel to see commands

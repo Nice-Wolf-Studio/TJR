@@ -47,3 +47,11 @@ export type { AggregateOptions } from "./aggregate.js";
 // Export clipping utilities
 export { clipBars } from "./clip.js";
 export type { ClipOptions } from "./clip.js";
+
+// Export composite provider selection
+export { selectProvider, loadCapabilities } from "./composite.js";
+export type {
+  ProviderCapabilities,
+  SelectProviderOptions,
+  ProviderSelectionResult,
+} from "./composite.js";

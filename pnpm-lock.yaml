@@ -68,6 +68,10 @@ importers:
         version: 8.15.5
 
   packages/dev-scripts:
+    dependencies:
+      '@tjr/analysis-kit':
+        specifier: workspace:*
+        version: link:../analysis-kit
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -91,6 +95,18 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.9.2
+
+  packages/market-data-core:
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
+
+  packages/sessions-calendar:
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
 
   packages/smoke:
     devDependencies:

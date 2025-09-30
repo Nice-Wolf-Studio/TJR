@@ -1,0 +1,17 @@
+{
+  "symbol": "ES",
+  "date": "2024-10-01",
+  "timeframe": "5m",
+  "bars": [
+    { "timestamp": 1727780400000, "open": 5800, "high": 5815, "low": 5795, "close": 5810, "volume": 15000 },
+    { "timestamp": 1727780700000, "open": 5810, "high": 5830, "low": 5808, "close": 5825, "volume": 18000 },
+    { "timestamp": 1727781000000, "open": 5825, "high": 5835, "low": 5820, "close": 5822, "volume": 12000 },
+    { "timestamp": 1727781300000, "open": 5822, "high": 5828, "low": 5810, "close": 5815, "volume": 14000 },
+    { "timestamp": 1727781600000, "open": 5815, "high": 5825, "low": 5805, "close": 5820, "volume": 16000 },
+    { "timestamp": 1727781900000, "open": 5820, "high": 5840, "low": 5818, "close": 5835, "volume": 20000 },
+    { "timestamp": 1727782200000, "open": 5835, "high": 5850, "low": 5832, "close": 5845, "volume": 22000 },
+    { "timestamp": 1727782500000, "open": 5845, "high": 5852, "low": 5840, "close": 5842, "volume": 17000 },
+    { "timestamp": 1727782800000, "open": 5842, "high": 5848, "low": 5830, "close": 5835, "volume": 15000 },
+    { "timestamp": 1727783100000, "open": 5835, "high": 5838, "low": 5820, "close": 5825, "volume": 18000 }
+  ]
+}

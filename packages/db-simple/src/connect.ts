@@ -26,6 +26,11 @@ const noopLogger: Logger = {
  */
 export interface DbConnection {
   /**
+   * Database type (sqlite or postgres)
+   */
+  readonly dbType: 'sqlite' | 'postgres'
+
+  /**
    * Execute SQL without returning results (DDL, INSERT, UPDATE, DELETE)
    */
   exec(sql: string, params?: unknown[]): Promise<void>
@@ -34,6 +39,12 @@ export interface DbConnection {
    * Execute SQL and return results (SELECT)
    */
   query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]>
+
+  /**
+   * Execute a function within a transaction
+   * Automatically commits on success, rolls back on error
+   */
+  transaction<T>(fn: (db: DbConnection) => Promise<T>): Promise<T>
 
   /**
    * Close the database connection
@@ -147,6 +158,8 @@ async function withRetry<T>(
  * SQLite connection wrapper
  */
 class SqliteConnection implements DbConnection {
+  readonly dbType = 'sqlite' as const
+
   constructor(
     private db: Database.Database,
     private logger: Logger
@@ -162,6 +175,21 @@ class SqliteConnection implements DbConnection {
     return stmt.all(...params) as T[]
   }
 
+  async transaction<T>(fn: (db: DbConnection) => Promise<T>): Promise<T> {
+    this.logger.info('Starting SQLite transaction')
+    this.db.exec('BEGIN')
+    try {
+      const result = await fn(this)
+      this.db.exec('COMMIT')
+      this.logger.info('SQLite transaction committed')
+      return result
+    } catch (error) {
+      this.db.exec('ROLLBACK')
+      this.logger.error('SQLite transaction rolled back', { error: String(error) })
+      throw error
+    }
+  }
+
   async close(): Promise<void> {
     this.db.close()
     this.logger.info('SQLite connection closed')
@@ -172,18 +200,54 @@ class SqliteConnection implements DbConnection {
  * PostgreSQL connection wrapper
  */
 class PostgresConnection implements DbConnection {
+  readonly dbType = 'postgres' as const
+
   constructor(
     private pool: pg.Pool,
-    private logger: Logger
+    private logger: Logger,
+    private client?: pg.PoolClient
   ) {}
 
   async exec(sql: string, params: unknown[] = []): Promise<void> {
-    await this.pool.query(sql, params)
+    if (this.client) {
+      // Use existing client (within transaction)
+      await this.client.query(sql, params)
+    } else {
+      // Use pool
+      await this.pool.query(sql, params)
+    }
   }
 
   async query<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {
-    const result = await this.pool.query(sql, params)
-    return result.rows as T[]
+    if (this.client) {
+      // Use existing client (within transaction)
+      const result = await this.client.query(sql, params)
+      return result.rows as T[]
+    } else {
+      // Use pool
+      const result = await this.pool.query(sql, params)
+      return result.rows as T[]
+    }
+  }
+
+  async transaction<T>(fn: (db: DbConnection) => Promise<T>): Promise<T> {
+    this.logger.info('Starting PostgreSQL transaction')
+    const client = await this.pool.connect()
+    try {
+      await client.query('BEGIN')
+      // Create a new connection instance that uses this client
+      const txConnection = new PostgresConnection(this.pool, this.logger, client)
+      const result = await fn(txConnection)
+      await client.query('COMMIT')
+      this.logger.info('PostgreSQL transaction committed')
+      return result
+    } catch (error) {
+      await client.query('ROLLBACK')
+      this.logger.error('PostgreSQL transaction rolled back', { error: String(error) })
+      throw error
+    } finally {
+      client.release()
+    }
   }
 
   async close(): Promise<void> {

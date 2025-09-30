@@ -49,18 +49,6 @@ importers:
         specifier: ^8.11.10
         version: 8.15.5
 
-  packages/dev-scripts:
-    devDependencies:
-      '@types/node':
-        specifier: ^18.19.0
-        version: 18.19.128
-
-  packages/sessions-calendar:
-    devDependencies:
-      '@types/node':
-        specifier: ^18.19.0
-        version: 18.19.128
-
   packages/smoke:
     devDependencies:
       '@types/node':

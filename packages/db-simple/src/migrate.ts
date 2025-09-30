@@ -31,15 +31,28 @@ export interface MigrateOptions {
 
 /**
  * Ensure migrations table exists
+ * Uses database-specific SQL for compatibility
  */
 async function ensureMigrationsTable(db: DbConnection): Promise<void> {
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS _migrations (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL UNIQUE,
-      applied_at TEXT DEFAULT (datetime('now'))
-    )
-  `)
+  if (db.dbType === 'sqlite') {
+    // SQLite syntax
+    await db.exec(`
+      CREATE TABLE IF NOT EXISTS _migrations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE,
+        applied_at TEXT DEFAULT (datetime('now'))
+      )
+    `)
+  } else {
+    // PostgreSQL syntax
+    await db.exec(`
+      CREATE TABLE IF NOT EXISTS _migrations (
+        id BIGSERIAL PRIMARY KEY,
+        name TEXT NOT NULL UNIQUE,
+        applied_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+  }
 }
 
 /**
@@ -52,34 +65,66 @@ async function getAppliedMigrations(db: DbConnection): Promise<Set<string>> {
 
 /**
  * Read migration files from directory
+ * Enhanced error handling for file I/O operations
  */
 function readMigrationFiles(migrationsDir: string): Migration[] {
+  // Check directory exists
   if (!fs.existsSync(migrationsDir)) {
     throw new Error(`Migrations directory not found: ${migrationsDir}`)
   }
 
-  const files = fs
-    .readdirSync(migrationsDir)
-    .filter((file) => file.endsWith('.sql'))
-    .sort() // Lexicographic sort ensures NNN_name.sql order
+  // Check directory is readable
+  let files: string[]
+  try {
+    files = fs.readdirSync(migrationsDir)
+  } catch (error) {
+    throw new Error(
+      `Failed to read migrations directory: ${migrationsDir}. Error: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    )
+  }
 
-  return files.map((file) => ({
-    name: file,
-    sql: fs.readFileSync(path.join(migrationsDir, file), 'utf-8'),
-  }))
+  // Filter and sort migration files
+  const sqlFiles = files.filter((file) => file.endsWith('.sql')).sort()
+
+  if (sqlFiles.length === 0) {
+    throw new Error(`No .sql migration files found in: ${migrationsDir}`)
+  }
+
+  // Read each migration file with error handling
+  return sqlFiles.map((file) => {
+    const filePath = path.join(migrationsDir, file)
+    try {
+      const sql = fs.readFileSync(filePath, 'utf-8')
+      if (sql.trim().length === 0) {
+        throw new Error(`Migration file is empty: ${file}`)
+      }
+      return { name: file, sql }
+    } catch (error) {
+      throw new Error(
+        `Failed to read migration file: ${file}. Error: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+    }
+  })
 }
 
 /**
  * Apply a single migration
+ * Wraps migration in transaction for atomicity
  */
 async function applyMigration(db: DbConnection, migration: Migration, logger: Logger): Promise<void> {
   logger.info('Applying migration', { name: migration.name })
 
-  // Execute migration SQL
-  await db.exec(migration.sql)
+  await db.transaction(async (txDb) => {
+    // Execute migration SQL
+    await txDb.exec(migration.sql)
 
-  // Record migration
-  await db.exec('INSERT INTO _migrations (name) VALUES (?)', [migration.name])
+    // Record migration
+    await txDb.exec('INSERT INTO _migrations (name) VALUES (?)', [migration.name])
+  })
 
   logger.info('Migration applied', { name: migration.name })
 }

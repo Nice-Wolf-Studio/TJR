@@ -1,5 +1,13 @@
 -- Example migration: Create initial tables
 -- Demonstrates basic table creation with foreign keys
+--
+-- NOTE: This is a SQLite-specific example.
+-- For PostgreSQL, replace:
+--   - INTEGER PRIMARY KEY AUTOINCREMENT → BIGSERIAL PRIMARY KEY
+--   - TEXT → VARCHAR or TEXT (both work in PostgreSQL)
+--   - datetime('now') → CURRENT_TIMESTAMP
+--
+-- See examples/001_create_tables_postgres.sql for PostgreSQL version.
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,0 +1,62 @@
+{
+  "name": "@tjr/discord-bot-core",
+  "version": "0.1.0",
+  "description": "Core Discord bot functionality with command schema and registrar",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "discord-registrar": "./dist/cli/registrar.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "cli",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:snapshot": "vitest run -u",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "register": "node ./dist/cli/registrar.js",
+    "register:dry": "node ./dist/cli/registrar.js --dry-run"
+  },
+  "keywords": [
+    "tjr",
+    "discord",
+    "bot",
+    "commands",
+    "registrar"
+  ],
+  "author": "Nice Wolf Studio",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "@discordjs/rest": "^2.2.0",
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@tjr/contracts": "workspace:*",
+    "@tjr/logger": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

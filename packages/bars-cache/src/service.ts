@@ -13,6 +13,8 @@ import type { Timeframe } from '@tjr-suite/market-data-core'
 import type { CacheStore } from './cacheStore.js'
 import type { DbCacheStore } from './dbCacheStore.js'
 import type { CachedBar, CacheQuery } from './types.js'
+import { EventBus, createCorrectionEvent } from './events.js'
+import type { CorrectionEvent } from './events.js'
 
 /**
  * Market data cache service with read-through semantics.
@@ -69,6 +71,7 @@ export class MarketDataCacheService {
   private memCache: CacheStore
   private dbCache: DbCacheStore
   private providerPriority: string[]
+  private eventBus: EventBus
 
   /**
    * Create a new market data cache service.
@@ -77,15 +80,18 @@ export class MarketDataCacheService {
    * @param dbCache - Database cache for persistent storage
    * @param providerPriority - Ordered list of providers (highest priority first)
    *                           Example: ['polygon', 'yahoo'] prefers polygon over yahoo
+   * @param eventBus - Optional event bus for correction events
    */
   constructor(
     memCache: CacheStore,
     dbCache: DbCacheStore,
-    providerPriority: string[] = []
+    providerPriority: string[] = [],
+    eventBus?: EventBus
   ) {
     this.memCache = memCache
     this.dbCache = dbCache
     this.providerPriority = providerPriority
+    this.eventBus = eventBus ?? new EventBus()
   }
 
   /**
@@ -151,6 +157,7 @@ export class MarketDataCacheService {
    * @param symbol - Symbol identifier
    * @param timeframe - Timeframe
    * @param bars - Array of cached bars to store
+   * @deprecated Use upsertBars() for revision-aware storage with correction events
    */
   async storeBars(
     symbol: string,
@@ -180,6 +187,195 @@ export class MarketDataCacheService {
     } catch (error) {
       throw new Error(`Failed to store bars: ${error}`)
     }
+  }
+
+  /**
+   * Upsert bars with revision semantics and correction tracking.
+   *
+   * This method implements deterministic merge logic:
+   * 1. Check existing bar for the same timestamp
+   * 2. Apply provider priority and revision rules
+   * 3. Emit correction event if bar data changes
+   * 4. Store the winning bar to cache
+   *
+   * Merge rules (in order):
+   * - Higher priority provider wins (based on providerPriority)
+   * - If same provider, higher revision wins
+   * - If no existing bar, new bar wins
+   *
+   * @param symbol - Symbol identifier
+   * @param timeframe - Timeframe
+   * @param bars - Array of cached bars to upsert
+   * @returns Array of correction events (empty if no corrections)
+   *
+   * Example:
+   * ```typescript
+   * // First insert: revision 1 from polygon
+   * await service.upsertBars('AAPL', '5m', [{
+   *   timestamp: 1633024800000,
+   *   open: 100, high: 101, low: 99, close: 100.5, volume: 10000,
+   *   provider: 'polygon', revision: 1, fetchedAt: Date.now()
+   * }]);
+   *
+   * // Later: revision 2 from polygon (correction)
+   * const events = await service.upsertBars('AAPL', '5m', [{
+   *   timestamp: 1633024800000,
+   *   open: 100, high: 101, low: 99, close: 100.6, volume: 10001,
+   *   provider: 'polygon', revision: 2, fetchedAt: Date.now()
+   * }]);
+   *
+   * // events[0] contains correction event with old/new data
+   * ```
+   */
+  async upsertBars(
+    symbol: string,
+    timeframe: Timeframe,
+    bars: CachedBar[]
+  ): Promise<CorrectionEvent[]> {
+    const correctionEvents: CorrectionEvent[] = []
+
+    try {
+      for (const newBar of bars) {
+        const key = {
+          symbol,
+          timeframe,
+          timestamp: newBar.timestamp,
+        }
+
+        // Step 1: Check for existing bar
+        let existingBar = this.memCache.get(key)
+        if (!existingBar) {
+          // Check database cache
+          const dbBars = await this.dbCache.getRange({
+            symbol,
+            timeframe,
+            start: newBar.timestamp,
+            end: newBar.timestamp + 1,
+          })
+          existingBar = dbBars.length > 0 ? dbBars[0] : null
+        }
+
+        // Step 2: Determine winning bar using merge logic
+        const winner = this.selectWinningBar(existingBar, newBar)
+
+        // Step 3: If bar changed, emit correction event
+        if (winner === newBar && existingBar !== null) {
+          // Only emit if there's an actual change
+          if (this.hasBarChanged(existingBar, newBar)) {
+            const event = createCorrectionEvent(
+              symbol,
+              timeframe,
+              newBar.timestamp,
+              existingBar,
+              newBar
+            )
+            correctionEvents.push(event)
+            this.eventBus.emit('correction', event)
+          }
+        }
+
+        // Step 4: Store winning bar (only if it's the new bar)
+        if (winner === newBar) {
+          await this.dbCache.setWithKey(key, newBar)
+          this.memCache.set(key, newBar)
+        }
+      }
+
+      return correctionEvents
+    } catch (error) {
+      throw new Error(`Failed to upsert bars: ${error}`)
+    }
+  }
+
+  /**
+   * Select winning bar based on provider priority and revision.
+   *
+   * Rules:
+   * 1. If no existing bar, new bar wins
+   * 2. If providers differ, higher priority provider wins
+   * 3. If same provider, higher revision wins
+   * 4. Otherwise, keep existing bar
+   *
+   * @param existingBar - Current bar (null if not present)
+   * @param newBar - Incoming bar
+   * @returns Winning bar
+   */
+  private selectWinningBar(
+    existingBar: CachedBar | null,
+    newBar: CachedBar
+  ): CachedBar {
+    // No existing bar: new bar wins
+    if (existingBar === null) {
+      return newBar
+    }
+
+    // Same provider: higher revision wins
+    if (existingBar.provider === newBar.provider) {
+      return newBar.revision > existingBar.revision ? newBar : existingBar
+    }
+
+    // Different providers: use priority
+    const existingPriority = this.getProviderPriority(existingBar.provider)
+    const newPriority = this.getProviderPriority(newBar.provider)
+
+    // Lower index = higher priority
+    if (newPriority < existingPriority) {
+      return newBar
+    }
+
+    return existingBar
+  }
+
+  /**
+   * Get provider priority index.
+   *
+   * Lower index = higher priority.
+   * Providers not in the list get lowest priority.
+   *
+   * @param provider - Provider identifier
+   * @returns Priority index (lower is better)
+   */
+  private getProviderPriority(provider: string): number {
+    const index = this.providerPriority.indexOf(provider)
+    return index === -1 ? Number.MAX_SAFE_INTEGER : index
+  }
+
+  /**
+   * Check if bar data has actually changed.
+   *
+   * Compares OHLCV values and provider/revision metadata.
+   *
+   * @param oldBar - Previous bar
+   * @param newBar - New bar
+   * @returns true if bars are different
+   */
+  private hasBarChanged(oldBar: CachedBar, newBar: CachedBar): boolean {
+    return (
+      oldBar.open !== newBar.open ||
+      oldBar.high !== newBar.high ||
+      oldBar.low !== newBar.low ||
+      oldBar.close !== newBar.close ||
+      oldBar.volume !== newBar.volume ||
+      oldBar.provider !== newBar.provider ||
+      oldBar.revision !== newBar.revision
+    )
+  }
+
+  /**
+   * Get the event bus for subscribing to correction events.
+   *
+   * @returns Event bus instance
+   *
+   * Example:
+   * ```typescript
+   * const eventBus = service.getEventBus();
+   * eventBus.on('correction', (event) => {
+   *   console.log('Correction:', event);
+   * });
+   * ```
+   */
+  getEventBus(): EventBus {
+    return this.eventBus
   }
 
   /**

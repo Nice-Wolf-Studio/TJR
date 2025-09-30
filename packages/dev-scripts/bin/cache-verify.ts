@@ -248,11 +248,24 @@ function parseCustomArgs(args: string[]): {
     } else if (arg === '--pretty') {
       result.pretty = true;
     } else if (arg === '--symbol' && i + 1 < args.length) {
-      result.symbol = args[++i];
+      const symbol = args[++i];
+      if (!/^[A-Z0-9\-._]+$/i.test(symbol)) {
+        throw new Error(`Invalid symbol format: ${symbol}`);
+      }
+      result.symbol = symbol;
     } else if (arg === '--timeframe' && i + 1 < args.length) {
-      result.timeframe = args[++i];
+      const timeframe = args[++i];
+      const validTimeframes = ['1m', '5m', '10m', '15m', '30m', '1h', '2h', '4h', '1D'];
+      if (!validTimeframes.includes(timeframe)) {
+        throw new Error(`Invalid timeframe: ${timeframe}. Valid options: ${validTimeframes.join(', ')}`);
+      }
+      result.timeframe = timeframe;
     } else if (arg === '--window' && i + 1 < args.length) {
-      result.window = parseInt(args[++i], 10);
+      const window = parseInt(args[++i], 10);
+      if (isNaN(window) || window <= 0 || window > 10000) {
+        throw new Error(`Invalid window: must be a number between 1 and 10000`);
+      }
+      result.window = window;
     }
   }
 

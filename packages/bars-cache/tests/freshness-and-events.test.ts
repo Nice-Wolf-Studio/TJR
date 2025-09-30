@@ -744,6 +744,68 @@ describe('MarketDataCacheService - Revision Upserts', () => {
 })
 
 // =============================================================================
+// Input Validation Tests
+// =============================================================================
+
+describe('Input validation', () => {
+  let db: DbConnection
+  let memCache: CacheStore
+  let dbCache: DbCacheStore
+  let service: MarketDataCacheService
+
+  beforeEach(async () => {
+    db = await connect('sqlite::memory:')
+    memCache = new CacheStore(100)
+    dbCache = new DbCacheStore(db, ['polygon', 'yahoo', 'alpaca'])
+    await dbCache.init()
+    service = new MarketDataCacheService(memCache, dbCache, ['polygon', 'yahoo', 'alpaca'])
+  })
+
+  afterEach(async () => {
+    await db.close()
+  })
+
+  it('should reject empty symbol', async () => {
+    await expect(service.upsertBars('', '5m', [])).rejects.toThrow('Symbol must be a non-empty string')
+  })
+
+  it('should handle empty bars array', async () => {
+    const events = await service.upsertBars('AAPL', '5m', [])
+    expect(events).toEqual([])
+  })
+
+  it('should reject invalid revision', async () => {
+    const invalidBar: CachedBar = {
+      timestamp: Date.now(),
+      open: 100,
+      high: 101,
+      low: 99,
+      close: 100,
+      volume: 1000,
+      provider: 'test',
+      revision: 0, // Invalid
+      fetchedAt: Date.now(),
+    }
+    await expect(service.upsertBars('AAPL', '5m', [invalidBar])).rejects.toThrow('Invalid revision')
+  })
+
+  it('should reject negative timestamp', async () => {
+    const invalidBar: CachedBar = {
+      timestamp: -1, // Invalid
+      open: 100,
+      high: 101,
+      low: 99,
+      close: 100,
+      volume: 1000,
+      provider: 'test',
+      revision: 1,
+      fetchedAt: Date.now(),
+    }
+    await expect(service.upsertBars('AAPL', '5m', [invalidBar])).rejects.toThrow('Invalid timestamp')
+  })
+})
+
+// =============================================================================
 // Integration Tests: Freshness + Events + Revisions
 // =============================================================================
 

@@ -81,17 +81,19 @@ export class MarketDataCacheService {
    * @param providerPriority - Ordered list of providers (highest priority first)
    *                           Example: ['polygon', 'yahoo'] prefers polygon over yahoo
    * @param eventBus - Optional event bus for correction events
+   * @param errorHandler - Optional error handler for event bus errors
    */
   constructor(
     memCache: CacheStore,
     dbCache: DbCacheStore,
     providerPriority: string[] = [],
-    eventBus?: EventBus
+    eventBus?: EventBus,
+    errorHandler?: (error: Error, event: CorrectionEvent) => void
   ) {
     this.memCache = memCache
     this.dbCache = dbCache
     this.providerPriority = providerPriority
-    this.eventBus = eventBus ?? new EventBus()
+    this.eventBus = eventBus ?? new EventBus(errorHandler)
   }
 
   /**
@@ -232,6 +234,24 @@ export class MarketDataCacheService {
     timeframe: Timeframe,
     bars: CachedBar[]
   ): Promise<CorrectionEvent[]> {
+    // Validate inputs
+    if (!symbol || symbol.trim().length === 0) {
+      throw new Error('Symbol must be a non-empty string')
+    }
+
+    if (bars.length === 0) {
+      return [] // Early return for empty array
+    }
+
+    for (const bar of bars) {
+      if (bar.revision < 1) {
+        throw new Error(`Invalid revision ${bar.revision}, must be >= 1`)
+      }
+      if (bar.timestamp < 0) {
+        throw new Error(`Invalid timestamp ${bar.timestamp}, must be >= 0`)
+      }
+    }
+
     const correctionEvents: CorrectionEvent[] = []
 
     try {

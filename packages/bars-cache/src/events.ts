@@ -99,9 +99,11 @@ export type CorrectionEventListener = (event: CorrectionEvent) => void
  */
 export class EventBus {
   private listeners: Map<string, CorrectionEventListener[]>
+  private errorHandler?: (error: Error, event: CorrectionEvent) => void
 
-  constructor() {
+  constructor(errorHandler?: (error: Error, event: CorrectionEvent) => void) {
     this.listeners = new Map()
+    this.errorHandler = errorHandler
   }
 
   /**
@@ -181,8 +183,10 @@ export class EventBus {
       try {
         listener(event)
       } catch (error) {
-        // Swallow errors from individual listeners to not disrupt others
-        // In production, you might want to log these to a proper logger
+        if (this.errorHandler) {
+          this.errorHandler(error as Error, event)
+        }
+        // Still swallow to not disrupt other listeners
       }
     }
   }

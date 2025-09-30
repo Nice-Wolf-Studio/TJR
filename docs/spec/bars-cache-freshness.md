@@ -386,10 +386,8 @@ await service.upsertBars('AAPL', '5m', [yahooBar]);
 **Enforcement:**
 - Events only emitted when `newBar` wins
 - Events only emitted when data changed (`hasBarChanged()`)
-- No event for initial insert (no previous data to correct)
-- Wait, that's wrong - initial inserts DO emit events with `correctionType: 'initial'`
 
-**Correction:** Events are emitted for:
+Events are emitted for:
 - Initial inserts (`correctionType: 'initial'`)
 - Revision updates (`correctionType: 'revision'`)
 - Provider overrides (`correctionType: 'provider_override'`)

@@ -1,0 +1,29 @@
+{
+  "name": "@tjr-suite/market-data-core",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Pure utilities for timeframe math, bar aggregation, and data clipping",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "tjr-suite",
+    "market-data",
+    "timeframe",
+    "aggregation",
+    "ohlcv"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}

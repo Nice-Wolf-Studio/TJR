@@ -192,8 +192,13 @@ export class Container implements IContainer {
         }
       }
 
-      // Shutdown this service
-      await service.shutdown();
+      // Shutdown this service (catch errors to allow other shutdowns to continue)
+      try {
+        await service.shutdown();
+      } catch (error) {
+        // Log error but don't throw - we want to continue shutting down other services
+        console.error(`Error shutting down service ${service.name}:`, error);
+      }
       shutdown.add(service.name);
     };
 

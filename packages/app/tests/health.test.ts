@@ -86,7 +86,8 @@ describe('HealthCommand', () => {
   describe('Health Status Checking', () => {
     it('should report healthy when all services healthy', async () => {
       const healthyService = new MockHealthyService();
-      container.register(Symbol('healthy'), () => healthyService);
+      const healthyToken = Symbol('healthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], {});
@@ -98,8 +99,10 @@ describe('HealthCommand', () => {
       const healthyService = new MockHealthyService();
       const unhealthyService = new MockUnhealthyService();
 
-      container.register(Symbol('healthy'), () => healthyService);
-      container.register(Symbol('unhealthy'), () => unhealthyService);
+      const healthyToken = Symbol('healthy');
+      const unhealthyToken = Symbol('unhealthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
+      container.register(unhealthyToken, () => unhealthyService, { name: 'UnhealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], {});
@@ -109,7 +112,8 @@ describe('HealthCommand', () => {
 
     it('should include service details in output', async () => {
       const healthyService = new MockHealthyService();
-      container.register(Symbol('healthy'), () => healthyService);
+      const healthyToken = Symbol('healthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], { format: 'json' });
@@ -124,8 +128,10 @@ describe('HealthCommand', () => {
       const healthyService = new MockHealthyService();
       const unhealthyService = new MockUnhealthyService();
 
-      container.register(Symbol('healthy'), () => healthyService);
-      container.register(Symbol('unhealthy'), () => unhealthyService);
+      const healthyToken = Symbol('healthy');
+      const unhealthyToken = Symbol('unhealthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
+      container.register(unhealthyToken, () => unhealthyService, { name: 'UnhealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], { format: 'json' });
@@ -141,7 +147,8 @@ describe('HealthCommand', () => {
   describe('Output Formatting', () => {
     beforeEach(async () => {
       const healthyService = new MockHealthyService();
-      container.register(Symbol('healthy'), () => healthyService);
+      const healthyToken = Symbol('healthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
       await container.initializeAll();
     });
 
@@ -232,7 +239,8 @@ describe('HealthCommand', () => {
   describe('Text Output Format', () => {
     it('should show check marks for healthy services', async () => {
       const healthyService = new MockHealthyService();
-      container.register(Symbol('healthy'), () => healthyService);
+      const healthyToken = Symbol('healthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], { format: 'text' });
@@ -243,7 +251,8 @@ describe('HealthCommand', () => {
 
     it('should show X marks for unhealthy services', async () => {
       const unhealthyService = new MockUnhealthyService();
-      container.register(Symbol('unhealthy'), () => unhealthyService);
+      const unhealthyToken = Symbol('unhealthy');
+      container.register(unhealthyToken, () => unhealthyService, { name: 'UnhealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], { format: 'text' });
@@ -254,7 +263,8 @@ describe('HealthCommand', () => {
 
     it('should include service details when present', async () => {
       const healthyService = new MockHealthyService();
-      container.register(Symbol('healthy'), () => healthyService);
+      const healthyToken = Symbol('healthy');
+      container.register(healthyToken, () => healthyService, { name: 'HealthyService' });
       await container.initializeAll();
 
       const result = await healthCommand.execute([], { format: 'text' });

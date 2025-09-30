@@ -108,9 +108,10 @@ describe('Container', () => {
 
     it('should resolve service with dependencies', () => {
       const mockService = new MockService();
-      container.register(Symbol('mock'), () => mockService);
+      const mockToken = Symbol('mock');
+      container.register(mockToken, () => mockService);
 
-      const dependentService = container.resolve(Symbol('mock'));
+      const dependentService = container.resolve(mockToken);
       expect(dependentService).toBe(mockService);
     });
   });
@@ -163,7 +164,10 @@ describe('Container', () => {
   describe('Service Initialization', () => {
     it('should initialize all services', async () => {
       const mockService = new MockService();
-      container.register(Symbol('mock'), () => mockService);
+      const mockToken = Symbol('mock');
+      container.register(mockToken, () => mockService, {
+        name: 'MockService'
+      });
 
       await container.initializeAll();
 
@@ -174,8 +178,14 @@ describe('Container', () => {
       const mockService = new MockService();
       const dependentService = new DependentService(mockService);
 
-      container.register(Symbol('mock'), () => mockService);
-      container.register(Symbol('dependent'), () => dependentService);
+      const mockToken = Symbol('mock');
+      const dependentToken = Symbol('dependent');
+      container.register(mockToken, () => mockService, {
+        name: 'MockService'
+      });
+      container.register(dependentToken, () => dependentService, {
+        name: 'DependentService'
+      });
 
       await container.initializeAll();
 
@@ -192,7 +202,10 @@ describe('Container', () => {
   describe('Service Shutdown', () => {
     it('should shutdown all initialized services', async () => {
       const mockService = new MockService();
-      container.register(Symbol('mock'), () => mockService);
+      const mockToken = Symbol('mock');
+      container.register(mockToken, () => mockService, {
+        name: 'MockService'
+      });
 
       await container.initializeAll();
       await container.shutdownAll();
@@ -213,7 +226,10 @@ describe('Container', () => {
         }
       };
 
-      container.register(Symbol('error'), () => errorService);
+      const errorToken = Symbol('error');
+      container.register(errorToken, () => errorService, {
+        name: 'ErrorService'
+      });
       await container.initializeAll();
 
       await expect(container.shutdownAll()).resolves.not.toThrow();
@@ -223,7 +239,10 @@ describe('Container', () => {
   describe('Health Checks', () => {
     it('should perform health check on all services', async () => {
       const mockService = new MockService();
-      container.register(Symbol('mock'), () => mockService);
+      const mockToken = Symbol('mock');
+      container.register(mockToken, () => mockService, {
+        name: 'MockService'
+      });
 
       await container.initializeAll();
       const healthStatuses = await container.healthCheckAll();
@@ -235,7 +254,10 @@ describe('Container', () => {
 
     it('should include last check timestamp', async () => {
       const mockService = new MockService();
-      container.register(Symbol('mock'), () => mockService);
+      const mockToken = Symbol('mock');
+      container.register(mockToken, () => mockService, {
+        name: 'MockService'
+      });
 
       await container.initializeAll();
       const healthStatuses = await container.healthCheckAll();
@@ -255,7 +277,10 @@ describe('Container', () => {
         }
       };
 
-      container.register(Symbol('unhealthy'), () => unhealthyService);
+      const unhealthyToken = Symbol('unhealthy');
+      container.register(unhealthyToken, () => unhealthyService, {
+        name: 'UnhealthyService'
+      });
       await container.initializeAll();
 
       const healthStatuses = await container.healthCheckAll();

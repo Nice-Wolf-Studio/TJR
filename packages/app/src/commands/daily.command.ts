@@ -8,10 +8,16 @@ import type { MarketBar } from '@tjr/contracts';
 import { Timeframe } from '@tjr/contracts';
 import { calculateDailyBias, classifyDayProfile, extractSessionExtremes } from '@tjr/analysis-kit';
 import type { ProviderService } from '../services/providers/types.js';
+import type { CacheService } from '../services/cache/types.js';
+import { DailyFormatter, type DailyAnalysisReport, type OutputFormat } from '../formatters/daily-formatter.js';
+import { sanitizeError } from '../utils/error-sanitizer.js';
 
 export interface DailyCommandConfig {
   providerService: ProviderService;
+  cacheService?: CacheService;
   logger: Logger;
+  cacheEnabled?: boolean;
+  includeMetadata?: boolean;
 }
 
 /**
@@ -23,11 +29,19 @@ export class DailyCommand implements Command {
   aliases = ['analyze', 'bias'];
 
   private providerService: ProviderService;
+  private cacheService?: CacheService;
   private logger: Logger;
+  private formatter: DailyFormatter;
+  private cacheEnabled: boolean;
+  private includeMetadata: boolean;
 
   constructor(config: DailyCommandConfig) {
     this.providerService = config.providerService;
+    this.cacheService = config.cacheService;
     this.logger = config.logger;
+    this.formatter = new DailyFormatter();
+    this.cacheEnabled = config.cacheEnabled ?? true;
+    this.includeMetadata = config.includeMetadata ?? false;
   }
 
   async execute(args: string[], options: CommandOptions): Promise<CommandResult> {
@@ -37,12 +51,44 @@ export class DailyCommand implements Command {
       // Parse arguments
       const symbol = args[0] || 'SPY';
       const date = args[1] ? new Date(args[1]) : new Date();
+      const format = (options.format as OutputFormat) || 'text';
 
       this.logger.info('Executing daily command', {
         symbol,
         date: date.toISOString(),
+        format,
         options
       });
+
+      // Check cache first if enabled
+      const cacheKey = this.buildCacheKey(symbol, date, 'analysis');
+      if (this.cacheEnabled && this.cacheService) {
+        const cached = await this.cacheService.get<DailyAnalysisReport>(cacheKey);
+        if (cached) {
+          this.logger.debug('Cache hit for daily analysis', { symbol, date: date.toISOString() });
+
+          // Update metadata if included
+          if (this.includeMetadata) {
+            cached.metadata = {
+              ...cached.metadata,
+              cacheHit: true,
+              latencyMs: Date.now() - startTime
+            };
+          }
+
+          const formattedOutput = this.formatter.format(cached, format);
+          return {
+            success: true,
+            output: formattedOutput,
+            duration: Date.now() - startTime,
+            metadata: {
+              symbol,
+              date: date.toISOString(),
+              cacheHit: true
+            }
+          };
+        }
+      }
 
       // Get market data for the day
       const bars = await this.fetchDayBars(symbol, date, options.dryRun);
@@ -80,10 +126,10 @@ export class DailyCommand implements Command {
         this.runSessionAnalysis(analysisBars)
       ]);
 
-      // Build output
-      const output = {
+      // Build analysis report
+      const report: DailyAnalysisReport = {
         symbol,
-        date: date.toISOString().split('T')[0],
+        date: date.toISOString().split('T')[0] ?? '',
         analysis: {
           bias,
           profile,
@@ -101,8 +147,27 @@ export class DailyCommand implements Command {
         timestamp: new Date().toISOString()
       };
 
+      // Add metadata if requested
+      if (this.includeMetadata) {
+        report.metadata = {
+          provider: 'composite',
+          cacheHit: false,
+          latencyMs: Date.now() - startTime
+        };
+      }
+
+      // Cache the report if enabled
+      if (this.cacheEnabled && this.cacheService) {
+        const cacheTTL = this.selectCacheTTL(date);
+        await this.cacheService.set(cacheKey, report, cacheTTL);
+        this.logger.debug('Cached analysis report', {
+          key: cacheKey,
+          ttl: cacheTTL
+        });
+      }
+
       // Format output
-      const formattedOutput = this.formatOutput(output, options.format);
+      const formattedOutput = this.formatter.format(report, format);
 
       return {
         success: true,
@@ -111,11 +176,12 @@ export class DailyCommand implements Command {
         metadata: {
           symbol,
           date: date.toISOString(),
-          barsAnalyzed: bars.length
+          barsAnalyzed: bars.length,
+          cacheHit: false
         }
       };
     } catch (error) {
-      this.logger.error('Daily command failed', { error });
+      this.logger.error('Daily command failed', { error: sanitizeError(error, options.verbose) });
 
       return {
         success: false,
@@ -136,12 +202,19 @@ export class DailyCommand implements Command {
       this.logger.info('Using fixture data for dry run');
     }
 
-    // Set date range for full trading day
+    // Set date range for full trading day (US Eastern Time)
+    // Create a new date at start of day, then add hours for market times
     const from = new Date(date);
-    from.setHours(9, 30, 0, 0); // Market open
+    from.setHours(9, 30, 0, 0); // Market open (9:30 AM local)
 
     const to = new Date(date);
-    to.setHours(16, 0, 0, 0); // Market close
+    to.setHours(16, 0, 0, 0); // Market close (4:00 PM local)
+
+    this.logger.info('Fetching bars for date range', {
+      symbol,
+      from: from.toISOString(),
+      to: to.toISOString()
+    });
 
     // Fetch 5-minute bars
     const bars = await this.providerService.getBars({
@@ -164,12 +237,12 @@ export class DailyCommand implements Command {
     try {
       const result = calculateDailyBias(bars, sessionExtremes);
       return {
-        direction: result.bias,
+        direction: typeof result.bias === 'string' ? result.bias.toUpperCase() : result.bias,
         confidence: result.confidence,
         reason: result.reason
       };
     } catch (error) {
-      this.logger.warn('Bias analysis failed', { error });
+      this.logger.warn('Bias analysis failed', { error: sanitizeError(error) });
       return {
         direction: 'NEUTRAL',
         confidence: 0,
@@ -257,92 +330,27 @@ export class DailyCommand implements Command {
     });
   }
 
-  private formatOutput(output: any, format?: string): any {
-    switch (format) {
-      case 'json':
-        return JSON.stringify(output, null, 2);
-
-      case 'table':
-        return this.formatAsTable(output);
-
-      case 'text':
-      default:
-        return this.formatAsText(output);
-    }
+  /**
+   * Build deterministic cache key
+   */
+  private buildCacheKey(symbol: string, date: Date, type: string): string {
+    const dateStr = date.toISOString().split('T')[0];
+    return `daily:${symbol}:${dateStr}:${type}:v1`;
   }
 
-  private formatAsText(output: any): string {
-    const lines: string[] = [];
+  /**
+   * Select cache TTL based on data recency
+   */
+  private selectCacheTTL(date: Date): number {
+    const now = new Date();
+    const daysDiff = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
 
-    lines.push(`Daily Analysis: ${output.symbol} - ${output.date}`);
-    lines.push('=' .repeat(50));
-    lines.push('');
-
-    // Bias Analysis
-    lines.push('Market Bias:');
-    lines.push(`  Direction: ${output.analysis.bias.direction}`);
-    lines.push(`  Strength: ${output.analysis.bias.strength || 'N/A'}`);
-    lines.push(`  Confidence: ${output.analysis.bias.confidence || 'N/A'}`);
-
-    if (output.analysis.bias.keyLevels) {
-      lines.push('  Key Levels:');
-      for (const [key, value] of Object.entries(output.analysis.bias.keyLevels)) {
-        lines.push(`    ${key}: ${value}`);
-      }
+    // Historical data (>2 days old) gets longer TTL
+    if (daysDiff > 2) {
+      return 3600000; // 1 hour
     }
 
-    lines.push('');
-
-    // Profile Analysis
-    lines.push('Day Profile:');
-    lines.push(`  Type: ${output.analysis.profile.type}`);
-
-    if (output.analysis.profile.characteristics) {
-      lines.push('  Characteristics:');
-      for (const char of output.analysis.profile.characteristics) {
-        lines.push(`    - ${char}`);
-      }
-    }
-
-    lines.push('');
-
-    // Session Analysis
-    if (output.analysis.sessions && output.analysis.sessions.length > 0) {
-      lines.push('Session Extremes:');
-      for (const session of output.analysis.sessions) {
-        lines.push(`  ${session.name}:`);
-        lines.push(`    High: ${session.high?.toFixed(2) || 'N/A'}`);
-        lines.push(`    Low: ${session.low?.toFixed(2) || 'N/A'}`);
-        lines.push(`    Range: ${session.range?.toFixed(2) || 'N/A'}`);
-      }
-    }
-
-    lines.push('');
-
-    // Statistics
-    lines.push('Statistics:');
-    lines.push(`  Bars Analyzed: ${output.statistics.barsAnalyzed}`);
-    lines.push(`  Day High: ${output.statistics.range.high.toFixed(2)}`);
-    lines.push(`  Day Low: ${output.statistics.range.low.toFixed(2)}`);
-    lines.push(`  Close: ${output.statistics.range.close.toFixed(2)}`);
-
-    return lines.join('\n');
-  }
-
-  private formatAsTable(output: any): string {
-    // Simplified table format
-    const lines: string[] = [];
-
-    lines.push('┌────────────────┬────────────────────────┐');
-    lines.push('│ Metric         │ Value                  │');
-    lines.push('├────────────────┼────────────────────────┤');
-    lines.push(`│ Symbol         │ ${output.symbol.padEnd(22)} │`);
-    lines.push(`│ Date           │ ${output.date.padEnd(22)} │`);
-    lines.push(`│ Bias           │ ${output.analysis.bias.direction.padEnd(22)} │`);
-    lines.push(`│ Profile        │ ${output.analysis.profile.type.padEnd(22)} │`);
-    lines.push(`│ Bars           │ ${String(output.statistics.barsAnalyzed).padEnd(22)} │`);
-    lines.push('└────────────────┴────────────────────────┘');
-
-    return lines.join('\n');
+    // Recent data gets shorter TTL
+    return 60000; // 1 minute
   }
 }

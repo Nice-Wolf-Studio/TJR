@@ -72,33 +72,26 @@ export class FixtureProvider implements ProviderService {
     try {
       await this.simulateDelay();
 
-      // Get fixtures for symbol
-      const bars = this.fixtures.get(params.symbol) || this.generateDefaultBars(params);
-
-      // Filter by date range if provided
-      let filtered = bars;
-      if (params.from || params.to) {
-        filtered = bars.filter(bar => {
-          const barTime = new Date(bar.timestamp);
-          if (params.from && barTime < new Date(params.from)) return false;
-          if (params.to && barTime > new Date(params.to)) return false;
-          return true;
-        });
-      }
+      // If specific from/to dates are requested, generate fresh bars for that range
+      // Otherwise use pre-loaded fixtures
+      const bars = (params.from || params.to)
+        ? this.generateDefaultBars(params)
+        : (this.fixtures.get(params.symbol) || this.generateDefaultBars(params));
 
       // Apply limit if specified
-      if (params.limit) {
-        filtered = filtered.slice(-params.limit);
+      let result = bars;
+      if (params.limit && result.length > params.limit) {
+        result = result.slice(-params.limit);
       }
 
       this.stats.latencyMs = Date.now() - startTime;
       this.logger.debug('Fixture provider returning bars', {
         symbol: params.symbol,
-        count: filtered.length,
+        count: result.length,
         latencyMs: this.stats.latencyMs
       });
 
-      return filtered;
+      return result;
     } catch (error) {
       this.stats.errors++;
       throw error;
@@ -200,22 +193,61 @@ export class FixtureProvider implements ProviderService {
 
   private generateDefaultBars(params: GetBarsParams): MarketBar[] {
     const bars: MarketBar[] = [];
-    const now = new Date();
     const intervalMinutes = this.timeframeToMinutes(params.timeframe);
-    const count = params.limit || 100;
 
-    for (let i = count - 1; i >= 0; i--) {
-      const time = new Date(now.getTime() - i * intervalMinutes * 60000);
-      const basePrice = 400 + Math.sin(i / 10) * 5; // Oscillating price
+    // If from/to are provided, generate bars within that range
+    let startTime: Date;
+    let count: number;
+
+    if (params.from && params.to) {
+      startTime = new Date(params.from);
+      const endTime = new Date(params.to);
+      count = Math.floor((endTime.getTime() - startTime.getTime()) / (intervalMinutes * 60000));
+      // Ensure we have at least 1 bar
+      if (count <= 0) {
+        count = 1;
+      }
+    } else if (params.from) {
+      startTime = new Date(params.from);
+      count = params.limit || 100;
+    } else {
+      // Default: generate backwards from now
+      const now = new Date();
+      count = params.limit || 100;
+      startTime = new Date(now.getTime() - (count - 1) * intervalMinutes * 60000);
+    }
+
+    // Base price varies by symbol
+    const basePriceMap: Record<string, number> = {
+      'SPY': 450,
+      'QQQ': 380,
+      'IWM': 200,
+      'ES': 4500,
+      'NQ': 15000,
+      'RTY': 2000
+    };
+    let basePrice = basePriceMap[params.symbol] || 400;
+
+    for (let i = 0; i < count; i++) {
+      const time = new Date(startTime.getTime() + i * intervalMinutes * 60000);
+      const oscillation = Math.sin(i / 10) * basePrice * 0.01; // 1% oscillation
+      const price = basePrice + oscillation;
+
+      const open = price + (Math.random() - 0.5) * basePrice * 0.002;
+      const close = open + (Math.random() - 0.5) * basePrice * 0.002;
+      const high = Math.max(open, close) + Math.random() * basePrice * 0.001;
+      const low = Math.min(open, close) - Math.random() * basePrice * 0.001;
 
       bars.push({
         timestamp: time.toISOString(),
-        open: basePrice + Math.random() * 2 - 1,
-        high: basePrice + Math.random() * 3,
-        low: basePrice - Math.random() * 3,
-        close: basePrice + Math.random() * 2 - 1,
+        open: parseFloat(open.toFixed(2)),
+        high: parseFloat(high.toFixed(2)),
+        low: parseFloat(low.toFixed(2)),
+        close: parseFloat(close.toFixed(2)),
         volume: Math.floor(1000000 + Math.random() * 500000)
       });
+
+      basePrice = close; // Continue from close price
     }
 
     return bars;

@@ -321,9 +321,8 @@ describe('DailyCommand', () => {
 
       const output = JSON.parse(result.output);
       expect(output.analysis.bias.direction).toBeDefined();
-      expect(['BULLISH', 'BEARISH', 'NEUTRAL']).toContain(
-        output.analysis.bias.direction
-      );
+      const direction = output.analysis.bias.direction.toUpperCase();
+      expect(['BULLISH', 'BEARISH', 'NEUTRAL']).toContain(direction);
     });
 
     it('should call profile classification', async () => {

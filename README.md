@@ -90,9 +90,51 @@ tjr-suite/
 
 ### Packages
 
-| Package            | Description                                    | Status    |
-| ------------------ | ---------------------------------------------- | --------- |
-| `@tjr-suite/smoke` | Smoke test package to validate build toolchain | ✅ Active |
+#### Core Infrastructure
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr-suite/contracts`         | DTOs and error taxonomy                        | ✅ Active |
+| `@tjr-suite/logger`            | Structured logging with PII redaction          | ✅ Active |
+| `@tjr-suite/db-simple`         | SQLite/Postgres connectors and migrations      | ✅ Active |
+
+#### Market Data
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr-suite/market-data-core`  | Timeframe math, bar aggregation, clipping      | ✅ Active |
+| `@tjr-suite/symbol-registry`   | Symbol normalization and continuous contracts  | ✅ Active |
+| `@tjr-suite/sessions-calendar` | Trading calendar with session hours            | ✅ Active |
+| `@tjr/bars-cache`              | Multi-tier caching for historical bars         | ✅ Active |
+
+#### Providers
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr/provider-yahoo`          | Yahoo Finance provider                         | ✅ Active |
+| `@tjr/provider-polygon`        | Polygon.io provider with retry logic           | ✅ Active |
+| `@tjr/provider-databento`      | Databento provider with large-window chunking  | ✅ Active |
+
+#### Analysis & Tools
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr/analysis-kit`            | Structure, bias, profile classification        | ✅ Active |
+| `@tjr/tjr-tools`               | Confluences (FVG, order blocks)                | ✅ Active |
+| `@tjr-suite/dev-scripts`       | CLI tools (backtest, cache-warm, replay-run)   | ✅ Active |
+
+#### Application
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr-suite/discord-bot-core`  | Discord bot command handlers                   | ✅ Active |
+| `@tjr-suite/app`               | Main application with dependency injection     | ✅ Active |
+
+#### Testing
+
+| Package                        | Description                                    | Status    |
+| ------------------------------ | ---------------------------------------------- | --------- |
+| `@tjr-suite/smoke`             | Smoke test package to validate build toolchain | ✅ Active |
 
 ---
 

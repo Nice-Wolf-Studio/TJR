@@ -9,6 +9,7 @@ import {
   SlashCommandBuilder,
   REST,
 } from 'discord.js';
+import { createHash } from 'node:crypto';
 import type { Command, CommandSchema } from '../types/index.js';
 
 /**
@@ -16,6 +17,7 @@ import type { Command, CommandSchema } from '../types/index.js';
  */
 export class CommandHandler {
   private commands: Collection<string, Command>;
+  private rest: REST | null = null;
 
   constructor(_client: Client) {
     // Client will be used in future implementations
@@ -25,9 +27,16 @@ export class CommandHandler {
   /**
    * Initialize REST API client
    */
-  public initializeRest(token: string): void {
-    // REST client will be stored for future use
-    new REST({ version: '10' }).setToken(token);
+  public initializeRest(token: string): REST {
+    this.rest = new REST({ version: '10' }).setToken(token);
+    return this.rest;
+  }
+
+  /**
+   * Get initialized REST client
+   */
+  public getRest(): REST | null {
+    return this.rest;
   }
 
   /**
@@ -228,16 +237,9 @@ export class CommandHandler {
   }
 
   /**
-   * Generate hash for comparison
+   * Generate hash for comparison using SHA-256
    */
   private generateHash(content: string): string {
-    // Simple hash for demonstration - in production use crypto
-    let hash = 0;
-    for (let i = 0; i < content.length; i++) {
-      const char = content.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString(16);
+    return createHash('sha256').update(content).digest('hex');
   }
 }

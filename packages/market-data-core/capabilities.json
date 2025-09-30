@@ -1,0 +1,50 @@
+{
+  "$schema": "./capabilities-schema.json",
+  "providers": [
+    {
+      "providerId": "yahoo",
+      "timeframes": ["1m", "5m", "15m", "30m", "1h", "1D"],
+      "assetClasses": ["stocks", "etf", "index"],
+      "maxLookbackDays": 7,
+      "priority": 20,
+      "freshnessSeconds": 900,
+      "description": "Yahoo Finance - free tier with 15-minute delay, limited historical data"
+    },
+    {
+      "providerId": "polygon",
+      "timeframes": ["1m", "5m", "10m", "15m", "30m", "1h", "2h", "4h", "1D"],
+      "assetClasses": ["stocks", "etf", "crypto", "forex"],
+      "maxLookbackDays": 730,
+      "priority": 10,
+      "freshnessSeconds": 0,
+      "description": "Polygon.io - real-time data with extended historical coverage"
+    },
+    {
+      "providerId": "alpaca",
+      "timeframes": ["1m", "5m", "15m", "1h", "1D"],
+      "assetClasses": ["stocks", "crypto"],
+      "maxLookbackDays": 365,
+      "priority": 15,
+      "freshnessSeconds": 0,
+      "description": "Alpaca Markets - real-time data for stocks and crypto"
+    },
+    {
+      "providerId": "coinbase",
+      "timeframes": ["1m", "5m", "15m", "1h", "1D"],
+      "assetClasses": ["crypto"],
+      "maxLookbackDays": 180,
+      "priority": 12,
+      "freshnessSeconds": 0,
+      "description": "Coinbase - real-time crypto data"
+    },
+    {
+      "providerId": "binance",
+      "timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1D"],
+      "assetClasses": ["crypto"],
+      "maxLookbackDays": 365,
+      "priority": 8,
+      "freshnessSeconds": 0,
+      "description": "Binance - real-time crypto data with extensive historical coverage"
+    }
+  ]
+}

@@ -166,8 +166,28 @@ class SqliteConnection implements DbConnection {
   ) {}
 
   async exec(sql: string, params: unknown[] = []): Promise<void> {
-    const stmt = this.db.prepare(sql)
-    stmt.run(...params)
+    // If params provided, use prepared statement (single statement only)
+    if (params.length > 0) {
+      const stmt = this.db.prepare(sql)
+      stmt.run(...params)
+      return
+    }
+
+    // If no params, check if SQL contains multiple statements
+    // Split by semicolon and execute each statement separately
+    const statements = sql
+      .split(';')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+
+    if (statements.length > 1) {
+      // Multiple statements - execute using db.exec (unprepared)
+      this.db.exec(sql)
+    } else {
+      // Single statement - use prepared statement for consistency
+      const stmt = this.db.prepare(sql)
+      stmt.run()
+    }
   }
 
   async query<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {

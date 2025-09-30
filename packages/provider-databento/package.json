@@ -1,0 +1,32 @@
+{
+  "name": "@tjr/provider-databento",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Databento provider for TJR Suite with large-window chunking support",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "lint": "echo 'Lint not configured yet'",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@tjr-suite/market-data-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "tjr-suite",
+    "provider",
+    "databento",
+    "market-data",
+    "chunking"
+  ],
+  "license": "UNLICENSED"
+}

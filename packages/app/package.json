@@ -1,0 +1,60 @@
+{
+  "name": "@tjr/app",
+  "version": "0.1.0",
+  "description": "Main application wiring for TJR Suite - connects all packages into cohesive trading system",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "tjr": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node --enable-source-maps dist/start.js",
+    "start:dev": "tsx src/start.ts",
+    "start:dry": "node --enable-source-maps dist/start.js --dry-run",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+  "dependencies": {
+    "@tjr/analysis-kit": "workspace:*",
+    "@tjr/contracts": "workspace:*",
+    "@tjr-suite/db-simple": "workspace:*",
+    "@tjr/logger": "workspace:*",
+    "commander": "^11.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "keywords": [
+    "tjr",
+    "trading",
+    "application",
+    "wiring",
+    "di"
+  ],
+  "author": "Nice Wolf Studio",
+  "license": "UNLICENSED",
+  "private": true
+}

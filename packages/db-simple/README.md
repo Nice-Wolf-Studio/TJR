@@ -165,6 +165,89 @@ Run all pending migrations from a directory.
 - Each migration runs in a transaction (atomicity guaranteed)
 - Logs each applied migration (if logger provided)
 
+---
+
+## Production Migrations
+
+### bars_cache Table
+
+This package includes production-ready migrations for the `bars_cache` table, which stores historical OHLC (Open, High, Low, Close) bar data from multiple market data providers.
+
+**Migration files:**
+```
+migrations/
+├── sqlite/
+│   └── 001_create_bars_cache_sqlite.sql
+├── postgres/
+│   └── 001_create_bars_cache_postgres.sql
+└── rollback/
+    └── 001_rollback_bars_cache.sql
+```
+
+**Schema overview:**
+- **Core fields:** symbol, provider, timeframe, timestamp (epoch milliseconds)
+- **OHLC data:** open, high, low, close, volume (all REAL/DOUBLE PRECISION)
+- **Metadata:** revision (for corrections), providerPriority (for merge handling), insertedAt
+- **Primary key:** Composite (symbol, provider, timeframe, timestamp)
+- **Indexes:**
+  - `idx_bars_cache_lookup`: (symbol, timeframe, timestamp) for range queries
+  - `idx_bars_cache_provider`: (provider, symbol) for provider-specific queries
+
+**Run migrations:**
+
+```bash
+# SQLite (development)
+pnpm --filter @tjr-suite/db-simple build
+pnpm --filter @tjr-suite/db-simple migrate:sqlite
+
+# PostgreSQL (production)
+DATABASE_URL=postgresql://user:pass@host:5432/db pnpm --filter @tjr-suite/db-simple migrate:postgres
+
+# Test migrations
+pnpm --filter @tjr-suite/db-simple test:migrations
+```
+
+**Rollback (destructive):**
+
+```bash
+# SQLite
+sqlite3 data/dev.db < migrations/rollback/001_rollback_bars_cache.sql
+
+# PostgreSQL
+psql $DATABASE_URL -f migrations/rollback/001_rollback_bars_cache.sql
+```
+
+**Usage example:**
+
+```typescript
+import { connect } from '@tjr-suite/db-simple'
+
+const db = await connect('sqlite:data/app.db')
+
+// Insert a bar
+await db.exec(
+  `INSERT INTO bars_cache
+   (symbol, provider, timeframe, timestamp, open, high, low, close, volume)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ['AAPL', 'alpaca', '5m', Date.now(), 150.0, 151.0, 149.5, 150.5, 1000000.0]
+)
+
+// Query bars by symbol and timeframe
+const bars = await db.query(
+  `SELECT * FROM bars_cache
+   WHERE symbol = ? AND timeframe = ?
+   ORDER BY timestamp DESC
+   LIMIT 100`,
+  ['AAPL', '5m']
+)
+
+console.log(bars)
+await db.close()
+```
+
+**See also:**
+- [ADR-0205: Database migrations for bars_cache](../../docs/adr/ADR-0205-db-migrations-bars-cache.md)
+
 ## Caveats and Limitations
 
 ### SQLite

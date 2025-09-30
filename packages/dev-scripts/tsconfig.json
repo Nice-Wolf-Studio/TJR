@@ -1,0 +1,28 @@
+{
+  // TypeScript configuration for @tjr-suite/dev-scripts
+  // Extends base monorepo config and adds CLI-specific settings
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Add Node.js type definitions for process, Buffer, etc.
+    "types": ["node"],
+
+    // Output compiled JavaScript to dist/
+    "outDir": "./dist",
+
+    // Root directory for source files
+    "rootDir": "."
+  },
+
+  // Include all TypeScript source files
+  "include": [
+    "bin/**/*.ts",
+    "src/**/*.ts"
+  ],
+
+  // Exclude test files and output directories
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests/**/*.js"
+  ]
+}

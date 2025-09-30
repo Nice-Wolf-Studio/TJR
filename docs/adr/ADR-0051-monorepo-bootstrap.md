@@ -11,6 +11,7 @@
 ## Context
 
 The TJR Suite requires a unified codebase structure that enables:
+
 - Shared TypeScript configurations and tooling across multiple packages
 - Consistent linting, formatting, and build processes
 - Coordinated versioning and release management
@@ -18,6 +19,7 @@ The TJR Suite requires a unified codebase structure that enables:
 - Clear code ownership and governance
 
 Without a monorepo strategy, we face:
+
 - Configuration drift across packages
 - Duplicate tooling setup and maintenance
 - Complex versioning and dependency management
@@ -33,6 +35,7 @@ Without a monorepo strategy, we face:
 We will use **pnpm** as our monorepo package manager.
 
 **Rationale:**
+
 - **Disk efficiency:** Uses content-addressable storage, saving disk space
 - **Performance:** Faster installs due to hard-linking from global store
 - **Strict dependency resolution:** Prevents phantom dependencies (packages not declared in package.json)
@@ -40,6 +43,7 @@ We will use **pnpm** as our monorepo package manager.
 - **Compatibility:** Drop-in replacement for npm with better defaults
 
 **Alternative considered:** Yarn Workspaces
+
 - Pros: More mature, wider adoption
 - Cons: Slower installs, less strict dependency resolution, larger disk footprint
 - Decision: pnpm's performance and strictness align better with our quality goals
@@ -51,12 +55,14 @@ We will use **pnpm** as our monorepo package manager.
 We will use **TypeScript project references** for incremental builds across packages.
 
 **Rationale:**
+
 - **Incremental builds:** Only rebuilds changed packages and their dependents
 - **Type safety across packages:** Ensures type consistency in the workspace
 - **IDE performance:** Faster IntelliSense with pre-built declaration files
 - **Explicit dependencies:** Forces clear package boundaries
 
 **Configuration:**
+
 - `tsconfig.base.json` at root with strict settings
 - Each package has its own `tsconfig.json` extending the base
 - Path mappings for internal package references (e.g., `@tjr-suite/*`)
@@ -68,11 +74,13 @@ We will use **TypeScript project references** for incremental builds across pack
 Unified linting and formatting enforced at the root level.
 
 **Rationale:**
+
 - **Consistency:** Same rules across all packages
 - **Automation:** Pre-commit hooks and CI checks prevent style drift
 - **Developer experience:** Editor integration provides instant feedback
 
 **Configurations:**
+
 - `.eslintrc.cjs`: TypeScript-aware rules, extensible per-package
 - `.prettierrc`: Opinionated formatting (2-space indent, single quotes, trailing commas)
 - `.editorconfig`: Cross-editor consistency (indent style, line endings)
@@ -84,12 +92,14 @@ Unified linting and formatting enforced at the root level.
 We will use **Changesets** for versioning and changelog generation.
 
 **Rationale:**
+
 - **Developer-driven:** Contributors write intent-based change descriptions
 - **Atomic versioning:** Groups related changes across packages
 - **Semantic versioning:** Automatically determines version bumps (major/minor/patch)
 - **CI integration:** Automates releases with proper changelogs
 
 **Workflow:**
+
 1. Developer runs `pnpm changeset` when making changes
 2. CI validates changesets are present for modified packages
 3. Release manager runs `pnpm changeset version` to bump versions
@@ -102,12 +112,14 @@ We will use **Changesets** for versioning and changelog generation.
 A single workflow file with matrix builds per package.
 
 **Rationale:**
+
 - **Efficiency:** Only runs tests for changed packages (future optimization)
 - **Parallelization:** Concurrent package builds and tests
 - **Caching:** pnpm store caching via `actions/setup-node`
 - **Consistency:** Same environment as local development (Node.js version, pnpm version)
 
 **Workflow stages:**
+
 1. **Setup:** Checkout, install Node.js, cache pnpm store
 2. **Install:** `pnpm install --frozen-lockfile`
 3. **Build:** `pnpm -w -r build` (all workspaces, recursive)
@@ -121,11 +133,13 @@ A single workflow file with matrix builds per package.
 Code ownership and review policies enforced via GitHub features.
 
 **Rationale:**
+
 - **Accountability:** Clear ownership per package/directory
 - **Quality gates:** Required reviews before merging
 - **Security:** Prevents unauthorized changes to critical paths
 
 **Setup:**
+
 - `.github/CODEOWNERS`: Maps paths to teams/individuals (e.g., `packages/core/ @tjr-team/core-maintainers`)
 - `docs/governance/branch-protections.md`: Documents required PR checks (CI pass, 1+ review, no force-push)
 
@@ -160,11 +174,14 @@ tjr-suite/
 ## Alternatives Considered
 
 ### Multi-Repo Strategy
+
 **Pros:**
+
 - Independent versioning per package
 - Simpler permissions model (repo-level access control)
 
 **Cons:**
+
 - Configuration duplication across repos
 - Complex cross-repo changes (requires multiple PRs)
 - Inefficient CI (each repo builds in isolation)
@@ -175,10 +192,13 @@ tjr-suite/
 ---
 
 ### Git Submodules
+
 **Pros:**
+
 - Allows independent repos with unified view
 
 **Cons:**
+
 - Notoriously difficult to use correctly (detached HEAD states, nested commits)
 - Poor tooling support
 - Doesn't solve configuration drift or dependency management
@@ -190,8 +210,10 @@ tjr-suite/
 ## Risks and Mitigations
 
 ### Risk 1: Large repository size over time
+
 **Impact:** Slow clones, large disk usage
 **Mitigation:**
+
 - Use pnpm (shared global store reduces duplication)
 - Implement `git lfs` for binary assets if needed
 - Consider shallow clones in CI (`--depth=1`)
@@ -199,8 +221,10 @@ tjr-suite/
 ---
 
 ### Risk 2: CI runtime increases as packages grow
+
 **Impact:** Slow feedback loop for developers
 **Mitigation:**
+
 - Implement affected package detection (only test changed packages)
 - Use GitHub Actions matrix builds for parallelization
 - Cache build artifacts across CI runs
@@ -208,8 +232,10 @@ tjr-suite/
 ---
 
 ### Risk 3: Breaking changes cascade across packages
+
 **Impact:** One bad change breaks multiple packages
 **Mitigation:**
+
 - TypeScript project references catch type errors early
 - Comprehensive test coverage per package
 - Changesets force explicit versioning of breaking changes
@@ -218,8 +244,10 @@ tjr-suite/
 ---
 
 ### Risk 4: Unclear package boundaries
+
 **Impact:** Tight coupling, hard-to-extract packages
 **Mitigation:**
+
 - Enforce explicit dependencies via pnpm workspace protocol
 - Code review focus on package API design
 - Periodic architecture reviews (documented as ADRs)

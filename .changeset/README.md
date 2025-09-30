@@ -5,6 +5,7 @@ This directory contains changeset files that describe changes made to packages i
 ## What are changesets?
 
 Changesets are a way to declare the **intent** of changes to packages. They track:
+
 - **Which packages** are affected by your changes
 - **What type of version bump** is needed (major, minor, patch)
 - **A description** of what changed (for the changelog)
@@ -20,6 +21,7 @@ pnpm changeset
 ```
 
 This will:
+
 1. Ask which packages have changed
 2. Ask what type of version bump is needed:
    - **Major** (breaking change, e.g., 1.0.0 → 2.0.0)
@@ -51,6 +53,7 @@ pnpm changeset publish
 ```
 
 This will:
+
 - Consume all changeset files in this directory
 - Update package versions based on the declared intents
 - Generate CHANGELOG.md entries for each package
@@ -60,8 +63,8 @@ This will:
 
 ```markdown
 ---
-"@tjr-suite/core": minor
-"@tjr-suite/utils": patch
+'@tjr-suite/core': minor
+'@tjr-suite/utils': patch
 ---
 
 Add new logging utility and fix bug in string helper
@@ -73,6 +76,7 @@ Add new logging utility and fix bug in string helper
 ## CI Integration
 
 CI will validate that:
+
 1. Every PR with package changes includes at least one changeset
 2. Changesets correctly reference the modified packages
 

@@ -20,6 +20,7 @@ Must pass before merging:
 - ✅ **Security / Security Audit** - Dependency vulnerability scan
 
 **Settings:**
+
 - ☑️ Require status checks to pass before merging
 - ☑️ Require branches to be up to date before merging
 
@@ -125,7 +126,7 @@ gh api repos/Nice-Wolf-Studio/tjr-suite/branches/phase-*/protection \
   --input protection-config-phase.json
 ```
 
-*(Protection config JSON files would need to be created separately)*
+_(Protection config JSON files would need to be created separately)_
 
 ---
 

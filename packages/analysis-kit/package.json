@@ -1,7 +1,7 @@
 {
-  "name": "@tjr-suite/smoke",
+  "name": "@tjr/analysis-kit",
   "version": "0.0.1",
-  "description": "Smoke test package to validate TJR Suite monorepo toolchain",
+  "description": "Pure-function analytics for market structure, bias, sessions, and profiles",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -15,8 +15,13 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "keywords": [
-    "tjr-suite",
-    "smoke-test"
+    "tjr",
+    "trading",
+    "analytics",
+    "market-structure",
+    "bias",
+    "profile",
+    "pure-functions"
   ],
   "license": "UNLICENSED",
   "devDependencies": {

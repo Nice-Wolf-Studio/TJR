@@ -1,5 +1,5 @@
 {
-  // TypeScript configuration for smoke test package
+  // TypeScript configuration for analysis-kit package
   // Extends base config from monorepo root
   "extends": "../../tsconfig.base.json",
 
@@ -11,8 +11,8 @@
     "rootDir": "./src"
   },
 
-  // Include only source files (not tests)
-  "include": ["src/**/*"],
+  // Include source files
+  "include": ["src/**/*.ts"],
 
   // Explicitly exclude test files, node_modules, and build artifacts
   "exclude": ["node_modules", "dist", "tests"]

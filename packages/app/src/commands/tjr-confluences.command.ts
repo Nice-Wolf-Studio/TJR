@@ -191,53 +191,6 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
   }
 
   /**
-   * Fetch market bars for analysis
-   */
-  private async fetchBars(
-    symbol: string,
-    timeframe: Timeframe,
-    date?: Date
-  ): Promise<any[]> {
-    try {
-      // Determine date range
-      const targetDate = date || new Date();
-
-      // For intraday timeframes, fetch trading day
-      // For SPY: 9:30 AM - 4:00 PM ET
-      const from = new Date(targetDate);
-      from.setHours(9, 30, 0, 0);
-
-      const to = new Date(targetDate);
-      to.setHours(16, 0, 0, 0);
-
-      this.logger.info('Fetching bars for confluence analysis', {
-        symbol,
-        timeframe,
-        from: from.toISOString(),
-        to: to.toISOString(),
-      });
-
-      // Fetch bars from provider
-      const bars = await this.providerService.getBars({
-        symbol,
-        timeframe,
-        from: from.toISOString(),
-        to: to.toISOString(),
-      });
-
-      this.logger.info('Fetched bars for analysis', {
-        symbol,
-        timeframe,
-        count: bars.length,
-      });
-
-      return bars;
-    } catch (error) {
-      throw wrapError(error, TJRErrorCode.PROVIDER_ERROR, { symbol, timeframe });
-    }
-  }
-
-  /**
    * Transform TJRToolsResult to ConfluenceReport
    */
   private transformToReport(

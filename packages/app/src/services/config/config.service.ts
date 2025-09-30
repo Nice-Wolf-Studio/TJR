@@ -263,9 +263,21 @@ export class FileConfigService implements ConfigService {
 
   /**
    * Get configuration file path for user
+   *
+   * Sanitizes userId to prevent path traversal attacks
    */
   getConfigPath(userId: string): string {
-    return join(this.configDir, `${userId}.json`);
+    // Sanitize userId to prevent path traversal
+    const sanitizedUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    if (sanitizedUserId !== userId) {
+      this.logger.warn('UserId was sanitized to prevent path traversal', {
+        original: userId,
+        sanitized: sanitizedUserId
+      });
+    }
+
+    return join(this.configDir, `${sanitizedUserId}.json`);
   }
 
   /**

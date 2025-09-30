@@ -10,7 +10,8 @@ import type { Logger } from '@tjr/logger';
 import type { ProviderService } from '../services/providers/types.js';
 import type { CacheService } from '../services/cache/types.js';
 import type { ConfigService } from '../services/config/types.js';
-import { TJRCommandError, TJRErrorCode, formatCommandError } from './errors.js';
+import { TJRCommandError, TJRErrorCode, formatCommandError, wrapError } from './errors.js';
+import { Timeframe } from '@tjr/contracts';
 
 /**
  * Configuration for base TJR command
@@ -281,5 +282,54 @@ export abstract class BaseTJRCommand implements Command {
     }
 
     return num;
+  }
+
+  /**
+   * Fetch bars for analysis
+   *
+   * Shared method used by both confluence and execution commands
+   */
+  protected async fetchBars(
+    symbol: string,
+    timeframe: Timeframe,
+    date?: Date
+  ): Promise<any[]> {
+    try {
+      // Determine date range
+      const targetDate = date || new Date();
+
+      // For intraday timeframes, fetch trading day
+      // For SPY: 9:30 AM - 4:00 PM ET
+      const from = new Date(targetDate);
+      from.setHours(9, 30, 0, 0);
+
+      const to = new Date(targetDate);
+      to.setHours(16, 0, 0, 0);
+
+      this.logger.info('Fetching bars for analysis', {
+        symbol,
+        timeframe,
+        from: from.toISOString(),
+        to: to.toISOString(),
+      });
+
+      // Fetch bars from provider
+      const bars = await this.providerService.getBars({
+        symbol,
+        timeframe,
+        from: from.toISOString(),
+        to: to.toISOString(),
+      });
+
+      this.logger.info('Fetched bars', {
+        symbol,
+        timeframe,
+        count: bars.length,
+      });
+
+      return bars;
+    } catch (error) {
+      throw wrapError(error, TJRErrorCode.PROVIDER_ERROR, { symbol, timeframe });
+    }
   }
 }

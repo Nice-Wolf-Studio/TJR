@@ -3,7 +3,10 @@
  * @module @tjr/tjr-tools/types
  */
 
+import type { RiskConfig, RiskCalculationInput } from './risk/index.js';
+
 export type { MarketBar } from '@tjr/contracts';
+export type { RiskConfig, RiskCalculationInput, RiskManagementResult, PartialExitLevel } from './risk/index.js';
 
 /**
  * Fair Value Gap (FVG) zone detected in price action.
@@ -95,4 +98,6 @@ export interface AnalyzeOptions {
   enableFVG?: boolean;
   /** Enable Order Block detection (default: true) */
   enableOrderBlock?: boolean;
+  /** Risk management configuration (optional) */
+  risk?: RiskCalculationInput & { config: RiskConfig };
 }

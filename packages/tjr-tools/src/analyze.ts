@@ -10,6 +10,7 @@ import { detectFVGs } from './confluences/fvg.js';
 import { detectOrderBlocks } from './confluences/order-block.js';
 import { calculateConfluence } from './scoring/scorer.js';
 import { DEFAULT_WEIGHTS } from './scoring/weights.js';
+import { calculateRisk, type RiskManagementResult } from './risk/index.js';
 
 /**
  * Result from TJR-Tools analysis (extends TJRConfluence with details).
@@ -21,6 +22,8 @@ export interface TJRToolsResult {
   fvgZones: FVGZone[];
   /** Detected Order Blocks */
   orderBlocks: OrderBlock[];
+  /** Risk management analysis (optional) */
+  riskManagement?: RiskManagementResult;
 }
 
 /**
@@ -50,6 +53,17 @@ export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRT
   // Build confluence factors
   const factors = buildConfluenceFactors(fvgZones, orderBlocks, weights, input.bars.length);
 
+  // Calculate risk management if requested
+  let riskManagement: RiskManagementResult | undefined;
+  if (opts.risk) {
+    try {
+      riskManagement = calculateRisk(opts.risk, opts.risk.config);
+    } catch (error) {
+      // Risk calculation is optional, don't fail entire analysis
+      console.warn('Risk calculation failed:', error);
+    }
+  }
+
   return {
     confluence: {
       score,
@@ -57,6 +71,7 @@ export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRT
     },
     fvgZones,
     orderBlocks,
+    riskManagement,
   };
 }
 

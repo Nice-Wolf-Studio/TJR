@@ -1,0 +1,36 @@
+{
+  "name": "@tjr/bars-cache",
+  "version": "1.0.0",
+  "description": "Two-tier caching system for market data bars with memory and database persistence",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "market-data",
+    "cache",
+    "bars",
+    "lru",
+    "database"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@tjr/contracts": "workspace:*",
+    "@tjr-suite/market-data-core": "workspace:*",
+    "@tjr-suite/db-simple": "workspace:*",
+    "better-sqlite3": "^11.0.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.9",
+    "@types/node": "^20.11.19",
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
+  }
+}

@@ -16,6 +16,11 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
+  "dependencies": {
+    "@tjr/bars-cache": "workspace:*",
+    "@tjr-suite/db-simple": "workspace:*",
+    "@tjr-suite/market-data-core": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "^20.0.0"
   },

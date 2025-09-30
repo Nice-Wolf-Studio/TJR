@@ -1,29 +1,14 @@
 /**
- * @fileoverview Main entry point for @tjr/tjr-tools package.
+ * @fileoverview TJR-Tools package exports.
  *
- * Exports the core analyze function, configuration types, and confluence utilities.
+ * This package provides confluence detection tools for TJR (Trading Journal Research)
+ * methodology, including Fair Value Gap (FVG) and Order Block detection.
  *
  * @module @tjr/tjr-tools
  */
 
-// Main analysis function
 export { analyze } from './analyze.js';
-
-// Configuration
-export type { TJRConfig } from './config.js';
-export { DEFAULT_CONFIG, mergeConfig } from './config.js';
-
-// Confluence detection (stubs for now)
-export { detectFVG } from './confluences/fvg.js';
-export type { FVGResult } from './confluences/fvg.js';
-
-export { detectOrderBlock } from './confluences/order-block.js';
-export type { OrderBlockResult } from './confluences/order-block.js';
-
-// Re-export commonly used types from contracts for convenience
-export type {
-  TJRAnalysisInput,
-  TJRConfluence,
-  TJRExecution,
-  TJRResult
-} from '@tjr/contracts';
+export type { TJRToolsResult } from './analyze.js';
+export type { AnalyzeOptions, FVGZone, OrderBlock, FVGOptions, OrderBlockOptions, ConfluenceWeights } from './types.js';
+export { detectFVGs, detectOrderBlocks } from './confluences/index.js';
+export { calculateConfluence, DEFAULT_WEIGHTS } from './scoring/index.js';

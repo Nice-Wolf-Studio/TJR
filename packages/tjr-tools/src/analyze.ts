@@ -1,132 +1,136 @@
 /**
- * @fileoverview Main TJR analysis function.
- *
- * Core analysis engine that processes market data and generates
- * confluence scores and trade execution parameters.
- *
+ * @fileoverview Main analysis orchestrator for TJR-Tools.
  * @module @tjr/tjr-tools/analyze
  */
 
-import type { TJRAnalysisInput, TJRResult, TJRConfluence } from '@tjr/contracts';
-import type { TJRConfig } from './config.js';
-import { mergeConfig } from './config.js';
-import { detectFVG } from './confluences/fvg.js';
-import { detectOrderBlock } from './confluences/order-block.js';
+import type { TJRAnalysisInput, TJRConfluence } from '@tjr/contracts';
+import type { AnalyzeOptions, FVGZone, OrderBlock } from './types.js';
+import { validateInput } from './utils/validation.js';
+import { detectFVGs } from './confluences/fvg.js';
+import { detectOrderBlocks } from './confluences/order-block.js';
+import { calculateConfluence } from './scoring/scorer.js';
+import { DEFAULT_WEIGHTS } from './scoring/weights.js';
 
 /**
- * Performs TJR analysis on market data.
- *
- * Analyzes price action using multiple confluence factors to identify
- * high-probability trade setups. Returns confluence scores and optional
- * execution parameters.
- *
- * Current implementation returns deterministic empty results.
- * Full implementation will be added in Issue #28.
- *
- * @param input - Market data and analysis parameters
- * @param config - Optional configuration overrides
- * @returns Analysis result with confluence and execution details
- *
- * @example
- * ```typescript
- * const result = analyze({
- *   symbol: 'SPY',
- *   timeframe: Timeframe.M5,
- *   bars: marketBars,
- *   analysisTimestamp: new Date().toISOString()
- * });
- *
- * if (result.execution) {
- *   console.log(`Trade setup: ${result.execution.direction} at ${result.execution.entryPrice}`);
- * }
- * ```
+ * Result from TJR-Tools analysis (extends TJRConfluence with details).
  */
-export function analyze(input: TJRAnalysisInput, config?: TJRConfig): TJRResult {
-  const startTime = Date.now();
-  const mergedConfig = mergeConfig(config);
+export interface TJRToolsResult {
+  /** Confluence score and factors */
+  confluence: TJRConfluence;
+  /** Detected FVG zones */
+  fvgZones: FVGZone[];
+  /** Detected Order Blocks */
+  orderBlocks: OrderBlock[];
+}
 
+/**
+ * Analyze market data for TJR confluences.
+ *
+ * Detects Fair Value Gaps and Order Blocks, then calculates a weighted
+ * confluence score indicating trade setup strength.
+ *
+ * @param input - Market data and analysis context
+ * @param options - Detection and scoring options
+ * @returns Analysis result with confluence score and detected patterns
+ */
+export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRToolsResult {
   // Validate input
-  const warnings: string[] = [];
+  validateInput(input);
 
-  if (input.bars.length < mergedConfig.minBarsRequired) {
-    warnings.push(`Insufficient bars: ${input.bars.length} provided, ${mergedConfig.minBarsRequired} required`);
-  }
+  const opts = options || {};
+  const weights = { ...DEFAULT_WEIGHTS, ...opts.weights };
 
-  // Run confluence detections (stub implementations for now)
-  const factors: TJRConfluence['factors'] = [];
+  // Run detectors
+  const fvgZones = opts.enableFVG !== false ? detectFVGs(input.bars, opts.fvg) : [];
+  const orderBlocks = opts.enableOrderBlock !== false ? detectOrderBlocks(input.bars, opts.orderBlock) : [];
 
-  if (mergedConfig.enableFVG) {
-    const fvgResult = detectFVG(input.bars);
-    factors.push({
-      name: 'Fair Value Gap',
-      weight: 0.2,
-      value: fvgResult.confidence,
-      description: fvgResult.description
-    });
-  }
+  // Calculate confluence score
+  const score = calculateConfluence(fvgZones, orderBlocks, weights, input.bars.length);
 
-  if (mergedConfig.enableOrderBlock) {
-    const obResult = detectOrderBlock(input.bars);
-    factors.push({
-      name: 'Order Block',
-      weight: 0.2,
-      value: obResult.confidence,
-      description: obResult.description
-    });
-  }
+  // Build confluence factors
+  const factors = buildConfluenceFactors(fvgZones, orderBlocks, weights, input.bars.length);
 
-  // Add placeholder factors for other confluences
-  if (mergedConfig.enableTrend) {
-    factors.push({
-      name: 'Trend Alignment',
-      weight: 0.2,
-      value: 0,
-      description: 'Trend analysis not yet implemented'
-    });
-  }
-
-  if (mergedConfig.enableSupportResistance) {
-    factors.push({
-      name: 'Support/Resistance',
-      weight: 0.2,
-      value: 0,
-      description: 'S/R analysis not yet implemented'
-    });
-  }
-
-  if (mergedConfig.enableVolumeProfile) {
-    factors.push({
-      name: 'Volume Profile',
-      weight: 0.2,
-      value: 0,
-      description: 'Volume profile analysis not yet implemented'
-    });
-  }
-
-  // Normalize weights to sum to 1.0
-  const totalWeight = factors.reduce((sum, f) => sum + f.weight, 0);
-  if (totalWeight > 0) {
-    factors.forEach(f => f.weight = f.weight / totalWeight);
-  }
-
-  // Calculate overall confluence score
-  const score = factors.reduce((sum, f) => sum + (f.value * f.weight * 100), 0);
-
-  const confluence: TJRConfluence = {
-    score: Math.round(score),
-    factors
+  return {
+    confluence: {
+      score,
+      factors,
+    },
+    fvgZones,
+    orderBlocks,
   };
+}
 
-  // Deterministic result - no execution for skeleton implementation
-  const result: TJRResult = {
-    input,
-    confluence,
-    warnings,
-    metadata: {
-      analysisVersion: '0.1.0',
-      computeTimeMs: Date.now() - startTime
+/**
+ * Build detailed confluence factors array.
+ */
+function buildConfluenceFactors(
+  fvgZones: FVGZone[],
+  orderBlocks: OrderBlock[],
+  weights: typeof DEFAULT_WEIGHTS,
+  barsCount: number
+) {
+  const factors = [];
+
+  // FVG factor
+  const unfilledFVGs = fvgZones.filter(z => !z.filled);
+  const fvgValue = unfilledFVGs.length > 0
+    ? unfilledFVGs.reduce((sum, z) => sum + z.strength, 0) / unfilledFVGs.length
+    : 0;
+
+  factors.push({
+    name: 'Fair Value Gaps',
+    weight: weights.fvg,
+    value: fvgValue,
+    description: `${unfilledFVGs.length} unfilled FVG(s) detected`,
+  });
+
+  // Order Block factor
+  const unmitigatedBlocks = orderBlocks.filter(b => !b.mitigated);
+  const obValue = unmitigatedBlocks.length > 0
+    ? unmitigatedBlocks.reduce((sum, b) => sum + b.strength, 0) / unmitigatedBlocks.length
+    : 0;
+
+  factors.push({
+    name: 'Order Blocks',
+    weight: weights.orderBlock,
+    value: obValue,
+    description: `${unmitigatedBlocks.length} unmitigated block(s) detected`,
+  });
+
+  // Overlap factor
+  let overlapCount = 0;
+  if (unfilledFVGs.length > 0 && unmitigatedBlocks.length > 0) {
+    for (const fvg of unfilledFVGs) {
+      for (const ob of unmitigatedBlocks) {
+        if (fvg.low <= ob.high && fvg.high >= ob.low) {
+          overlapCount++;
+          break;
+        }
+      }
     }
-  };
+  }
+  const overlapValue = unfilledFVGs.length > 0 ? overlapCount / unfilledFVGs.length : 0;
 
-  return result;
+  factors.push({
+    name: 'Zone Overlap',
+    weight: weights.overlap,
+    value: overlapValue,
+    description: `${overlapCount} overlapping zone(s)`,
+  });
+
+  // Recency factor
+  const mostRecentFVG = fvgZones.length > 0 ? Math.max(...fvgZones.map(z => z.startIndex)) : -1;
+  const mostRecentOB = orderBlocks.length > 0 ? Math.max(...orderBlocks.map(b => b.index)) : -1;
+  const mostRecentIndex = Math.max(mostRecentFVG, mostRecentOB);
+  const barsAgo = mostRecentIndex >= 0 ? barsCount - mostRecentIndex : barsCount;
+  const recencyValue = barsCount > 0 ? Math.max(0, 1 - barsAgo / barsCount) : 0;
+
+  factors.push({
+    name: 'Recency',
+    weight: weights.recency,
+    value: recencyValue,
+    description: `Most recent zone ${barsAgo} bar(s) ago`,
+  });
+
+  return factors;
 }

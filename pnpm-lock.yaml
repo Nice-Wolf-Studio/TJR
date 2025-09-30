@@ -152,6 +152,9 @@ importers:
       '@tjr/bars-cache':
         specifier: workspace:*
         version: link:../bars-cache
+      commander:
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@types/node':
         specifier: ^20.0.0

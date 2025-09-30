@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Bar clipping utilities.
  *
@@ -11,8 +10,6 @@
  * All clipping operates in UTC. Provider adapters must convert local times to
  * UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.clipBars = clipBars;
 /**
  * Clips bars to a timestamp range.
  *
@@ -71,7 +68,7 @@ exports.clipBars = clipBars;
  * Note: This function does NOT validate that bars are sorted. If bars are
  * unsorted, results are undefined.
  */
-function clipBars(bars, from, to, _options = {}) {
+export function clipBars(bars, from, to, _options = {}) {
     // Handle empty input
     if (bars.length === 0) {
         return [];

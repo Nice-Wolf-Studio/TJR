@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Bar aggregation utilities.
  *
@@ -14,9 +13,7 @@
  * All aggregation is performed in UTC. Provider adapters must convert local
  * times to UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.aggregateBars = aggregateBars;
-const timeframe_js_1 = require("./timeframe.js");
+import { toMillis, alignTimestamp, isAligned } from "./timeframe.js";
 /**
  * Aggregates bars from a source timeframe to a target timeframe.
  *
@@ -76,7 +73,7 @@ const timeframe_js_1 = require("./timeframe.js");
  * - No duplicate timestamps
  * - Target timeframe is an integer multiple of source timeframe
  */
-function aggregateBars(bars, targetTimeframe, options = {}) {
+export function aggregateBars(bars, targetTimeframe, options = {}) {
     // Handle empty input
     if (bars.length === 0) {
         return [];
@@ -84,13 +81,13 @@ function aggregateBars(bars, targetTimeframe, options = {}) {
     // Special case: Single bar input - return as-is if aligned
     if (bars.length === 1) {
         const bar = bars[0];
-        if (bar && (0, timeframe_js_1.isAligned)(bar.timestamp, targetTimeframe)) {
+        if (bar && isAligned(bar.timestamp, targetTimeframe)) {
             return [bar];
         }
         return [];
     }
     const { includePartialLast = false, validate = false, warnOnGaps = false } = options;
-    const targetMs = (0, timeframe_js_1.toMillis)(targetTimeframe);
+    const targetMs = toMillis(targetTimeframe);
     // Validation: Check that bars are sorted ascending
     if (validate) {
         for (let i = 1; i < bars.length; i++) {
@@ -125,7 +122,7 @@ function aggregateBars(bars, targetTimeframe, options = {}) {
     let lastExpectedTs;
     for (const bar of bars) {
         // Align bar timestamp to target boundary (floor)
-        const boundary = (0, timeframe_js_1.alignTimestamp)(bar.timestamp, targetTimeframe, "floor");
+        const boundary = alignTimestamp(bar.timestamp, targetTimeframe, "floor");
         // Gap detection: Warn if there's a gap in the bar sequence
         if (warnOnGaps && sourceMs !== undefined && lastExpectedTs !== undefined) {
             const gap = bar.timestamp - lastExpectedTs;

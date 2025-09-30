@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Core type definitions for market data structures.
  *
@@ -6,5 +5,5 @@
  * package. All types are designed to be simple, serializable, and independent
  * of any specific data provider.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+export {};
 //# sourceMappingURL=types.js.map

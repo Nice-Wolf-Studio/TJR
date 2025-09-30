@@ -1,0 +1,40 @@
+{
+  "name": "@tjr/provider-alphavantage",
+  "version": "0.1.0",
+  "description": "Alpha Vantage data provider for TJR Suite",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "tjr",
+    "alphavantage",
+    "alpha-vantage",
+    "market-data",
+    "provider"
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@tjr/contracts": "workspace:*",
+    "@tjr-suite/market-data-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

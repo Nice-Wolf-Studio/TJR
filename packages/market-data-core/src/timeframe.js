@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Timeframe manipulation utilities.
  *
@@ -10,11 +9,6 @@
  * All functions assume UTC timezone. Provider adapters are responsible for
  * converting local times to UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.toMillis = toMillis;
-exports.normalizeTimeframe = normalizeTimeframe;
-exports.alignTimestamp = alignTimestamp;
-exports.isAligned = isAligned;
 /**
  * Mapping of canonical timeframes to their duration in milliseconds.
  *
@@ -108,7 +102,7 @@ const TIMEFRAME_ALIASES = {
  *
  * Complexity: O(1) (direct map lookup)
  */
-function toMillis(timeframe) {
+export function toMillis(timeframe) {
     return TIMEFRAME_MS[timeframe];
 }
 /**
@@ -138,7 +132,7 @@ function toMillis(timeframe) {
  *
  * Complexity: O(1) (map lookups)
  */
-function normalizeTimeframe(input) {
+export function normalizeTimeframe(input) {
     // Fast path: input is already canonical
     if (input in TIMEFRAME_MS) {
         return input;
@@ -195,7 +189,7 @@ function normalizeTimeframe(input) {
  *
  * Complexity: O(1) (arithmetic operations only)
  */
-function alignTimestamp(timestamp, timeframe, direction) {
+export function alignTimestamp(timestamp, timeframe, direction) {
     const tfMs = toMillis(timeframe);
     if (direction === "floor") {
         // Round down to nearest boundary
@@ -235,7 +229,7 @@ function alignTimestamp(timestamp, timeframe, direction) {
  *
  * Complexity: O(1)
  */
-function isAligned(timestamp, timeframe) {
+export function isAligned(timestamp, timeframe) {
     const tfMs = toMillis(timeframe);
     return timestamp % tfMs === 0;
 }

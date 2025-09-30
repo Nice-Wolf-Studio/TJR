@@ -101,6 +101,22 @@ importers:
         specifier: ^18.19.0
         version: 18.19.128
 
+  packages/provider-polygon:
+    dependencies:
+      '@tjr-suite/market-data-core':
+        specifier: workspace:*
+        version: link:../market-data-core
+      '@tjr/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@tjr/logger':
+        specifier: workspace:*
+        version: link:../logger
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
+
   packages/sessions-calendar:
     devDependencies:
       '@types/node':

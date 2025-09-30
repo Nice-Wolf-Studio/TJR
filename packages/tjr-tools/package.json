@@ -1,0 +1,34 @@
+{
+  "name": "@tjr/tjr-tools",
+  "version": "0.1.0",
+  "description": "TJR confluence detection tools for Fair Value Gaps and Order Blocks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "tjr",
+    "trading",
+    "confluences",
+    "fair-value-gap",
+    "order-block",
+    "fvg",
+    "pure-functions"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@tjr/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}

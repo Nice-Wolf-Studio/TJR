@@ -12,6 +12,9 @@
     "test": "node --test tests/index.test.js",
     "test:pg": "node --test tests/postgres.test.js",
     "test:all": "node --test tests/*.test.js",
+    "test:migrations": "node --test tests/bars-cache-migration.test.js",
+    "migrate:sqlite": "node -e \"const db = require('./dist/index.js'); db.connect('sqlite:data/dev.db').then(conn => db.runMigrations('./migrations/sqlite', conn, { logger: console }).then(() => conn.close()))\"",
+    "migrate:postgres": "node -e \"const db = require('./dist/index.js'); if(!process.env.DATABASE_URL){console.error('DATABASE_URL required');process.exit(1)}; db.connect(process.env.DATABASE_URL).then(conn => db.runMigrations('./migrations/postgres', conn, { logger: console }).then(() => conn.close()))\"",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist *.tsbuildinfo"
@@ -25,12 +28,13 @@
   ],
   "license": "UNLICENSED",
   "dependencies": {
-    "better-sqlite3": "^11.0.0",
-    "pg": "^8.13.1"
+    "better-sqlite3": "^11.10.0",
+    "pg": "^8.16.3",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.12",
-    "@types/node": "^18.19.0",
-    "@types/pg": "^8.11.10"
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^18.19.128",
+    "@types/pg": "^8.15.5"
   }
 }

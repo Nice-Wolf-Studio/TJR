@@ -18,7 +18,10 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
-    "@tjr/analysis-kit": "workspace:*"
+    "@tjr/analysis-kit": "workspace:*",
+    "@tjr/bars-cache": "workspace:*",
+    "@tjr-suite/db-simple": "workspace:*",
+    "@tjr-suite/market-data-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

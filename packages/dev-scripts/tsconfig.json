@@ -24,5 +24,12 @@
     "node_modules",
     "dist",
     "tests/**/*.js"
+  ],
+
+  // Project references for TypeScript composite builds
+  "references": [
+    { "path": "../bars-cache" },
+    { "path": "../db-simple" },
+    { "path": "../market-data-core" }
   ]
 }

@@ -22,7 +22,10 @@ export interface ParsedArgs {
   execute: boolean;        // --execute: Actually perform mutating operation (vs dry-run)
   dryRun: boolean;         // --dry-run: Preview what would happen (default for mutating ops)
   pretty: boolean;         // --pretty: Human-readable formatted output
+  csv: boolean;            // --csv: Output in CSV format
+  json: boolean;           // --json: Output in JSON format (default)
   fixture?: string;        // --fixture=path: Path to fixture file (for replay-run)
+  modules?: string;        // --modules=list: Comma-separated module names
   remaining: string[];     // Positional arguments (non-flag args)
 }
 
@@ -67,6 +70,8 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
     execute: false,
     dryRun: defaultDryRun,
     pretty: false,
+    csv: false,
+    json: false,
     remaining: [],
   };
 
@@ -81,8 +86,14 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
       args.execute = false;  // Dry-run mode disables execute
     } else if (arg === '--pretty') {
       args.pretty = true;
+    } else if (arg === '--csv') {
+      args.csv = true;
+    } else if (arg === '--json') {
+      args.json = true;
     } else if (arg.startsWith('--fixture=')) {
       args.fixture = arg.slice('--fixture='.length);
+    } else if (arg.startsWith('--modules=')) {
+      args.modules = arg.slice('--modules='.length);
     } else if (arg.startsWith('--')) {
       // Unknown flag - could add error handling here
       args.remaining.push(arg);

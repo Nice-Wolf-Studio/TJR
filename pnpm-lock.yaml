@@ -152,6 +152,12 @@ importers:
       '@tjr/bars-cache':
         specifier: workspace:*
         version: link:../bars-cache
+      '@tjr/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@tjr/tjr-tools':
+        specifier: workspace:*
+        version: link:../tjr-tools
       commander:
         specifier: ^11.1.0
         version: 11.1.0

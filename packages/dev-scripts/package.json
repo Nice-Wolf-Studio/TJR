@@ -21,6 +21,8 @@
   "dependencies": {
     "@tjr/analysis-kit": "workspace:*",
     "@tjr/bars-cache": "workspace:*",
+    "@tjr/contracts": "workspace:*",
+    "@tjr/tjr-tools": "workspace:*",
     "@tjr-suite/db-simple": "workspace:*",
     "@tjr-suite/market-data-core": "workspace:*",
     "commander": "^11.1.0"

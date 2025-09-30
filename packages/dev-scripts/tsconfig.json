@@ -23,13 +23,14 @@
   "exclude": [
     "node_modules",
     "dist",
-    "tests/**/*.js"
+    "tests/**/*.js",
+    "bin/cache-verify.ts",
+    "bin/cache-warm.ts"
   ],
 
   // Project references for TypeScript composite builds
   "references": [
-    { "path": "../bars-cache" },
-    { "path": "../db-simple" },
-    { "path": "../market-data-core" }
+    { "path": "../analysis-kit" },
+    { "path": "../tjr-tools" }
   ]
 }

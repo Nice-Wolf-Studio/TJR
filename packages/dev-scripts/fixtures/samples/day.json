@@ -1,0 +1,17 @@
+{
+  "symbol": "ES",
+  "date": "2024-10-01",
+  "timeframe": "M5",
+  "bars": [
+    { "timestamp": "2024-10-01T09:30:00Z", "open": 5850.25, "high": 5855.50, "low": 5848.00, "close": 5852.75, "volume": 15234 },
+    { "timestamp": "2024-10-01T09:35:00Z", "open": 5852.75, "high": 5858.00, "low": 5851.50, "close": 5856.25, "volume": 14892 },
+    { "timestamp": "2024-10-01T09:40:00Z", "open": 5856.25, "high": 5860.75, "low": 5854.00, "close": 5859.50, "volume": 16021 },
+    { "timestamp": "2024-10-01T09:45:00Z", "open": 5859.50, "high": 5862.00, "low": 5857.25, "close": 5860.75, "volume": 13456 },
+    { "timestamp": "2024-10-01T09:50:00Z", "open": 5860.75, "high": 5865.25, "low": 5859.50, "close": 5863.00, "volume": 15789 }
+  ],
+  "expected": {
+    "fvgCount": 0,
+    "orderBlockCount": 1,
+    "executionCount": 0
+  }
+}

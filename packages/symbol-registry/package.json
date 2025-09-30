@@ -1,0 +1,29 @@
+{
+  "name": "@tjr/symbol-registry",
+  "version": "0.0.1",
+  "description": "Canonical symbol registry with continuous futures mapping and rollover rules",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test 'tests/*.test.{js,cjs}'",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "tjr",
+    "symbols",
+    "futures",
+    "continuous-contracts",
+    "rollover"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}

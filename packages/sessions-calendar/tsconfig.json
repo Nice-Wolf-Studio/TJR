@@ -1,0 +1,20 @@
+{
+  // TypeScript configuration for sessions-calendar package
+  // Extends base config from monorepo root
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    // Override output directory for this package
+    "outDir": "./dist",
+
+    // Root directory for source files
+    "rootDir": "./src"
+  },
+
+  // Include source files (including JSON data files)
+  // Explicitly include JSON files to satisfy composite mode requirements
+  "include": ["src/**/*.ts", "src/**/*.json"],
+
+  // Explicitly exclude test files, node_modules, and build artifacts
+  "exclude": ["node_modules", "dist", "tests"]
+}

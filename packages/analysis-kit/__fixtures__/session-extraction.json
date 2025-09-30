@@ -1,0 +1,22 @@
+{
+  "name": "session-extremes-extraction",
+  "description": "Extract OHLC from bars within RTH window",
+  "input": {
+    "bars": [
+      { "timestamp": 1000, "open": 100, "high": 105, "low": 99, "close": 104 },
+      { "timestamp": 2000, "open": 104, "high": 110, "low": 103, "close": 108 },
+      { "timestamp": 3000, "open": 108, "high": 109, "low": 107, "close": 108 },
+      { "timestamp": 4000, "open": 108, "high": 111, "low": 106, "close": 110 }
+    ],
+    "rthWindow": {
+      "start": 1000,
+      "end": 3500
+    }
+  },
+  "expected": {
+    "rthOpen": 100,
+    "rthClose": 108,
+    "rthHigh": 110,
+    "rthLow": 99
+  }
+}

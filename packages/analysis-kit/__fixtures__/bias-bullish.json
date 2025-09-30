@@ -1,0 +1,21 @@
+{
+  "name": "strong-bullish-bias",
+  "description": "Close above open and in upper range",
+  "input": {
+    "bars": [
+      { "timestamp": 1609459200000, "open": 100, "high": 105, "low": 99, "close": 104 },
+      { "timestamp": 1609545600000, "open": 104, "high": 110, "low": 103, "close": 108 }
+    ],
+    "sessionExtremes": {
+      "rthOpen": 100,
+      "rthClose": 108,
+      "rthHigh": 110,
+      "rthLow": 99
+    }
+  },
+  "expected": {
+    "bias": "bullish",
+    "confidenceMin": 0.7,
+    "reasonContains": "above open"
+  }
+}

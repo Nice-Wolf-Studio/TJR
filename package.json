@@ -22,6 +22,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
     "typecheck": "pnpm -w -r typecheck",
     "clean": "pnpm -w -r clean && rm -rf node_modules",
+    "e2e": "cd e2e && pnpm e2e:run",
+    "e2e:update": "cd e2e && pnpm e2e:update",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish"

@@ -162,7 +162,7 @@ export class TJRExecutionCommand extends BaseTJRCommand {
           symbol,
           timeframe: Timeframe.M5,
           bars: bars5m,
-          timestamp: new Date().toISOString(),
+          analysisTimestamp: new Date().toISOString(),
         },
         {
           fvg: userConfig.confluence.fvg,
@@ -173,11 +173,12 @@ export class TJRExecutionCommand extends BaseTJRCommand {
           execution: userConfig.execution,
           bars1m,
           risk: riskConfig ? {
-            ...riskConfig,
-            config: riskConfig,
+            symbol,
             entryPrice: 0, // Will be filled by analysis
             stopLoss: 0,   // Will be filled by analysis
             direction: 'long', // Will be filled by analysis
+            currentTimestamp: new Date().toISOString(),
+            config: riskConfig,
           } : undefined,
         }
       );
@@ -277,7 +278,7 @@ export class TJRExecutionCommand extends BaseTJRCommand {
     if (include1m && result.execution) {
       entryTrigger = {
         triggered: true,
-        entryPrice: result.execution.entry,
+        entryPrice: result.execution.entryPrice,
         direction: result.execution.direction,
         reason: '1m entry trigger confirmed within confluence zones',
       };
@@ -293,14 +294,14 @@ export class TJRExecutionCommand extends BaseTJRCommand {
     if (result.execution) {
       execution = {
         direction: result.execution.direction,
-        entryPrice: result.execution.entry,
+        entryPrice: result.execution.entryPrice,
         stopLoss: result.execution.stopLoss,
         takeProfit: result.execution.takeProfit,
         positionSize: result.execution.positionSize,
-        riskAmount: result.execution.riskAmount,
-        rewardAmount: result.execution.rewardAmount,
-        riskRewardRatio: result.execution.riskReward,
-        confluenceFactors: result.execution.confluenceFactors || [],
+        riskAmount: Math.abs(result.execution.entryPrice - result.execution.stopLoss) * result.execution.positionSize,
+        rewardAmount: Math.abs(result.execution.takeProfit - result.execution.entryPrice) * result.execution.positionSize,
+        riskRewardRatio: result.execution.riskRewardRatio,
+        confluenceFactors: result.confluence.factors.map(f => f.name),
       };
     }
 
@@ -308,17 +309,17 @@ export class TJRExecutionCommand extends BaseTJRCommand {
     let riskManagement: ExecutionReport['riskManagement'];
     if (result.riskManagement) {
       riskManagement = {
-        accountSize: result.riskManagement.accountSize,
-        maxRiskPerTrade: result.riskManagement.maxRiskPerTrade,
-        maxRiskAmount: result.riskManagement.maxRiskAmount,
-        positionSize: result.riskManagement.positionSize,
-        dailyLossLimit: result.riskManagement.dailyLossLimit,
-        dailyLossUsed: result.riskManagement.dailyLossUsed,
-        canTakeNewTrade: result.riskManagement.canTakeNewTrade,
-        partialExits: result.riskManagement.partialExits?.map((exit: any) => ({
-          percentage: exit.percentage,
+        accountSize: result.riskManagement.positionSize.positionValue,
+        maxRiskPerTrade: result.riskManagement.positionSize.percentRisk,
+        maxRiskAmount: result.riskManagement.positionSize.dollarRisk,
+        positionSize: result.riskManagement.positionSize.shares,
+        dailyLossLimit: result.riskManagement.dailyStop.currentLoss + result.riskManagement.dailyStop.remainingCapacity,
+        dailyLossUsed: result.riskManagement.dailyStop.currentLoss,
+        canTakeNewTrade: result.riskManagement.recommendation.canTrade,
+        partialExits: result.riskManagement.partialExits.map((exit) => ({
+          percentage: exit.quantity / result.riskManagement!.positionSize.shares,
           price: exit.price,
-          description: exit.description,
+          description: `Exit ${exit.quantity} shares at ${exit.rMultiple}R`,
         })),
       };
     }

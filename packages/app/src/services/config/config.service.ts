@@ -48,18 +48,32 @@ export const DEFAULT_USER_CONFIG: UserConfig = {
     },
   },
   risk: {
-    maxRiskPerTrade: 0.01,
-    maxDailyLoss: 0.05,
-    accountSize: 100000,
-    defaultStopPercent: 0.015,
-    defaultRiskReward: 2.0,
-    useTrailingStop: true,
+    account: {
+      balance: 100000,
+      currency: 'USD',
+      timezone: 'America/New_York',
+    },
+    perTrade: {
+      maxRiskPercent: 1.0,
+      kellyFraction: 0.25,
+      useKelly: false,
+    },
+    dailyLimits: {
+      maxLossPercent: 5.0,
+      includeFees: true,
+    },
     partialExits: {
-      enabled: true,
+      strategy: 'r-multiple',
       levels: [
-        { percentage: 0.5, atRiskReward: 1.0 },
-        { percentage: 0.25, atRiskReward: 2.0 },
+        { trigger: 1.0, exitPercent: 50 },
+        { trigger: 2.0, exitPercent: 50 },
       ],
+    },
+    constraints: {
+      minPositionSize: 1,
+      maxPositionPercent: 20.0,
+      roundLots: true,
+      lotSize: 1,
     },
   },
   formatting: {
@@ -200,15 +214,16 @@ export class FileConfigService implements ConfigService {
     });
 
     // Validate FVG options
-    if (config.confluence.fvg.minGapSizeATR <= 0) {
+    if (config.confluence.fvg.minGapSizeATR !== undefined && config.confluence.fvg.minGapSizeATR <= 0) {
       errors.push('FVG minGapSizeATR must be positive');
     }
 
     // Validate Order Block options
-    if (config.confluence.orderBlock.minVolumeRatio < 1) {
+    if (config.confluence.orderBlock.minVolumeRatio !== undefined && config.confluence.orderBlock.minVolumeRatio < 1) {
       warnings.push('Order Block minVolumeRatio below 1.0 may produce many false positives');
     }
-    if (config.confluence.orderBlock.minRejection < 0 || config.confluence.orderBlock.minRejection > 1) {
+    if (config.confluence.orderBlock.minRejection !== undefined &&
+        (config.confluence.orderBlock.minRejection < 0 || config.confluence.orderBlock.minRejection > 1)) {
       errors.push('Order Block minRejection must be between 0 and 1');
     }
 

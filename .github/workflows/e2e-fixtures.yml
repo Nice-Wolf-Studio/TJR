@@ -1,0 +1,240 @@
+# E2E Fixtures Test Workflow
+# Runs end-to-end scenario tests with deterministic fixture data
+#
+# Purpose:
+# - Validate full pipeline from providers to execution zones
+# - Test with deterministic fixture data (no live API calls)
+# - Ensure outputs match expected snapshots
+# - Fast feedback (<2 minutes) for PR validation
+#
+# Triggers:
+# - On every push to main and phase-** branches
+# - On every pull request to main
+# - Manual workflow_dispatch for testing
+
+name: E2E Fixtures
+
+on:
+  push:
+    branches:
+      - main
+      - 'phase-**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Specific scenario to run (e.g., "01" for scenario-01, or leave empty for all)'
+        required: false
+        type: string
+        default: ''
+
+# Cancel in-progress runs for the same workflow on the same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-tests:
+    name: E2E Scenario Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Shallow clone for speed
+
+      # Step 2: Setup Node.js with caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'pnpm'
+
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+          run_install: false
+
+      # Step 4: Get pnpm store directory
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      # Step 5: Setup pnpm cache
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Step 6: Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 7: Install e2e dependencies
+      - name: Install E2E dependencies
+        run: |
+          cd e2e
+          pnpm install --frozen-lockfile
+
+      # Step 8: Run E2E tests (all scenarios)
+      - name: Run E2E scenarios
+        if: inputs.scenario == ''
+        run: pnpm e2e
+        env:
+          NODE_ENV: test
+
+      # Step 9: Run specific E2E scenario (if provided)
+      - name: Run specific E2E scenario
+        if: inputs.scenario != ''
+        run: cd e2e && pnpm e2e:scenario=${{ inputs.scenario }}
+        env:
+          NODE_ENV: test
+
+      # Step 10: Upload test results as artifacts
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-results
+          path: |
+            e2e/specs/snapshots/*.json
+          retention-days: 7
+
+      # Step 11: Generate test summary
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "**Status:** All scenarios passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** Some scenarios failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Scenarios Tested" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. SPY Trending Up Day" >> $GITHUB_STEP_SUMMARY
+          echo "2. QQQ Ranging Day" >> $GITHUB_STEP_SUMMARY
+          echo "3. Multi-Timeframe Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "4. Full Execution Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "5. Cache Behavior Test" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Pipeline Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Provider (fixture mode)" >> $GITHUB_STEP_SUMMARY
+          echo "- Composite bars aggregation" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache storage and retrieval" >> $GITHUB_STEP_SUMMARY
+          echo "- Analysis kit processing" >> $GITHUB_STEP_SUMMARY
+          echo "- TJR tools (FVG, Order Blocks)" >> $GITHUB_STEP_SUMMARY
+          echo "- Execution zone detection" >> $GITHUB_STEP_SUMMARY
+          echo "- Confluence scoring" >> $GITHUB_STEP_SUMMARY
+
+  # Job 2: Validate snapshots are up-to-date
+  snapshot-validation:
+    name: Validate Snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+          run_install: false
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          cd e2e && pnpm install --frozen-lockfile
+
+      - name: Check snapshot files exist
+        run: |
+          echo "Checking snapshot files..."
+          MISSING_SNAPSHOTS=0
+
+          for scenario in e2e/specs/scenarios/scenario-*.json; do
+            scenario_id=$(basename "$scenario" .json | sed 's/scenario-//')
+            snapshot_file="e2e/specs/snapshots/scenario-${scenario_id}.json"
+
+            if [ ! -f "$snapshot_file" ]; then
+              echo "Missing snapshot: $snapshot_file"
+              MISSING_SNAPSHOTS=$((MISSING_SNAPSHOTS + 1))
+            else
+              echo "Found snapshot: $snapshot_file"
+            fi
+          done
+
+          if [ $MISSING_SNAPSHOTS -gt 0 ]; then
+            echo ""
+            echo "ERROR: $MISSING_SNAPSHOTS snapshot(s) missing"
+            echo "Run 'pnpm e2e:update' locally to generate snapshots"
+            exit 1
+          fi
+
+          echo ""
+          echo "All snapshots present"
+
+      - name: Validate snapshot format
+        run: |
+          echo "Validating snapshot JSON format..."
+
+          for snapshot in e2e/specs/snapshots/scenario-*.json; do
+            echo "Validating: $snapshot"
+            if ! python3 -c "import json; json.load(open('$snapshot'))"; then
+              echo "ERROR: Invalid JSON in $snapshot"
+              exit 1
+            fi
+          done
+
+          echo "All snapshots have valid JSON format"
+
+  # Job 3: Summary report
+  summary:
+    name: E2E Test Summary
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, snapshot-validation]
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## E2E Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          E2E_STATUS="${{ needs.e2e-tests.result }}"
+          SNAPSHOT_STATUS="${{ needs.snapshot-validation.result }}"
+
+          echo "**E2E Tests:** $E2E_STATUS" >> $GITHUB_STEP_SUMMARY
+          echo "**Snapshot Validation:** $SNAPSHOT_STATUS" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$E2E_STATUS" == "success" ] && [ "$SNAPSHOT_STATUS" == "success" ]; then
+            echo "All E2E tests passed with valid snapshots" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Some E2E tests or validations failed - check logs above" >> $GITHUB_STEP_SUMMARY
+          fi

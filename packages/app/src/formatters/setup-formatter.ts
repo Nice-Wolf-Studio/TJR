@@ -121,22 +121,18 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     // Risk Management Configuration
     if (report.risk) {
       lines.push('Risk Management Configuration:');
-      lines.push(`  Max Risk Per Trade: ${(report.risk.maxRiskPerTrade * 100).toFixed(2)}%`);
-      lines.push(`  Max Daily Loss: ${(report.risk.maxDailyLoss * 100).toFixed(2)}%`);
-      if (report.risk.accountSize) {
-        lines.push(`  Account Size: $${report.risk.accountSize.toLocaleString()}`);
-      }
-      lines.push(`  Default Stop Percent: ${(report.risk.defaultStopPercent * 100).toFixed(2)}%`);
-      lines.push(`  Default Risk/Reward: ${report.risk.defaultRiskReward.toFixed(1)}`);
-      lines.push(`  Use Trailing Stop: ${report.risk.useTrailingStop ? 'Yes' : 'No'}`);
-      if (report.risk.partialExits?.enabled) {
+      lines.push(`  Max Risk Per Trade: ${report.risk.perTrade.maxRiskPercent.toFixed(2)}%`);
+      lines.push(`  Max Daily Loss: ${report.risk.dailyLimits.maxLossPercent.toFixed(2)}%`);
+      lines.push(`  Account Size: $${report.risk.account.balance.toLocaleString()}`);
+      lines.push(`  Account Currency: ${report.risk.account.currency}`);
+      lines.push(`  Account Timezone: ${report.risk.account.timezone}`);
+      lines.push(`  Use Kelly Criterion: ${report.risk.perTrade.useKelly ? 'Yes' : 'No'}`);
+      if (report.risk.partialExits.levels.length > 0) {
         lines.push('  Partial Exits:');
-        lines.push(`    Enabled: Yes`);
-        if (report.risk.partialExits.levels) {
-          lines.push('    Levels:');
-          for (const level of report.risk.partialExits.levels) {
-            lines.push(`      - ${(level.percentage * 100).toFixed(0)}% at ${level.atRiskReward}R`);
-          }
+        lines.push(`    Strategy: ${report.risk.partialExits.strategy}`);
+        lines.push('    Levels:');
+        for (const level of report.risk.partialExits.levels) {
+          lines.push(`      - ${level.exitPercent}% at ${level.trigger}R`);
         }
       }
       lines.push('');

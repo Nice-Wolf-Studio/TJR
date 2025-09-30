@@ -1,0 +1,37 @@
+{
+  "id": "03",
+  "name": "Multi-Timeframe Analysis",
+  "description": "Test multi-timeframe analysis with 5m and 1m bars for SPY",
+  "fixture": {
+    "symbol": "SPY",
+    "date": "2025-09-29",
+    "timeframes": ["5m", "1m"],
+    "type": "trend-up"
+  },
+  "expectedOutputs": {
+    "timeframes": {
+      "5m": {
+        "barCount": 78,
+        "hasFairValueGaps": true,
+        "hasOrderBlocks": true
+      },
+      "1m": {
+        "barCount": 390,
+        "hasFairValueGaps": true,
+        "hasOrderBlocks": true
+      }
+    },
+    "hasTimeframeAlignment": true
+  },
+  "pipeline": {
+    "steps": [
+      "provider-fixture",
+      "composite-bars-5m",
+      "composite-bars-1m",
+      "cache-store",
+      "analysis-kit-multi-timeframe",
+      "tjr-tools-confluences"
+    ]
+  },
+  "tags": ["multi-timeframe", "spy", "5m", "1m", "alignment"]
+}

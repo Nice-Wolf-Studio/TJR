@@ -84,6 +84,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
     } else {
       for (let i = 0; i < report.fvgZones.length; i++) {
         const fvg = report.fvgZones[i];
+        if (!fvg) continue;
         lines.push(`  FVG ${i + 1} (${fvg.type}):`);
         lines.push(`    Range: ${this.formatPrice(fvg.low)} - ${this.formatPrice(fvg.high)}`);
         lines.push(`    Size: ${this.formatPrice(fvg.size)}`);
@@ -101,6 +102,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
     } else {
       for (let i = 0; i < report.orderBlocks.length; i++) {
         const ob = report.orderBlocks[i];
+        if (!ob) continue;
         lines.push(`  OB ${i + 1} (${ob.type}):`);
         lines.push(`    Range: ${this.formatPrice(ob.low)} - ${this.formatPrice(ob.high)}`);
         lines.push(`    Volume: ${ob.volume.toLocaleString()}`);
@@ -200,6 +202,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
       lines.push('├────┼──────────┼───────────┼───────────┼──────────┼────────┤');
       for (let i = 0; i < report.fvgZones.length; i++) {
         const fvg = report.fvgZones[i];
+        if (!fvg) continue;
         lines.push(
           `│ ${this.padLeft(String(i + 1), 2)} │ ${this.padRight(fvg.type, 8)} │ ${this.padLeft(this.formatPrice(fvg.low), 9)} │ ${this.padLeft(this.formatPrice(fvg.high), 9)} │ ${this.padLeft(fvg.strength.toFixed(2), 8)} │ ${this.padRight(fvg.filled ? 'Yes' : 'No', 6)} │`
         );
@@ -215,6 +218,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
       lines.push('├────┼─────────┼───────────┼───────────┼──────────┼───────────┤');
       for (let i = 0; i < report.orderBlocks.length; i++) {
         const ob = report.orderBlocks[i];
+        if (!ob) continue;
         lines.push(
           `│ ${this.padLeft(String(i + 1), 2)} │ ${this.padRight(ob.type, 7)} │ ${this.padLeft(this.formatPrice(ob.low), 9)} │ ${this.padLeft(this.formatPrice(ob.high), 9)} │ ${this.padLeft(ob.strength.toFixed(2), 8)} │ ${this.padRight(ob.mitigated ? 'Yes' : 'No', 9)} │`
         );
@@ -265,6 +269,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
       lines.push('|---|------|-------|------|----------|--------|-----|');
       for (let i = 0; i < report.fvgZones.length; i++) {
         const fvg = report.fvgZones[i];
+        if (!fvg) continue;
         const range = `${this.formatPrice(fvg.low)} - ${this.formatPrice(fvg.high)}`;
         lines.push(
           `| ${i + 1} | ${fvg.type} | ${range} | ${this.formatPrice(fvg.size)} | ${fvg.strength.toFixed(2)} | ${fvg.filled ? 'Yes' : 'No'} | ${fvg.startIndex} |`
@@ -284,6 +289,7 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
       lines.push('|---|------|-------|--------|----------|-----------|-----|');
       for (let i = 0; i < report.orderBlocks.length; i++) {
         const ob = report.orderBlocks[i];
+        if (!ob) continue;
         const range = `${this.formatPrice(ob.low)} - ${this.formatPrice(ob.high)}`;
         lines.push(
           `| ${i + 1} | ${ob.type} | ${range} | ${ob.volume.toLocaleString()} | ${ob.strength.toFixed(2)} | ${ob.mitigated ? 'Yes' : 'No'} | ${ob.index} |`

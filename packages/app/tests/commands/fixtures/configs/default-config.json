@@ -1,0 +1,77 @@
+{
+  "confluence": {
+    "weights": {
+      "fvg": 0.35,
+      "orderBlock": 0.35,
+      "overlap": 0.20,
+      "recency": 0.10
+    },
+    "fvg": {
+      "minGapSizeATR": 0.5,
+      "checkFilled": true
+    },
+    "orderBlock": {
+      "minVolumeRatio": 1.5,
+      "minRejection": 0.3,
+      "checkMitigated": true
+    }
+  },
+  "execution": {
+    "confirmation5m": {
+      "minConfluenceScore": 70,
+      "requiredFactors": ["Fair Value Gaps", "Order Blocks"],
+      "lookbackBars": 20
+    },
+    "entry1m": {
+      "minConfluenceScore": 60,
+      "maxBarsAfterConfirmation": 5,
+      "requireZoneEntry": true
+    },
+    "risk": {
+      "maxRiskPerTrade": 0.01,
+      "defaultStopPercent": 0.015,
+      "defaultRiskReward": 2.0
+    }
+  },
+  "risk": {
+    "account": {
+      "balance": 100000,
+      "currency": "USD",
+      "timezone": "America/New_York"
+    },
+    "perTrade": {
+      "maxRiskPercent": 1.0,
+      "kellyFraction": 0.25,
+      "useKelly": false
+    },
+    "dailyLimits": {
+      "maxLossPercent": 5.0,
+      "includeFees": true
+    },
+    "partialExits": {
+      "strategy": "r-multiple",
+      "levels": [
+        { "trigger": 1.0, "exitPercent": 50 },
+        { "trigger": 2.0, "exitPercent": 50 }
+      ]
+    },
+    "constraints": {
+      "minPositionSize": 1,
+      "maxPositionPercent": 20.0,
+      "roundLots": true,
+      "lotSize": 1
+    }
+  },
+  "formatting": {
+    "defaultFormat": "text",
+    "includeMetadata": false,
+    "verbose": false
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": {
+      "confluence": 300000,
+      "execution": 60000
+    }
+  }
+}

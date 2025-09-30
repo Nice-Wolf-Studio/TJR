@@ -1,0 +1,32 @@
+{
+  "id": "01",
+  "name": "SPY Trending Up Day",
+  "description": "Full pipeline test with SPY on a strong uptrend day (2025-09-29)",
+  "fixture": {
+    "symbol": "SPY",
+    "date": "2025-09-29",
+    "timeframe": "5m",
+    "type": "trend-up"
+  },
+  "expectedOutputs": {
+    "barCount": 78,
+    "hasFairValueGaps": true,
+    "hasOrderBlocks": true,
+    "minFvgCount": 2,
+    "minOrderBlockCount": 1,
+    "trend": "bullish",
+    "hasConfluences": false,
+    "hasExecutionZones": false
+  },
+  "pipeline": {
+    "steps": [
+      "provider-fixture",
+      "composite-bars",
+      "cache-store",
+      "analysis-kit",
+      "tjr-tools-confluences",
+      "execution-zones"
+    ]
+  },
+  "tags": ["trending", "bullish", "spy", "full-pipeline"]
+}

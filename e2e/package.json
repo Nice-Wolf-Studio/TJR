@@ -1,0 +1,24 @@
+{
+  "name": "@tjr-suite/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "End-to-end scenario tests for TJR Suite pipeline",
+  "type": "module",
+  "scripts": {
+    "e2e:run": "tsx runner.ts",
+    "e2e:update": "tsx runner.ts --update-snapshots",
+    "e2e:scenario": "tsx runner.ts --scenario="
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.18",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "e2e",
+    "testing",
+    "scenarios",
+    "fixtures",
+    "snapshots"
+  ]
+}

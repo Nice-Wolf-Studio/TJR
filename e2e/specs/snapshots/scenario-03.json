@@ -1,0 +1,1910 @@
+{
+  "bars": [
+    {
+      "timestamp": "2025-09-28T13:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:30:00.000Z",
+      "open": 450,
+      "high": 450,
+      "low": 450,
+      "close": 450,
+      "volume": 1500000,
+      "trades": 15000,
+      "vwap": 450
+    },
+    {
+      "timestamp": "2025-09-28T13:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:35:00.000Z",
+      "open": 450.09,
+      "high": 450.41,
+      "low": 449.98,
+      "close": 450.31,
+      "volume": 1510000,
+      "trades": 15100,
+      "vwap": 450.2
+    },
+    {
+      "timestamp": "2025-09-28T13:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:40:00.000Z",
+      "open": 450.49,
+      "high": 451.05,
+      "low": 450.3,
+      "close": 450.86,
+      "volume": 1520000,
+      "trades": 15200,
+      "vwap": 450.68
+    },
+    {
+      "timestamp": "2025-09-28T13:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:45:00.000Z",
+      "open": 451.14,
+      "high": 451.81,
+      "low": 450.91,
+      "close": 451.59,
+      "volume": 1530000,
+      "trades": 15300,
+      "vwap": 451.36
+    },
+    {
+      "timestamp": "2025-09-28T13:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:50:00.000Z",
+      "open": 451.95,
+      "high": 452.56,
+      "low": 451.74,
+      "close": 452.36,
+      "volume": 1540000,
+      "trades": 15400,
+      "vwap": 452.15
+    },
+    {
+      "timestamp": "2025-09-28T13:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T13:55:00.000Z",
+      "open": 452.81,
+      "high": 453.22,
+      "low": 452.67,
+      "close": 453.08,
+      "volume": 1550000,
+      "trades": 15500,
+      "vwap": 452.94
+    },
+    {
+      "timestamp": "2025-09-28T14:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:00:00.000Z",
+      "open": 453.62,
+      "high": 453.72,
+      "low": 453.59,
+      "close": 453.69,
+      "volume": 1560000,
+      "trades": 15600,
+      "vwap": 453.66
+    },
+    {
+      "timestamp": "2025-09-28T14:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:05:00.000Z",
+      "open": 454.32,
+      "high": 454.4,
+      "low": 454.08,
+      "close": 454.16,
+      "volume": 1570000,
+      "trades": 15700,
+      "vwap": 454.24
+    },
+    {
+      "timestamp": "2025-09-28T14:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:10:00.000Z",
+      "open": 454.89,
+      "high": 455.06,
+      "low": 454.37,
+      "close": 454.55,
+      "volume": 1580000,
+      "trades": 15800,
+      "vwap": 454.72
+    },
+    {
+      "timestamp": "2025-09-28T14:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:15:00.000Z",
+      "open": 455.36,
+      "high": 455.59,
+      "low": 454.7,
+      "close": 454.92,
+      "volume": 1590000,
+      "trades": 15900,
+      "vwap": 455.14
+    },
+    {
+      "timestamp": "2025-09-28T14:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:20:00.000Z",
+      "open": 455.83,
+      "high": 456.05,
+      "low": 455.18,
+      "close": 455.39,
+      "volume": 1600000,
+      "trades": 16000,
+      "vwap": 455.61
+    },
+    {
+      "timestamp": "2025-09-28T14:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:25:00.000Z",
+      "open": 456.4,
+      "high": 456.56,
+      "low": 455.91,
+      "close": 456.07,
+      "volume": 1610000,
+      "trades": 16100,
+      "vwap": 456.24
+    },
+    {
+      "timestamp": "2025-09-28T14:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:30:00.000Z",
+      "open": 457.17,
+      "high": 457.23,
+      "low": 456.98,
+      "close": 457.04,
+      "volume": 1620000,
+      "trades": 16200,
+      "vwap": 457.11
+    },
+    {
+      "timestamp": "2025-09-28T14:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:35:00.000Z",
+      "open": 458.23,
+      "high": 458.38,
+      "low": 458.18,
+      "close": 458.33,
+      "volume": 1630000,
+      "trades": 16300,
+      "vwap": 458.28
+    },
+    {
+      "timestamp": "2025-09-28T14:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:40:00.000Z",
+      "open": 459.61,
+      "high": 460.06,
+      "low": 459.46,
+      "close": 459.91,
+      "volume": 1640000,
+      "trades": 16400,
+      "vwap": 459.76
+    },
+    {
+      "timestamp": "2025-09-28T14:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:45:00.000Z",
+      "open": 461.29,
+      "high": 461.94,
+      "low": 461.08,
+      "close": 461.72,
+      "volume": 1650000,
+      "trades": 16500,
+      "vwap": 461.51
+    },
+    {
+      "timestamp": "2025-09-28T14:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:50:00.000Z",
+      "open": 463.2,
+      "high": 463.89,
+      "low": 462.97,
+      "close": 463.66,
+      "volume": 1660000,
+      "trades": 16600,
+      "vwap": 463.43
+    },
+    {
+      "timestamp": "2025-09-28T14:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T14:55:00.000Z",
+      "open": 465.23,
+      "high": 465.79,
+      "low": 465.05,
+      "close": 465.6,
+      "volume": 1670000,
+      "trades": 16700,
+      "vwap": 465.42
+    },
+    {
+      "timestamp": "2025-09-28T15:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:00:00.000Z",
+      "open": 467.28,
+      "high": 467.57,
+      "low": 467.19,
+      "close": 467.47,
+      "volume": 1680000,
+      "trades": 16800,
+      "vwap": 467.38
+    },
+    {
+      "timestamp": "2025-09-28T15:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:05:00.000Z",
+      "open": 469.25,
+      "high": 469.27,
+      "low": 469.2,
+      "close": 469.21,
+      "volume": 1690000,
+      "trades": 16900,
+      "vwap": 469.23
+    },
+    {
+      "timestamp": "2025-09-28T15:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:10:00.000Z",
+      "open": 471.09,
+      "high": 471.22,
+      "low": 470.71,
+      "close": 470.84,
+      "volume": 1700000,
+      "trades": 17000,
+      "vwap": 470.96
+    },
+    {
+      "timestamp": "2025-09-28T15:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:15:00.000Z",
+      "open": 472.81,
+      "high": 473.02,
+      "low": 472.19,
+      "close": 472.4,
+      "volume": 1710000,
+      "trades": 17100,
+      "vwap": 472.61
+    },
+    {
+      "timestamp": "2025-09-28T15:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:20:00.000Z",
+      "open": 474.48,
+      "high": 474.71,
+      "low": 473.77,
+      "close": 474.01,
+      "volume": 1720000,
+      "trades": 17200,
+      "vwap": 474.24
+    },
+    {
+      "timestamp": "2025-09-28T15:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:25:00.000Z",
+      "open": 476.19,
+      "high": 476.39,
+      "low": 475.56,
+      "close": 475.77,
+      "volume": 1730000,
+      "trades": 17300,
+      "vwap": 475.98
+    },
+    {
+      "timestamp": "2025-09-28T15:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:30:00.000Z",
+      "open": 478.05,
+      "high": 478.18,
+      "low": 477.67,
+      "close": 477.8,
+      "volume": 1740000,
+      "trades": 17400,
+      "vwap": 477.93
+    },
+    {
+      "timestamp": "2025-09-28T15:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:35:00.000Z",
+      "open": 480.19,
+      "high": 480.2,
+      "low": 480.14,
+      "close": 480.16,
+      "volume": 1750000,
+      "trades": 17500,
+      "vwap": 480.17
+    },
+    {
+      "timestamp": "2025-09-28T15:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:40:00.000Z",
+      "open": 482.65,
+      "high": 482.96,
+      "low": 482.55,
+      "close": 482.86,
+      "volume": 1760000,
+      "trades": 17600,
+      "vwap": 482.75
+    },
+    {
+      "timestamp": "2025-09-28T15:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:45:00.000Z",
+      "open": 485.46,
+      "high": 486.04,
+      "low": 485.27,
+      "close": 485.85,
+      "volume": 1770000,
+      "trades": 17700,
+      "vwap": 485.66
+    },
+    {
+      "timestamp": "2025-09-28T15:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:50:00.000Z",
+      "open": 488.57,
+      "high": 489.29,
+      "low": 488.33,
+      "close": 489.05,
+      "volume": 1780000,
+      "trades": 17800,
+      "vwap": 488.81
+    },
+    {
+      "timestamp": "2025-09-28T15:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T15:55:00.000Z",
+      "open": 491.89,
+      "high": 492.58,
+      "low": 491.66,
+      "close": 492.35,
+      "volume": 1790000,
+      "trades": 17900,
+      "vwap": 492.12
+    },
+    {
+      "timestamp": "2025-09-28T16:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:00:00.000Z",
+      "open": 495.3,
+      "high": 495.78,
+      "low": 495.14,
+      "close": 495.62,
+      "volume": 1800000,
+      "trades": 18000,
+      "vwap": 495.46
+    },
+    {
+      "timestamp": "2025-09-28T16:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:05:00.000Z",
+      "open": 498.69,
+      "high": 498.85,
+      "low": 498.64,
+      "close": 498.8,
+      "volume": 1810000,
+      "trades": 18100,
+      "vwap": 498.74
+    },
+    {
+      "timestamp": "2025-09-28T16:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:10:00.000Z",
+      "open": 501.99,
+      "high": 502.06,
+      "low": 501.77,
+      "close": 501.84,
+      "volume": 1820000,
+      "trades": 18200,
+      "vwap": 501.92
+    },
+    {
+      "timestamp": "2025-09-28T16:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:15:00.000Z",
+      "open": 505.16,
+      "high": 505.34,
+      "low": 504.62,
+      "close": 504.8,
+      "volume": 1830000,
+      "trades": 18300,
+      "vwap": 504.98
+    },
+    {
+      "timestamp": "2025-09-28T16:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:20:00.000Z",
+      "open": 508.23,
+      "high": 508.47,
+      "low": 507.5,
+      "close": 507.75,
+      "volume": 1840000,
+      "trades": 18400,
+      "vwap": 507.99
+    },
+    {
+      "timestamp": "2025-09-28T16:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:25:00.000Z",
+      "open": 511.3,
+      "high": 511.55,
+      "low": 510.56,
+      "close": 510.81,
+      "volume": 1850000,
+      "trades": 18500,
+      "vwap": 511.05
+    },
+    {
+      "timestamp": "2025-09-28T16:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:30:00.000Z",
+      "open": 514.48,
+      "high": 514.68,
+      "low": 513.91,
+      "close": 514.1,
+      "volume": 1860000,
+      "trades": 18600,
+      "vwap": 514.29
+    },
+    {
+      "timestamp": "2025-09-28T16:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:35:00.000Z",
+      "open": 517.9,
+      "high": 517.99,
+      "low": 517.64,
+      "close": 517.73,
+      "volume": 1870000,
+      "trades": 18700,
+      "vwap": 517.82
+    },
+    {
+      "timestamp": "2025-09-28T16:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:40:00.000Z",
+      "open": 521.66,
+      "high": 521.78,
+      "low": 521.62,
+      "close": 521.74,
+      "volume": 1880000,
+      "trades": 18800,
+      "vwap": 521.7
+    },
+    {
+      "timestamp": "2025-09-28T16:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:45:00.000Z",
+      "open": 525.81,
+      "high": 526.28,
+      "low": 525.65,
+      "close": 526.13,
+      "volume": 1890000,
+      "trades": 18900,
+      "vwap": 525.97
+    },
+    {
+      "timestamp": "2025-09-28T16:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:50:00.000Z",
+      "open": 530.33,
+      "high": 531.06,
+      "low": 530.09,
+      "close": 530.82,
+      "volume": 1900000,
+      "trades": 19000,
+      "vwap": 530.58
+    },
+    {
+      "timestamp": "2025-09-28T16:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T16:55:00.000Z",
+      "open": 535.17,
+      "high": 535.96,
+      "low": 534.9,
+      "close": 535.7,
+      "volume": 1910000,
+      "trades": 19100,
+      "vwap": 535.43
+    },
+    {
+      "timestamp": "2025-09-28T17:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:00:00.000Z",
+      "open": 540.2,
+      "high": 540.87,
+      "low": 539.97,
+      "close": 540.65,
+      "volume": 1920000,
+      "trades": 19200,
+      "vwap": 540.42
+    },
+    {
+      "timestamp": "2025-09-28T17:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:05:00.000Z",
+      "open": 545.29,
+      "high": 545.68,
+      "low": 545.17,
+      "close": 545.55,
+      "volume": 1930000,
+      "trades": 19300,
+      "vwap": 545.42
+    },
+    {
+      "timestamp": "2025-09-28T17:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:10:00.000Z",
+      "open": 550.35,
+      "high": 550.35,
+      "low": 550.34,
+      "close": 550.35,
+      "volume": 1940000,
+      "trades": 19400,
+      "vwap": 550.35
+    },
+    {
+      "timestamp": "2025-09-28T17:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:15:00.000Z",
+      "open": 555.3,
+      "high": 555.43,
+      "low": 554.9,
+      "close": 555.03,
+      "volume": 1950000,
+      "trades": 19500,
+      "vwap": 555.16
+    },
+    {
+      "timestamp": "2025-09-28T17:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:20:00.000Z",
+      "open": 560.14,
+      "high": 560.37,
+      "low": 559.43,
+      "close": 559.67,
+      "volume": 1960000,
+      "trades": 19600,
+      "vwap": 559.9
+    },
+    {
+      "timestamp": "2025-09-28T17:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:25:00.000Z",
+      "open": 564.93,
+      "high": 565.21,
+      "low": 564.09,
+      "close": 564.37,
+      "volume": 1970000,
+      "trades": 19700,
+      "vwap": 564.65
+    },
+    {
+      "timestamp": "2025-09-28T17:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:30:00.000Z",
+      "open": 569.79,
+      "high": 570.04,
+      "low": 569.02,
+      "close": 569.28,
+      "volume": 1980000,
+      "trades": 19800,
+      "vwap": 569.53
+    },
+    {
+      "timestamp": "2025-09-28T17:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:35:00.000Z",
+      "open": 574.86,
+      "high": 575.02,
+      "low": 574.35,
+      "close": 574.52,
+      "volume": 1990000,
+      "trades": 19900,
+      "vwap": 574.69
+    },
+    {
+      "timestamp": "2025-09-28T17:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:40:00.000Z",
+      "open": 580.26,
+      "high": 580.3,
+      "low": 580.15,
+      "close": 580.19,
+      "volume": 2000000,
+      "trades": 20000,
+      "vwap": 580.23
+    },
+    {
+      "timestamp": "2025-09-28T17:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:45:00.000Z",
+      "open": 586.11,
+      "high": 586.42,
+      "low": 586,
+      "close": 586.31,
+      "volume": 2010000,
+      "trades": 20100,
+      "vwap": 586.21
+    },
+    {
+      "timestamp": "2025-09-28T17:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:50:00.000Z",
+      "open": 592.41,
+      "high": 593.08,
+      "low": 592.19,
+      "close": 592.86,
+      "volume": 2020000,
+      "trades": 20200,
+      "vwap": 592.64
+    },
+    {
+      "timestamp": "2025-09-28T17:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T17:55:00.000Z",
+      "open": 599.14,
+      "high": 600.01,
+      "low": 598.85,
+      "close": 599.72,
+      "volume": 2030000,
+      "trades": 20300,
+      "vwap": 599.43
+    },
+    {
+      "timestamp": "2025-09-28T18:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:00:00.000Z",
+      "open": 606.2,
+      "high": 607.06,
+      "low": 605.91,
+      "close": 606.77,
+      "volume": 2040000,
+      "trades": 20400,
+      "vwap": 606.49
+    },
+    {
+      "timestamp": "2025-09-28T18:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:05:00.000Z",
+      "open": 613.45,
+      "high": 614.09,
+      "low": 613.24,
+      "close": 613.87,
+      "volume": 2050000,
+      "trades": 20500,
+      "vwap": 613.66
+    },
+    {
+      "timestamp": "2025-09-28T18:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:10:00.000Z",
+      "open": 620.75,
+      "high": 621,
+      "low": 620.67,
+      "close": 620.91,
+      "volume": 2060000,
+      "trades": 20600,
+      "vwap": 620.83
+    },
+    {
+      "timestamp": "2025-09-28T18:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:15:00.000Z",
+      "open": 627.99,
+      "high": 628.06,
+      "low": 627.78,
+      "close": 627.85,
+      "volume": 2070000,
+      "trades": 20700,
+      "vwap": 627.92
+    },
+    {
+      "timestamp": "2025-09-28T18:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:20:00.000Z",
+      "open": 635.14,
+      "high": 635.35,
+      "low": 634.51,
+      "close": 634.72,
+      "volume": 2080000,
+      "trades": 20800,
+      "vwap": 634.93
+    },
+    {
+      "timestamp": "2025-09-28T18:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:25:00.000Z",
+      "open": 642.21,
+      "high": 642.51,
+      "low": 641.31,
+      "close": 641.61,
+      "volume": 2090000,
+      "trades": 20900,
+      "vwap": 641.91
+    },
+    {
+      "timestamp": "2025-09-28T18:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:30:00.000Z",
+      "open": 649.31,
+      "high": 649.63,
+      "low": 648.36,
+      "close": 648.68,
+      "volume": 2100000,
+      "trades": 21000,
+      "vwap": 649
+    },
+    {
+      "timestamp": "2025-09-28T18:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:35:00.000Z",
+      "open": 656.59,
+      "high": 656.85,
+      "low": 655.82,
+      "close": 656.08,
+      "volume": 2110000,
+      "trades": 21100,
+      "vwap": 656.34
+    },
+    {
+      "timestamp": "2025-09-28T18:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:40:00.000Z",
+      "open": 664.21,
+      "high": 664.35,
+      "low": 663.82,
+      "close": 663.95,
+      "volume": 2120000,
+      "trades": 21200,
+      "vwap": 664.08
+    },
+    {
+      "timestamp": "2025-09-28T18:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:45:00.000Z",
+      "open": 672.31,
+      "high": 672.4,
+      "low": 672.29,
+      "close": 672.37,
+      "volume": 2130000,
+      "trades": 21300,
+      "vwap": 672.34
+    },
+    {
+      "timestamp": "2025-09-28T18:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:50:00.000Z",
+      "open": 680.98,
+      "high": 681.53,
+      "low": 680.79,
+      "close": 681.35,
+      "volume": 2140000,
+      "trades": 21400,
+      "vwap": 681.16
+    },
+    {
+      "timestamp": "2025-09-28T18:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T18:55:00.000Z",
+      "open": 690.2,
+      "high": 691.11,
+      "low": 689.9,
+      "close": 690.81,
+      "volume": 2150000,
+      "trades": 21500,
+      "vwap": 690.51
+    },
+    {
+      "timestamp": "2025-09-28T19:00:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:00:00.000Z",
+      "open": 699.93,
+      "high": 700.96,
+      "low": 699.58,
+      "close": 700.62,
+      "volume": 2160000,
+      "trades": 21600,
+      "vwap": 700.27
+    },
+    {
+      "timestamp": "2025-09-28T19:05:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:05:00.000Z",
+      "open": 710,
+      "high": 710.92,
+      "low": 709.7,
+      "close": 710.61,
+      "volume": 2170000,
+      "trades": 21700,
+      "vwap": 710.31
+    },
+    {
+      "timestamp": "2025-09-28T19:10:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:10:00.000Z",
+      "open": 720.28,
+      "high": 720.84,
+      "low": 720.09,
+      "close": 720.65,
+      "volume": 2180000,
+      "trades": 21800,
+      "vwap": 720.47
+    },
+    {
+      "timestamp": "2025-09-28T19:15:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:15:00.000Z",
+      "open": 730.6,
+      "high": 730.66,
+      "low": 730.58,
+      "close": 730.64,
+      "volume": 2190000,
+      "trades": 21900,
+      "vwap": 730.62
+    },
+    {
+      "timestamp": "2025-09-28T19:20:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:20:00.000Z",
+      "open": 740.87,
+      "high": 741.03,
+      "low": 740.4,
+      "close": 740.56,
+      "volume": 2200000,
+      "trades": 22000,
+      "vwap": 740.71
+    },
+    {
+      "timestamp": "2025-09-28T19:25:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:25:00.000Z",
+      "open": 751.07,
+      "high": 751.37,
+      "low": 750.17,
+      "close": 750.47,
+      "volume": 2210000,
+      "trades": 22100,
+      "vwap": 750.77
+    },
+    {
+      "timestamp": "2025-09-28T19:30:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:30:00.000Z",
+      "open": 761.28,
+      "high": 761.65,
+      "low": 760.16,
+      "close": 760.54,
+      "volume": 2220000,
+      "trades": 22200,
+      "vwap": 760.91
+    },
+    {
+      "timestamp": "2025-09-28T19:35:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:35:00.000Z",
+      "open": 771.64,
+      "high": 772,
+      "low": 770.58,
+      "close": 770.93,
+      "volume": 2230000,
+      "trades": 22300,
+      "vwap": 771.29
+    },
+    {
+      "timestamp": "2025-09-28T19:40:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:40:00.000Z",
+      "open": 782.34,
+      "high": 782.59,
+      "low": 781.6,
+      "close": 781.85,
+      "volume": 2240000,
+      "trades": 22400,
+      "vwap": 782.09
+    },
+    {
+      "timestamp": "2025-09-28T19:45:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:45:00.000Z",
+      "open": 793.57,
+      "high": 793.65,
+      "low": 793.34,
+      "close": 793.42,
+      "volume": 2250000,
+      "trades": 22500,
+      "vwap": 793.5
+    },
+    {
+      "timestamp": "2025-09-28T19:50:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:50:00.000Z",
+      "open": 805.48,
+      "high": 805.83,
+      "low": 805.36,
+      "close": 805.71,
+      "volume": 2260000,
+      "trades": 22600,
+      "vwap": 805.6
+    },
+    {
+      "timestamp": "2025-09-28T19:55:00.000Z",
+      "symbol": "SPY",
+      "time": "2025-09-28T19:55:00.000Z",
+      "open": 818.12,
+      "high": 818.99,
+      "low": 817.83,
+      "close": 818.7,
+      "volume": 2270000,
+      "trades": 22700,
+      "vwap": 818.41
+    }
+  ],
+  "fvgs": [
+    {
+      "type": "bullish",
+      "topBar": 4,
+      "bottomBar": 2,
+      "top": 451.74,
+      "bottom": 451.05,
+      "gap": 0.6899999999999977
+    },
+    {
+      "type": "bullish",
+      "topBar": 5,
+      "bottomBar": 3,
+      "top": 452.67,
+      "bottom": 451.81,
+      "gap": 0.8600000000000136
+    },
+    {
+      "type": "bullish",
+      "topBar": 6,
+      "bottomBar": 4,
+      "top": 453.59,
+      "bottom": 452.56,
+      "gap": 1.0299999999999727
+    },
+    {
+      "type": "bullish",
+      "topBar": 7,
+      "bottomBar": 5,
+      "top": 454.08,
+      "bottom": 453.22,
+      "gap": 0.8599999999999568
+    },
+    {
+      "type": "bullish",
+      "topBar": 8,
+      "bottomBar": 6,
+      "top": 454.37,
+      "bottom": 453.72,
+      "gap": 0.6499999999999773
+    },
+    {
+      "type": "bullish",
+      "topBar": 12,
+      "bottomBar": 10,
+      "top": 456.98,
+      "bottom": 456.05,
+      "gap": 0.9300000000000068
+    },
+    {
+      "type": "bullish",
+      "topBar": 13,
+      "bottomBar": 11,
+      "top": 458.18,
+      "bottom": 456.56,
+      "gap": 1.6200000000000045
+    },
+    {
+      "type": "bullish",
+      "topBar": 14,
+      "bottomBar": 12,
+      "top": 459.46,
+      "bottom": 457.23,
+      "gap": 2.2299999999999613
+    },
+    {
+      "type": "bullish",
+      "topBar": 15,
+      "bottomBar": 13,
+      "top": 461.08,
+      "bottom": 458.38,
+      "gap": 2.6999999999999886
+    },
+    {
+      "type": "bullish",
+      "topBar": 16,
+      "bottomBar": 14,
+      "top": 462.97,
+      "bottom": 460.06,
+      "gap": 2.910000000000025
+    },
+    {
+      "type": "bullish",
+      "topBar": 17,
+      "bottomBar": 15,
+      "top": 465.05,
+      "bottom": 461.94,
+      "gap": 3.1100000000000136
+    },
+    {
+      "type": "bullish",
+      "topBar": 18,
+      "bottomBar": 16,
+      "top": 467.19,
+      "bottom": 463.89,
+      "gap": 3.3000000000000114
+    },
+    {
+      "type": "bullish",
+      "topBar": 19,
+      "bottomBar": 17,
+      "top": 469.2,
+      "bottom": 465.79,
+      "gap": 3.409999999999968
+    },
+    {
+      "type": "bullish",
+      "topBar": 20,
+      "bottomBar": 18,
+      "top": 470.71,
+      "bottom": 467.57,
+      "gap": 3.1399999999999864
+    },
+    {
+      "type": "bullish",
+      "topBar": 21,
+      "bottomBar": 19,
+      "top": 472.19,
+      "bottom": 469.27,
+      "gap": 2.920000000000016
+    },
+    {
+      "type": "bullish",
+      "topBar": 22,
+      "bottomBar": 20,
+      "top": 473.77,
+      "bottom": 471.22,
+      "gap": 2.5499999999999545
+    },
+    {
+      "type": "bullish",
+      "topBar": 23,
+      "bottomBar": 21,
+      "top": 475.56,
+      "bottom": 473.02,
+      "gap": 2.5400000000000205
+    },
+    {
+      "type": "bullish",
+      "topBar": 24,
+      "bottomBar": 22,
+      "top": 477.67,
+      "bottom": 474.71,
+      "gap": 2.9600000000000364
+    },
+    {
+      "type": "bullish",
+      "topBar": 25,
+      "bottomBar": 23,
+      "top": 480.14,
+      "bottom": 476.39,
+      "gap": 3.75
+    },
+    {
+      "type": "bullish",
+      "topBar": 26,
+      "bottomBar": 24,
+      "top": 482.55,
+      "bottom": 478.18,
+      "gap": 4.3700000000000045
+    },
+    {
+      "type": "bullish",
+      "topBar": 27,
+      "bottomBar": 25,
+      "top": 485.27,
+      "bottom": 480.2,
+      "gap": 5.069999999999993
+    },
+    {
+      "type": "bullish",
+      "topBar": 28,
+      "bottomBar": 26,
+      "top": 488.33,
+      "bottom": 482.96,
+      "gap": 5.3700000000000045
+    },
+    {
+      "type": "bullish",
+      "topBar": 29,
+      "bottomBar": 27,
+      "top": 491.66,
+      "bottom": 486.04,
+      "gap": 5.6200000000000045
+    },
+    {
+      "type": "bullish",
+      "topBar": 30,
+      "bottomBar": 28,
+      "top": 495.14,
+      "bottom": 489.29,
+      "gap": 5.849999999999966
+    },
+    {
+      "type": "bullish",
+      "topBar": 31,
+      "bottomBar": 29,
+      "top": 498.64,
+      "bottom": 492.58,
+      "gap": 6.060000000000002
+    },
+    {
+      "type": "bullish",
+      "topBar": 32,
+      "bottomBar": 30,
+      "top": 501.77,
+      "bottom": 495.78,
+      "gap": 5.990000000000009
+    },
+    {
+      "type": "bullish",
+      "topBar": 33,
+      "bottomBar": 31,
+      "top": 504.62,
+      "bottom": 498.85,
+      "gap": 5.769999999999982
+    },
+    {
+      "type": "bullish",
+      "topBar": 34,
+      "bottomBar": 32,
+      "top": 507.5,
+      "bottom": 502.06,
+      "gap": 5.439999999999998
+    },
+    {
+      "type": "bullish",
+      "topBar": 35,
+      "bottomBar": 33,
+      "top": 510.56,
+      "bottom": 505.34,
+      "gap": 5.220000000000027
+    },
+    {
+      "type": "bullish",
+      "topBar": 36,
+      "bottomBar": 34,
+      "top": 513.91,
+      "bottom": 508.47,
+      "gap": 5.439999999999941
+    },
+    {
+      "type": "bullish",
+      "topBar": 37,
+      "bottomBar": 35,
+      "top": 517.64,
+      "bottom": 511.55,
+      "gap": 6.089999999999975
+    },
+    {
+      "type": "bullish",
+      "topBar": 38,
+      "bottomBar": 36,
+      "top": 521.62,
+      "bottom": 514.68,
+      "gap": 6.940000000000055
+    },
+    {
+      "type": "bullish",
+      "topBar": 39,
+      "bottomBar": 37,
+      "top": 525.65,
+      "bottom": 517.99,
+      "gap": 7.659999999999968
+    },
+    {
+      "type": "bullish",
+      "topBar": 40,
+      "bottomBar": 38,
+      "top": 530.09,
+      "bottom": 521.78,
+      "gap": 8.31000000000006
+    },
+    {
+      "type": "bullish",
+      "topBar": 41,
+      "bottomBar": 39,
+      "top": 534.9,
+      "bottom": 526.28,
+      "gap": 8.620000000000005
+    },
+    {
+      "type": "bullish",
+      "topBar": 42,
+      "bottomBar": 40,
+      "top": 539.97,
+      "bottom": 531.06,
+      "gap": 8.910000000000082
+    },
+    {
+      "type": "bullish",
+      "topBar": 43,
+      "bottomBar": 41,
+      "top": 545.17,
+      "bottom": 535.96,
+      "gap": 9.209999999999923
+    },
+    {
+      "type": "bullish",
+      "topBar": 44,
+      "bottomBar": 42,
+      "top": 550.34,
+      "bottom": 540.87,
+      "gap": 9.470000000000027
+    },
+    {
+      "type": "bullish",
+      "topBar": 45,
+      "bottomBar": 43,
+      "top": 554.9,
+      "bottom": 545.68,
+      "gap": 9.220000000000027
+    },
+    {
+      "type": "bullish",
+      "topBar": 46,
+      "bottomBar": 44,
+      "top": 559.43,
+      "bottom": 550.35,
+      "gap": 9.079999999999927
+    },
+    {
+      "type": "bullish",
+      "topBar": 47,
+      "bottomBar": 45,
+      "top": 564.09,
+      "bottom": 555.43,
+      "gap": 8.660000000000082
+    },
+    {
+      "type": "bullish",
+      "topBar": 48,
+      "bottomBar": 46,
+      "top": 569.02,
+      "bottom": 560.37,
+      "gap": 8.649999999999977
+    },
+    {
+      "type": "bullish",
+      "topBar": 49,
+      "bottomBar": 47,
+      "top": 574.35,
+      "bottom": 565.21,
+      "gap": 9.139999999999986
+    },
+    {
+      "type": "bullish",
+      "topBar": 50,
+      "bottomBar": 48,
+      "top": 580.15,
+      "bottom": 570.04,
+      "gap": 10.110000000000014
+    },
+    {
+      "type": "bullish",
+      "topBar": 51,
+      "bottomBar": 49,
+      "top": 586,
+      "bottom": 575.02,
+      "gap": 10.980000000000018
+    },
+    {
+      "type": "bullish",
+      "topBar": 52,
+      "bottomBar": 50,
+      "top": 592.19,
+      "bottom": 580.3,
+      "gap": 11.8900000000001
+    },
+    {
+      "type": "bullish",
+      "topBar": 53,
+      "bottomBar": 51,
+      "top": 598.85,
+      "bottom": 586.42,
+      "gap": 12.430000000000064
+    },
+    {
+      "type": "bullish",
+      "topBar": 54,
+      "bottomBar": 52,
+      "top": 605.91,
+      "bottom": 593.08,
+      "gap": 12.829999999999927
+    },
+    {
+      "type": "bullish",
+      "topBar": 55,
+      "bottomBar": 53,
+      "top": 613.24,
+      "bottom": 600.01,
+      "gap": 13.230000000000018
+    },
+    {
+      "type": "bullish",
+      "topBar": 56,
+      "bottomBar": 54,
+      "top": 620.67,
+      "bottom": 607.06,
+      "gap": 13.610000000000014
+    },
+    {
+      "type": "bullish",
+      "topBar": 57,
+      "bottomBar": 55,
+      "top": 627.78,
+      "bottom": 614.09,
+      "gap": 13.68999999999994
+    },
+    {
+      "type": "bullish",
+      "topBar": 58,
+      "bottomBar": 56,
+      "top": 634.51,
+      "bottom": 621,
+      "gap": 13.509999999999991
+    },
+    {
+      "type": "bullish",
+      "topBar": 59,
+      "bottomBar": 57,
+      "top": 641.31,
+      "bottom": 628.06,
+      "gap": 13.25
+    },
+    {
+      "type": "bullish",
+      "topBar": 60,
+      "bottomBar": 58,
+      "top": 648.36,
+      "bottom": 635.35,
+      "gap": 13.009999999999991
+    },
+    {
+      "type": "bullish",
+      "topBar": 61,
+      "bottomBar": 59,
+      "top": 655.82,
+      "bottom": 642.51,
+      "gap": 13.31000000000006
+    },
+    {
+      "type": "bullish",
+      "topBar": 62,
+      "bottomBar": 60,
+      "top": 663.82,
+      "bottom": 649.63,
+      "gap": 14.190000000000055
+    },
+    {
+      "type": "bullish",
+      "topBar": 63,
+      "bottomBar": 61,
+      "top": 672.29,
+      "bottom": 656.85,
+      "gap": 15.43999999999994
+    },
+    {
+      "type": "bullish",
+      "topBar": 64,
+      "bottomBar": 62,
+      "top": 680.79,
+      "bottom": 664.35,
+      "gap": 16.43999999999994
+    },
+    {
+      "type": "bullish",
+      "topBar": 65,
+      "bottomBar": 63,
+      "top": 689.9,
+      "bottom": 672.4,
+      "gap": 17.5
+    },
+    {
+      "type": "bullish",
+      "topBar": 66,
+      "bottomBar": 64,
+      "top": 699.58,
+      "bottom": 681.53,
+      "gap": 18.050000000000068
+    },
+    {
+      "type": "bullish",
+      "topBar": 67,
+      "bottomBar": 65,
+      "top": 709.7,
+      "bottom": 691.11,
+      "gap": 18.590000000000032
+    },
+    {
+      "type": "bullish",
+      "topBar": 68,
+      "bottomBar": 66,
+      "top": 720.09,
+      "bottom": 700.96,
+      "gap": 19.129999999999995
+    },
+    {
+      "type": "bullish",
+      "topBar": 69,
+      "bottomBar": 67,
+      "top": 730.58,
+      "bottom": 710.92,
+      "gap": 19.660000000000082
+    },
+    {
+      "type": "bullish",
+      "topBar": 70,
+      "bottomBar": 68,
+      "top": 740.4,
+      "bottom": 720.84,
+      "gap": 19.559999999999945
+    },
+    {
+      "type": "bullish",
+      "topBar": 71,
+      "bottomBar": 69,
+      "top": 750.17,
+      "bottom": 730.66,
+      "gap": 19.50999999999999
+    },
+    {
+      "type": "bullish",
+      "topBar": 72,
+      "bottomBar": 70,
+      "top": 760.16,
+      "bottom": 741.03,
+      "gap": 19.129999999999995
+    },
+    {
+      "type": "bullish",
+      "topBar": 73,
+      "bottomBar": 71,
+      "top": 770.58,
+      "bottom": 751.37,
+      "gap": 19.210000000000036
+    },
+    {
+      "type": "bullish",
+      "topBar": 74,
+      "bottomBar": 72,
+      "top": 781.6,
+      "bottom": 761.65,
+      "gap": 19.950000000000045
+    },
+    {
+      "type": "bullish",
+      "topBar": 75,
+      "bottomBar": 73,
+      "top": 793.34,
+      "bottom": 772,
+      "gap": 21.340000000000032
+    },
+    {
+      "type": "bullish",
+      "topBar": 76,
+      "bottomBar": 74,
+      "top": 805.36,
+      "bottom": 782.59,
+      "gap": 22.769999999999982
+    },
+    {
+      "type": "bullish",
+      "topBar": 77,
+      "bottomBar": 75,
+      "top": 817.83,
+      "bottom": 793.65,
+      "gap": 24.180000000000064
+    }
+  ],
+  "orderBlocks": [
+    {
+      "type": "bullish",
+      "index": 12,
+      "level": 455.91,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 13,
+      "level": 456.98,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 14,
+      "level": 458.18,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 15,
+      "level": 459.46,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 16,
+      "level": 461.08,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 17,
+      "level": 462.97,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 18,
+      "level": 465.05,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 19,
+      "level": 467.19,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 20,
+      "level": 469.2,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 21,
+      "level": 470.71,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 22,
+      "level": 472.19,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 23,
+      "level": 473.77,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 24,
+      "level": 475.56,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 25,
+      "level": 477.67,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 26,
+      "level": 480.14,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 27,
+      "level": 482.55,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 28,
+      "level": 485.27,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 29,
+      "level": 488.33,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 30,
+      "level": 491.66,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 31,
+      "level": 495.14,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 32,
+      "level": 498.64,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 33,
+      "level": 501.77,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 34,
+      "level": 504.62,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 35,
+      "level": 507.5,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 36,
+      "level": 510.56,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 37,
+      "level": 513.91,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 38,
+      "level": 517.64,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 39,
+      "level": 521.62,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 40,
+      "level": 525.65,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 41,
+      "level": 530.09,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 42,
+      "level": 534.9,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 43,
+      "level": 539.97,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 44,
+      "level": 545.17,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 45,
+      "level": 550.34,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 46,
+      "level": 554.9,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 47,
+      "level": 559.43,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 48,
+      "level": 564.09,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 49,
+      "level": 569.02,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 50,
+      "level": 574.35,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 51,
+      "level": 580.15,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 52,
+      "level": 586,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 53,
+      "level": 592.19,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 54,
+      "level": 598.85,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 55,
+      "level": 605.91,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 56,
+      "level": 613.24,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 57,
+      "level": 620.67,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 58,
+      "level": 627.78,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 59,
+      "level": 634.51,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 60,
+      "level": 641.31,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 61,
+      "level": 648.36,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 62,
+      "level": 655.82,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 63,
+      "level": 663.82,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 64,
+      "level": 672.29,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 65,
+      "level": 680.79,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 66,
+      "level": 689.9,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 67,
+      "level": 699.58,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 68,
+      "level": 709.7,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 69,
+      "level": 720.09,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 70,
+      "level": 730.58,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 71,
+      "level": 740.4,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 72,
+      "level": 750.17,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 73,
+      "level": 760.16,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 74,
+      "level": 770.58,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 75,
+      "level": 781.6,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 76,
+      "level": 793.34,
+      "strength": "medium"
+    },
+    {
+      "type": "bullish",
+      "index": 77,
+      "level": 805.36,
+      "strength": "medium"
+    }
+  ],
+  "confluences": [],
+  "executionZones": []
+}

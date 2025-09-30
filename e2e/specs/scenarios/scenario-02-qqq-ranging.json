@@ -1,0 +1,29 @@
+{
+  "id": "02",
+  "name": "QQQ Ranging Day",
+  "description": "Full pipeline test with QQQ on a consolidation/ranging day",
+  "fixture": {
+    "symbol": "QQQ",
+    "date": "2025-09-27",
+    "timeframe": "5m",
+    "type": "ranging"
+  },
+  "expectedOutputs": {
+    "barCount": 78,
+    "hasFairValueGaps": false,
+    "hasOrderBlocks": false,
+    "trend": "neutral",
+    "hasConfluences": false,
+    "hasExecutionZones": false
+  },
+  "pipeline": {
+    "steps": [
+      "provider-fixture",
+      "composite-bars",
+      "cache-store",
+      "analysis-kit",
+      "tjr-tools-confluences"
+    ]
+  },
+  "tags": ["ranging", "neutral", "qqq", "full-pipeline"]
+}

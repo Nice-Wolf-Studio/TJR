@@ -30,6 +30,18 @@ importers:
         specifier: ^5.3.3
         version: 5.9.2
 
+  e2e:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.18
+        version: 20.19.18
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   packages/analysis-kit:
     devDependencies:
       '@types/node':

@@ -153,7 +153,7 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
           symbol,
           timeframe,
           bars,
-          timestamp: new Date().toISOString(),
+          analysisTimestamp: new Date().toISOString(),
         },
         {
           fvg: userConfig.confluence.fvg,
@@ -253,7 +253,10 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
       timeframe,
       timestamp: new Date().toISOString(),
       confluenceScore: result.confluence.score,
-      factors: result.confluence.factors,
+      factors: result.confluence.factors.map(f => ({
+        ...f,
+        description: f.description || '',
+      })),
       fvgZones: result.fvgZones,
       orderBlocks: result.orderBlocks,
       overlaps,

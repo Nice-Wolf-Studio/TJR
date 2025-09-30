@@ -1,0 +1,32 @@
+{
+  "id": "04",
+  "name": "Full Execution Pipeline with Confluence Detection",
+  "description": "Complete pipeline from provider to execution zones with confluence scoring",
+  "fixture": {
+    "symbol": "IWM",
+    "date": "2025-09-29",
+    "timeframe": "5m",
+    "type": "trend-up"
+  },
+  "expectedOutputs": {
+    "barCount": 78,
+    "hasFairValueGaps": true,
+    "hasOrderBlocks": true,
+    "hasConfluences": true,
+    "minConfluenceScore": 2,
+    "hasExecutionZones": true,
+    "hasRiskLevels": true
+  },
+  "pipeline": {
+    "steps": [
+      "provider-fixture",
+      "composite-bars",
+      "cache-store",
+      "analysis-kit",
+      "tjr-tools-confluences",
+      "tjr-tools-execution",
+      "tjr-tools-risk"
+    ]
+  },
+  "tags": ["full-pipeline", "execution", "risk", "confluence", "iwm"]
+}

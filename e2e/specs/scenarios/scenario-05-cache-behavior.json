@@ -1,0 +1,34 @@
+{
+  "id": "05",
+  "name": "Cache Hit vs Cache Miss",
+  "description": "Test cache behavior with cold start (miss) and warm cache (hit)",
+  "fixture": {
+    "symbol": "SPY",
+    "date": "2025-09-29",
+    "timeframe": "5m",
+    "type": "trend-up"
+  },
+  "expectedOutputs": {
+    "coldStart": {
+      "cacheHit": false,
+      "barCount": 78,
+      "loadedFromProvider": true
+    },
+    "warmCache": {
+      "cacheHit": true,
+      "barCount": 78,
+      "loadedFromCache": true,
+      "matchesColdStart": true
+    }
+  },
+  "pipeline": {
+    "steps": [
+      "cache-clear",
+      "provider-fixture-cold",
+      "cache-store",
+      "provider-fixture-warm",
+      "cache-verify"
+    ]
+  },
+  "tags": ["cache", "performance", "spy", "deterministic"]
+}

@@ -71,7 +71,7 @@ export class TJRSetupCommand extends BaseTJRCommand {
     const action = args[0]?.toLowerCase();
 
     // Validate action
-    if (!['show', 'set', 'reset', 'validate'].includes(action)) {
+    if (!['show', 'set', 'reset', 'validate'].includes(action || '')) {
       throw new TJRCommandError(
         TJRErrorCode.INVALID_ARGS,
         `Invalid action: ${action}. Must be one of: show, set, reset, validate`,
@@ -196,7 +196,7 @@ export class TJRSetupCommand extends BaseTJRCommand {
   private async handleSet(
     key: string,
     value: any,
-    userConfig: UserConfig,
+    _userConfig: UserConfig,
     format: OutputFormat
   ): Promise<{ output: any; metadata?: Record<string, any> }> {
     // Set the value
@@ -302,7 +302,18 @@ export class TJRSetupCommand extends BaseTJRCommand {
     const validation = this.configService.validate(userConfig);
 
     return {
-      confluence: userConfig.confluence,
+      confluence: {
+        weights: userConfig.confluence.weights,
+        fvg: {
+          minGapSizeATR: userConfig.confluence.fvg.minGapSizeATR ?? 0,
+          checkFilled: userConfig.confluence.fvg.checkFilled ?? true,
+        },
+        orderBlock: {
+          minVolumeRatio: userConfig.confluence.orderBlock.minVolumeRatio ?? 0,
+          minRejection: userConfig.confluence.orderBlock.minRejection ?? 0,
+          checkMitigated: userConfig.confluence.orderBlock.checkMitigated ?? true,
+        },
+      },
       execution: userConfig.execution,
       risk: userConfig.risk,
       formatting: userConfig.formatting,

@@ -1,0 +1,68 @@
+{
+  "symbol": "BTC-USDT",
+  "bars5m": [
+    { "timestamp": "2025-09-30T09:30:00Z", "open": 64500, "high": 64650, "low": 64480, "close": 64600, "volume": 1200 },
+    { "timestamp": "2025-09-30T09:35:00Z", "open": 64600, "high": 64750, "low": 64580, "close": 64720, "volume": 1450 },
+    { "timestamp": "2025-09-30T09:40:00Z", "open": 64720, "high": 64900, "low": 64700, "close": 64850, "volume": 2100 },
+    { "timestamp": "2025-09-30T09:45:00Z", "open": 64850, "high": 64920, "low": 64800, "close": 64880, "volume": 1800 },
+    { "timestamp": "2025-09-30T09:50:00Z", "open": 64880, "high": 65000, "low": 64850, "close": 64950, "volume": 1950 },
+    { "timestamp": "2025-09-30T09:55:00Z", "open": 64950, "high": 65100, "low": 64930, "close": 65050, "volume": 2200 },
+    { "timestamp": "2025-09-30T10:00:00Z", "open": 65050, "high": 65200, "low": 65020, "close": 65180, "volume": 2500 }
+  ],
+  "bars1m": [
+    { "timestamp": "2025-09-30T10:00:00Z", "open": 65050, "high": 65080, "low": 65040, "close": 65070, "volume": 500 },
+    { "timestamp": "2025-09-30T10:01:00Z", "open": 65070, "high": 65100, "low": 65060, "close": 65090, "volume": 520 },
+    { "timestamp": "2025-09-30T10:02:00Z", "open": 65090, "high": 65130, "low": 65080, "close": 65120, "volume": 480 },
+    { "timestamp": "2025-09-30T10:03:00Z", "open": 65120, "high": 65160, "low": 65110, "close": 65150, "volume": 550 },
+    { "timestamp": "2025-09-30T10:04:00Z", "open": 65150, "high": 65200, "low": 65140, "close": 65180, "volume": 600 }
+  ],
+  "result": {
+    "confirmation": {
+      "confirmed": true,
+      "confluenceScore": 85.2,
+      "timestamp": "2025-09-30T10:00:00Z",
+      "barIndex": 6,
+      "reason": "5m confluence score (85.2) meets threshold"
+    },
+    "entryTrigger": {
+      "triggered": true,
+      "entryPrice": 65150,
+      "direction": "long",
+      "timestamp": "2025-09-30T10:03:00Z",
+      "barIndex": 3,
+      "reason": "1m entry trigger confirmed within confluence zones"
+    },
+    "execution": {
+      "direction": "long",
+      "entryPrice": 65150,
+      "stopLoss": 65000,
+      "takeProfit": 65450,
+      "positionSize": 100,
+      "riskAmount": 15000,
+      "rewardAmount": 30000,
+      "riskRewardRatio": 2.0,
+      "confluenceFactors": ["Fair Value Gaps", "Order Blocks", "Zone Overlap"]
+    },
+    "riskManagement": {
+      "accountSize": 100000,
+      "maxRiskPerTrade": 0.01,
+      "maxRiskAmount": 1000,
+      "positionSize": 100,
+      "dailyLossLimit": 5000,
+      "dailyLossUsed": 0,
+      "canTakeNewTrade": true,
+      "partialExits": [
+        {
+          "percentage": 0.5,
+          "price": 65300,
+          "description": "Exit 50 shares at 1.0R"
+        },
+        {
+          "percentage": 0.5,
+          "price": 65450,
+          "description": "Exit 50 shares at 2.0R"
+        }
+      ]
+    }
+  }
+}

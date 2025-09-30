@@ -1,0 +1,52 @@
+{
+  "ES": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "NQ": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "YM": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "RTY": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "VX": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 8,
+    "expirationDay": "wednesday-before-third-friday"
+  },
+  "GC": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "SI": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "CL": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "ZB": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  },
+  "ZN": {
+    "type": "fixed-days",
+    "daysBeforeExpiration": 5,
+    "expirationDay": "third-friday"
+  }
+}

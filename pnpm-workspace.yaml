@@ -1,2 +1,16 @@
+# pnpm workspace configuration for TJR Suite monorepo
+# Defines which directories contain workspace packages
+# See: https://pnpm.io/workspaces
+
 packages:
-  - "packages/*"
+  # All packages under packages/ directory
+  # This is where publishable packages live (e.g., @tjr-suite/core, @tjr-suite/utils)
+  - 'packages/*'
+
+  # Exclude test directories and build artifacts from workspace scanning
+  # This prevents pnpm from treating these as packages
+  - '!**/test/**'
+  - '!**/tests/**'
+  - '!**/__tests__/**'
+  - '!**/dist/**'
+  - '!**/build/**'

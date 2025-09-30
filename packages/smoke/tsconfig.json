@@ -1,0 +1,19 @@
+{
+  // TypeScript configuration for smoke test package
+  // Extends base config from monorepo root
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    // Override output directory for this package
+    "outDir": "./dist",
+
+    // Root directory for source files
+    "rootDir": "./src"
+  },
+
+  // Include only source files (not tests)
+  "include": ["src/**/*"],
+
+  // Explicitly exclude test files, node_modules, and build artifacts
+  "exclude": ["node_modules", "dist", "tests"]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@tjr/analysis-kit",
+  "version": "0.0.1",
+  "description": "Pure-function analytics for market structure, bias, sessions, and profiles",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "tjr",
+    "trading",
+    "analytics",
+    "market-structure",
+    "bias",
+    "profile",
+    "pure-functions"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}

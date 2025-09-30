@@ -1,0 +1,22 @@
+{
+  "name": "trend-day-bullish",
+  "description": "Strong bullish trend day with close near high",
+  "input": {
+    "bars": [
+      { "timestamp": 1000, "open": 100, "high": 105, "low": 99, "close": 104 },
+      { "timestamp": 2000, "open": 104, "high": 110, "low": 103, "close": 108 },
+      { "timestamp": 3000, "open": 108, "high": 115, "low": 107, "close": 114 }
+    ],
+    "sessionExtremes": {
+      "rthOpen": 100,
+      "rthClose": 114,
+      "rthHigh": 115,
+      "rthLow": 99
+    }
+  },
+  "expected": {
+    "type": "P",
+    "characteristicsContains": ["strong directional move", "bullish"],
+    "volatilityMin": 0.7
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "id": "es_2024-10-01_09:30:00",
+    "text": "ES 5850.25 +12.50 vol 15234",
+    "timestamp": "2024-10-01T09:30:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5850.25,
+      "change": 12.50,
+      "volume": 15234
+    }
+  },
+  {
+    "id": "es_2024-10-01_10:00:00",
+    "text": "ES 5848.00 -2.25 vol 12456",
+    "timestamp": "2024-10-01T10:00:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5848.00,
+      "change": -2.25,
+      "volume": 12456
+    }
+  },
+  {
+    "id": "es_2024-10-01_10:30:00",
+    "text": "ES 5851.75 +3.75 vol 18901",
+    "timestamp": "2024-10-01T10:30:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5851.75,
+      "change": 3.75,
+      "volume": 18901
+    }
+  },
+  {
+    "id": "es_2024-10-01_11:00:00",
+    "text": "ES 5849.50 -2.25 vol 14567",
+    "timestamp": "2024-10-01T11:00:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5849.50,
+      "change": -2.25,
+      "volume": 14567
+    }
+  },
+  {
+    "id": "es_2024-10-01_11:30:00",
+    "text": "ES 5853.00 +3.50 vol 16789",
+    "timestamp": "2024-10-01T11:30:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5853.00,
+      "change": 3.50,
+      "volume": 16789
+    }
+  },
+  {
+    "id": "es_2024-10-01_12:00:00",
+    "text": "ES 5855.25 +2.25 vol 13456",
+    "timestamp": "2024-10-01T12:00:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5855.25,
+      "change": 2.25,
+      "volume": 13456
+    }
+  },
+  {
+    "id": "es_2024-10-01_14:00:00",
+    "text": "ES 5852.75 -2.50 vol 19234",
+    "timestamp": "2024-10-01T14:00:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5852.75,
+      "change": -2.50,
+      "volume": 19234
+    }
+  },
+  {
+    "id": "es_2024-10-01_14:30:00",
+    "text": "ES 5856.00 +3.25 vol 17890",
+    "timestamp": "2024-10-01T14:30:00Z",
+    "expectedResult": {
+      "symbol": "ES",
+      "price": 5856.00,
+      "change": 3.25,
+      "volume": 17890
+    }
+  }
+]

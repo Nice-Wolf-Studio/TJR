@@ -1,0 +1,31 @@
+{
+  "name": "@tjr-suite/dev-scripts",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Development and operational CLI tools for TJR Suite",
+  "bin": {
+    "commands-diff": "./bin/commands-diff.js",
+    "cache-warm": "./bin/cache-warm.js",
+    "cache-verify": "./bin/cache-verify.js",
+    "replay-run": "./bin/replay-run.js"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "lint": "echo 'Lint not configured yet'",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "cli",
+    "dev-tools",
+    "cache",
+    "discord",
+    "replay"
+  ],
+  "author": "TJR Suite Team",
+  "license": "UNLICENSED"
+}

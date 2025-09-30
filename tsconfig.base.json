@@ -1,35 +1,58 @@
 {
   // Base TypeScript configuration for TJR Suite monorepo
-  // Individual packages extend this configuration
+  // Individual packages extend this config via `"extends": "../../tsconfig.base.json"`
+  // Project references enable incremental builds across workspace packages
   "compilerOptions": {
     // Language and Environment
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "target": "ES2022", // Modern JS features (async/await, classes, etc.)
+    "lib": ["ES2022"], // Standard library typings for ES2022
+    "module": "commonjs", // CommonJS modules for Node.js compatibility
+    "moduleResolution": "node", // Node.js-style module resolution
 
-    // Emit
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "composite": true,
-    "incremental": true,
+    // Emit Configuration
+    "declaration": true, // Generate .d.ts files for consumers
+    "declarationMap": true, // Source maps for .d.ts files (better IDE nav)
+    "sourceMap": true, // Source maps for debugging
+    "outDir": "./dist", // Output directory (overridden per-package)
+    "composite": true, // Enable project references
+    "incremental": true, // Speed up rebuilds with .tsbuildinfo cache
 
-    // Type Checking
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    // Type Checking - STRICT MODE (catch bugs early)
+    "strict": true, // Enable all strict type-checking options
+    "noImplicitAny": true, // Error on implicit 'any' types
+    "strictNullChecks": true, // null/undefined must be explicit
+    "strictFunctionTypes": true, // Stricter function type checking
+    "strictBindCallApply": true, // Strict bind/call/apply checking
+    "strictPropertyInitialization": true, // Class properties must be initialized
+    "noImplicitThis": true, // Error on implicit 'this' types
+    "alwaysStrict": true, // Emit "use strict" in output
 
-    // Interop Constraints
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+    // Additional Checks (prevent common mistakes)
+    "noUnusedLocals": true, // Error on unused local variables
+    "noUnusedParameters": true, // Error on unused function parameters
+    "noImplicitReturns": true, // Error on code paths that don't return
+    "noFallthroughCasesInSwitch": true, // Error on switch fallthrough
+    "noUncheckedIndexedAccess": true, // Array access returns T | undefined
+    "noPropertyAccessFromIndexSignature": true, // Enforce bracket notation for index sigs
 
-    // Skip Lib Check (for faster builds)
-    "skipLibCheck": true
-  }
+    // Module Resolution
+    "esModuleInterop": true, // Better CommonJS/ESM interop
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules without one
+    "resolveJsonModule": true, // Import JSON files as modules
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+
+    // Paths (workspace package aliases)
+    // Packages can reference each other via @tjr-suite/* instead of relative paths
+    "baseUrl": ".",
+    "paths": {
+      "@tjr-suite/*": ["packages/*/src"]
+    },
+
+    // Advanced
+    "skipLibCheck": true, // Skip type checking of .d.ts files (faster builds)
+    "forceConsistentCasingInFileNames": true // Prevent case-sensitivity issues across OSes
+  },
+
+  // Exclude common non-source directories from compilation
+  "exclude": ["node_modules", "dist", "build", "**/*.spec.ts", "**/*.test.ts", "**/tests/**"]
 }

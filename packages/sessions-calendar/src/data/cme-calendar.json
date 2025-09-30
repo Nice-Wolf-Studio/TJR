@@ -1,0 +1,149 @@
+{
+  "exchange": "CME",
+  "validFrom": "2024-01-01",
+  "validTo": "2027-12-31",
+  "holidays": [
+    {
+      "date": "2025-01-01",
+      "name": "New Year's Day",
+      "type": "full"
+    },
+    {
+      "date": "2025-04-18",
+      "name": "Good Friday",
+      "type": "full"
+    },
+    {
+      "date": "2025-05-26",
+      "name": "Memorial Day",
+      "type": "full"
+    },
+    {
+      "date": "2025-07-04",
+      "name": "Independence Day",
+      "type": "full"
+    },
+    {
+      "date": "2025-09-01",
+      "name": "Labor Day",
+      "type": "full"
+    },
+    {
+      "date": "2025-11-27",
+      "name": "Thanksgiving Day",
+      "type": "full"
+    },
+    {
+      "date": "2025-11-28",
+      "name": "Day After Thanksgiving",
+      "type": "early_close"
+    },
+    {
+      "date": "2025-12-24",
+      "name": "Christmas Eve",
+      "type": "early_close"
+    },
+    {
+      "date": "2025-12-25",
+      "name": "Christmas Day",
+      "type": "full"
+    },
+    {
+      "date": "2026-01-01",
+      "name": "New Year's Day",
+      "type": "full"
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Good Friday",
+      "type": "full"
+    },
+    {
+      "date": "2026-05-25",
+      "name": "Memorial Day",
+      "type": "full"
+    },
+    {
+      "date": "2026-07-03",
+      "name": "Independence Day (Observed)",
+      "type": "full"
+    },
+    {
+      "date": "2026-09-07",
+      "name": "Labor Day",
+      "type": "full"
+    },
+    {
+      "date": "2026-11-26",
+      "name": "Thanksgiving Day",
+      "type": "full"
+    },
+    {
+      "date": "2026-11-27",
+      "name": "Day After Thanksgiving",
+      "type": "early_close"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Christmas Day",
+      "type": "full"
+    }
+  ],
+  "dstTransitions": [
+    {
+      "year": 2025,
+      "spring": "2025-03-09T02:00:00",
+      "fall": "2025-11-02T02:00:00"
+    },
+    {
+      "year": 2026,
+      "spring": "2026-03-08T02:00:00",
+      "fall": "2026-11-01T02:00:00"
+    },
+    {
+      "year": 2027,
+      "spring": "2027-03-14T02:00:00",
+      "fall": "2027-11-07T02:00:00"
+    }
+  ],
+  "sessions": {
+    "ES": {
+      "name": "E-mini S&P 500",
+      "timezone": "America/Chicago",
+      "rth": {
+        "start": "08:30",
+        "end": "15:00",
+        "description": "Regular Trading Hours (CME)"
+      },
+      "eth_pre": {
+        "start": "17:00",
+        "end": "08:30",
+        "description": "Extended Hours - Evening/Overnight (previous day 17:00 to current day 08:30)"
+      },
+      "eth_post": {
+        "start": "15:00",
+        "end": "16:00",
+        "description": "Extended Hours - Afternoon (15:00 to 16:00)"
+      }
+    },
+    "NQ": {
+      "name": "E-mini NASDAQ-100",
+      "timezone": "America/Chicago",
+      "rth": {
+        "start": "08:30",
+        "end": "15:00",
+        "description": "Regular Trading Hours (CME)"
+      },
+      "eth_pre": {
+        "start": "17:00",
+        "end": "08:30",
+        "description": "Extended Hours - Evening/Overnight"
+      },
+      "eth_post": {
+        "start": "15:00",
+        "end": "16:00",
+        "description": "Extended Hours - Afternoon"
+      }
+    }
+  }
+}

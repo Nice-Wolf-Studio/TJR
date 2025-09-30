@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - 'phase-**'  # All phase branches
+      - 'phase-**' # All phase branches
   pull_request:
     branches:
       - main
@@ -28,28 +28,28 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [18.x]
-      fail-fast: false  # Continue running other matrix jobs if one fails
+      fail-fast: false # Continue running other matrix jobs if one fails
 
     steps:
       # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for changesets and git operations
+          fetch-depth: 0 # Full history for changesets and git operations
 
       # Step 2: Setup Node.js with caching
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'  # Cache pnpm store for faster installs
+          cache: 'pnpm' # Cache pnpm store for faster installs
 
       # Step 3: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8.15.0
-          run_install: false  # We'll run install manually
+          run_install: false # We'll run install manually
 
       # Step 4: Install dependencies (frozen lockfile ensures reproducibility)
       - name: Install dependencies
@@ -71,6 +71,16 @@ jobs:
       # Step 8: Check code formatting with Prettier
       - name: Check formatting
         run: pnpm format:check
+
+      # Step 9: Smoke test dev-scripts CLIs
+      - name: Smoke test dev-scripts
+        run: |
+          cd packages/dev-scripts
+          node dist/bin/commands-diff.js --help
+          node dist/bin/cache-warm.js --help
+          node dist/bin/cache-verify.js --help
+          node dist/bin/replay-run.js --help
+        continue-on-error: false  # Fail CI if smoke tests fail
 
   # Job 2: Security audit (runs in parallel with ci job)
   security:
@@ -94,4 +104,4 @@ jobs:
       # Run pnpm audit (currently non-blocking, logs warnings only)
       - name: Run pnpm audit
         run: pnpm audit --audit-level moderate || true
-        continue-on-error: true  # Don't fail CI on audit warnings (for now)
+        continue-on-error: true # Don't fail CI on audit warnings (for now)

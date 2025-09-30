@@ -1,0 +1,277 @@
+# Provider Smoke Test Workflow
+# Manual-only workflow for live API testing of market data providers
+#
+# IMPORTANT: This workflow is NEVER triggered automatically or on PRs
+# It must be manually dispatched via GitHub Actions UI
+#
+# Purpose:
+# - Validate provider API integrations against live endpoints
+# - Test API key validity and quota availability
+# - Verify provider behavior without impacting CI/CD pipeline
+#
+# Security:
+# - API keys are stored as GitHub Secrets
+# - Secrets are never echoed to logs
+# - URLs containing API keys are masked
+# - Rate limiting prevents excessive API usage
+
+name: Provider Smoke Tests
+
+# MANUAL TRIGGER ONLY - No automatic execution
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: 'Provider to test'
+        required: true
+        type: choice
+        options:
+          - yahoo
+          - polygon
+          - all
+        default: 'all'
+
+      symbol:
+        description: 'Trading symbol to test (ES=F for Yahoo, ES for Polygon)'
+        required: true
+        type: string
+        default: 'ES=F'
+
+      timeframe:
+        description: 'Timeframe for data request'
+        required: true
+        type: choice
+        options:
+          - 1m
+          - 5m
+          - 1h
+          - 1D
+        default: '1h'
+
+      dry-run:
+        description: 'Dry run (validate setup without API calls)'
+        required: false
+        type: boolean
+        default: false
+
+# Prevent concurrent runs of this workflow
+concurrency:
+  group: provider-smoke-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+# Restrict permissions to minimum required (read-only access to code)
+permissions:
+  contents: read  # Only needs to read code for checkout
+
+jobs:
+  # Job: Run smoke tests per provider
+  smoke-test:
+    name: Smoke Test - ${{ matrix.provider }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Matrix strategy: Run each provider in parallel
+    strategy:
+      matrix:
+        # Dynamically set matrix based on input
+        provider: ${{ fromJSON(inputs.provider == 'all' && '["yahoo", "polygon"]' || format('["{0}"]', inputs.provider)) }}
+      fail-fast: false  # Continue testing other providers if one fails
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Shallow clone for faster checkout
+
+      # Step 2: Setup Node.js with pnpm caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'pnpm'
+
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+          run_install: false
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 5: Build the specific provider package
+      - name: Build provider - ${{ matrix.provider }}
+        env:
+          PROVIDER: ${{ matrix.provider }}
+        run: pnpm --filter "@tjr/provider-${PROVIDER}" build
+
+      # Step 6: Run dry-run validation (if enabled)
+      - name: Dry-run validation
+        if: inputs.dry-run == true
+        env:
+          PROVIDER: ${{ matrix.provider }}
+          SYMBOL: ${{ inputs.symbol }}
+          TIMEFRAME: ${{ inputs.timeframe }}
+        run: |
+          echo "==== DRY RUN MODE ===="
+          echo "Provider: ${PROVIDER}"
+          echo "Symbol: ${SYMBOL}"
+          echo "Timeframe: ${TIMEFRAME}"
+          echo "Package path: packages/provider-${PROVIDER}"
+
+          # Verify package structure
+          if [ ! -d "packages/provider-${PROVIDER}" ]; then
+            echo "ERROR: Provider package not found"
+            exit 1
+          fi
+
+          # Verify build artifacts exist
+          if [ ! -d "packages/provider-${PROVIDER}/dist" ]; then
+            echo "ERROR: Build artifacts not found"
+            exit 1
+          fi
+
+          echo "Dry-run validation passed"
+          exit 0
+
+      # Step 7: Yahoo provider smoke test
+      - name: Smoke test - Yahoo
+        if: matrix.provider == 'yahoo' && inputs.dry-run == false
+        env:
+          # Yahoo may or may not require API key depending on implementation
+          YAHOO_API_KEY: ${{ secrets.YAHOO_API_KEY }}
+          SYMBOL: ${{ inputs.symbol }}
+          TIMEFRAME: ${{ inputs.timeframe }}
+        run: |
+          echo "==== YAHOO PROVIDER SMOKE TEST ===="
+          echo "Symbol: ${SYMBOL}"
+          echo "Timeframe: ${TIMEFRAME}"
+          echo ""
+
+          # Check if test:smoke script exists
+          if ! grep -q '"test:smoke"' packages/provider-yahoo/package.json 2>/dev/null; then
+            echo "WARNING: test:smoke script not found in package.json"
+            echo "Expected command format:"
+            echo "  pnpm --filter @tjr/provider-yahoo test:smoke -- --symbol=SYMBOL --timeframe=TIMEFRAME"
+            echo ""
+            echo "Please add this script to packages/provider-yahoo/package.json:"
+            echo '  "test:smoke": "node dist/smoke-test.js"'
+            echo ""
+            echo "SKIPPING: Smoke test script not implemented yet"
+            exit 0
+          fi
+
+          # Rate limit: Sleep before API call to avoid hitting limits
+          echo "Rate limiting: Waiting 3 seconds before API call..."
+          sleep 3
+
+          # Run smoke test with masked API key
+          echo "Executing smoke test..."
+          pnpm --filter @tjr/provider-yahoo test:smoke -- \
+            --symbol="${SYMBOL}" \
+            --timeframe="${TIMEFRAME}"
+
+      # Step 8: Polygon provider smoke test
+      - name: Smoke test - Polygon
+        if: matrix.provider == 'polygon' && inputs.dry-run == false
+        env:
+          # Polygon requires API key
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+          SYMBOL: ${{ inputs.symbol }}
+          TIMEFRAME: ${{ inputs.timeframe }}
+        run: |
+          echo "==== POLYGON PROVIDER SMOKE TEST ===="
+          echo "Symbol: ${SYMBOL}"
+          echo "Timeframe: ${TIMEFRAME}"
+          echo ""
+
+          # Verify API key is set
+          if [ -z "$POLYGON_API_KEY" ]; then
+            echo "ERROR: POLYGON_API_KEY secret not configured"
+            echo "Please add POLYGON_API_KEY to repository secrets"
+            exit 1
+          fi
+
+          # Mask API key in logs (GitHub Actions will auto-mask secrets, but be explicit)
+          echo "::add-mask::$POLYGON_API_KEY"
+
+          # Check if test:smoke script exists
+          if ! grep -q '"test:smoke"' packages/provider-polygon/package.json 2>/dev/null; then
+            echo "WARNING: test:smoke script not found in package.json"
+            echo "Expected command format:"
+            echo "  POLYGON_API_KEY=*** pnpm --filter @tjr/provider-polygon test:smoke -- --symbol=SYMBOL --timeframe=TIMEFRAME"
+            echo ""
+            echo "Please add this script to packages/provider-polygon/package.json:"
+            echo '  "test:smoke": "node dist/smoke-test.js"'
+            echo ""
+            echo "SKIPPING: Smoke test script not implemented yet"
+            exit 0
+          fi
+
+          # Rate limit: Sleep before API call to avoid hitting limits
+          echo "Rate limiting: Waiting 5 seconds before API call..."
+          sleep 5
+
+          # Run smoke test with API key
+          echo "Executing smoke test..."
+          pnpm --filter @tjr/provider-polygon test:smoke -- \
+            --symbol="${SYMBOL}" \
+            --timeframe="${TIMEFRAME}"
+
+      # Step 9: Report results
+      - name: Report results
+        if: always()
+        env:
+          PROVIDER: ${{ matrix.provider }}
+          SYMBOL: ${{ inputs.symbol }}
+          TIMEFRAME: ${{ inputs.timeframe }}
+          DRY_RUN: ${{ inputs.dry-run }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          echo ""
+          echo "==== SMOKE TEST SUMMARY ===="
+          echo "Provider: ${PROVIDER}"
+          echo "Symbol: ${SYMBOL}"
+          echo "Timeframe: ${TIMEFRAME}"
+          echo "Dry-run: ${DRY_RUN}"
+
+          if [ "${JOB_STATUS}" == "success" ]; then
+            echo "Status: PASSED"
+          else
+            echo "Status: FAILED"
+          fi
+          echo "=========================="
+
+  # Job: Summary report (waits for all provider tests)
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: smoke-test
+    if: always()
+
+    steps:
+      - name: Generate summary
+        env:
+          PROVIDER: ${{ inputs.provider }}
+          SYMBOL: ${{ inputs.symbol }}
+          TIMEFRAME: ${{ inputs.timeframe }}
+          DRY_RUN: ${{ inputs.dry-run }}
+          TEST_RESULT: ${{ needs.smoke-test.result }}
+        run: |
+          echo "## Provider Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Configuration:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Provider: ${PROVIDER}" >> $GITHUB_STEP_SUMMARY
+          echo "- Symbol: ${SYMBOL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Timeframe: ${TIMEFRAME}" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry-run: ${DRY_RUN}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${TEST_RESULT}" == "success" ]; then
+            echo "**Result:** All tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Result:** Some tests failed - check logs above" >> $GITHUB_STEP_SUMMARY
+          fi

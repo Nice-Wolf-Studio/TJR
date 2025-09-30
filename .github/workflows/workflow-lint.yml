@@ -1,0 +1,116 @@
+# Workflow Linting
+# Validates GitHub Actions workflow YAML syntax
+#
+# Purpose:
+# - Catch YAML syntax errors before workflows run
+# - Validate workflow structure and schema
+# - Ensure consistent formatting across workflow files
+#
+# Runs on:
+# - Every push to workflow files
+# - Every PR that modifies workflow files
+# - Manual trigger for on-demand validation
+
+name: Workflow Lint
+
+on:
+  # Trigger on pushes that modify workflow files
+  push:
+    branches:
+      - main
+      - 'phase-**'
+    paths:
+      - '.github/workflows/**'
+
+  # Trigger on PRs that modify workflow files
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+# Prevent concurrent runs
+concurrency:
+  group: workflow-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+# Restrict permissions to minimum required
+permissions:
+  contents: read        # Read code for checkout
+  pull-requests: write  # Post comments on PRs (used by reviewdog)
+
+jobs:
+  lint:
+    name: Lint Workflow Files
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Shallow clone for faster checkout
+
+      # Step 2: Run actionlint using official action
+      # actionlint is a static checker for GitHub Actions workflow files
+      # https://github.com/rhysd/actionlint
+      - name: Lint workflow files with actionlint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          actionlint_flags: -color -verbose
+
+      # Step 3: Validate YAML syntax using yamllint
+      - name: Install yamllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+
+      # Step 4: Run yamllint with custom config
+      - name: Validate YAML syntax
+        run: |
+          echo "==== Validating YAML Syntax ===="
+
+          # Create temporary yamllint config
+          cat > /tmp/yamllint-config.yml << 'EOF'
+          extends: default
+          rules:
+            # Allow longer lines (GitHub Actions workflows are verbose)
+            line-length:
+              max: 200
+              level: warning
+
+            # Allow inline mappings (for workflow syntax)
+            braces:
+              min-spaces-inside: 0
+              max-spaces-inside: 1
+
+            # Allow comments with more than one space
+            comments:
+              min-spaces-from-content: 1
+
+            # Allow document start marker to be optional
+            document-start: disable
+
+            # Allow truthy values (on, off, yes, no)
+            truthy:
+              allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+          EOF
+
+          # Run yamllint on workflow files
+          yamllint -c /tmp/yamllint-config.yml .github/workflows/*.yml
+
+      # Step 5: Report results
+      - name: Report results
+        if: always()
+        run: |
+          echo ""
+          echo "==== LINT SUMMARY ===="
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "Status: All workflow files are valid"
+          else
+            echo "Status: Workflow validation failed"
+            echo "Please fix the errors above and re-run"
+          fi
+          echo "======================"

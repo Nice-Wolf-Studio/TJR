@@ -5,7 +5,13 @@
  * Wires all services together and starts the application
  */
 
-import { createLogger, attachGlobalHandlers, type Logger } from '@tjr/logger';
+import {
+  createLogger,
+  attachGlobalHandlers,
+  withRequestContext,
+  startTimer,
+  type Logger,
+} from '@tjr/logger';
 import { Container, TOKENS, type IContainer } from './container/index.js';
 import { loadConfig, getConfigSummary, type Config } from './config/index.js';
 import { DiscordStub } from './services/discord/discord.stub.js';
@@ -62,17 +68,44 @@ async function start(): Promise<void> {
     // Attach global error handlers
     attachGlobalHandlers(logger);
 
-    logger.info('Starting TJR Suite', getConfigSummary(config));
+    // Wrap startup in request context for observability
+    await withRequestContext(async () => {
+      const startupTimer = startTimer();
 
-    // Create DI container
-    container = new Container();
+      // Assert logger is defined within the context
+      if (!logger) throw new Error('Logger not initialized');
 
-    // Register services
-    await registerServices(container, config, logger);
+      logger.info('Starting TJR Suite', {
+        ...getConfigSummary(config),
+        operation: 'app_startup'
+      });
 
-    // Initialize all services
-    logger.info('Initializing services...');
-    await container.initializeAll();
+      // Create DI container
+      container = new Container();
+
+      // Register services
+      await registerServices(container, config, logger);
+
+      // Initialize all services
+      logger.info('Initializing services...', { operation: 'service_init' });
+      const initTimer = startTimer();
+      await container.initializeAll();
+      logger.info('Services initialized', {
+        operation: 'service_init',
+        duration_ms: initTimer.stop(),
+        result: 'success'
+      });
+
+      logger.info('TJR Suite startup complete', {
+        operation: 'app_startup',
+        duration_ms: startupTimer.stop(),
+        result: 'success'
+      });
+    });
+
+    // Assert container is defined
+    if (!container) throw new Error('Container not initialized');
+    if (!logger) throw new Error('Logger not initialized');
 
     // Print wiring graph
     if (config.app.verbose) {

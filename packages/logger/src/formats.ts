@@ -1,9 +1,10 @@
 /**
  * @fileoverview Custom Winston formats for TJR Logger
- * Includes PII redaction, field normalization, and output formatting.
+ * Includes PII redaction, field normalization, output formatting, and request ID injection.
  */
 
 import { format } from 'winston';
+import { getRequestId } from './request-context.js';
 
 /**
  * Sensitive field patterns that should be redacted from logs.
@@ -127,6 +128,7 @@ export const redactPII = format((info) => {
 
 /**
  * Winston format that adds standard TJR fields and timestamp.
+ * Automatically injects request_id from AsyncLocalStorage context if available.
  *
  * @example
  * ```typescript
@@ -143,7 +145,16 @@ export const standardFields = format.combine(
   format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }),
 
   // Add errors field for Error objects
-  format.errors({ stack: true })
+  format.errors({ stack: true }),
+
+  // Inject request_id from AsyncLocalStorage context
+  format((info) => {
+    const requestId = getRequestId();
+    if (requestId && !info['request_id']) {
+      info['request_id'] = requestId;
+    }
+    return info;
+  })()
 );
 
 /**

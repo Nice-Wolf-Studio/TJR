@@ -83,6 +83,30 @@ export interface LogEntry {
   /** Component or module name (typically from child logger) */
   component?: string;
 
+  /** Data provider name (e.g., "yahoo", "polygon", "alphavantage") */
+  provider?: string;
+
+  /** Timestamp of data or operation (ISO 8601 format) */
+  asOf?: string;
+
+  /** Operation duration in milliseconds */
+  duration_ms?: number;
+
+  /** Operation result (e.g., "success", "error", "partial") */
+  result?: string;
+
+  /** Operation name or type */
+  operation?: string;
+
+  /** Error code or type (when result is error) */
+  error_code?: string;
+
+  /** Number of items processed */
+  count?: number;
+
+  /** Cache hit or miss indicator */
+  cache?: 'hit' | 'miss';
+
   /** Allow additional custom fields */
   [key: string]: unknown;
 }
@@ -109,6 +133,12 @@ export interface ChildLoggerContext {
 
   /** Request ID context */
   request_id?: string;
+
+  /** Provider context */
+  provider?: string;
+
+  /** Operation context */
+  operation?: string;
 
   /** Allow any additional context fields */
   [key: string]: unknown;

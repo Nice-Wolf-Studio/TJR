@@ -1,0 +1,97 @@
+# CI Workflow for TJR Suite Monorepo
+# Runs on every push and pull request to validate builds, tests, and linting
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'phase-**'  # All phase branches
+  pull_request:
+    branches:
+      - main
+
+# Cancel in-progress runs for the same workflow on the same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Run all checks (install, build, test, lint)
+  ci:
+    name: CI (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    # Matrix strategy: Test on multiple OS (can be expanded later)
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+      fail-fast: false  # Continue running other matrix jobs if one fails
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changesets and git operations
+
+      # Step 2: Setup Node.js with caching
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'  # Cache pnpm store for faster installs
+
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+          run_install: false  # We'll run install manually
+
+      # Step 4: Install dependencies (frozen lockfile ensures reproducibility)
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 5: Build all packages
+      # Uses -w (workspace root) -r (recursive) to build all workspace packages
+      - name: Build packages
+        run: pnpm -w -r build
+
+      # Step 6: Run tests across all packages
+      - name: Run tests
+        run: pnpm -w -r test
+
+      # Step 7: Lint all packages
+      - name: Lint code
+        run: pnpm -w -r lint
+
+      # Step 8: Check code formatting with Prettier
+      - name: Check formatting
+        run: pnpm format:check
+
+  # Job 2: Security audit (runs in parallel with ci job)
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      # Run pnpm audit (currently non-blocking, logs warnings only)
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level moderate || true
+        continue-on-error: true  # Don't fail CI on audit warnings (for now)

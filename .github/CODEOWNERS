@@ -1,0 +1,66 @@
+# CODEOWNERS for TJR Suite Monorepo
+# Defines ownership and required reviewers for different parts of the codebase
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Format: <path-pattern> @github-username @github-org/team-name
+# Later matches take precedence over earlier matches
+
+# ==============================================================================
+# DEFAULT OWNERS (catch-all for any unspecified files)
+# ==============================================================================
+* @Nice-Wolf-Studio/maintainers
+
+# ==============================================================================
+# INFRASTRUCTURE & CONFIGURATION
+# ==============================================================================
+
+# Root configuration files (build, lint, format)
+/package.json                @Nice-Wolf-Studio/maintainers
+/pnpm-workspace.yaml         @Nice-Wolf-Studio/maintainers
+/tsconfig.base.json          @Nice-Wolf-Studio/maintainers
+/.eslintrc.cjs               @Nice-Wolf-Studio/maintainers
+/.prettierrc                 @Nice-Wolf-Studio/maintainers
+/.editorconfig               @Nice-Wolf-Studio/maintainers
+
+# CI/CD workflows (requires DevOps review)
+/.github/workflows/          @Nice-Wolf-Studio/devops
+
+# GitHub-specific configs
+/.github/CODEOWNERS          @Nice-Wolf-Studio/maintainers
+
+# Changesets (versioning and releases)
+/.changeset/                 @Nice-Wolf-Studio/maintainers
+
+# ==============================================================================
+# DOCUMENTATION
+# ==============================================================================
+
+# Architectural Decision Records (requires architect review)
+/docs/adr/                   @Nice-Wolf-Studio/architects
+
+# Governance and policies
+/docs/governance/            @Nice-Wolf-Studio/maintainers
+
+# General documentation
+/docs/                       @Nice-Wolf-Studio/maintainers
+
+# Root README
+/README.md                   @Nice-Wolf-Studio/maintainers
+
+# ==============================================================================
+# WORKSPACE PACKAGES
+# ==============================================================================
+
+# Default package ownership (can be overridden per-package below)
+/packages/                   @Nice-Wolf-Studio/maintainers
+
+# Smoke test package (owned by QA team)
+/packages/smoke/             @Nice-Wolf-Studio/qa
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+# - Add specific package owners as new packages are created
+# - Format: /packages/<package-name>/  @owner-username
+# - Teams should be created in GitHub org settings before referencing here
+# - Individual users can also be specified: @username

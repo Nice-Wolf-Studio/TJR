@@ -1,0 +1,43 @@
+{
+  "name": "tjr-suite",
+  "version": "0.0.0",
+  "private": true,
+  "description": "TJR Suite monorepo - unified workspace for all TJR packages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nice-Wolf-Studio/tjr-suite.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Nice Wolf Studio",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "build": "pnpm -w -r build",
+    "test": "pnpm -w -r test",
+    "lint": "pnpm -w -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "typecheck": "pnpm -w -r typecheck",
+    "clean": "pnpm -w -r clean && rm -rf node_modules",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "monorepo",
+    "tjr-suite",
+    "workspace"
+  ]
+}

@@ -1,0 +1,126 @@
+# Release Workflow for TJR Suite Monorepo
+# Manual trigger for safe, controlled releases with Changesets
+# Publishes only affected packages to npm
+
+name: Release
+
+on:
+  # Manual trigger only - no automatic releases for safety
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no actual publish)'
+        required: false
+        type: boolean
+        default: true
+
+# Minimal permissions - only what's needed for releases
+permissions:
+  contents: write      # For creating version tags
+  pull-requests: write # For creating release PRs
+  id-token: write      # For npm provenance
+
+# Prevent concurrent releases
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code with full history
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history required for changesets
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Setup Node.js with npm registry
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+          run_install: false
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 5: Build all packages
+      - name: Build packages
+        run: pnpm -w -r build
+
+      # Step 6: Run tests to ensure quality
+      - name: Run tests
+        run: pnpm -w -r test
+
+      # Step 7: Dry-run mode - show what would be published
+      - name: Dry-run - Show version plan
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          echo "=== DRY RUN MODE ==="
+          echo "This shows what would be published without publishing."
+          echo ""
+          echo "=== Changeset Status ==="
+          pnpm changeset status --verbose
+          echo ""
+          echo "=== Version Plan (if changesets exist) ==="
+          pnpm changeset version --snapshot dry-run || \
+            echo "No changesets to version"
+          echo ""
+          echo "=== Would Publish ==="
+          pnpm changeset publish --dry-run || \
+            echo "No packages to publish"
+
+      # Step 8: Create Release Pull Request (if changesets exist)
+      - name: Create Release PR
+        if: ${{ inputs.dry_run == false }}
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          commit: 'chore: version packages'
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 9: Publish to npm (only if not in PR creation mode)
+      - name: Publish to npm
+        if: >-
+          ${{ inputs.dry_run == false &&
+          steps.changesets.outputs.hasChangesets == 'false' }}
+        run: |
+          echo "=== Publishing Packages ==="
+          pnpm changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+
+      # Step 10: Push tags to GitHub
+      - name: Push tags
+        if: >-
+          ${{ inputs.dry_run == false &&
+          steps.changesets.outputs.hasChangesets == 'false' }}
+        run: git push --follow-tags
+
+      # Step 11: Summary
+      - name: Release Summary
+        if: always()
+        run: |
+          echo "=== Release Summary ==="
+          echo "Dry Run: ${{ inputs.dry_run }}"
+          echo "Has Changesets: ${{ steps.changesets.outputs.hasChangesets }}"
+          echo "Published: ${{ steps.changesets.outputs.published }}"
+          pkgs="${{ steps.changesets.outputs.publishedPackages }}"
+          echo "Published Packages: ${pkgs}"

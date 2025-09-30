@@ -3,21 +3,29 @@
  * @module @tjr/tjr-tools/analyze
  */
 
-import type { TJRAnalysisInput, TJRConfluence } from '@tjr/contracts';
+import type { TJRAnalysisInput, TJRConfluence, TJRResult } from '@tjr/contracts';
 import type { AnalyzeOptions, FVGZone, OrderBlock } from './types.js';
 import { validateInput } from './utils/validation.js';
 import { detectFVGs } from './confluences/fvg.js';
 import { detectOrderBlocks } from './confluences/order-block.js';
 import { calculateConfluence } from './scoring/scorer.js';
 import { DEFAULT_WEIGHTS } from './scoring/weights.js';
+import {
+  checkConfirmation,
+  determineDirection,
+  checkEntryTrigger,
+  calculatePriceLevels,
+  buildExecution,
+  shouldGenerateExecution,
+  extractActiveFactors,
+  mergeExecutionConfig,
+} from './execution/index.js';
 import { calculateRisk, type RiskManagementResult } from './risk/index.js';
 
 /**
- * Result from TJR-Tools analysis (extends TJRConfluence with details).
+ * Result from TJR-Tools analysis (extends TJRResult with details).
  */
-export interface TJRToolsResult {
-  /** Confluence score and factors */
-  confluence: TJRConfluence;
+export interface TJRToolsResult extends TJRResult {
   /** Detected FVG zones */
   fvgZones: FVGZone[];
   /** Detected Order Blocks */
@@ -27,14 +35,15 @@ export interface TJRToolsResult {
 }
 
 /**
- * Analyze market data for TJR confluences.
+ * Analyze market data for TJR confluences and potential execution.
  *
- * Detects Fair Value Gaps and Order Blocks, then calculates a weighted
- * confluence score indicating trade setup strength.
+ * Detects Fair Value Gaps and Order Blocks, calculates weighted confluence scores,
+ * and optionally generates trade execution parameters based on 5m confirmation
+ * and 1m entry criteria.
  *
- * @param input - Market data and analysis context
- * @param options - Detection and scoring options
- * @returns Analysis result with confluence score and detected patterns
+ * @param input - Market data and analysis context (5-minute timeframe)
+ * @param options - Detection, scoring, and execution options
+ * @returns Analysis result with confluence, zones, and optional execution
  */
 export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRToolsResult {
   // Validate input
@@ -53,6 +62,11 @@ export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRT
   // Build confluence factors
   const factors = buildConfluenceFactors(fvgZones, orderBlocks, weights, input.bars.length);
 
+  const confluence: TJRConfluence = {
+    score,
+    factors,
+  };
+
   // Calculate risk management if requested
   let riskManagement: RiskManagementResult | undefined;
   if (opts.risk) {
@@ -64,15 +78,94 @@ export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRT
     }
   }
 
-  return {
-    confluence: {
-      score,
-      factors,
-    },
+  // Initialize result
+  let result: TJRToolsResult = {
+    input,
+    confluence,
+    warnings: [],
     fvgZones,
     orderBlocks,
     riskManagement,
   };
+
+  // Check for execution if configured
+  if (opts.execution) {
+    const execConfig = mergeExecutionConfig(opts.execution);
+
+    // Check 5-minute confirmation
+    const confirmation = checkConfirmation(
+      input.bars,
+      confluence,
+      fvgZones,
+      orderBlocks,
+      execConfig
+    );
+
+    if (confirmation.confirmed) {
+      // Determine trade direction
+      const direction = determineDirection(
+        input.bars,
+        confirmation.barIndex!,
+        fvgZones,
+        orderBlocks
+      );
+
+      if (direction && opts.bars1m) {
+        // Check 1-minute entry trigger
+        const entry = checkEntryTrigger(
+          opts.bars1m,
+          confluence,
+          confirmation,
+          fvgZones,
+          orderBlocks,
+          execConfig,
+          direction
+        );
+
+        // Generate execution if all conditions met
+        if (shouldGenerateExecution(confirmation, entry, execConfig)) {
+          const levels = calculatePriceLevels(
+            entry.entryPrice!,
+            direction,
+            input.bars,
+            fvgZones,
+            orderBlocks,
+            execConfig
+          );
+
+          const activeFactors = extractActiveFactors(fvgZones, orderBlocks, score);
+
+          const execution = buildExecution(
+            input,
+            levels,
+            confirmation,
+            entry,
+            score,
+            activeFactors,
+            execConfig
+          );
+
+          result.execution = execution;
+        } else if (!entry.triggered) {
+          result.warnings.push(`No 1-minute entry: ${entry.reason}`);
+        }
+      } else if (!opts.bars1m) {
+        result.warnings.push('1-minute bars required for entry trigger');
+      } else {
+        result.warnings.push('Unable to determine trade direction from confirmation');
+      }
+    } else {
+      result.warnings.push(`No 5-minute confirmation: ${confirmation.reason}`);
+    }
+  }
+
+  // Add metadata
+  result.metadata = {
+    analysisVersion: '0.2.0', // Updated for execution support
+    computeTimeMs: 0, // Would be calculated if timing
+  };
+
+  return result;
 }
 
 /**

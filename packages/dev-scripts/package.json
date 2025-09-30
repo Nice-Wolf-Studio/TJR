@@ -4,10 +4,11 @@
   "private": true,
   "description": "Development and operational CLI tools for TJR Suite",
   "bin": {
-    "commands-diff": "./bin/commands-diff.js",
-    "cache-warm": "./bin/cache-warm.js",
-    "cache-verify": "./bin/cache-verify.js",
-    "replay-run": "./bin/replay-run.js"
+    "commands-diff": "./dist/bin/commands-diff.js",
+    "cache-warm": "./dist/bin/cache-warm.js",
+    "cache-verify": "./dist/bin/cache-verify.js",
+    "replay-run": "./dist/bin/replay-run.js",
+    "backtest": "./dist/bin/backtest.js"
   },
   "scripts": {
     "build": "tsc --build",
@@ -17,6 +18,7 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
+    "@tjr/analysis-kit": "workspace:*",
     "@tjr/bars-cache": "workspace:*",
     "@tjr-suite/db-simple": "workspace:*",
     "@tjr-suite/market-data-core": "workspace:*"

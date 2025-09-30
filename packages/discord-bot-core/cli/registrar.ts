@@ -8,24 +8,28 @@ import { Command } from 'commander';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord.js';
 import chalk from 'chalk';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
 import { commands } from '../src/commands/index.js';
 import { CommandHandler } from '../src/handlers/CommandHandler.js';
+import { getProfile, validateProfileEnv } from '../src/config/profiles.js';
 import type { DiffResult, CommandManifest } from '../src/types/index.js';
 
 const program = new Command();
 
 program
   .name('discord-registrar')
-  .description('Register Discord slash commands')
+  .description('Register Discord slash commands with environment support')
   .version('0.1.0')
-  .option('-t, --token <token>', 'Discord bot token (or use DISCORD_TOKEN env)')
-  .option('-a, --application-id <id>', 'Discord application ID (or use DISCORD_APPLICATION_ID env)')
-  .option('-g, --guild-id <id>', 'Guild ID for guild-specific commands (optional)')
+  .option('-e, --env <environment>', 'Environment to deploy to (dev, stage, prod)', 'dev')
+  .option('-t, --token <token>', 'Discord bot token (overrides env-specific token)')
+  .option('-a, --application-id <id>', 'Discord application ID (overrides env-specific ID)')
+  .option('-g, --guild-id <id>', 'Guild ID for guild-specific commands (overrides profile)')
   .option('-d, --dry-run', 'Show what would be changed without making changes', false)
   .option('-f, --force', 'Force registration even if no changes detected', false)
-  .option('-m, --manifest <path>', 'Path to save/load command manifest', './command-manifest.json')
+  .option('-m, --manifest <path>', 'Path to save/load command manifest (overrides profile default)')
   .option('-v, --verbose', 'Show detailed output', false)
+  .option('--validate-only', 'Only validate environment configuration without registering', false)
   .parse(process.argv);
 
 const options = program.opts();
@@ -145,28 +149,86 @@ function displayDiff(diff: DiffResult): void {
  * Register commands with Discord
  */
 async function registerCommands(): Promise<void> {
-  const token = options.token || process.env.DISCORD_TOKEN;
-  const applicationId = options.applicationId || process.env.DISCORD_APPLICATION_ID;
-  const guildId = options.guildId || process.env.DISCORD_GUILD_ID;
+  console.log(chalk.bold.cyan('\n🤖 Discord Command Registrar\n'));
+
+  // Get profile for the specified environment
+  const profile = getProfile(options.env);
+  console.log(chalk.bold(`Environment: ${chalk.cyan(profile.environment)}\n`));
+
+  // Validate environment configuration
+  const validationErrors = validateProfileEnv(profile);
+  if (validationErrors.length > 0) {
+    console.error(chalk.red('❌ Environment validation failed:\n'));
+    validationErrors.forEach(error => {
+      console.error(chalk.red(`   - ${error}`));
+    });
+    console.error(chalk.yellow('\nPlease ensure all required environment variables are set.'));
+    process.exit(1);
+  }
+
+  if (options.validateOnly) {
+    console.log(chalk.green('✅ Environment configuration is valid\n'));
+    console.log(chalk.dim('Profile settings:'));
+    console.log(chalk.dim(`  - Global: ${profile.global}`));
+    console.log(chalk.dim(`  - Enabled commands: ${profile.enabledCommands.join(', ')}`));
+    console.log(chalk.dim(`  - Manifest path: ${profile.manifestPath}`));
+    if (profile.guildIds?.length) {
+      console.log(chalk.dim(`  - Guild IDs: ${profile.guildIds.join(', ')}`));
+    }
+    return;
+  }
+
+  // Get credentials from environment-specific variables or overrides
+  const envPrefix = `DISCORD_${profile.environment.toUpperCase()}`;
+  const token = options.token || process.env[`${envPrefix}_TOKEN`];
+  const applicationId = options.applicationId || process.env[`${envPrefix}_APPLICATION_ID`];
+  const guildIds = options.guildId ? [options.guildId] : profile.guildIds;
 
   if (!token) {
-    console.error(chalk.red('❌ Discord bot token is required (--token or DISCORD_TOKEN env)'));
+    console.error(chalk.red(`❌ Discord bot token is required (--token or ${envPrefix}_TOKEN env)`));
     process.exit(1);
   }
 
   if (!applicationId) {
-    console.error(chalk.red('❌ Discord application ID is required (--application-id or DISCORD_APPLICATION_ID env)'));
+    console.error(chalk.red(`❌ Discord application ID is required (--application-id or ${envPrefix}_APPLICATION_ID env)`));
     process.exit(1);
   }
 
-  console.log(chalk.bold.cyan('\n🤖 Discord Command Registrar\n'));
-
-  // Initialize handler and generate manifest
+  // Initialize handler and register only enabled commands for this environment
   const handler = new CommandHandler({} as any);
-  commands.forEach(cmd => handler.registerCommand(cmd));
+  const enabledCommands = commands.filter(cmd => profile.enabledCommands.includes(cmd.schema.name));
+
+  // Apply environment-specific overrides
+  enabledCommands.forEach(cmd => {
+    const overrides = profile.commandOverrides?.[cmd.schema.name];
+    if (overrides) {
+      const modifiedCmd = {
+        ...cmd,
+        schema: {
+          ...cmd.schema,
+          description: overrides.description || cmd.schema.description,
+          dmPermission: overrides.dmPermission !== undefined ? overrides.dmPermission : cmd.schema.dmPermission,
+          defaultMemberPermissions: overrides.defaultMemberPermissions !== undefined
+            ? overrides.defaultMemberPermissions
+            : cmd.schema.defaultMemberPermissions,
+        }
+      };
+      handler.registerCommand(modifiedCmd);
+    } else {
+      handler.registerCommand(cmd);
+    }
+  });
 
   const manifest = handler.generateManifest();
-  const previousManifest = loadPreviousManifest(options.manifest);
+  const manifestPath = options.manifest || profile.manifestPath;
+
+  // Ensure manifest directory exists
+  const manifestDir = dirname(manifestPath);
+  if (!existsSync(manifestDir)) {
+    mkdirSync(manifestDir, { recursive: true });
+  }
+
+  const previousManifest = loadPreviousManifest(manifestPath);
 
   // Calculate diff
   const diff = calculateDiff(manifest, previousManifest);
@@ -181,7 +243,8 @@ async function registerCommands(): Promise<void> {
     console.log(chalk.green('✅ No changes detected. Commands are up to date.\n'));
     if (!options.dryRun) {
       // Save manifest even if no changes
-      writeFileSync(options.manifest, JSON.stringify(manifest, null, 2));
+      writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+      console.log(chalk.dim(`Manifest saved to ${manifestPath}\n`));
     }
     return;
   }
@@ -201,25 +264,46 @@ async function registerCommands(): Promise<void> {
   try {
     const startTime = Date.now();
 
-    const route = guildId
-      ? Routes.applicationGuildCommands(applicationId, guildId)
-      : Routes.applicationCommands(applicationId);
+    // Handle multiple guild deployments or single global deployment
+    if (profile.global) {
+      // Global deployment
+      const route = Routes.applicationCommands(applicationId);
+      const registeredCommands = await rest.put(route, { body: commandsJson }) as any[];
+      const duration = Date.now() - startTime;
 
-    const registeredCommands = await rest.put(route, { body: commandsJson }) as any[];
+      console.log(chalk.green(`✅ Successfully registered ${registeredCommands.length} commands globally in ${duration}ms\n`));
+    } else if (guildIds && guildIds.length > 0) {
+      // Guild-specific deployment
+      let totalRegistered = 0;
+      for (const guildId of guildIds) {
+        const route = Routes.applicationGuildCommands(applicationId, guildId);
+        const registeredCommands = await rest.put(route, { body: commandsJson }) as any[];
+        totalRegistered += registeredCommands.length;
+        console.log(chalk.green(`✅ Registered ${registeredCommands.length} commands to guild ${guildId}`));
+      }
+      const duration = Date.now() - startTime;
+      console.log(chalk.green(`\n✅ Successfully registered ${totalRegistered} total commands across ${guildIds.length} guild(s) in ${duration}ms\n`));
+    } else {
+      console.error(chalk.red('❌ No guild IDs specified for guild-specific deployment'));
+      process.exit(1);
+    }
 
-    const duration = Date.now() - startTime;
-
-    console.log(chalk.green(`✅ Successfully registered ${registeredCommands.length} commands in ${duration}ms\n`));
-
-    // Save manifest
-    writeFileSync(options.manifest, JSON.stringify(manifest, null, 2));
-    console.log(chalk.dim(`Manifest saved to ${options.manifest}\n`));
+    // Save manifest with environment metadata
+    const manifestWithMetadata = {
+      ...manifest,
+      environment: profile.environment,
+      deployedAt: new Date().toISOString(),
+      global: profile.global,
+      guildIds: profile.global ? undefined : guildIds,
+    };
+    writeFileSync(manifestPath, JSON.stringify(manifestWithMetadata, null, 2));
+    console.log(chalk.dim(`Manifest saved to ${manifestPath}\n`));
 
     // List registered commands if verbose
     if (options.verbose) {
       console.log(chalk.bold('Registered Commands:'));
-      registeredCommands.forEach((cmd: any) => {
-        console.log(`  - /${cmd.name}: ${cmd.description}`);
+      enabledCommands.forEach((cmd: any) => {
+        console.log(`  - /${cmd.schema.name}: ${cmd.schema.description}`);
       });
       console.log();
     }

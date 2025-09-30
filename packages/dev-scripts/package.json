@@ -5,6 +5,7 @@
   "description": "Development and operational CLI tools for TJR Suite",
   "bin": {
     "commands-diff": "./bin/commands-diff.js",
+    "commands-deploy": "./bin/commands-deploy.js",
     "cache-warm": "./bin/cache-warm.js",
     "cache-verify": "./bin/cache-verify.js",
     "replay-run": "./bin/replay-run.js"
@@ -15,6 +16,9 @@
     "lint": "echo 'Lint not configured yet'",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

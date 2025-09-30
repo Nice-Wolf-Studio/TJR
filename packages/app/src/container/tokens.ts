@@ -23,6 +23,12 @@ export const TOKENS = {
   CommandRegistry: Symbol('CommandRegistry'),
   HealthCommand: Symbol('HealthCommand'),
   DailyCommand: Symbol('DailyCommand'),
+  TJRSetupCommand: Symbol('TJRSetupCommand'),
+  TJRConfluencesCommand: Symbol('TJRConfluencesCommand'),
+  TJRExecutionCommand: Symbol('TJRExecutionCommand'),
+
+  // TJR services
+  ConfigService: Symbol('ConfigService'),
 
   // Utility services
   FixtureLoader: Symbol('FixtureLoader'),

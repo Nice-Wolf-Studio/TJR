@@ -50,6 +50,9 @@ importers:
       '@tjr/logger':
         specifier: workspace:*
         version: link:../logger
+      '@tjr/tjr-tools':
+        specifier: workspace:*
+        version: link:../tjr-tools
       commander:
         specifier: ^11.0.0
         version: 11.1.0

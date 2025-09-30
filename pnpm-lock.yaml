@@ -102,6 +102,16 @@ importers:
         specifier: ^18.19.0
         version: 18.19.128
 
+  packages/provider-databento:
+    dependencies:
+      '@tjr-suite/market-data-core':
+        specifier: workspace:*
+        version: link:../market-data-core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.18
+
   packages/sessions-calendar:
     devDependencies:
       '@types/node':

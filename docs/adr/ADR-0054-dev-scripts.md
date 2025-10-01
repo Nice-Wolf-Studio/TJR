@@ -29,6 +29,9 @@ All mutating operations (cache warming, data replay) default to dry-run mode:
 - `--execute`: Actually perform the operation
 - Read-only operations (commands-diff, cache-verify) don't need this flag
 
+Flag precedence and safety guard:
+- If both `--dry-run` and `--execute` are supplied, `--dry-run` takes precedence and execution is disabled. This prevents accidental state mutations when users include both flags (e.g., during shell aliasing or copy/paste).
+
 **Rationale:** Prevents accidental data modification in production. Makes tools safe to explore and test. Forces explicit intent for mutating operations.
 
 #### 2. JSON Output by Default

@@ -1,0 +1,19 @@
+{
+  "name": "@tjr/databento",
+  "version": "0.0.1",
+  "description": "Databento provider for ES/NQ futures (bars and quotes)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}
+

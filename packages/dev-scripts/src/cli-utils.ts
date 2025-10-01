@@ -74,6 +74,8 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
     json: false,
     remaining: [],
   };
+  let sawExecute = false;
+  let sawDryRun = false;
 
   for (const arg of argv) {
     if (arg === '--help' || arg === '-h') {
@@ -81,9 +83,11 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
     } else if (arg === '--execute') {
       args.execute = true;
       args.dryRun = false;  // Execute mode disables dry-run
+      sawExecute = true;
     } else if (arg === '--dry-run') {
       args.dryRun = true;
       args.execute = false;  // Dry-run mode disables execute
+      sawDryRun = true;
     } else if (arg === '--pretty') {
       args.pretty = true;
     } else if (arg === '--csv') {
@@ -101,6 +105,12 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
       // Positional argument
       args.remaining.push(arg);
     }
+  }
+
+  // Guard conflicting flags safely: explicit --dry-run always wins over --execute
+  if (sawDryRun && sawExecute) {
+    args.dryRun = true;
+    args.execute = false;
   }
 
   return args;

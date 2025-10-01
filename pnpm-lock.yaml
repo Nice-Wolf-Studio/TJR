@@ -7,10 +7,20 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@tjr/bars-cache':
+        specifier: workspace:^
+        version: link:packages/bars-cache
+      '@tjr/databento':
+        specifier: workspace:^
+        version: link:packages/databento
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
-        version: 2.29.7
+        version: 2.29.7(@types/node@18.19.128)
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.0.0
         version: 7.18.0(@typescript-eslint/parser@7.18.0)(eslint@8.57.1)(typescript@5.9.2)
@@ -28,18 +38,6 @@ importers:
         version: 3.6.2
       typescript:
         specifier: ^5.3.3
-        version: 5.9.2
-
-  e2e:
-    devDependencies:
-      '@types/node':
-        specifier: ^20.19.18
-        version: 20.19.18
-      tsx:
-        specifier: ^4.20.6
-        version: 4.20.6
-      typescript:
-        specifier: ^5.9.2
         version: 5.9.2
 
   packages/analysis-kit:
@@ -131,6 +129,12 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.18)
 
+  packages/databento:
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
+
   packages/db-simple:
     dependencies:
       better-sqlite3:
@@ -212,6 +216,12 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.18)
 
+  packages/live-tests:
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
+
   packages/logger:
     dependencies:
       logform:
@@ -255,6 +265,19 @@ importers:
       vitest:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@18.19.128)
+
+  packages/provider-composite:
+    dependencies:
+      '@tjr/bars-cache':
+        specifier: workspace:*
+        version: link:../bars-cache
+      '@tjr/databento':
+        specifier: workspace:*
+        version: link:../databento
+    devDependencies:
+      '@types/node':
+        specifier: ^18.19.0
+        version: 18.19.128
 
   packages/provider-databento:
     dependencies:
@@ -371,7 +394,7 @@ packages:
       '@changesets/types': 6.1.0
     dev: true
 
-  /@changesets/cli@2.29.7:
+  /@changesets/cli@2.29.7(@types/node@18.19.128):
     resolution: {integrity: sha512-R7RqWoaksyyKXbKXBTbT4REdy22yH81mcFK6sWtqSanxUCbUi9Uf+6aqxZtDQouIqPdem2W56CdxXgsxdq7FLQ==}
     hasBin: true
     dependencies:
@@ -389,7 +412,7 @@ packages:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@changesets/write': 0.4.0
-      '@inquirer/external-editor': 1.0.2
+      '@inquirer/external-editor': 1.0.2(@types/node@18.19.128)
       '@manypkg/get-packages': 1.1.3
       ansi-colors: 4.1.3
       ci-info: 3.9.0
@@ -1098,7 +1121,7 @@ packages:
     deprecated: Use @eslint/object-schema instead
     dev: true
 
-  /@inquirer/external-editor@1.0.2:
+  /@inquirer/external-editor@1.0.2(@types/node@18.19.128):
     resolution: {integrity: sha512-yy9cOoBnx58TlsPrIxauKIFQTiyH+0MK4e97y4sV9ERbI+zDxw7i2hxHLCIEGIE/8PPvDxGhgzIOTSOWcs6/MQ==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -1107,6 +1130,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
+      '@types/node': 18.19.128
       chardet: 2.1.0
       iconv-lite: 0.7.0
     dev: true

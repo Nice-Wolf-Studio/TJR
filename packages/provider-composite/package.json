@@ -1,0 +1,23 @@
+{
+  "name": "@tjr/provider-composite",
+  "version": "0.0.1",
+  "description": "Deterministic provider composite with cache and fixture support",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --test tests/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@tjr/bars-cache": "workspace:*",
+    "@tjr/databento": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0"
+  }
+}
+

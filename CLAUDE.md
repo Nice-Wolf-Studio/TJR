@@ -2,6 +2,36 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Wolf Agents Integration
+
+**This repository follows the [Wolf Agents](https://github.com/Nice-Wolf-Studio/WolfAgents) multi-agent development framework.**
+
+### Core Wolf Ethos
+- **Evidence first; opinions last** - Make decisions based on data and testing
+- **Smallest viable, reversible change** - Prefer incremental, rollback-friendly changes
+- **Additive before destructive** - Use shims, flags, and adapters before breaking changes
+- **Boring-by-default tech** - Choose proven, simple solutions unless novelty reduces risk
+- **Readability/operability are features** - Code must be maintainable and debuggable
+
+### Phase Lifecycle
+All work follows the Wolf Agents Phase Lifecycle:
+1. **Seed Brief** - Phase objectives and context (start of phase)
+2. **Pre-Phase Sweeps** - Meta + Governance setup (before shard work)
+3. **Shard Work** - Intake → Research/ADR → Implementation → Review → Merge
+4. **Close-Out Sweeps** - Meta + Governance validation (end of phase)
+
+### Journaling Requirements
+- **Fragments**: Create journal entries in `docs/journal/_fragments/<phase>/`
+- **Append-only**: Never replace journals, only append
+- **Roll-up**: Fragments consolidate to `docs/journals/PHASE-[X].md` at phase closeout
+
+### Command Grammar
+Control agent behavior with prefixes:
+- `OOC:` - Out of character (normal conversation)
+- `AS:Agent:` - Act as different agent temporarily
+- `META:` - System/meta discussion
+- **Flags**: `NOJOURNAL`, `NOTOOLS`, `NOCI`, `DRYRUN`
+
 ## Repository Overview
 
 TJR Suite is a TypeScript monorepo for trading analysis and automation, using pnpm workspaces with strict TypeScript configuration and project references for incremental builds.
@@ -181,6 +211,14 @@ All CLI tools in `dev-scripts/` follow:
 4. **Pure analytics in analysis-kit**: No I/O, fully deterministic, testable with fixtures
 5. **Contracts as single source of truth**: All packages consume shared types, zero circular deps
 
+### Wolf Agents Alignment
+Following Wolf Ethos principles:
+- **Additive strategy**: New packages don't break existing ones (contracts first)
+- **Reversibility**: Build tooling supports incremental rollback (TypeScript project references)
+- **Observability**: Structured logging via `@tjr-suite/logger` with PII redaction
+- **Determinism**: Pure functions in `analysis-kit` for reproducible testing
+- **Evidence-based**: ADRs document all major architectural decisions
+
 ## Common Patterns
 
 ### Adding a New Package
@@ -220,3 +258,51 @@ pnpm --filter @tjr/contracts test
 - Analysis kit functions must be pure (no I/O, deterministic)
 - Dev-scripts CLIs default to dry-run mode
 - Pre-commit: Ensure CI passes (build, test, lint, format)
+
+## Wolf Agents Workflow Integration
+
+### Definition of Done (Wolf Ethos)
+For each change:
+- ✅ Reversible slice merged (flagged/seamed if needed)
+- ✅ Deterministic checks green (CI passes)
+- ✅ Evidence validates (tests, benchmarks, ADRs)
+- ✅ One journal lesson captured
+- ✅ Operability note for debugging
+
+### Shard Workflow
+1. **Intake** - Create issue with clear acceptance criteria
+2. **Research/ADR** - Document decision before implementation
+3. **Implementation** - Create PR with journal fragment
+4. **Review** - Code review + QA validation
+5. **Merge** - Integrate after all checks pass
+
+### Required Artifacts Per Shard
+- **Journal Fragment**: `docs/journal/_fragments/<phase>/<shard>-<description>.md`
+- **ADR** (if architectural): `docs/adr/ADR-<number>-<title>.md`
+- **Tests**: Unit and integration tests for new functionality
+- **Output Summary**: Links to PRs and journal entries
+
+### Research Before Code
+**Mandatory**: ADR or research comment required before implementation for:
+- New packages or major features
+- Breaking changes
+- Security-sensitive code
+- Performance-critical paths
+- Third-party integrations
+
+### Quality Gates by Risk Level
+
+**Low Risk** (typos, docs):
+- Comment-only governance
+- Fast path to merge
+
+**Standard** (features, bug fixes):
+- Code Reviewer approval
+- QA evidence (tests passing)
+- Deterministic checks green
+
+**High Risk** (security, breaking changes):
+- Code Reviewer + QA/Security + Architect
+- Agentic verification
+- Feature flags mandatory
+- Rollback plan documented

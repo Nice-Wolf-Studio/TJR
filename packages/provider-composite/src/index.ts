@@ -1,4 +1,4 @@
-import { InMemoryBarsCache, type Bar as CacheBar } from '@tjr/bars-cache';
+import { CacheStore, type CachedBar } from '@tjr/bars-cache';
 import { getRecentBars as dbGetRecentBars, getQuote as dbGetQuote } from '@tjr/databento';
 import { readFileSync } from 'node:fs';
 
@@ -14,9 +14,9 @@ export interface Quote { price: number; timestamp: Date }
 export interface Bar { timestamp: number; open:number; high:number; low:number; close:number; volume?: number }
 
 export class CompositeProvider {
-  private cache: InMemoryBarsCache;
+  private cache: CacheStore;
   constructor(private opts: CompositeOptions) {
-    this.cache = new InMemoryBarsCache(opts.ttlMs ?? 5 * 60 * 1000);
+    this.cache = new CacheStore(opts.ttlMs ?? 5 * 60 * 1000);
   }
 
   async getQuote(symbol: FuturesSymbol): Promise<Quote | null> {

@@ -45,7 +45,7 @@
     // Packages can reference each other via @tjr-suite/* instead of relative paths
     "baseUrl": ".",
     "paths": {
-      "@tjr-suite/*": ["packages/*/src"],
+      "@tjr-suite/*": ["packages/*/dist"],
       "@tjr/contracts": ["packages/contracts/dist/index.d.ts"]
     },
 

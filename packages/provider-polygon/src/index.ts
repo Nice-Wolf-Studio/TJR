@@ -40,8 +40,9 @@
  * @packageDocumentation
  */
 
-import type { Bar, Timeframe } from "@tjr-suite/market-data-core";
+import type { Bar } from "@tjr-suite/market-data-core";
 import type { ProviderCapabilities } from "@tjr/contracts";
+import { Timeframe } from "@tjr/contracts";
 import type {
   PolygonProviderConfig,
   GetBarsOptions,

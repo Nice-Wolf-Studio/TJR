@@ -6,26 +6,40 @@
  * that Polygon doesn't directly support.
  */
 
-import type { Bar, Timeframe } from "@tjr-suite/market-data-core";
+import type { Bar, Timeframe as CoreTimeframe } from "@tjr-suite/market-data-core";
 import { aggregateBars } from "@tjr-suite/market-data-core";
+import { Timeframe } from "@tjr/contracts";
+
+/**
+ * Converts contracts Timeframe enum to market-data-core string format.
+ */
+function toCoreTimeframe(timeframe: Timeframe): CoreTimeframe {
+  const mapping: Record<Timeframe, CoreTimeframe> = {
+    [Timeframe.M1]: "1m",
+    [Timeframe.M5]: "5m",
+    [Timeframe.M10]: "10m",
+    [Timeframe.H1]: "1h",
+    [Timeframe.H4]: "4h",
+    [Timeframe.D1]: "1D",
+  };
+  return mapping[timeframe];
+}
 
 /**
  * Native timeframes supported by Polygon.io API.
  * These can be requested directly without aggregation.
  */
 export const POLYGON_NATIVE_TIMEFRAMES: Timeframe[] = [
-  "1m",
-  "5m",
-  "15m",
-  "30m",
-  "1h",
-  "1D",
+  Timeframe.M1,
+  Timeframe.M5,
+  Timeframe.H1,
+  Timeframe.D1,
 ];
 
 /**
  * Timeframes that require aggregation from native Polygon timeframes.
  */
-export const POLYGON_AGGREGATED_TIMEFRAMES: Timeframe[] = ["10m", "2h", "4h"];
+export const POLYGON_AGGREGATED_TIMEFRAMES: Timeframe[] = [Timeframe.M10, Timeframe.H4];
 
 /**
  * All timeframes supported by this provider (native + aggregated).
@@ -63,25 +77,22 @@ export function requiresAggregation(timeframe: Timeframe): boolean {
  *
  * @example
  * ```typescript
- * getSourceTimeframe('5m');  // '5m' (native)
- * getSourceTimeframe('10m'); // '5m' (aggregate 2 bars)
- * getSourceTimeframe('4h');  // '1h' (aggregate 4 bars)
+ * getSourceTimeframe(Timeframe.M5);  // Timeframe.M5 (native)
+ * getSourceTimeframe(Timeframe.M10); // Timeframe.M5 (aggregate 2 bars)
+ * getSourceTimeframe(Timeframe.H4);  // Timeframe.H1 (aggregate 4 bars)
  * ```
  */
 export function getSourceTimeframe(targetTimeframe: Timeframe): Timeframe {
-  const aggregationMap: Record<Timeframe, Timeframe> = {
+  const aggregationMap: Partial<Record<Timeframe, Timeframe>> = {
     // Native timeframes (no aggregation needed)
-    "1m": "1m",
-    "5m": "5m",
-    "15m": "15m",
-    "30m": "30m",
-    "1h": "1h",
-    "1D": "1D",
+    [Timeframe.M1]: Timeframe.M1,
+    [Timeframe.M5]: Timeframe.M5,
+    [Timeframe.H1]: Timeframe.H1,
+    [Timeframe.D1]: Timeframe.D1,
 
     // Aggregated timeframes (source -> target)
-    "10m": "5m",  // 2x 5m bars = 1x 10m bar
-    "2h": "1h",   // 2x 1h bars = 1x 2h bar
-    "4h": "1h",   // 4x 1h bars = 1x 4h bar
+    [Timeframe.M10]: Timeframe.M5,  // 2x 5m bars = 1x 10m bar
+    [Timeframe.H4]: Timeframe.H1,   // 4x 1h bars = 1x 4h bar
   };
 
   return aggregationMap[targetTimeframe] || targetTimeframe;
@@ -101,22 +112,19 @@ export function getSourceTimeframe(targetTimeframe: Timeframe): Timeframe {
  *
  * @example
  * ```typescript
- * toPolygonParams('5m');  // { multiplier: 5, timespan: 'minute' }
- * toPolygonParams('1h');  // { multiplier: 1, timespan: 'hour' }
- * toPolygonParams('1D');  // { multiplier: 1, timespan: 'day' }
+ * toPolygonParams(Timeframe.M5);  // { multiplier: 5, timespan: 'minute' }
+ * toPolygonParams(Timeframe.H1);  // { multiplier: 1, timespan: 'hour' }
+ * toPolygonParams(Timeframe.D1);  // { multiplier: 1, timespan: 'day' }
  * ```
  */
 export function toPolygonParams(timeframe: Timeframe): { multiplier: number; timespan: string } {
-  const paramsMap: Record<Timeframe, { multiplier: number; timespan: string }> = {
-    "1m": { multiplier: 1, timespan: "minute" },
-    "5m": { multiplier: 5, timespan: "minute" },
-    "10m": { multiplier: 10, timespan: "minute" }, // Not used (we aggregate from 5m)
-    "15m": { multiplier: 15, timespan: "minute" },
-    "30m": { multiplier: 30, timespan: "minute" },
-    "1h": { multiplier: 1, timespan: "hour" },
-    "2h": { multiplier: 2, timespan: "hour" }, // Not used (we aggregate from 1h)
-    "4h": { multiplier: 4, timespan: "hour" }, // Not used (we aggregate from 1h)
-    "1D": { multiplier: 1, timespan: "day" },
+  const paramsMap: Partial<Record<Timeframe, { multiplier: number; timespan: string }>> = {
+    [Timeframe.M1]: { multiplier: 1, timespan: "minute" },
+    [Timeframe.M5]: { multiplier: 5, timespan: "minute" },
+    [Timeframe.M10]: { multiplier: 10, timespan: "minute" }, // Not used (we aggregate from 5m)
+    [Timeframe.H1]: { multiplier: 1, timespan: "hour" },
+    [Timeframe.H4]: { multiplier: 4, timespan: "hour" }, // Not used (we aggregate from 1h)
+    [Timeframe.D1]: { multiplier: 1, timespan: "day" },
   };
 
   const params = paramsMap[timeframe];
@@ -140,13 +148,13 @@ export function toPolygonParams(timeframe: Timeframe): { multiplier: number; tim
  * @example
  * ```typescript
  * // No aggregation needed for native timeframes
- * const bars5m = aggregateToTimeframe(rawBars, '5m'); // Returns rawBars
+ * const bars5m = aggregateToTimeframe(rawBars, Timeframe.M5); // Returns rawBars
  *
  * // Aggregation needed for 10m (from 5m source)
- * const bars10m = aggregateToTimeframe(bars5m, '10m'); // Aggregates 2x5m -> 1x10m
+ * const bars10m = aggregateToTimeframe(bars5m, Timeframe.M10); // Aggregates 2x5m -> 1x10m
  *
  * // Aggregation needed for 4h (from 1h source)
- * const bars4h = aggregateToTimeframe(bars1h, '4h'); // Aggregates 4x1h -> 1x4h
+ * const bars4h = aggregateToTimeframe(bars1h, Timeframe.H4); // Aggregates 4x1h -> 1x4h
  * ```
  */
 export function aggregateToTimeframe(bars: Bar[], targetTimeframe: Timeframe): Bar[] {
@@ -155,8 +163,11 @@ export function aggregateToTimeframe(bars: Bar[], targetTimeframe: Timeframe): B
     return bars;
   }
 
+  // Convert to core timeframe format for aggregateBars
+  const coreTimeframe = toCoreTimeframe(targetTimeframe);
+
   // Aggregate from source to target
-  return aggregateBars(bars, targetTimeframe, {
+  return aggregateBars(bars, coreTimeframe, {
     includePartialLast: false,
     validate: false,
     warnOnGaps: false,

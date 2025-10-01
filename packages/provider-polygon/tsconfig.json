@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "outDir": "./dist",
     "skipLibCheck": true,
     "noUnusedLocals": false,
@@ -15,5 +16,10 @@
     "node_modules",
     "dist",
     "tests"
+  ],
+  "references": [
+    { "path": "../market-data-core" },
+    { "path": "../contracts" },
+    { "path": "../logger" }
   ]
 }

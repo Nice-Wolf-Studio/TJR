@@ -6,7 +6,7 @@
  */
 
 import type { Logger } from "@tjr/logger";
-import type { Timeframe } from "@tjr-suite/market-data-core";
+import type { Timeframe } from "@tjr/contracts";
 
 /**
  * Configuration for creating a Polygon.io provider instance.

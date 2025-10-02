@@ -1,4 +1,3 @@
-import { CacheStore, type CachedBar } from '@tjr/bars-cache';
 import { getRecentBars as dbGetRecentBars, getQuote as dbGetQuote } from '@tjr/databento';
 import { readFileSync } from 'node:fs';
 
@@ -6,7 +5,6 @@ export type FuturesSymbol = 'ES' | 'NQ';
 
 export interface CompositeOptions {
   mode: 'live' | 'fixture';
-  ttlMs?: number;
   fixturePath?: string;
 }
 
@@ -14,10 +12,7 @@ export interface Quote { price: number; timestamp: Date }
 export interface Bar { timestamp: number; open:number; high:number; low:number; close:number; volume?: number }
 
 export class CompositeProvider {
-  private cache: CacheStore;
-  constructor(private opts: CompositeOptions) {
-    this.cache = new CacheStore(opts.ttlMs ?? 5 * 60 * 1000);
-  }
+  constructor(private opts: CompositeOptions) {}
 
   async getQuote(symbol: FuturesSymbol): Promise<Quote | null> {
     if (this.opts.mode === 'fixture') return null;
@@ -41,11 +36,7 @@ export class CompositeProvider {
       }));
     }
 
-    const cached = await this.cache.get(symbol, timeframe);
-    if (cached && cached.length >= count) return cached.slice(-count);
-    const fresh = await dbGetRecentBars(symbol, timeframe, count);
-    await this.cache.set(symbol, timeframe, fresh as CacheBar[]);
-    return fresh;
+    return dbGetRecentBars(symbol, timeframe, count);
   }
 }
 

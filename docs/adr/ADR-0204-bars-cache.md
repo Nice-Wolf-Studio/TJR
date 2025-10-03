@@ -36,18 +36,21 @@ Without a caching layer:
 Implement a hybrid caching system with two layers:
 
 **Layer 1: In-Memory LRU Cache (CacheStore)**
+
 - Fast O(1) access for hot data
 - Fixed-size LRU eviction (default 10,000 bars)
 - Ephemeral (cleared on restart)
 - No I/O overhead
 
 **Layer 2: Database-Backed Cache (DbCacheStore)**
+
 - Persistent storage via SQLite/PostgreSQL (using @tjr-suite/db-simple)
 - Survives restarts
 - Indexed range queries (symbol, timeframe, timestamp)
 - Supports provider priority resolution and revision tracking
 
 **Read-Through Semantics:**
+
 ```typescript
 async getBars(query: CacheQuery): Promise<CachedBar[]> {
   // 1. Check memory cache first
@@ -71,6 +74,7 @@ async getBars(query: CacheQuery): Promise<CachedBar[]> {
 ```
 
 **Write-Through Semantics:**
+
 ```typescript
 async storeBars(symbol: string, timeframe: Timeframe, bars: CachedBar[]): Promise<void> {
   // Write to both layers atomically
@@ -96,13 +100,14 @@ async storeBars(symbol: string, timeframe: Timeframe, bars: CachedBar[]): Promis
 
 ```typescript
 interface CachedBar extends Bar {
-  provider: string;   // e.g., 'polygon', 'yahoo'
-  revision: number;   // 1, 2, 3... (higher = newer)
-  fetchedAt: number;  // Unix timestamp when cached
+  provider: string; // e.g., 'polygon', 'yahoo'
+  revision: number; // 1, 2, 3... (higher = newer)
+  fetchedAt: number; // Unix timestamp when cached
 }
 ```
 
 **Revision Rules:**
+
 1. **Same provider, higher revision wins**
    - revision=2 overwrites revision=1
    - revision=1 ignored if revision=2 exists
@@ -123,20 +128,20 @@ interface CachedBar extends Bar {
 **Goal:** Deterministic selection when multiple providers have data for same bar.
 
 **Configuration:**
+
 ```typescript
 const providerPriority = ['polygon', 'yahoo', 'alpaca']; // Ordered by quality
 ```
 
 **Selection Algorithm:**
+
 ```typescript
 function selectBestBar(bars: CachedBar[]): CachedBar {
   // 1. Group by provider
   const byProvider = groupBy(bars, 'provider');
 
   // 2. For each provider, select highest revision
-  const bestPerProvider = mapValues(byProvider,
-    bars => maxBy(bars, 'revision')
-  );
+  const bestPerProvider = mapValues(byProvider, (bars) => maxBy(bars, 'revision'));
 
   // 3. Select provider by priority order
   for (const provider of providerPriority) {
@@ -151,6 +156,7 @@ function selectBestBar(bars: CachedBar[]): CachedBar {
 ```
 
 **Rationale:**
+
 - **Polygon:** Institutional-grade data, lowest latency, highest accuracy
 - **Yahoo:** Free tier, good for backtesting, occasional gaps
 - **Alpaca:** Real-time during market hours, delayed otherwise
@@ -189,11 +195,13 @@ CREATE INDEX idx_bars_cache_provider
 ```
 
 **Storage Estimates:**
+
 - 1 bar = ~100 bytes (with indices)
 - 1 year of 1m bars (1 symbol) = 525,600 bars = ~50 MB
 - 100 symbols × 3 providers × 1 year = ~15 GB
 
 **SQLite vs PostgreSQL:**
+
 - **SQLite:** Recommended for single-node deployments (dev, small-scale backtesting)
 - **PostgreSQL:** Required for multi-node production (shared cache across services)
 
@@ -205,18 +213,20 @@ CREATE INDEX idx_bars_cache_provider
 
 ```typescript
 interface CacheKey {
-  symbol: string;       // e.g., 'AAPL', 'BTC-USD'
+  symbol: string; // e.g., 'AAPL', 'BTC-USD'
   timeframe: Timeframe; // '1m', '5m', '1h', '1D'
-  timestamp: number;    // Unix milliseconds (UTC, aligned to timeframe boundary)
+  timestamp: number; // Unix milliseconds (UTC, aligned to timeframe boundary)
 }
 ```
 
 **Why provider excluded:**
+
 - Multiple providers can have data for same bar
 - Key represents logical bar identity
 - Provider resolved during retrieval via priority rules
 
 **Key Serialization (for in-memory Map):**
+
 ```typescript
 function serializeKey(key: CacheKey): string {
   return `${key.symbol}|${key.timeframe}|${key.timestamp}`;
@@ -228,27 +238,33 @@ function serializeKey(key: CacheKey): string {
 ### 6. **Integration with Dev-Scripts CLI**
 
 **Command: cache-warm**
+
 ```bash
 pnpm dev-scripts cache-warm --symbol AAPL --timeframe 5m --duration 7d
 ```
+
 - Pre-loads cache with recent data
 - Reduces cold-start latency for backtests
 - Runs in background, non-blocking
 
 **Command: cache-backfill**
+
 ```bash
 pnpm dev-scripts cache-backfill --symbol AAPL --timeframe 5m \
   --from 2025-01-01 --to 2025-09-30 --provider polygon
 ```
+
 - Historical data import
 - Respects API rate limits (10 req/sec default)
 - Progress bar and ETA display
 
 **Command: cache-verify**
+
 ```bash
 pnpm dev-scripts cache-verify --symbol AAPL --timeframe 5m \
   --from 2025-09-01 --to 2025-09-30
 ```
+
 - Checks for gaps in cached data
 - Reports missing timestamps
 - Suggests backfill commands
@@ -287,11 +303,13 @@ class CacheStore {
 ```
 
 **Why LRU:**
+
 - Recency principle: Recently accessed bars likely accessed again soon
 - Simple implementation (JavaScript Map preserves insertion order)
 - Predictable memory usage (fixed size)
 
 **Eviction Tuning:**
+
 - Default: 10,000 bars (~1 MB memory)
 - Backtesting: 100,000 bars (~10 MB)
 - Production: 1,000,000 bars (~100 MB)
@@ -306,19 +324,20 @@ class CacheStore {
 interface CacheQuery {
   symbol: string;
   timeframe: Timeframe;
-  start: number;  // Unix ms (inclusive)
-  end: number;    // Unix ms (exclusive)
+  start: number; // Unix ms (inclusive)
+  end: number; // Unix ms (exclusive)
 }
 ```
 
 **Examples:**
+
 ```typescript
 // Last 24 hours of 5m bars
 const query1: CacheQuery = {
   symbol: 'AAPL',
   timeframe: '5m',
   start: Date.now() - 86400000,
-  end: Date.now()
+  end: Date.now(),
 };
 
 // Specific date range
@@ -326,11 +345,12 @@ const query2: CacheQuery = {
   symbol: 'BTC-USD',
   timeframe: '1h',
   start: Date.UTC(2025, 0, 1), // 2025-01-01 00:00:00 UTC
-  end: Date.UTC(2025, 1, 1)    // 2025-02-01 00:00:00 UTC
+  end: Date.UTC(2025, 1, 1), // 2025-02-01 00:00:00 UTC
 };
 ```
 
 **Database Query (SQLite):**
+
 ```sql
 SELECT * FROM bars_cache
 WHERE symbol = ?
@@ -365,6 +385,7 @@ ORDER BY timestamp ASC, provider ASC;
 ### Trade-Offs
 
 **Cache Invalidation Strategy (Future Work):**
+
 - Option A: TTL-based (e.g., expire bars older than 7 days)
 - Option B: Provider push notifications (webhook triggers cache clear)
 - Option C: Manual invalidation via dev-scripts command
@@ -378,10 +399,12 @@ ORDER BY timestamp ASC, provider ASC;
 ### 1. Single-Tier (Database-Only) Cache
 
 **Pros:**
+
 - Simpler architecture (no LRU logic)
 - All data persistent
 
 **Cons:**
+
 - Higher latency for hot data (10ms vs <1ms)
 - Database I/O overhead for every query
 
@@ -392,11 +415,13 @@ ORDER BY timestamp ASC, provider ASC;
 ### 2. Redis for In-Memory Layer
 
 **Pros:**
+
 - Distributed cache (shared across nodes)
 - Built-in TTL support
 - Mature ecosystem
 
 **Cons:**
+
 - External dependency (deployment complexity)
 - Network overhead (local Map is faster)
 - Serialization overhead (JSON encoding/decoding)
@@ -408,9 +433,11 @@ ORDER BY timestamp ASC, provider ASC;
 ### 3. No Provider Priority (Newest Data Wins)
 
 **Pros:**
+
 - Simpler logic (just compare timestamps)
 
 **Cons:**
+
 - Non-deterministic (depends on fetch order)
 - No way to prefer higher-quality providers
 - Revision tracking becomes ambiguous
@@ -422,10 +449,12 @@ ORDER BY timestamp ASC, provider ASC;
 ### 4. Separate Tables Per Provider
 
 **Pros:**
+
 - Simpler queries (no provider filtering)
 - Easier to prune old data per provider
 
 **Cons:**
+
 - Duplicate schema management
 - Complex join logic for provider priority
 - More database connections
@@ -441,6 +470,7 @@ ORDER BY timestamp ASC, provider ASC;
 **Impact:** Incorrect bars cached, affecting all downstream queries
 
 **Mitigation:**
+
 - Validate bars before caching (OHLC invariants: low <= open/close <= high)
 - Log all writes with provider + revision for audit trail
 - Implement `cache-verify` command to detect anomalies
@@ -452,6 +482,7 @@ ORDER BY timestamp ASC, provider ASC;
 **Impact:** Database exceeds disk capacity after months of use
 
 **Mitigation:**
+
 - Implement retention policy (default: 1 year)
 - Add `cache-prune` command to delete old bars
 - Monitor storage metrics in production
@@ -463,6 +494,7 @@ ORDER BY timestamp ASC, provider ASC;
 **Impact:** Low-quality provider overrides high-quality provider
 
 **Mitigation:**
+
 - Document provider characteristics in README
 - Log provider selection decisions (debug mode)
 - Add `cache-stats` command showing per-provider hit rates
@@ -474,6 +506,7 @@ ORDER BY timestamp ASC, provider ASC;
 **Impact:** Older revision appears newer due to system clock differences
 
 **Mitigation:**
+
 - Use fetchedAt field (server time) not wall time
 - Log warnings when revision decreases
 - Future: Add checksum field to detect data corruption

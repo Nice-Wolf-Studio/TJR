@@ -5,7 +5,12 @@
  * in multiple output formats (text, JSON, table, markdown).
  */
 
-import type { ConfluenceReport, TJRFormatter, OutputFormat, ValidationResult } from '../reports/types.js';
+import type {
+  ConfluenceReport,
+  TJRFormatter,
+  OutputFormat,
+  ValidationResult,
+} from '../reports/types.js';
 
 /**
  * Formatter for confluence analysis reports
@@ -72,7 +77,9 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
     for (const factor of report.factors) {
       const contribution = (factor.weight * factor.value * 100).toFixed(1);
       lines.push(`  ${factor.name}:`);
-      lines.push(`    Weight: ${factor.weight.toFixed(2)} | Value: ${factor.value.toFixed(2)} | Contribution: ${contribution}`);
+      lines.push(
+        `    Weight: ${factor.weight.toFixed(2)} | Value: ${factor.value.toFixed(2)} | Contribution: ${contribution}`
+      );
       lines.push(`    ${factor.description}`);
     }
     lines.push('');
@@ -118,7 +125,9 @@ export class ConfluenceFormatter implements TJRFormatter<ConfluenceReport> {
       lines.push(`Zone Overlaps (${report.overlaps.length} found):`);
       for (const overlap of report.overlaps) {
         lines.push(`  FVG ${overlap.fvgIndex + 1} ↔ OB ${overlap.orderBlockIndex + 1}:`);
-        lines.push(`    Overlap Range: ${this.formatPrice(overlap.overlapLow)} - ${this.formatPrice(overlap.overlapHigh)}`);
+        lines.push(
+          `    Overlap Range: ${this.formatPrice(overlap.overlapLow)} - ${this.formatPrice(overlap.overlapHigh)}`
+        );
         lines.push(`    Overlap Size: ${this.formatPrice(overlap.overlapSize)}`);
       }
       lines.push('');

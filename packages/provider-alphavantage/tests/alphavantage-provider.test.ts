@@ -175,7 +175,7 @@ describe('AlphaVantageProvider', () => {
       });
 
       // All bars should be within range
-      bars.forEach(bar => {
+      bars.forEach((bar) => {
         const barTime = new Date(bar.timestamp).getTime();
         expect(barTime).toBeGreaterThanOrEqual(new Date(fromDate).getTime());
         expect(barTime).toBeLessThanOrEqual(new Date(toDate).getTime());
@@ -303,9 +303,9 @@ describe('Parser', () => {
       expect(result.bars.length).toBe(2);
 
       // Verify first bar
-      expect(result.bars[0].open).toBe(4750.00);
+      expect(result.bars[0].open).toBe(4750.0);
       expect(result.bars[0].high).toBe(4752.25);
-      expect(result.bars[0].low).toBe(4749.50);
+      expect(result.bars[0].low).toBe(4749.5);
       expect(result.bars[0].close).toBe(4751.75);
       expect(result.bars[0].volume).toBe(1250);
     });
@@ -409,18 +409,18 @@ describe('Parser', () => {
       const bars = [
         {
           timestamp: '2024-01-15T14:30:00.000Z',
-          open: 4750.00,
+          open: 4750.0,
           high: 4752.25,
-          low: 4749.50,
+          low: 4749.5,
           close: 4751.75,
           volume: 1250,
         },
         {
           timestamp: '2024-01-15T14:31:00.000Z',
           open: 4751.75,
-          high: 4753.00,
-          low: 4751.00,
-          close: 4752.50,
+          high: 4753.0,
+          low: 4751.0,
+          close: 4752.5,
           volume: 1100,
         },
       ];
@@ -433,25 +433,25 @@ describe('Parser', () => {
       const bars = [
         {
           timestamp: '2024-01-15T14:30:00.000Z',
-          open: 4750.00,
+          open: 4750.0,
           high: 4752.25,
-          low: 4749.50,
+          low: 4749.5,
           close: 4751.75,
           volume: 1250,
         },
         {
           timestamp: '2024-01-15T14:30:00.000Z', // Duplicate
-          open: 4751.00,
-          high: 4752.00,
-          low: 4750.00,
-          close: 4751.50,
+          open: 4751.0,
+          high: 4752.0,
+          low: 4750.0,
+          close: 4751.5,
           volume: 1000,
         },
       ];
 
       const warnings = validateBars(bars);
       expect(warnings.length).toBeGreaterThan(0);
-      expect(warnings.some(w => w.includes('Duplicate timestamp'))).toBe(true);
+      expect(warnings.some((w) => w.includes('Duplicate timestamp'))).toBe(true);
     });
 
     it('should detect out-of-order timestamps', () => {
@@ -459,16 +459,16 @@ describe('Parser', () => {
         {
           timestamp: '2024-01-15T14:31:00.000Z', // Later timestamp first
           open: 4751.75,
-          high: 4753.00,
-          low: 4751.00,
-          close: 4752.50,
+          high: 4753.0,
+          low: 4751.0,
+          close: 4752.5,
           volume: 1100,
         },
         {
           timestamp: '2024-01-15T14:30:00.000Z',
-          open: 4750.00,
+          open: 4750.0,
           high: 4752.25,
-          low: 4749.50,
+          low: 4749.5,
           close: 4751.75,
           volume: 1250,
         },
@@ -476,16 +476,16 @@ describe('Parser', () => {
 
       const warnings = validateBars(bars);
       expect(warnings.length).toBeGreaterThan(0);
-      expect(warnings.some(w => w.includes('not in chronological order'))).toBe(true);
+      expect(warnings.some((w) => w.includes('not in chronological order'))).toBe(true);
     });
 
     it('should detect zero volume bars', () => {
       const bars = [
         {
           timestamp: '2024-01-15T14:30:00.000Z',
-          open: 4750.00,
+          open: 4750.0,
           high: 4752.25,
-          low: 4749.50,
+          low: 4749.5,
           close: 4751.75,
           volume: 0, // Zero volume
         },
@@ -493,7 +493,7 @@ describe('Parser', () => {
 
       const warnings = validateBars(bars);
       expect(warnings.length).toBeGreaterThan(0);
-      expect(warnings.some(w => w.includes('zero volume'))).toBe(true);
+      expect(warnings.some((w) => w.includes('zero volume'))).toBe(true);
     });
   });
 });

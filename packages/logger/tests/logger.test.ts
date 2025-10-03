@@ -52,7 +52,7 @@ describe('createLogger', () => {
     logger.info('Test message', { foo: 'bar' });
 
     // Give Winston time to flush
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logExists = fs.existsSync(testLogFile);
     assert.ok(logExists, 'Log file should be created');
@@ -73,10 +73,13 @@ describe('createLogger', () => {
     const childLogger = logger.child({ component: 'test-component' });
     childLogger.info('Child log message');
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
-    assert.ok(logContent.includes('"component":"test-component"'), 'Child logger should include context');
+    assert.ok(
+      logContent.includes('"component":"test-component"'),
+      'Child logger should include context'
+    );
   });
 
   it('should support multiple context fields in child logger', async () => {
@@ -96,7 +99,7 @@ describe('createLogger', () => {
 
     childLogger.info('Trade signal');
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"component":"trading"'), 'Should include component');
@@ -115,7 +118,7 @@ describe('createLogger', () => {
 
     logger.info('Timestamped message');
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"timestamp"'), 'Log should include timestamp');
@@ -132,7 +135,7 @@ describe('createLogger', () => {
     const error = new Error('Test error');
     logger.error('Error occurred', { error: error.message, stack: error.stack });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('Test error'), 'Log should include error message');
@@ -148,11 +151,11 @@ describe('createLogger', () => {
     });
 
     logger.debug('Debug message'); // Should NOT appear
-    logger.info('Info message');   // Should NOT appear
-    logger.warn('Warn message');   // Should appear
+    logger.info('Info message'); // Should NOT appear
+    logger.warn('Warn message'); // Should appear
     logger.error('Error message'); // Should appear
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(!logContent.includes('Debug message'), 'Debug should be filtered');

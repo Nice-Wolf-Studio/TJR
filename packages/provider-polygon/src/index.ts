@@ -40,22 +40,18 @@
  * @packageDocumentation
  */
 
-import type { Bar } from "@tjr-suite/market-data-core";
-import type { ProviderCapabilities } from "@tjr/contracts";
-import { Timeframe } from "@tjr/contracts";
-import type {
-  PolygonProviderConfig,
-  GetBarsOptions,
-  Provider,
-} from "./types.js";
-import { createClient, PolygonClient } from "./client.js";
-import { parseAggregatesResponse } from "./parse.js";
+import type { Bar } from '@tjr-suite/market-data-core';
+import type { ProviderCapabilities } from '@tjr/contracts';
+import type { Timeframe as _Timeframe } from '@tjr/contracts';
+import type { PolygonProviderConfig, GetBarsOptions, Provider } from './types.js';
+import { createClient, type PolygonClient as _PolygonClient } from './client.js';
+import { parseAggregatesResponse } from './parse.js';
 import {
   getSourceTimeframe,
   toPolygonParams,
   aggregateToTimeframe,
   POLYGON_SUPPORTED_TIMEFRAMES,
-} from "./aggregate.js";
+} from './aggregate.js';
 
 /**
  * Creates a new Polygon.io provider instance.
@@ -98,13 +94,13 @@ import {
 export function createPolygonProvider(config: PolygonProviderConfig): Provider {
   // Validate required config
   if (!config.apiKey) {
-    throw new Error("PolygonProviderConfig.apiKey is required");
+    throw new Error('PolygonProviderConfig.apiKey is required');
   }
 
   // Create HTTP client
   const client = createClient({
     apiKey: config.apiKey,
-    baseUrl: config.baseUrl || "https://api.polygon.io",
+    baseUrl: config.baseUrl || 'https://api.polygon.io',
     timeout: config.timeout || 30000,
     logger: config.logger,
   });
@@ -160,7 +156,7 @@ export function createPolygonProvider(config: PolygonProviderConfig): Provider {
       const { symbol, timeframe, from, to, limit } = options;
 
       // Log request
-      config.logger?.info("Fetching bars from Polygon", {
+      config.logger?.info('Fetching bars from Polygon', {
         symbol,
         timeframe,
         from: from.toISOString(),
@@ -192,7 +188,7 @@ export function createPolygonProvider(config: PolygonProviderConfig): Provider {
       const sourceBars = parseAggregatesResponse(response);
 
       // Log source bars count
-      config.logger?.debug("Received source bars", {
+      config.logger?.debug('Received source bars', {
         symbol,
         sourceTimeframe,
         count: sourceBars.length,
@@ -202,13 +198,11 @@ export function createPolygonProvider(config: PolygonProviderConfig): Provider {
       const bars = aggregateToTimeframe(sourceBars, timeframe);
 
       // Log final bars count
-      config.logger?.info("Bars fetched successfully", {
+      config.logger?.info('Bars fetched successfully', {
         symbol,
         timeframe,
         count: bars.length,
-        firstTimestamp: bars[0]?.timestamp
-          ? new Date(bars[0].timestamp).toISOString()
-          : null,
+        firstTimestamp: bars[0]?.timestamp ? new Date(bars[0].timestamp).toISOString() : null,
         lastTimestamp: bars[bars.length - 1]?.timestamp
           ? new Date(bars[bars.length - 1].timestamp).toISOString()
           : null,
@@ -276,20 +270,14 @@ export function createPolygonProvider(config: PolygonProviderConfig): Provider {
         // Free tier: 2 years
         // Paid tiers: Unlimited
         // We report conservative value for free tier
-        historicalDataFrom: new Date(
-          Date.now() - 2 * 365 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        historicalDataFrom: new Date(Date.now() - 2 * 365 * 24 * 60 * 60 * 1000).toISOString(),
       };
     },
   };
 }
 
 // Re-export public types and utilities
-export type {
-  PolygonProviderConfig,
-  GetBarsOptions,
-  Provider,
-} from "./types.js";
+export type { PolygonProviderConfig, GetBarsOptions, Provider } from './types.js';
 
 export {
   RateLimitError,
@@ -298,14 +286,9 @@ export {
   isRateLimitError,
   isApiError,
   isParseError,
-} from "./errors.js";
+} from './errors.js';
 
-export {
-  parseAggregatesResponse,
-  parseAggregate,
-  parseIntraday,
-  parseDaily,
-} from "./parse.js";
+export { parseAggregatesResponse, parseAggregate, parseIntraday, parseDaily } from './parse.js';
 
 export {
   POLYGON_NATIVE_TIMEFRAMES,
@@ -316,4 +299,4 @@ export {
   toPolygonParams,
   aggregateToTimeframe,
   estimateAggregatedCount,
-} from "./aggregate.js";
+} from './aggregate.js';

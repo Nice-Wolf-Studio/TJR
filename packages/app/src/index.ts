@@ -12,7 +12,7 @@ export type {
   IContainer,
   DependencyNode,
   ServiceFactory,
-  ServiceRegistration
+  ServiceRegistration,
 } from './container/types.js';
 
 // Configuration exports
@@ -32,17 +32,12 @@ export type { CacheService, CacheStats, CacheConfig } from './services/cache/typ
 // Command exports
 export { HealthCommand } from './commands/health.command.js';
 export { DailyCommand } from './commands/daily.command.js';
-export type {
-  Command,
-  CommandOptions,
-  CommandResult,
-  CommandRegistry
-} from './commands/types.js';
+export type { Command, CommandOptions, CommandResult, CommandRegistry } from './commands/types.js';
 
 // Fixture exports
 export {
   generateFixtureBars,
   generateSessionBars,
   generateTrendDay,
-  loadFixtures
+  loadFixtures,
 } from './fixtures/index.js';

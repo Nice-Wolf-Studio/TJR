@@ -18,18 +18,18 @@
  * @invariant String values must match provider API conventions
  */
 export declare enum Timeframe {
-    /** 1-minute bars - highest resolution intraday */
-    M1 = "1",
-    /** 5-minute bars - common intraday timeframe */
-    M5 = "5",
-    /** 10-minute bars - reduced noise intraday */
-    M10 = "10",
-    /** 1-hour bars - hourly analysis */
-    H1 = "60",
-    /** 4-hour bars - swing trading timeframe */
-    H4 = "240",
-    /** Daily bars - daily swing analysis */
-    D1 = "1D"
+  /** 1-minute bars - highest resolution intraday */
+  M1 = '1',
+  /** 5-minute bars - common intraday timeframe */
+  M5 = '5',
+  /** 10-minute bars - reduced noise intraday */
+  M10 = '10',
+  /** 1-hour bars - hourly analysis */
+  H1 = '60',
+  /** 4-hour bars - swing trading timeframe */
+  H4 = '240',
+  /** Daily bars - daily swing analysis */
+  D1 = '1D',
 }
 /**
  * Validates whether a string is a valid Timeframe enum value.

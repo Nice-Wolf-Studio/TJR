@@ -2,16 +2,86 @@
   "symbol": "BTC-USDT",
   "timeframe": "M5",
   "bars": [
-    { "timestamp": "2025-09-30T09:30:00Z", "open": 64500, "high": 64650, "low": 64480, "close": 64600, "volume": 1200 },
-    { "timestamp": "2025-09-30T09:35:00Z", "open": 64600, "high": 64750, "low": 64580, "close": 64720, "volume": 1450 },
-    { "timestamp": "2025-09-30T09:40:00Z", "open": 64720, "high": 64900, "low": 64700, "close": 64850, "volume": 2100 },
-    { "timestamp": "2025-09-30T09:45:00Z", "open": 64850, "high": 64920, "low": 64800, "close": 64880, "volume": 1800 },
-    { "timestamp": "2025-09-30T09:50:00Z", "open": 64880, "high": 65000, "low": 64850, "close": 64950, "volume": 1950 },
-    { "timestamp": "2025-09-30T09:55:00Z", "open": 64950, "high": 65100, "low": 64930, "close": 65050, "volume": 2200 },
-    { "timestamp": "2025-09-30T10:00:00Z", "open": 65050, "high": 65200, "low": 65020, "close": 65180, "volume": 2500 },
-    { "timestamp": "2025-09-30T10:05:00Z", "open": 65180, "high": 65250, "low": 65100, "close": 65200, "volume": 1700 },
-    { "timestamp": "2025-09-30T10:10:00Z", "open": 65200, "high": 65280, "low": 65150, "close": 65230, "volume": 1600 },
-    { "timestamp": "2025-09-30T10:15:00Z", "open": 65230, "high": 65300, "low": 65180, "close": 65260, "volume": 1500 }
+    {
+      "timestamp": "2025-09-30T09:30:00Z",
+      "open": 64500,
+      "high": 64650,
+      "low": 64480,
+      "close": 64600,
+      "volume": 1200
+    },
+    {
+      "timestamp": "2025-09-30T09:35:00Z",
+      "open": 64600,
+      "high": 64750,
+      "low": 64580,
+      "close": 64720,
+      "volume": 1450
+    },
+    {
+      "timestamp": "2025-09-30T09:40:00Z",
+      "open": 64720,
+      "high": 64900,
+      "low": 64700,
+      "close": 64850,
+      "volume": 2100
+    },
+    {
+      "timestamp": "2025-09-30T09:45:00Z",
+      "open": 64850,
+      "high": 64920,
+      "low": 64800,
+      "close": 64880,
+      "volume": 1800
+    },
+    {
+      "timestamp": "2025-09-30T09:50:00Z",
+      "open": 64880,
+      "high": 65000,
+      "low": 64850,
+      "close": 64950,
+      "volume": 1950
+    },
+    {
+      "timestamp": "2025-09-30T09:55:00Z",
+      "open": 64950,
+      "high": 65100,
+      "low": 64930,
+      "close": 65050,
+      "volume": 2200
+    },
+    {
+      "timestamp": "2025-09-30T10:00:00Z",
+      "open": 65050,
+      "high": 65200,
+      "low": 65020,
+      "close": 65180,
+      "volume": 2500
+    },
+    {
+      "timestamp": "2025-09-30T10:05:00Z",
+      "open": 65180,
+      "high": 65250,
+      "low": 65100,
+      "close": 65200,
+      "volume": 1700
+    },
+    {
+      "timestamp": "2025-09-30T10:10:00Z",
+      "open": 65200,
+      "high": 65280,
+      "low": 65150,
+      "close": 65230,
+      "volume": 1600
+    },
+    {
+      "timestamp": "2025-09-30T10:15:00Z",
+      "open": 65230,
+      "high": 65300,
+      "low": 65180,
+      "close": 65260,
+      "volume": 1500
+    }
   ],
   "result": {
     "confluenceScore": 85.2,

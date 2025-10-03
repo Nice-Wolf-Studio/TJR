@@ -20,8 +20,6 @@
     "lookback": 2
   },
   "expected": {
-    "swings": [
-      { "index": 10, "timestamp": 11000, "price": 116, "type": "HH" }
-    ]
+    "swings": [{ "index": 10, "timestamp": 11000, "price": 116, "type": "HH" }]
   }
 }

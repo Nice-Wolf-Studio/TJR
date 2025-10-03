@@ -30,40 +30,40 @@ import type { Timeframe } from './timeframes.js';
  * ```
  */
 export declare class TJRError extends Error {
-    /**
-     * Machine-readable error code (e.g., 'PROVIDER_RATE_LIMIT').
-     * Use for error categorization and handling logic.
-     */
-    readonly code: string;
-    /**
-     * Structured error data for debugging and retry logic.
-     * Format varies by error type.
-     */
-    readonly data?: Record<string, unknown>;
-    /**
-     * ISO 8601 timestamp when error was created.
-     */
-    readonly timestamp: string;
-    /**
-     * Creates a new TJRError.
-     *
-     * @param code - Error code constant
-     * @param message - Human-readable error message
-     * @param data - Optional structured context data
-     */
-    constructor(code: string, message: string, data?: Record<string, unknown>);
-    /**
-     * Serializes error to JSON-safe object.
-     *
-     * @returns Plain object representation
-     *
-     * @example
-     * ```typescript
-     * const err = new TJRError('TEST', 'Test error');
-     * JSON.stringify(err.toJSON());
-     * ```
-     */
-    toJSON(): Record<string, unknown>;
+  /**
+   * Machine-readable error code (e.g., 'PROVIDER_RATE_LIMIT').
+   * Use for error categorization and handling logic.
+   */
+  readonly code: string;
+  /**
+   * Structured error data for debugging and retry logic.
+   * Format varies by error type.
+   */
+  readonly data?: Record<string, unknown>;
+  /**
+   * ISO 8601 timestamp when error was created.
+   */
+  readonly timestamp: string;
+  /**
+   * Creates a new TJRError.
+   *
+   * @param code - Error code constant
+   * @param message - Human-readable error message
+   * @param data - Optional structured context data
+   */
+  constructor(code: string, message: string, data?: Record<string, unknown>);
+  /**
+   * Serializes error to JSON-safe object.
+   *
+   * @returns Plain object representation
+   *
+   * @example
+   * ```typescript
+   * const err = new TJRError('TEST', 'Test error');
+   * JSON.stringify(err.toJSON());
+   * ```
+   */
+  toJSON(): Record<string, unknown>;
 }
 /**
  * Thrown when a data provider's rate limit is exceeded.
@@ -79,21 +79,24 @@ export declare class TJRError extends Error {
  * ```
  */
 export declare class ProviderRateLimitError extends TJRError {
-    /**
-     * Creates a new ProviderRateLimitError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.provider - Provider name (e.g., 'alpaca', 'tradier')
-     * @param data.retryAfter - Optional: seconds to wait before retry
-     * @param data.limitType - Optional: type of limit hit (e.g., 'requests_per_minute')
-     */
-    constructor(message: string, data: {
-        provider: string;
-        retryAfter?: number;
-        limitType?: string;
-        [key: string]: unknown;
-    });
+  /**
+   * Creates a new ProviderRateLimitError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.provider - Provider name (e.g., 'alpaca', 'tradier')
+   * @param data.retryAfter - Optional: seconds to wait before retry
+   * @param data.limitType - Optional: type of limit hit (e.g., 'requests_per_minute')
+   */
+  constructor(
+    message: string,
+    data: {
+      provider: string;
+      retryAfter?: number;
+      limitType?: string;
+      [key: string]: unknown;
+    }
+  );
 }
 /**
  * Thrown when insufficient historical bars are available for analysis.
@@ -114,23 +117,26 @@ export declare class ProviderRateLimitError extends TJRError {
  * ```
  */
 export declare class InsufficientBarsError extends TJRError {
-    /**
-     * Creates a new InsufficientBarsError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.required - Minimum bars required
-     * @param data.received - Actual bars received
-     * @param data.symbol - Symbol being queried
-     * @param data.timeframe - Timeframe being queried
-     */
-    constructor(message: string, data: {
-        required: number;
-        received: number;
-        symbol: string;
-        timeframe: Timeframe;
-        [key: string]: unknown;
-    });
+  /**
+   * Creates a new InsufficientBarsError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.required - Minimum bars required
+   * @param data.received - Actual bars received
+   * @param data.symbol - Symbol being queried
+   * @param data.timeframe - Timeframe being queried
+   */
+  constructor(
+    message: string,
+    data: {
+      required: number;
+      received: number;
+      symbol: string;
+      timeframe: Timeframe;
+      [key: string]: unknown;
+    }
+  );
 }
 /**
  * Thrown when a symbol cannot be resolved by a provider.
@@ -150,21 +156,24 @@ export declare class InsufficientBarsError extends TJRError {
  * ```
  */
 export declare class SymbolResolutionError extends TJRError {
-    /**
-     * Creates a new SymbolResolutionError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.symbol - Symbol that failed to resolve
-     * @param data.provider - Provider where resolution failed
-     * @param data.suggestion - Optional: suggested correct symbol
-     */
-    constructor(message: string, data: {
-        symbol: string;
-        provider: string;
-        suggestion?: string;
-        [key: string]: unknown;
-    });
+  /**
+   * Creates a new SymbolResolutionError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.symbol - Symbol that failed to resolve
+   * @param data.provider - Provider where resolution failed
+   * @param data.suggestion - Optional: suggested correct symbol
+   */
+  constructor(
+    message: string,
+    data: {
+      symbol: string;
+      provider: string;
+      suggestion?: string;
+      [key: string]: unknown;
+    }
+  );
 }
 /**
  * Type guard to check if an error is a TJRError.

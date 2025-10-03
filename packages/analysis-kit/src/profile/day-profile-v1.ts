@@ -14,8 +14,8 @@ const PRICE_EPSILON = 1e-9;
  * Profile classification thresholds
  */
 const THRESHOLDS = {
-  TREND_RANGE_RATIO: 0.7,    // Range/ATR ratio for trend day (large range)
-  RANGE_DAY_RATIO: 0.3,       // Range/ATR ratio for range day (small range)
+  TREND_RANGE_RATIO: 0.7, // Range/ATR ratio for trend day (large range)
+  RANGE_DAY_RATIO: 0.3, // Range/ATR ratio for range day (small range)
   DIRECTIONAL_THRESHOLD: 0.6, // Close position in range for trend identification
 };
 
@@ -158,7 +158,7 @@ export function classifyDayProfile(bars: Bar[], sessionExtremes: SessionExtremes
       characteristics.push('strong directional move');
       characteristics.push('bullish trend');
       characteristics.push('close near high');
-    } else if (closePosition <= (1 - THRESHOLDS.DIRECTIONAL_THRESHOLD)) {
+    } else if (closePosition <= 1 - THRESHOLDS.DIRECTIONAL_THRESHOLD) {
       // Trend day - close near low (bearish)
       profileType = 'P';
       characteristics.push('strong directional move');

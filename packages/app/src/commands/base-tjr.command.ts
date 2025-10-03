@@ -229,11 +229,9 @@ export abstract class BaseTJRCommand implements Command {
    */
   protected validateRequired(value: any, name: string): void {
     if (value === undefined || value === null || value === '') {
-      throw new TJRCommandError(
-        TJRErrorCode.INVALID_ARGS,
-        `Missing required argument: ${name}`,
-        { argument: name }
-      );
+      throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `Missing required argument: ${name}`, {
+        argument: name,
+      });
     }
   }
 
@@ -243,11 +241,10 @@ export abstract class BaseTJRCommand implements Command {
   protected parseDate(dateStr: string, name: string = 'date'): Date {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
-      throw new TJRCommandError(
-        TJRErrorCode.INVALID_ARGS,
-        `Invalid date format: ${dateStr}`,
-        { argument: name, value: dateStr }
-      );
+      throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `Invalid date format: ${dateStr}`, {
+        argument: name,
+        value: dateStr,
+      });
     }
     return date;
   }
@@ -258,27 +255,26 @@ export abstract class BaseTJRCommand implements Command {
   protected parseNumber(value: string, name: string, min?: number, max?: number): number {
     const num = Number(value);
     if (isNaN(num)) {
-      throw new TJRCommandError(
-        TJRErrorCode.INVALID_ARGS,
-        `Invalid number: ${value}`,
-        { argument: name, value }
-      );
+      throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `Invalid number: ${value}`, {
+        argument: name,
+        value,
+      });
     }
 
     if (min !== undefined && num < min) {
-      throw new TJRCommandError(
-        TJRErrorCode.INVALID_ARGS,
-        `${name} must be >= ${min}`,
-        { argument: name, value: num, min }
-      );
+      throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `${name} must be >= ${min}`, {
+        argument: name,
+        value: num,
+        min,
+      });
     }
 
     if (max !== undefined && num > max) {
-      throw new TJRCommandError(
-        TJRErrorCode.INVALID_ARGS,
-        `${name} must be <= ${max}`,
-        { argument: name, value: num, max }
-      );
+      throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `${name} must be <= ${max}`, {
+        argument: name,
+        value: num,
+        max,
+      });
     }
 
     return num;
@@ -289,11 +285,7 @@ export abstract class BaseTJRCommand implements Command {
    *
    * Shared method used by both confluence and execution commands
    */
-  protected async fetchBars(
-    symbol: string,
-    timeframe: Timeframe,
-    date?: Date
-  ): Promise<any[]> {
+  protected async fetchBars(symbol: string, timeframe: Timeframe, date?: Date): Promise<any[]> {
     try {
       // Determine date range
       const targetDate = date || new Date();

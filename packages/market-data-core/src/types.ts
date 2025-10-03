@@ -20,16 +20,7 @@
  * Note: Only these canonical timeframes are supported. Arbitrary intervals
  * (e.g., "7m", "3h") are not supported in Phase 51.
  */
-export type Timeframe =
-  | "1m"
-  | "5m"
-  | "10m"
-  | "15m"
-  | "30m"
-  | "1h"
-  | "2h"
-  | "4h"
-  | "1D";
+export type Timeframe = '1m' | '5m' | '10m' | '15m' | '30m' | '1h' | '2h' | '4h' | '1D';
 
 /**
  * OHLCV (Open-High-Low-Close-Volume) bar structure.

@@ -16,10 +16,19 @@ const MONTH_CODES = ['F', 'G', 'H', 'J', 'K', 'M', 'N', 'Q', 'U', 'V', 'X', 'Z']
  * Known continuous futures roots
  */
 const KNOWN_FUTURES_ROOTS = new Set([
-  'ES', 'NQ', 'YM', 'RTY',  // Equity indices
-  'GC', 'SI', 'HG', 'CL',   // Commodities
-  'ZB', 'ZN', 'ZF', 'ZT',   // Treasuries
-  'VX',                      // Volatility
+  'ES',
+  'NQ',
+  'YM',
+  'RTY', // Equity indices
+  'GC',
+  'SI',
+  'HG',
+  'CL', // Commodities
+  'ZB',
+  'ZN',
+  'ZF',
+  'ZT', // Treasuries
+  'VX', // Volatility
 ]);
 
 /**

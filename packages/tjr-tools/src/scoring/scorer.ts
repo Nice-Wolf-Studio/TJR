@@ -19,16 +19,18 @@ export function calculateConfluence(
   const w = { ...DEFAULT_WEIGHTS, ...weights };
 
   // FVG factor: average strength of unfilled FVGs
-  const unfilledFVGs = fvgZones.filter(z => !z.filled);
-  const fvgFactor = unfilledFVGs.length > 0
-    ? unfilledFVGs.reduce((sum, z) => sum + z.strength, 0) / unfilledFVGs.length
-    : 0;
+  const unfilledFVGs = fvgZones.filter((z) => !z.filled);
+  const fvgFactor =
+    unfilledFVGs.length > 0
+      ? unfilledFVGs.reduce((sum, z) => sum + z.strength, 0) / unfilledFVGs.length
+      : 0;
 
   // Order Block factor: average strength of unmitigated blocks
-  const unmitigatedBlocks = orderBlocks.filter(b => !b.mitigated);
-  const obFactor = unmitigatedBlocks.length > 0
-    ? unmitigatedBlocks.reduce((sum, b) => sum + b.strength, 0) / unmitigatedBlocks.length
-    : 0;
+  const unmitigatedBlocks = orderBlocks.filter((b) => !b.mitigated);
+  const obFactor =
+    unmitigatedBlocks.length > 0
+      ? unmitigatedBlocks.reduce((sum, b) => sum + b.strength, 0) / unmitigatedBlocks.length
+      : 0;
 
   // Overlap factor: percentage of zones that overlap
   const overlapFactor = calculateOverlapFactor(unfilledFVGs, unmitigatedBlocks);
@@ -37,12 +39,12 @@ export function calculateConfluence(
   const recencyFactor = calculateRecencyFactor(fvgZones, orderBlocks, barsCount);
 
   // Weighted sum, scaled to 0-100
-  const score = (
-    fvgFactor * w.fvg +
-    obFactor * w.orderBlock +
-    overlapFactor * w.overlap +
-    recencyFactor * w.recency
-  ) * 100;
+  const score =
+    (fvgFactor * w.fvg +
+      obFactor * w.orderBlock +
+      overlapFactor * w.overlap +
+      recencyFactor * w.recency) *
+    100;
 
   return Math.round(score * 100) / 100; // Round to 2 decimals
 }
@@ -71,13 +73,17 @@ function calculateOverlapFactor(fvgs: FVGZone[], orderBlocks: OrderBlock[]): num
 /**
  * Calculate recency factor (0-1) based on most recent zone.
  */
-function calculateRecencyFactor(fvgs: FVGZone[], orderBlocks: OrderBlock[], barsCount: number): number {
+function calculateRecencyFactor(
+  fvgs: FVGZone[],
+  orderBlocks: OrderBlock[],
+  barsCount: number
+): number {
   if (barsCount === 0 || (fvgs.length === 0 && orderBlocks.length === 0)) {
     return 0;
   }
 
-  const mostRecentFVG = fvgs.length > 0 ? Math.max(...fvgs.map(z => z.startIndex)) : -1;
-  const mostRecentOB = orderBlocks.length > 0 ? Math.max(...orderBlocks.map(b => b.index)) : -1;
+  const mostRecentFVG = fvgs.length > 0 ? Math.max(...fvgs.map((z) => z.startIndex)) : -1;
+  const mostRecentOB = orderBlocks.length > 0 ? Math.max(...orderBlocks.map((b) => b.index)) : -1;
   const mostRecentIndex = Math.max(mostRecentFVG, mostRecentOB);
 
   // More recent = higher score

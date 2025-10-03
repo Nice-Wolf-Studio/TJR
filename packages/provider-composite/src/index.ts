@@ -8,8 +8,18 @@ export interface CompositeOptions {
   fixturePath?: string;
 }
 
-export interface Quote { price: number; timestamp: Date }
-export interface Bar { timestamp: number; open:number; high:number; low:number; close:number; volume?: number }
+export interface Quote {
+  price: number;
+  timestamp: Date;
+}
+export interface Bar {
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume?: number;
+}
 
 export class CompositeProvider {
   constructor(private opts: CompositeOptions) {}
@@ -19,7 +29,11 @@ export class CompositeProvider {
     return dbGetQuote(symbol);
   }
 
-  async getBars(symbol: FuturesSymbol, timeframe: '1m'|'1h'|'4h', count: number): Promise<Bar[]> {
+  async getBars(
+    symbol: FuturesSymbol,
+    timeframe: '1m' | '1h' | '4h',
+    count: number
+  ): Promise<Bar[]> {
     if (this.opts.mode === 'fixture') {
       const path = this.opts.fixturePath;
       if (!path) throw new Error('fixturePath is required in fixture mode');
@@ -39,4 +53,3 @@ export class CompositeProvider {
     return dbGetRecentBars(symbol, timeframe, count);
   }
 }
-

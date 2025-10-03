@@ -30,28 +30,23 @@
  */
 
 // Export types
-export type { Bar, Timeframe } from "./types.js";
+export type { Bar, Timeframe } from './types.js';
 
 // Export timeframe utilities
-export {
-  toMillis,
-  normalizeTimeframe,
-  alignTimestamp,
-  isAligned,
-} from "./timeframe.js";
+export { toMillis, normalizeTimeframe, alignTimestamp, isAligned } from './timeframe.js';
 
 // Export aggregation utilities
-export { aggregateBars } from "./aggregate.js";
-export type { AggregateOptions } from "./aggregate.js";
+export { aggregateBars } from './aggregate.js';
+export type { AggregateOptions } from './aggregate.js';
 
 // Export clipping utilities
-export { clipBars } from "./clip.js";
-export type { ClipOptions } from "./clip.js";
+export { clipBars } from './clip.js';
+export type { ClipOptions } from './clip.js';
 
 // Export composite provider selection
-export { selectProvider, loadCapabilities } from "./composite.js";
+export { selectProvider, loadCapabilities } from './composite.js';
 export type {
   ProviderCapabilities,
   SelectProviderOptions,
   ProviderSelectionResult,
-} from "./composite.js";
+} from './composite.js';

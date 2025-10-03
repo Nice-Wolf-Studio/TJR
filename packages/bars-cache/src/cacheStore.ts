@@ -6,12 +6,12 @@
  * LRU ordering for eviction.
  */
 
-import type { CachedBar, CacheKey, CacheQuery } from './types.js'
+import type { CachedBar, CacheKey, CacheQuery } from './types.js';
 
 /**
  * Default maximum number of bars to keep in memory.
  */
-const DEFAULT_MAX_SIZE = 10000
+const DEFAULT_MAX_SIZE = 10000;
 
 /**
  * Generate a string key from CacheKey components.
@@ -20,7 +20,7 @@ const DEFAULT_MAX_SIZE = 10000
  * Example: "AAPL:5m:1633024800000"
  */
 function serializeKey(key: CacheKey): string {
-  return `${key.symbol}:${key.timeframe}:${key.timestamp}`
+  return `${key.symbol}:${key.timeframe}:${key.timestamp}`;
 }
 
 /**
@@ -47,8 +47,8 @@ function serializeKey(key: CacheKey): string {
  * ```
  */
 export class CacheStore {
-  private cache: Map<string, CachedBar>
-  private maxSize: number
+  private cache: Map<string, CachedBar>;
+  private maxSize: number;
 
   /**
    * Create a new in-memory cache.
@@ -56,8 +56,8 @@ export class CacheStore {
    * @param maxSize - Maximum number of bars to cache (default: 10000)
    */
   constructor(maxSize: number = DEFAULT_MAX_SIZE) {
-    this.cache = new Map()
-    this.maxSize = maxSize
+    this.cache = new Map();
+    this.maxSize = maxSize;
   }
 
   /**
@@ -69,18 +69,18 @@ export class CacheStore {
    * Note: This operation moves the accessed entry to the end of the LRU queue.
    */
   get(key: CacheKey): CachedBar | null {
-    const serializedKey = serializeKey(key)
-    const bar = this.cache.get(serializedKey)
+    const serializedKey = serializeKey(key);
+    const bar = this.cache.get(serializedKey);
 
     if (bar === undefined) {
-      return null
+      return null;
     }
 
     // Move to end (LRU: most recently used)
-    this.cache.delete(serializedKey)
-    this.cache.set(serializedKey, bar)
+    this.cache.delete(serializedKey);
+    this.cache.set(serializedKey, bar);
 
-    return bar
+    return bar;
   }
 
   /**
@@ -92,23 +92,23 @@ export class CacheStore {
    * Note: If the cache is full, the least recently used entry is evicted.
    */
   set(key: CacheKey, bar: CachedBar): void {
-    const serializedKey = serializeKey(key)
+    const serializedKey = serializeKey(key);
 
     // Remove existing entry if present (to update position)
     if (this.cache.has(serializedKey)) {
-      this.cache.delete(serializedKey)
+      this.cache.delete(serializedKey);
     }
 
     // Evict oldest entry if at capacity
     if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value
+      const firstKey = this.cache.keys().next().value;
       if (firstKey !== undefined) {
-        this.cache.delete(firstKey)
+        this.cache.delete(firstKey);
       }
     }
 
     // Add new entry to end
-    this.cache.set(serializedKey, bar)
+    this.cache.set(serializedKey, bar);
   }
 
   /**
@@ -121,7 +121,7 @@ export class CacheStore {
    * It scans all entries and filters by query parameters.
    */
   getRange(query: CacheQuery): CachedBar[] {
-    const results: CachedBar[] = []
+    const results: CachedBar[] = [];
 
     for (const bar of this.cache.values()) {
       if (
@@ -132,14 +132,14 @@ export class CacheStore {
         // or use a more sophisticated indexing structure
         this.matchesBar(bar, query.symbol, query.timeframe)
       ) {
-        results.push(bar)
+        results.push(bar);
       }
     }
 
     // Sort by timestamp (ascending)
-    results.sort((a, b) => a.timestamp - b.timestamp)
+    results.sort((a, b) => a.timestamp - b.timestamp);
 
-    return results
+    return results;
   }
 
   /**
@@ -148,26 +148,22 @@ export class CacheStore {
    * Since Bar doesn't include symbol/timeframe, we need to extract it from the cache key.
    * This is a helper method that parses the serialized key.
    */
-  private matchesBar(
-    bar: CachedBar,
-    symbol: string,
-    timeframe: string
-  ): boolean {
+  private matchesBar(bar: CachedBar, symbol: string, timeframe: string): boolean {
     // Find the key that corresponds to this bar
     for (const [key, cachedBar] of this.cache.entries()) {
       if (cachedBar === bar) {
-        const parts = key.split(':')
-        return parts[0] === symbol && parts[1] === timeframe
+        const parts = key.split(':');
+        return parts[0] === symbol && parts[1] === timeframe;
       }
     }
-    return false
+    return false;
   }
 
   /**
    * Clear all entries from the cache.
    */
   clear(): void {
-    this.cache.clear()
+    this.cache.clear();
   }
 
   /**
@@ -176,6 +172,6 @@ export class CacheStore {
    * @returns Current cache size
    */
   size(): number {
-    return this.cache.size
+    return this.cache.size;
   }
 }

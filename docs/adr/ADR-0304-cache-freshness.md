@@ -15,6 +15,7 @@ The bars-cache package (ADR-0204) provides a two-tier caching system for market 
 4. **Provider priority**: How do we resolve conflicts when multiple providers have data for the same bar?
 
 These capabilities are critical for production use where:
+
 - Real-time trading needs fresh data
 - Late corrections from exchanges affect historical analysis
 - Multiple data providers may have conflicting information
@@ -35,10 +36,10 @@ interface FreshnessPolicy {
 }
 
 const DEFAULT_FRESHNESS_POLICIES: FreshnessPolicy[] = [
-  { timeframe: '1m', ttlMs: 5 * 60 * 1000 },      // 5 minutes
-  { timeframe: '5m', ttlMs: 15 * 60 * 1000 },     // 15 minutes
+  { timeframe: '1m', ttlMs: 5 * 60 * 1000 }, // 5 minutes
+  { timeframe: '5m', ttlMs: 15 * 60 * 1000 }, // 15 minutes
   { timeframe: '1h', ttlMs: 2 * 60 * 60 * 1000 }, // 2 hours
-  { timeframe: '1D', ttlMs: 24 * 60 * 60 * 1000 } // 24 hours
+  { timeframe: '1D', ttlMs: 24 * 60 * 60 * 1000 }, // 24 hours
 ];
 
 function isStale(bar: CachedBar, timeframe: Timeframe): boolean;
@@ -46,6 +47,7 @@ function getStaleBars(bars: CachedBar[], timeframe: Timeframe): CachedBar[];
 ```
 
 **Design rationale:**
+
 - Different timeframes have different staleness characteristics
 - 1-minute bars become stale quickly (5 min TTL)
 - Daily bars rarely change after market close (24 hour TTL)
@@ -75,6 +77,7 @@ class EventBus {
 ```
 
 **Design rationale:**
+
 - Synchronous event emission for simplicity
 - Errors in listeners don't disrupt other listeners
 - Support unsubscribe via returned function
@@ -101,12 +104,14 @@ class MarketDataCacheService {
 ```
 
 **Merge rules (in order):**
+
 1. If no existing bar → new bar wins
 2. If providers differ → higher priority provider wins (based on `providerPriority` array)
 3. If same provider → higher revision wins
 4. Otherwise → keep existing bar
 
 **Design rationale:**
+
 - Provider priority overrides revision numbers (data quality > recency)
 - Same-provider revisions are monotonic (no downgrades)
 - Emit correction event only when bar actually changes
@@ -122,6 +127,7 @@ cache-verify --symbol ES --timeframe 1m --window 200 [--pretty]
 ```
 
 **Output includes:**
+
 - Total bars in cache
 - Fresh vs. stale bar counts
 - Correction events with before/after data
@@ -129,6 +135,7 @@ cache-verify --symbol ES --timeframe 1m --window 200 [--pretty]
 - Provider distribution
 
 **Design rationale:**
+
 - Read-only operation (safe to run in production)
 - Supports debugging data quality issues
 - Exit codes: 0=healthy, 1=warnings, 2=errors
@@ -180,6 +187,7 @@ private selectWinningBar(
 ### Event Emission Timing
 
 Corrections are emitted:
+
 1. **After** merge logic determines winner
 2. **Only if** new bar wins
 3. **Only if** bar data actually changed (not just metadata)
@@ -249,6 +257,7 @@ All existing tests (`bars-cache.test.ts`) continue to pass, demonstrating backwa
 **Approach:** Store corrections in a separate table/store rather than emitting events.
 
 **Rejected because:**
+
 - Requires additional storage
 - Polling needed to discover new corrections
 - Doesn't support real-time notification
@@ -259,6 +268,7 @@ All existing tests (`bars-cache.test.ts`) continue to pass, demonstrating backwa
 **Approach:** Emit events even when bar data doesn't change.
 
 **Rejected because:**
+
 - Generates noise for downstream consumers
 - Wastes resources invoking listeners
 - Harder to distinguish real corrections from no-ops
@@ -268,6 +278,7 @@ All existing tests (`bars-cache.test.ts`) continue to pass, demonstrating backwa
 **Approach:** Use async/await for event emission and listener invocation.
 
 **Rejected because:**
+
 - Adds complexity without clear benefit
 - Synchronous is sufficient for in-process events
 - Can add async later if needed (breaking change)
@@ -277,6 +288,7 @@ All existing tests (`bars-cache.test.ts`) continue to pass, demonstrating backwa
 **Approach:** Longer TTL for higher revisions (assume more stable).
 
 **Rejected because:**
+
 - Revision semantics vary by provider
 - Doesn't account for timeframe differences
 - Overly complex heuristic
@@ -298,11 +310,13 @@ All existing tests (`bars-cache.test.ts`) continue to pass, demonstrating backwa
 ### Example Migration
 
 **Before:**
+
 ```typescript
 await service.storeBars('AAPL', '5m', bars);
 ```
 
 **After:**
+
 ```typescript
 const corrections = await service.upsertBars('AAPL', '5m', bars);
 if (corrections.length > 0) {

@@ -56,19 +56,19 @@ function formatReportAsText(report: DailyReport): string {
     `- Sharpe Ratio: ${report.metrics.sharpeRatio}`,
     '',
     '## Highlights',
-    ...report.highlights.map(h => `- ${h}`),
+    ...report.highlights.map((h) => `- ${h}`),
     '',
   ];
 
   if (report.warnings && report.warnings.length > 0) {
     lines.push('## Warnings');
-    lines.push(...report.warnings.map(w => `⚠️ ${w}`));
+    lines.push(...report.warnings.map((w) => `⚠️ ${w}`));
     lines.push('');
   }
 
   if (report.recommendations && report.recommendations.length > 0) {
     lines.push('## Recommendations');
-    lines.push(...report.recommendations.map(r => `→ ${r}`));
+    lines.push(...report.recommendations.map((r) => `→ ${r}`));
     lines.push('');
   }
 
@@ -163,11 +163,13 @@ export async function dailyHandler(interaction: ChatInputCommandInteraction): Pr
     const content = formatReportAsText(report);
     const buffer = Buffer.from(content, 'utf-8');
 
-    replyOptions.files = [{
-      attachment: buffer,
-      name: `daily-report-${date}.md`,
-      description: `Daily ${type} report for ${date}`,
-    }];
+    replyOptions.files = [
+      {
+        attachment: buffer,
+        name: `daily-report-${date}.md`,
+        description: `Daily ${type} report for ${date}`,
+      },
+    ];
   }
 
   await interaction.editReply(replyOptions);

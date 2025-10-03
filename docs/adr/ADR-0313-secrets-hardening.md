@@ -43,6 +43,7 @@ Implement a comprehensive secrets management and hardening framework with the fo
 Adopt the pattern: `PROVIDER_NAME_SECRET_TYPE[_ENVIRONMENT]`
 
 **Examples:**
+
 ```bash
 ALPHAVANTAGE_API_KEY
 DATABENTO_API_KEY
@@ -53,6 +54,7 @@ DATABASE_URL
 ```
 
 **Rationale:**
+
 - Self-documenting variable names
 - Easy pattern matching for CI/CD secret masking
 - Consistent across all providers
@@ -64,18 +66,22 @@ DATABASE_URL
 Establish priority-based rotation schedule:
 
 **HIGH PRIORITY (90 days):**
+
 - `DATABASE_URL` - Full database access
 - `DATABENTO_API_KEY` - Paid service, rate-limited
 - `DISCORD_*_TOKEN` - Complete bot control
 
 **MEDIUM PRIORITY (180 days):**
+
 - `ALPHAVANTAGE_API_KEY` - Free tier, public data
 
 **IMMEDIATE:**
+
 - Any secret suspected of compromise
 - Secrets exposed in commits, logs, or communications
 
 **Rationale:**
+
 - Balances security with operational overhead
 - Prioritizes high-value/high-risk credentials
 - Provides clear guidance for developers
@@ -87,18 +93,19 @@ Implement GitHub Actions workflow using **Gitleaks** for automated scanning.
 
 **Why Gitleaks:**
 
-| Criteria | Gitleaks | TruffleHog | git-secrets |
-|----------|----------|------------|-------------|
-| Detection accuracy | Excellent | Very Good | Good |
-| Performance | Fast | Moderate | Fast |
-| Configuration | Easy | Moderate | Complex |
-| Maintenance | Active | Active | Stale |
-| GitHub Actions | Native support | Available | Limited |
-| False positives | Low | Moderate | Low |
+| Criteria           | Gitleaks       | TruffleHog | git-secrets |
+| ------------------ | -------------- | ---------- | ----------- |
+| Detection accuracy | Excellent      | Very Good  | Good        |
+| Performance        | Fast           | Moderate   | Fast        |
+| Configuration      | Easy           | Moderate   | Complex     |
+| Maintenance        | Active         | Active     | Stale       |
+| GitHub Actions     | Native support | Available  | Limited     |
+| False positives    | Low            | Moderate   | Low         |
 
 **Decision:** Gitleaks provides the best balance of accuracy, performance, and ease of integration.
 
 **Implementation:**
+
 - Run on all pushes and PRs
 - Scan full git history (fetch-depth: 0)
 - Fail builds if secrets detected
@@ -113,6 +120,7 @@ Implement GitHub Actions workflow using **Gitleaks** for automated scanning.
 Create `scripts/validate-env.js` to validate configuration before deployment.
 
 **Features:**
+
 - Format validation (regex patterns)
 - Length constraints
 - Placeholder detection in production
@@ -121,6 +129,7 @@ Create `scripts/validate-env.js` to validate configuration before deployment.
 - Non-zero exit codes for CI/CD
 
 **Rationale:**
+
 - Catch configuration errors before deployment
 - Prevent placeholder values in production
 - Provide clear error messages
@@ -130,6 +139,7 @@ Create `scripts/validate-env.js` to validate configuration before deployment.
 ### 5. Comprehensive Documentation
 
 Create `docs/security/secrets.md` covering:
+
 - Naming conventions
 - Rotation procedures
 - Local development setup
@@ -138,6 +148,7 @@ Create `docs/security/secrets.md` covering:
 - Provider-specific guidelines
 
 **Rationale:**
+
 - Single source of truth
 - Reduces onboarding friction
 - Clear procedures reduce errors
@@ -147,6 +158,7 @@ Create `docs/security/secrets.md` covering:
 ### 6. Enhanced .env.example
 
 Update `.env.example` with:
+
 - Inline security warnings
 - Rotation frequency documentation
 - Format descriptions
@@ -154,6 +166,7 @@ Update `.env.example` with:
 - Links to comprehensive documentation
 
 **Rationale:**
+
 - Documentation at point of use
 - Reduces need to search for information
 - Examples show expected formats
@@ -168,12 +181,14 @@ Update `.env.example` with:
 **Considered:** HashiCorp Vault, AWS Secrets Manager, Azure Key Vault
 
 **Pros:**
+
 - Centralized secret storage
 - Audit logging
 - Dynamic secrets
 - Access control
 
 **Cons:**
+
 - Additional infrastructure complexity
 - Operational overhead
 - Learning curve
@@ -187,11 +202,13 @@ Update `.env.example` with:
 **Considered:** TruffleHog instead of Gitleaks
 
 **Pros:**
+
 - Very accurate detection
 - Good community support
 - Verified secret detection
 
 **Cons:**
+
 - Slower than Gitleaks
 - Higher false positive rate
 - More complex configuration
@@ -203,10 +220,12 @@ Update `.env.example` with:
 **Considered:** Ad-hoc rotation only when suspected compromise
 
 **Pros:**
+
 - Less operational overhead
 - Simpler procedures
 
 **Cons:**
+
 - Higher risk window
 - No proactive security
 - Difficult to audit
@@ -219,10 +238,12 @@ Update `.env.example` with:
 **Considered:** Manual checklist instead of automated validation
 
 **Pros:**
+
 - No code maintenance
 - Flexible
 
 **Cons:**
+
 - Error-prone
 - Time-consuming
 - Not scalable
@@ -324,16 +345,16 @@ Examples:
 ```yaml
 # GitHub Actions workflow triggers
 on:
-  push:                    # Every commit
-  pull_request:            # Every PR
-  workflow_dispatch:       # Manual trigger
+  push: # Every commit
+  pull_request: # Every PR
+  workflow_dispatch: # Manual trigger
 
 # Multiple validation jobs
 jobs:
-  scan:                    # Gitleaks scanning
-  validate-gitignore:      # .gitignore validation
-  check-example-files:     # .env.example validation
-  report:                  # Summary report
+  scan: # Gitleaks scanning
+  validate-gitignore: # .gitignore validation
+  check-example-files: # .env.example validation
+  report: # Summary report
 ```
 
 ### Validation Checks
@@ -453,6 +474,7 @@ DATABASE_URL: /^postgresql:\/\/([^:]+):([^@]+)@([^:\/]+):(\d+)\/(.+)$/
 ### Near Term (6 months)
 
 1. **Add npm scripts** for common validation tasks:
+
    ```json
    {
      "validate:env": "node scripts/validate-env.js",
@@ -498,6 +520,7 @@ DATABASE_URL: /^postgresql:\/\/([^:]+):([^@]+)@([^:\/]+):(\d+)\/(.+)$/
 **Approval Date:** 2025-09-30
 
 **Implementation Status:** Complete
+
 - [x] .env.example updated
 - [x] docs/security/secrets.md created
 - [x] .github/workflows/secret-lint.yml created
@@ -555,8 +578,8 @@ If secret is accidentally committed:
 
 ## Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2025-09-30 | 1.0 | Initial ADR | Security Team |
+| Date       | Version | Changes     | Author        |
+| ---------- | ------- | ----------- | ------------- |
+| 2025-09-30 | 1.0     | Initial ADR | Security Team |
 
 **Next Review Due:** 2025-12-30

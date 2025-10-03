@@ -9,8 +9,8 @@
  * - Debugging data quality issues
  */
 
-import type { Timeframe } from '@tjr-suite/market-data-core'
-import type { CachedBar } from './types.js'
+import type { Timeframe } from '@tjr-suite/market-data-core';
+import type { CachedBar } from './types.js';
 
 /**
  * Event emitted when a bar is corrected with a higher revision.
@@ -22,29 +22,29 @@ export interface CorrectionEvent {
   /**
    * Symbol that was corrected (e.g., 'AAPL', 'ES').
    */
-  symbol: string
+  symbol: string;
 
   /**
    * Timeframe of the corrected bar (e.g., '1m', '5m', '1h').
    */
-  timeframe: Timeframe
+  timeframe: Timeframe;
 
   /**
    * Bar timestamp (Unix milliseconds, UTC).
    */
-  timestamp: number
+  timestamp: number;
 
   /**
    * Previous bar data before correction.
    *
    * Null if this is the first time we're seeing this bar.
    */
-  oldBar: CachedBar | null
+  oldBar: CachedBar | null;
 
   /**
    * New bar data after correction.
    */
-  newBar: CachedBar
+  newBar: CachedBar;
 
   /**
    * Type of correction event.
@@ -53,18 +53,18 @@ export interface CorrectionEvent {
    * - 'provider_override': Different provider with higher priority
    * - 'initial': First time seeing this bar (no old data)
    */
-  correctionType: 'revision' | 'provider_override' | 'initial'
+  correctionType: 'revision' | 'provider_override' | 'initial';
 
   /**
    * Unix timestamp (ms) when the correction was detected.
    */
-  detectedAt: number
+  detectedAt: number;
 }
 
 /**
  * Event listener callback for correction events.
  */
-export type CorrectionEventListener = (event: CorrectionEvent) => void
+export type CorrectionEventListener = (event: CorrectionEvent) => void;
 
 /**
  * Event bus for cache correction events.
@@ -98,12 +98,12 @@ export type CorrectionEventListener = (event: CorrectionEvent) => void
  * ```
  */
 export class EventBus {
-  private listeners: Map<string, CorrectionEventListener[]>
-  private errorHandler?: (error: Error, event: CorrectionEvent) => void
+  private listeners: Map<string, CorrectionEventListener[]>;
+  private errorHandler?: (error: Error, event: CorrectionEvent) => void;
 
   constructor(errorHandler?: (error: Error, event: CorrectionEvent) => void) {
-    this.listeners = new Map()
-    this.errorHandler = errorHandler
+    this.listeners = new Map();
+    this.errorHandler = errorHandler;
   }
 
   /**
@@ -126,14 +126,14 @@ export class EventBus {
    * ```
    */
   on(eventType: 'correction', listener: CorrectionEventListener): () => void {
-    const eventListeners = this.listeners.get(eventType) ?? []
-    eventListeners.push(listener)
-    this.listeners.set(eventType, eventListeners)
+    const eventListeners = this.listeners.get(eventType) ?? [];
+    eventListeners.push(listener);
+    this.listeners.set(eventType, eventListeners);
 
     // Return unsubscribe function
     return () => {
-      this.off(eventType, listener)
-    }
+      this.off(eventType, listener);
+    };
   }
 
   /**
@@ -143,16 +143,16 @@ export class EventBus {
    * @param listener - Listener function to remove
    */
   off(eventType: 'correction', listener: CorrectionEventListener): void {
-    const eventListeners = this.listeners.get(eventType) ?? []
-    const index = eventListeners.indexOf(listener)
+    const eventListeners = this.listeners.get(eventType) ?? [];
+    const index = eventListeners.indexOf(listener);
     if (index !== -1) {
-      eventListeners.splice(index, 1)
+      eventListeners.splice(index, 1);
     }
 
     if (eventListeners.length === 0) {
-      this.listeners.delete(eventType)
+      this.listeners.delete(eventType);
     } else {
-      this.listeners.set(eventType, eventListeners)
+      this.listeners.set(eventType, eventListeners);
     }
   }
 
@@ -176,15 +176,15 @@ export class EventBus {
    * ```
    */
   emit(eventType: 'correction', event: CorrectionEvent): void {
-    const eventListeners = this.listeners.get(eventType) ?? []
+    const eventListeners = this.listeners.get(eventType) ?? [];
 
     // Invoke all listeners synchronously
     for (const listener of eventListeners) {
       try {
-        listener(event)
+        listener(event);
       } catch (error) {
         if (this.errorHandler) {
-          this.errorHandler(error as Error, event)
+          this.errorHandler(error as Error, event);
         }
         // Still swallow to not disrupt other listeners
       }
@@ -198,14 +198,14 @@ export class EventBus {
    * @returns Number of active listeners
    */
   listenerCount(eventType: 'correction'): number {
-    return this.listeners.get(eventType)?.length ?? 0
+    return this.listeners.get(eventType)?.length ?? 0;
   }
 
   /**
    * Remove all listeners for all event types.
    */
   removeAllListeners(): void {
-    this.listeners.clear()
+    this.listeners.clear();
   }
 
   /**
@@ -214,7 +214,7 @@ export class EventBus {
    * @param eventType - Event type to clear listeners for
    */
   removeAllListenersForEvent(eventType: 'correction'): void {
-    this.listeners.delete(eventType)
+    this.listeners.delete(eventType);
   }
 }
 
@@ -233,22 +233,22 @@ export function detectCorrectionType(
   newBar: CachedBar
 ): 'revision' | 'provider_override' | 'initial' {
   if (oldBar === null) {
-    return 'initial'
+    return 'initial';
   }
 
   // Same provider, higher revision
   if (oldBar.provider === newBar.provider && newBar.revision > oldBar.revision) {
-    return 'revision'
+    return 'revision';
   }
 
   // Different provider (priority-based override)
   if (oldBar.provider !== newBar.provider) {
-    return 'provider_override'
+    return 'provider_override';
   }
 
   // Same provider, same revision (this shouldn't trigger a correction event)
   // but we'll classify it as a revision for consistency
-  return 'revision'
+  return 'revision';
 }
 
 /**
@@ -276,5 +276,5 @@ export function createCorrectionEvent(
     newBar,
     correctionType: detectCorrectionType(oldBar, newBar),
     detectedAt: Date.now(),
-  }
+  };
 }

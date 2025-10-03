@@ -1861,28 +1861,19 @@
     {
       "type": "fvg-ob-alignment",
       "score": 2,
-      "components": [
-        "fvg",
-        "orderBlock"
-      ],
+      "components": ["fvg", "orderBlock"],
       "level": 203.37
     },
     {
       "type": "fvg-ob-alignment",
       "score": 2,
-      "components": [
-        "fvg",
-        "orderBlock"
-      ],
+      "components": ["fvg", "orderBlock"],
       "level": 203.64
     },
     {
       "type": "fvg-ob-alignment",
       "score": 2,
-      "components": [
-        "fvg",
-        "orderBlock"
-      ],
+      "components": ["fvg", "orderBlock"],
       "level": 203.92
     }
   ],

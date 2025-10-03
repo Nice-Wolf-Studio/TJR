@@ -6,9 +6,9 @@
  * make real HTTP requests.
  */
 
-import type { Logger } from "@tjr/logger";
-import type { PolygonAggregatesResponse } from "./types.js";
-import { ApiError, RateLimitError } from "./errors.js";
+import type { Logger } from '@tjr/logger';
+import type { PolygonAggregatesResponse } from './types.js';
+import type { ApiError as _ApiError, RateLimitError as _RateLimitError } from './errors.js';
 
 /**
  * HTTP client configuration.
@@ -103,7 +103,7 @@ export class PolygonClient {
     const url = this.buildAggregatesUrl(ticker, multiplier, timespan, from, to, limit);
 
     // Log request (if logger available)
-    this.config.logger?.debug("Polygon API request", {
+    this.config.logger?.debug('Polygon API request', {
       url,
       symbol: ticker,
       multiplier,
@@ -118,8 +118,8 @@ export class PolygonClient {
     // In tests, this will be replaced with fixture data.
     throw new Error(
       `STUB: PolygonClient.getAggregates called for ${ticker}. ` +
-      `This method does not make actual HTTP requests. ` +
-      `Replace with fixtures in tests.`
+        `This method does not make actual HTTP requests. ` +
+        `Replace with fixtures in tests.`
     );
   }
 
@@ -149,12 +149,12 @@ export class PolygonClient {
 
     // Build query parameters
     const params = new URLSearchParams();
-    params.set("adjusted", "true"); // Use split-adjusted prices
-    params.set("sort", "asc"); // Sort by timestamp ascending
+    params.set('adjusted', 'true'); // Use split-adjusted prices
+    params.set('sort', 'asc'); // Sort by timestamp ascending
     if (limit !== undefined) {
-      params.set("limit", String(limit));
+      params.set('limit', String(limit));
     }
-    params.set("apiKey", this.config.apiKey);
+    params.set('apiKey', this.config.apiKey);
 
     return `${this.config.baseUrl}${path}?${params.toString()}`;
   }

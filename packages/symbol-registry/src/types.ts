@@ -28,10 +28,7 @@ export type RolloverType = 'volume' | 'fixed-days';
 /**
  * Expiration day specification
  */
-export type ExpirationDay =
-  | 'third-friday'
-  | 'wednesday-before-third-friday'
-  | string;
+export type ExpirationDay = 'third-friday' | 'wednesday-before-third-friday' | string;
 
 /**
  * Rollover rule configuration for a specific symbol

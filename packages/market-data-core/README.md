@@ -24,18 +24,18 @@ pnpm add @tjr-suite/market-data-core
 ### Timeframe Normalization
 
 ```typescript
-import { normalizeTimeframe, toMillis } from "@tjr-suite/market-data-core";
+import { normalizeTimeframe, toMillis } from '@tjr-suite/market-data-core';
 
 // Normalize vendor-specific notations
-normalizeTimeframe("1min");  // → "1m"
-normalizeTimeframe("60s");   // → "1m"
-normalizeTimeframe("D");     // → "1D"
+normalizeTimeframe('1min'); // → "1m"
+normalizeTimeframe('60s'); // → "1m"
+normalizeTimeframe('D'); // → "1D"
 
 // Convert to milliseconds
-toMillis("1m");   // → 60000
-toMillis("5m");   // → 300000
-toMillis("1h");   // → 3600000
-toMillis("1D");   // → 86400000
+toMillis('1m'); // → 60000
+toMillis('5m'); // → 300000
+toMillis('1h'); // → 3600000
+toMillis('1D'); // → 86400000
 ```
 
 ### Bar Aggregation
@@ -43,7 +43,7 @@ toMillis("1D");   // → 86400000
 Aggregate bars from a source timeframe to a target timeframe:
 
 ```typescript
-import { aggregateBars } from "@tjr-suite/market-data-core";
+import { aggregateBars } from '@tjr-suite/market-data-core';
 
 // Example: Aggregate ten 1-minute bars into two 5-minute bars
 const bars1m = [
@@ -52,7 +52,7 @@ const bars1m = [
   // ... 8 more bars ...
 ];
 
-const bars5m = aggregateBars(bars1m, "5m");
+const bars5m = aggregateBars(bars1m, '5m');
 // Result: [
 //   { timestamp: 1633024800000, open: 100, high: 102, low: 99, close: 101.5, volume: 5500 },
 //   { timestamp: 1633025100000, open: 101.5, high: 103, low: 101, close: 102.8, volume: 6100 },
@@ -71,13 +71,13 @@ const bars5m = aggregateBars(bars1m, "5m");
 
 ```typescript
 // Include partial last bar (useful for live data)
-const barsWithPartial = aggregateBars(bars1m, "5m", { includePartialLast: true });
+const barsWithPartial = aggregateBars(bars1m, '5m', { includePartialLast: true });
 
 // Enable validation (checks that bars are sorted, no duplicates)
-const barsValidated = aggregateBars(bars1m, "5m", { validate: true });
+const barsValidated = aggregateBars(bars1m, '5m', { validate: true });
 
 // Warn on gaps in bar sequence
-const barsWithWarnings = aggregateBars(bars1m, "5m", { warnOnGaps: true });
+const barsWithWarnings = aggregateBars(bars1m, '5m', { warnOnGaps: true });
 ```
 
 ### Bar Clipping
@@ -85,7 +85,7 @@ const barsWithWarnings = aggregateBars(bars1m, "5m", { warnOnGaps: true });
 Extract subsets of bars by timestamp range:
 
 ```typescript
-import { clipBars } from "@tjr-suite/market-data-core";
+import { clipBars } from '@tjr-suite/market-data-core';
 
 // Clip to range [from, to)
 const subset = clipBars(bars, from, to);
@@ -109,34 +109,34 @@ Clipping uses binary search for O(log n + m) complexity, where n is the input si
 Align timestamps to timeframe boundaries:
 
 ```typescript
-import { alignTimestamp, isAligned } from "@tjr-suite/market-data-core";
+import { alignTimestamp, isAligned } from '@tjr-suite/market-data-core';
 
 const timestamp = 1633024859000; // 2021-09-30T14:40:59.000Z
 
 // Align to 5-minute boundary (floor)
-alignTimestamp(timestamp, "5m", "floor");  // → 1633024800000 (14:40:00)
+alignTimestamp(timestamp, '5m', 'floor'); // → 1633024800000 (14:40:00)
 
 // Align to 5-minute boundary (ceil)
-alignTimestamp(timestamp, "5m", "ceil");   // → 1633025100000 (14:45:00)
+alignTimestamp(timestamp, '5m', 'ceil'); // → 1633025100000 (14:45:00)
 
 // Check if aligned
-isAligned(1633024800000, "5m");  // → true
-isAligned(1633024859000, "5m");  // → false
+isAligned(1633024800000, '5m'); // → true
+isAligned(1633024859000, '5m'); // → false
 ```
 
 ## Supported Timeframes
 
-| Notation | Milliseconds | Notes |
-|----------|--------------|-------|
-| `1m` | 60,000 | Most common base timeframe |
-| `5m` | 300,000 | Standard intraday chart |
-| `10m` | 600,000 | Common for scalping strategies |
-| `15m` | 900,000 | Popular day-trading timeframe |
-| `30m` | 1,800,000 | Pre-market/after-hours boundary |
-| `1h` | 3,600,000 | Hourly bar (standard) |
-| `2h` | 7,200,000 | Useful for swing trading |
-| `4h` | 14,400,000 | Major support/resistance timeframe |
-| `1D` | 86,400,000 | Daily bar (UTC 00:00 aligned) |
+| Notation | Milliseconds | Notes                              |
+| -------- | ------------ | ---------------------------------- |
+| `1m`     | 60,000       | Most common base timeframe         |
+| `5m`     | 300,000      | Standard intraday chart            |
+| `10m`    | 600,000      | Common for scalping strategies     |
+| `15m`    | 900,000      | Popular day-trading timeframe      |
+| `30m`    | 1,800,000    | Pre-market/after-hours boundary    |
+| `1h`     | 3,600,000    | Hourly bar (standard)              |
+| `2h`     | 7,200,000    | Useful for swing trading           |
+| `4h`     | 14,400,000   | Major support/resistance timeframe |
+| `1D`     | 86,400,000   | Daily bar (UTC 00:00 aligned)      |
 
 ## Design Principles
 
@@ -169,13 +169,13 @@ All functions are pure (no I/O, no side effects). This makes them:
 ### Aggregate 1m → 10m
 
 ```typescript
-import { aggregateBars } from "@tjr-suite/market-data-core";
+import { aggregateBars } from '@tjr-suite/market-data-core';
 
 const bars1m = [
   /* 10 one-minute bars from 14:00 to 14:09 */
 ];
 
-const bars10m = aggregateBars(bars1m, "10m");
+const bars10m = aggregateBars(bars1m, '10m');
 // Result: 1 ten-minute bar covering 14:00-14:10
 ```
 
@@ -190,13 +190,13 @@ Output (10m bar):                    |14:00 - 14:10|
 ### Aggregate 1h → 4h
 
 ```typescript
-import { aggregateBars } from "@tjr-suite/market-data-core";
+import { aggregateBars } from '@tjr-suite/market-data-core';
 
 const bars1h = [
   /* 6 one-hour bars from 00:00 to 05:00 */
 ];
 
-const bars4h = aggregateBars(bars1h, "4h");
+const bars4h = aggregateBars(bars1h, '4h');
 // Result: 1 four-hour bar (00:00-04:00), partial at 04:00-05:00 excluded
 ```
 

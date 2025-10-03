@@ -5,6 +5,7 @@ Main application package that wires together all TJR Suite components into a coh
 ## Overview
 
 The app package provides:
+
 - **Dependency injection container** for service wiring
 - **Command interface** for health checks and daily analysis
 - **Service stubs** for Discord, providers, and cache
@@ -106,6 +107,7 @@ tjr health --verbose  # Include wiring graph
 ```
 
 Output includes:
+
 - Service health status
 - Error messages if unhealthy
 - System statistics
@@ -122,6 +124,7 @@ tjr daily SPY 2025-09-29  # Specific date
 ```
 
 Analysis includes:
+
 - Market bias (direction, strength, confidence)
 - Day profile classification
 - Session extremes
@@ -175,6 +178,7 @@ pnpm start --dry-run daily SPY
 ```
 
 This ensures:
+
 - Consistent test results
 - No external API calls
 - Fast execution

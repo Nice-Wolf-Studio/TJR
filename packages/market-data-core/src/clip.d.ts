@@ -10,23 +10,23 @@
  * All clipping operates in UTC. Provider adapters must convert local times to
  * UTC before calling these functions.
  */
-import { Bar } from "./types.js";
+import { Bar } from './types.js';
 /**
  * Options for clipBars function.
  */
 export interface ClipOptions {
-    /**
-     * If true, includes bars that start before 'to' but may extend beyond it.
-     * If false (default), excludes bars that extend beyond 'to'.
-     *
-     * Example: Clipping to [14:00, 14:05) with a 1-minute bar at 14:04
-     * - includePartialLast=false: Includes bar (it ends at 14:05, within range)
-     * - includePartialLast=true: Same result (bar is within range)
-     *
-     * This option only matters for the LAST bar in the range. It determines
-     * whether a bar that STARTS before 'to' but ENDS after 'to' is included.
-     */
-    includePartialLast?: boolean;
+  /**
+   * If true, includes bars that start before 'to' but may extend beyond it.
+   * If false (default), excludes bars that extend beyond 'to'.
+   *
+   * Example: Clipping to [14:00, 14:05) with a 1-minute bar at 14:04
+   * - includePartialLast=false: Includes bar (it ends at 14:05, within range)
+   * - includePartialLast=true: Same result (bar is within range)
+   *
+   * This option only matters for the LAST bar in the range. It determines
+   * whether a bar that STARTS before 'to' but ENDS after 'to' is included.
+   */
+  includePartialLast?: boolean;
 }
 /**
  * Clips bars to a timestamp range.
@@ -86,5 +86,10 @@ export interface ClipOptions {
  * Note: This function does NOT validate that bars are sorted. If bars are
  * unsorted, results are undefined.
  */
-export declare function clipBars(bars: Bar[], from?: number, to?: number, _options?: ClipOptions): Bar[];
+export declare function clipBars(
+  bars: Bar[],
+  from?: number,
+  to?: number,
+  _options?: ClipOptions
+): Bar[];
 //# sourceMappingURL=clip.d.ts.map

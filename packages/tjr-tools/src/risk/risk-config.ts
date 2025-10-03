@@ -155,7 +155,11 @@ export function validateRiskConfig(config: RiskConfig): void {
   }
 
   if (config.perTrade.useKelly) {
-    if (config.perTrade.winRate === undefined || config.perTrade.winRate <= 0 || config.perTrade.winRate >= 1) {
+    if (
+      config.perTrade.winRate === undefined ||
+      config.perTrade.winRate <= 0 ||
+      config.perTrade.winRate >= 1
+    ) {
       throw new Error('winRate must be between 0 and 1 when using Kelly Criterion');
     }
     if (config.perTrade.avgWin === undefined || config.perTrade.avgWin <= 0) {
@@ -181,7 +185,10 @@ export function validateRiskConfig(config: RiskConfig): void {
     throw new Error('maxLossAmount must be positive');
   }
 
-  if (config.dailyLimits.maxConsecutiveLosses !== undefined && config.dailyLimits.maxConsecutiveLosses < 1) {
+  if (
+    config.dailyLimits.maxConsecutiveLosses !== undefined &&
+    config.dailyLimits.maxConsecutiveLosses < 1
+  ) {
     throw new Error('maxConsecutiveLosses must be at least 1');
   }
 

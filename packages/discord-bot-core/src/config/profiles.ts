@@ -67,7 +67,7 @@ export const profiles: Record<Environment, ProfileConfig> = {
     enabledCommands: ['health', 'daily'], // Can be more selective in prod
     commandOverrides: {
       daily: {
-        description: 'Get today\'s trading session information',
+        description: "Get today's trading session information",
       },
     },
     manifestPath: './manifests/prod-manifest.json',
@@ -81,7 +81,9 @@ export function getProfile(env: string = 'dev'): ProfileConfig {
   const environment = env as Environment;
 
   if (!profiles[environment]) {
-    throw new Error(`Unknown environment: ${env}. Valid environments are: ${Object.keys(profiles).join(', ')}`);
+    throw new Error(
+      `Unknown environment: ${env}. Valid environments are: ${Object.keys(profiles).join(', ')}`
+    );
   }
 
   const profile = { ...profiles[environment] };
@@ -90,7 +92,7 @@ export function getProfile(env: string = 'dev'): ProfileConfig {
   if (!profile.global && profile.guildIds?.length === 0) {
     const envGuildIds = process.env[`DISCORD_${environment.toUpperCase()}_GUILD_IDS`];
     if (envGuildIds) {
-      profile.guildIds = envGuildIds.split(',').map(id => id.trim());
+      profile.guildIds = envGuildIds.split(',').map((id) => id.trim());
     }
   }
 
@@ -105,10 +107,7 @@ export function validateProfileEnv(profile: ProfileConfig): string[] {
   const envPrefix = `DISCORD_${profile.environment.toUpperCase()}`;
 
   // Check for required base variables
-  const requiredVars = [
-    `${envPrefix}_TOKEN`,
-    `${envPrefix}_APPLICATION_ID`,
-  ];
+  const requiredVars = [`${envPrefix}_TOKEN`, `${envPrefix}_APPLICATION_ID`];
 
   // Add guild IDs requirement for non-global deployments
   if (!profile.global) {

@@ -5,7 +5,12 @@
  * output formats (text, JSON, table, markdown).
  */
 
-import type { SetupReport, TJRFormatter, OutputFormat, ValidationResult } from '../reports/types.js';
+import type {
+  SetupReport,
+  TJRFormatter,
+  OutputFormat,
+  ValidationResult,
+} from '../reports/types.js';
 
 /**
  * Formatter for setup/configuration reports
@@ -94,7 +99,9 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('  Order Block Options:');
     lines.push(`    Min Volume Ratio: ${report.confluence.orderBlock.minVolumeRatio}`);
     lines.push(`    Min Rejection: ${report.confluence.orderBlock.minRejection}`);
-    lines.push(`    Check Mitigated: ${report.confluence.orderBlock.checkMitigated ? 'Yes' : 'No'}`);
+    lines.push(
+      `    Check Mitigated: ${report.confluence.orderBlock.checkMitigated ? 'Yes' : 'No'}`
+    );
     lines.push('');
 
     // Execution Configuration
@@ -102,16 +109,26 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('  5m Confirmation:');
     lines.push(`    Min Confluence Score: ${report.execution.confirmation5m.minConfluenceScore}`);
     if (report.execution.confirmation5m.requiredFactors) {
-      lines.push(`    Required Factors: ${report.execution.confirmation5m.requiredFactors.join(', ')}`);
+      lines.push(
+        `    Required Factors: ${report.execution.confirmation5m.requiredFactors.join(', ')}`
+      );
     }
     lines.push(`    Lookback Bars: ${report.execution.confirmation5m.lookbackBars || 20}`);
     lines.push('  1m Entry:');
     lines.push(`    Min Confluence Score: ${report.execution.entry1m.minConfluenceScore}`);
-    lines.push(`    Max Bars After Confirmation: ${report.execution.entry1m.maxBarsAfterConfirmation}`);
-    lines.push(`    Require Zone Entry: ${report.execution.entry1m.requireZoneEntry ? 'Yes' : 'No'}`);
+    lines.push(
+      `    Max Bars After Confirmation: ${report.execution.entry1m.maxBarsAfterConfirmation}`
+    );
+    lines.push(
+      `    Require Zone Entry: ${report.execution.entry1m.requireZoneEntry ? 'Yes' : 'No'}`
+    );
     lines.push('  Risk:');
-    lines.push(`    Max Risk Per Trade: ${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`);
-    lines.push(`    Default Stop Percent: ${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`);
+    lines.push(
+      `    Max Risk Per Trade: ${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`
+    );
+    lines.push(
+      `    Default Stop Percent: ${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`
+    );
     lines.push(`    Default Risk/Reward: ${report.execution.risk.defaultRiskReward.toFixed(1)}`);
     if (report.execution.risk.accountSize) {
       lines.push(`    Account Size: $${report.execution.risk.accountSize.toLocaleString()}`);
@@ -194,10 +211,18 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('┌────────────────────┬──────────┐');
     lines.push('│ Confluence Weights │  Value   │');
     lines.push('├────────────────────┼──────────┤');
-    lines.push(`│ FVG                │ ${this.padLeft(report.confluence.weights.fvg.toFixed(2), 8)} │`);
-    lines.push(`│ Order Block        │ ${this.padLeft(report.confluence.weights.orderBlock.toFixed(2), 8)} │`);
-    lines.push(`│ Overlap            │ ${this.padLeft(report.confluence.weights.overlap.toFixed(2), 8)} │`);
-    lines.push(`│ Recency            │ ${this.padLeft(report.confluence.weights.recency.toFixed(2), 8)} │`);
+    lines.push(
+      `│ FVG                │ ${this.padLeft(report.confluence.weights.fvg.toFixed(2), 8)} │`
+    );
+    lines.push(
+      `│ Order Block        │ ${this.padLeft(report.confluence.weights.orderBlock.toFixed(2), 8)} │`
+    );
+    lines.push(
+      `│ Overlap            │ ${this.padLeft(report.confluence.weights.overlap.toFixed(2), 8)} │`
+    );
+    lines.push(
+      `│ Recency            │ ${this.padLeft(report.confluence.weights.recency.toFixed(2), 8)} │`
+    );
     lines.push('└────────────────────┴──────────┘');
     lines.push('');
 
@@ -205,9 +230,15 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('┌─────────────────────────┬────────┐');
     lines.push('│ Execution Thresholds    │  Value │');
     lines.push('├─────────────────────────┼────────┤');
-    lines.push(`│ 5m Min Confluence       │ ${this.padLeft(String(report.execution.confirmation5m.minConfluenceScore), 6)} │`);
-    lines.push(`│ 1m Min Confluence       │ ${this.padLeft(String(report.execution.entry1m.minConfluenceScore), 6)} │`);
-    lines.push(`│ Max Bars After Confirm  │ ${this.padLeft(String(report.execution.entry1m.maxBarsAfterConfirmation), 6)} │`);
+    lines.push(
+      `│ 5m Min Confluence       │ ${this.padLeft(String(report.execution.confirmation5m.minConfluenceScore), 6)} │`
+    );
+    lines.push(
+      `│ 1m Min Confluence       │ ${this.padLeft(String(report.execution.entry1m.minConfluenceScore), 6)} │`
+    );
+    lines.push(
+      `│ Max Bars After Confirm  │ ${this.padLeft(String(report.execution.entry1m.maxBarsAfterConfirmation), 6)} │`
+    );
     lines.push('└─────────────────────────┴────────┘');
     lines.push('');
 
@@ -215,9 +246,15 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('┌──────────────────────────┬──────────┐');
     lines.push('│ Risk Parameters          │   Value  │');
     lines.push('├──────────────────────────┼──────────┤');
-    lines.push(`│ Max Risk Per Trade       │ ${this.padLeft(`${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`, 8)} │`);
-    lines.push(`│ Default Stop             │ ${this.padLeft(`${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`, 8)} │`);
-    lines.push(`│ Default Risk/Reward      │ ${this.padLeft(report.execution.risk.defaultRiskReward.toFixed(1), 8)} │`);
+    lines.push(
+      `│ Max Risk Per Trade       │ ${this.padLeft(`${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`, 8)} │`
+    );
+    lines.push(
+      `│ Default Stop             │ ${this.padLeft(`${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`, 8)} │`
+    );
+    lines.push(
+      `│ Default Risk/Reward      │ ${this.padLeft(report.execution.risk.defaultRiskReward.toFixed(1), 8)} │`
+    );
     lines.push('└──────────────────────────┴──────────┘');
 
     return lines.join('\n');
@@ -288,20 +325,28 @@ export class SetupFormatter implements TJRFormatter<SetupReport> {
     lines.push('### 5m Confirmation');
     lines.push(`- Min Confluence Score: ${report.execution.confirmation5m.minConfluenceScore}`);
     if (report.execution.confirmation5m.requiredFactors) {
-      lines.push(`- Required Factors: ${report.execution.confirmation5m.requiredFactors.join(', ')}`);
+      lines.push(
+        `- Required Factors: ${report.execution.confirmation5m.requiredFactors.join(', ')}`
+      );
     }
     lines.push(`- Lookback Bars: ${report.execution.confirmation5m.lookbackBars || 20}`);
     lines.push('');
 
     lines.push('### 1m Entry');
     lines.push(`- Min Confluence Score: ${report.execution.entry1m.minConfluenceScore}`);
-    lines.push(`- Max Bars After Confirmation: ${report.execution.entry1m.maxBarsAfterConfirmation}`);
+    lines.push(
+      `- Max Bars After Confirmation: ${report.execution.entry1m.maxBarsAfterConfirmation}`
+    );
     lines.push(`- Require Zone Entry: ${report.execution.entry1m.requireZoneEntry ? 'Yes' : 'No'}`);
     lines.push('');
 
     lines.push('### Risk');
-    lines.push(`- Max Risk Per Trade: ${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`);
-    lines.push(`- Default Stop Percent: ${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`);
+    lines.push(
+      `- Max Risk Per Trade: ${(report.execution.risk.maxRiskPerTrade * 100).toFixed(2)}%`
+    );
+    lines.push(
+      `- Default Stop Percent: ${(report.execution.risk.defaultStopPercent * 100).toFixed(2)}%`
+    );
     lines.push(`- Default Risk/Reward: ${report.execution.risk.defaultRiskReward.toFixed(1)}`);
     lines.push('');
 

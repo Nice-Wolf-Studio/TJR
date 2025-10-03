@@ -7,18 +7,21 @@ The TJR Discord bot supports multiple deployment environments (dev, stage, prod)
 ## Environment Profiles
 
 ### Development (dev)
+
 - **Purpose**: Local development and testing
 - **Registration**: Guild-specific (test servers only)
 - **Commands**: All available commands
 - **Manifest**: `./manifests/dev-manifest.json`
 
 ### Staging (stage)
+
 - **Purpose**: Pre-production testing
 - **Registration**: Guild-specific (staging servers)
 - **Commands**: All available commands
 - **Manifest**: `./manifests/stage-manifest.json`
 
 ### Production (prod)
+
 - **Purpose**: Live production environment
 - **Registration**: Global (all servers)
 - **Commands**: Production-ready commands only
@@ -29,6 +32,7 @@ The TJR Discord bot supports multiple deployment environments (dev, stage, prod)
 Each environment requires specific Discord credentials and configuration:
 
 ### Development
+
 ```bash
 DISCORD_DEV_TOKEN=your_dev_bot_token
 DISCORD_DEV_APPLICATION_ID=your_dev_app_id
@@ -36,6 +40,7 @@ DISCORD_DEV_GUILD_IDS=guild_id_1,guild_id_2
 ```
 
 ### Staging
+
 ```bash
 DISCORD_STAGE_TOKEN=your_stage_bot_token
 DISCORD_STAGE_APPLICATION_ID=your_stage_app_id
@@ -43,6 +48,7 @@ DISCORD_STAGE_GUILD_IDS=staging_guild_id
 ```
 
 ### Production
+
 ```bash
 DISCORD_PROD_TOKEN=your_prod_bot_token
 DISCORD_PROD_APPLICATION_ID=your_prod_app_id
@@ -93,6 +99,7 @@ pnpm commands-deploy rollback --env prod
 ## Deployment Workflow
 
 ### 1. Development
+
 ```bash
 # Set up dev environment variables
 export DISCORD_DEV_TOKEN=...
@@ -105,6 +112,7 @@ pnpm commands-deploy apply --env dev
 ```
 
 ### 2. Staging
+
 ```bash
 # Validate staging configuration
 pnpm commands-deploy validate --env stage
@@ -117,6 +125,7 @@ pnpm commands-deploy status --env stage
 ```
 
 ### 3. Production
+
 ```bash
 # Final validation
 pnpm commands-deploy validate --env prod
@@ -134,12 +143,14 @@ pnpm commands-deploy status --env prod
 ## Manifest Files
 
 Command manifests are stored in `./manifests/` and contain:
+
 - List of registered commands
 - Environment metadata
 - Deployment timestamp
 - Registration scope (global/guild-specific)
 
 Example manifest structure:
+
 ```json
 {
   "version": "1.0.0",
@@ -208,16 +219,19 @@ pnpm commands-deploy rollback --env prod --backup prod-manifest.backup.170406720
 ## Troubleshooting
 
 ### Missing Environment Variables
+
 ```bash
 pnpm commands-deploy validate --env dev --verbose
 ```
 
 ### Command Registration Failures
+
 - Check bot permissions in Discord Developer Portal
 - Verify application ID matches bot token
 - Ensure bot is invited to guild (for guild-specific deployments)
 
 ### Manifest Corruption
+
 ```bash
 # Remove corrupted manifest
 rm ./manifests/dev-manifest.json
@@ -229,6 +243,7 @@ pnpm commands-deploy apply --env dev --force
 ## CI/CD Integration
 
 ### GitHub Actions Example
+
 ```yaml
 name: Deploy Discord Commands
 

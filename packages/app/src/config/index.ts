@@ -23,7 +23,7 @@ export function loadConfig(logger?: Logger): Config {
   const result = configSchema.safeParse(rawConfig);
 
   if (!result.success) {
-    const errors = result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`);
+    const errors = result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
     throw new Error(`Configuration validation failed:\n${errors.join('\n')}`);
   }
 
@@ -33,7 +33,7 @@ export function loadConfig(logger?: Logger): Config {
       dryRun: result.data.app.dryRun,
       provider: result.data.provider.type,
       cache: result.data.cache.type,
-      database: result.data.database.type
+      database: result.data.database.type,
     });
   }
 
@@ -90,13 +90,13 @@ export function getConfigSummary(config: Config): Record<string, any> {
       discord: config.discord.enabled ? 'enabled' : 'disabled',
       provider: config.provider.type,
       cache: config.cache.type,
-      database: config.database.type
+      database: config.database.type,
     },
     logging: {
       level: config.logging.level,
       format: config.logging.format,
-      output: config.logging.output
-    }
+      output: config.logging.output,
+    },
   };
 }
 

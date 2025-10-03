@@ -1,7 +1,12 @@
 import { createServer as httpCreateServer, IncomingMessage, ServerResponse } from 'node:http';
 import { URL } from 'node:url';
 import { CompositeProvider } from '@tjr/provider-composite';
-import { extractSessionExtremes, calculateDailyBias, classifyDayProfile, detectSwings } from '@tjr/analysis-kit';
+import {
+  extractSessionExtremes,
+  calculateDailyBias,
+  classifyDayProfile,
+  detectSwings,
+} from '@tjr/analysis-kit';
 
 type Mode = 'live' | 'fixture';
 
@@ -14,7 +19,7 @@ interface AppConfig {
 function parseQuery(req: IncomingMessage) {
   const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
   const q = Object.fromEntries(url.searchParams.entries());
-  return { pathname: url.pathname, q } as { pathname: string; q: Record<string,string> };
+  return { pathname: url.pathname, q } as { pathname: string; q: Record<string, string> };
 }
 
 function ok(res: ServerResponse, body: unknown) {
@@ -44,7 +49,7 @@ export function createServer(config: AppConfig) {
       }
       if (pathname === '/daily') {
         const symbol = (q['symbol'] || 'ES').toUpperCase();
-        const timeframe = (q['timeframe'] || '1m') as '1m'|'1h'|'4h';
+        const timeframe = (q['timeframe'] || '1m') as '1m' | '1h' | '4h';
         const count = Number(q['count'] || 390);
 
         const quote = await cp.getQuote(symbol as any);
@@ -53,11 +58,21 @@ export function createServer(config: AppConfig) {
         const end = new Date();
         const start = new Date(end.getTime() - 6 * 3600 * 1000);
         const extremes = extractSessionExtremes(
-          bars.map(b => ({ timestamp: b.timestamp, open: b.open, high: b.high, low: b.low, close: b.close })),
+          bars.map((b: any) => ({
+            timestamp: b.timestamp,
+            open: b.open,
+            high: b.high,
+            low: b.low,
+            close: b.close,
+          })),
           { start, end }
         );
-        const bias = extremes ? calculateDailyBias(bars as any, extremes) : { bias: 'neutral', confidence: 0, reason: 'no extremes' };
-        const profile = extremes ? classifyDayProfile(bars as any, extremes) : { type: 'K', characteristics: ['insufficient data'], volatility: 0 };
+        const bias = extremes
+          ? calculateDailyBias(bars as any, extremes)
+          : { bias: 'neutral', confidence: 0, reason: 'no extremes' };
+        const profile = extremes
+          ? classifyDayProfile(bars as any, extremes)
+          : { type: 'K', characteristics: ['insufficient data'], volatility: 0 };
         const swings = detectSwings(bars as any, 5);
 
         return ok(res, {
@@ -77,13 +92,18 @@ export function createServer(config: AppConfig) {
   });
 
   return {
-    listen() { server.listen(port, () => console.log(JSON.stringify({ level:'info', event:'listening', port, mode })) ); },
+    listen() {
+      server.listen(port, () =>
+        console.log(JSON.stringify({ level: 'info', event: 'listening', port, mode }))
+      );
+    },
     server,
   };
 }
 
 if (require.main === module) {
-  const mode: Mode = (process.env['MODE'] as Mode) || (process.env['DATABENTO_API_KEY'] ? 'live' : 'fixture');
+  const mode: Mode =
+    (process.env['MODE'] as Mode) || (process.env['DATABENTO_API_KEY'] ? 'live' : 'fixture');
   const fixturePath = process.env['FIXTURE'];
   createServer({ mode, fixturePath }).listen();
 }

@@ -58,7 +58,7 @@ function precisionAt(items: RankedItem[], k: number): number {
 
   // Count relevant items in top-K
   const topK = items.slice(0, k);
-  const relevantCount = topK.filter(item => item.relevant).length;
+  const relevantCount = topK.filter((item) => item.relevant).length;
 
   const precision = (relevantCount / k) * 100;
   return round1(precision);

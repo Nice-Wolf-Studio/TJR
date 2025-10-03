@@ -139,14 +139,20 @@ export function calculateDailyStop(
   }
 
   // Calculate consecutive losses
-  const consecutiveLosses = calculateConsecutiveLosses(trades, currentTimestamp, config.account.timezone);
+  const consecutiveLosses = calculateConsecutiveLosses(
+    trades,
+    currentTimestamp,
+    config.account.timezone
+  );
 
   // Check consecutive loss limit
   const maxConsecutiveLosses = config.dailyLimits.maxConsecutiveLosses;
   let consecutiveLimitReached = false;
   if (maxConsecutiveLosses !== undefined && consecutiveLosses >= maxConsecutiveLosses) {
     consecutiveLimitReached = true;
-    warnings.push(`Reached maximum consecutive losses (${consecutiveLosses}/${maxConsecutiveLosses})`);
+    warnings.push(
+      `Reached maximum consecutive losses (${consecutiveLosses}/${maxConsecutiveLosses})`
+    );
   }
 
   // Calculate total risk (realized + open)
@@ -160,7 +166,9 @@ export function calculateDailyStop(
 
   // Generate warnings
   if (remainingCapacity < maxDailyLoss * 0.2 && remainingCapacity > 0) {
-    warnings.push(`Approaching daily loss limit: ${((totalRisk / maxDailyLoss) * 100).toFixed(1)}% used`);
+    warnings.push(
+      `Approaching daily loss limit: ${((totalRisk / maxDailyLoss) * 100).toFixed(1)}% used`
+    );
   }
 
   if (isLimitReached && !consecutiveLimitReached) {
@@ -262,7 +270,11 @@ function calculateResetTime(currentDate: Date, _timezone: string): string {
  * @param _timezone - Account timezone
  * @returns Number of consecutive losses
  */
-function calculateConsecutiveLosses(trades: TradeRecord[], currentTimestamp: string, _timezone: string): number {
+function calculateConsecutiveLosses(
+  trades: TradeRecord[],
+  currentTimestamp: string,
+  _timezone: string
+): number {
   if (trades.length === 0) {
     return 0;
   }

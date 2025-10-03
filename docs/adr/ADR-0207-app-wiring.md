@@ -55,7 +55,7 @@ interface IContainer {
   resolve<T>(token: symbol): T;
   has(token: symbol): boolean;
   getDependencyGraph(): DependencyNode[];
-  getWiringGraph(): string;  // ASCII art visualization
+  getWiringGraph(): string; // ASCII art visualization
   initializeAll(): Promise<void>;
   shutdownAll(): Promise<void>;
   healthCheckAll(): Promise<Map<string, HealthStatus>>;
@@ -144,7 +144,7 @@ async function initialize(service: Service) {
 
   // Initialize dependencies first
   for (const depName of service.dependencies) {
-    const dep = services.find(s => s.name === depName);
+    const dep = services.find((s) => s.name === depName);
     if (dep) await initialize(dep);
   }
 
@@ -173,7 +173,7 @@ class MemoryCache implements Service {
   healthCheck(): HealthStatus {
     return {
       healthy: true,
-      message: `${this.cache.size} items cached`
+      message: `${this.cache.size} items cached`,
     };
   }
 }
@@ -214,13 +214,13 @@ export const configSchema = z.object({
 
 ```typescript
 export const envMapping: Record<string, string> = {
-  'NODE_ENV': 'app.env',
-  'DRY_RUN': 'app.dryRun',
-  'LOG_LEVEL': 'logging.level',
-  'DISCORD_TOKEN': 'discord.token',
-  'PROVIDER_TYPE': 'provider.type',
-  'CACHE_TYPE': 'cache.type',
-  'DATABASE_URL': 'database.url',
+  NODE_ENV: 'app.env',
+  DRY_RUN: 'app.dryRun',
+  LOG_LEVEL: 'logging.level',
+  DISCORD_TOKEN: 'discord.token',
+  PROVIDER_TYPE: 'provider.type',
+  CACHE_TYPE: 'cache.type',
+  DATABASE_URL: 'database.url',
 };
 ```
 
@@ -388,12 +388,14 @@ No changes needed in commands or other services that depend on `DiscordService`.
 **Approach:** Use established DI frameworks like `tsyringe` or `inversify`.
 
 **Pros:**
+
 - Battle-tested: Mature libraries with large user bases
 - Rich feature set: Advanced features like multi-injection, scoped lifetimes
 - Documentation: Extensive guides and examples
 - Decorator support: `@injectable()`, `@inject()` decorators for cleaner syntax
 
 **Cons:**
+
 - External dependency: Supply chain risk, version conflicts
 - Learning curve: Each library has unique API and concepts
 - Overengineering: We don't need multi-injection, scopes, or decorators
@@ -414,11 +416,13 @@ const logger = container.resolve(Logger);
 ```
 
 **Pros:**
+
 - Simpler syntax: No need for separate `TOKENS` object
 - Natural TypeScript: Classes are already unique identifiers
 - Type inference: Compiler can infer return type from class
 
 **Cons:**
+
 - Coupling: Services must import concrete classes, not interfaces
 - Mocking difficulty: Harder to substitute mock implementations
 - Multiple implementations: Can't have multiple providers for same interface
@@ -446,11 +450,13 @@ class HealthCommand {
 ```
 
 **Pros:**
+
 - Simplicity: No need to pass dependencies through constructors
 - Flexibility: Can fetch dependencies on-demand
 - Less boilerplate: No factory functions needed
 
 **Cons:**
+
 - Hidden dependencies: Dependencies not visible in constructor
 - Testing difficulty: Must mock global state for tests
 - Coupling: All services tightly coupled to service locator
@@ -475,11 +481,13 @@ export class HealthCommand { ... }
 ```
 
 **Pros:**
+
 - Simplicity: No DI container needed
 - Static analysis: Easy for bundlers to tree-shake
 - Performance: No runtime resolution overhead
 
 **Cons:**
+
 - Testing difficulty: Singletons are global state, hard to mock
 - Initialization order: Module execution order determines initialization
 - Circular dependencies: Module system can't handle circles
@@ -575,9 +583,9 @@ packages/app/
 
 ### Dependencies
 
-- `@tjr/logger` (workspace:*) - Logging infrastructure
-- `@tjr/contracts` (workspace:*) - Shared types and interfaces
-- `@tjr/analysis-kit` (workspace:*) - Market analysis functions
+- `@tjr/logger` (workspace:\*) - Logging infrastructure
+- `@tjr/contracts` (workspace:\*) - Shared types and interfaces
+- `@tjr/analysis-kit` (workspace:\*) - Market analysis functions
 - `zod` - Configuration schema validation
 - `discord.js` (future) - Discord bot library (not yet used)
 
@@ -588,6 +596,7 @@ packages/app/
 **Unit Tests:** Not yet implemented (implementation-first approach for Phase 2.G1)
 
 **Integration Tests:** Manual testing of:
+
 - `tjr health` - Health check command execution
 - `tjr daily SPY` - Daily analysis command with fixture data
 - `tjr --verbose` - Wiring graph visualization
@@ -595,6 +604,7 @@ packages/app/
 - Interactive CLI mode (`tjr` with no args)
 
 **Future Test Coverage:**
+
 - Container lifecycle (initialize, shutdown, health checks)
 - Service registration and resolution
 - Dependency graph generation

@@ -3,8 +3,8 @@
     "weights": {
       "fvg": 0.35,
       "orderBlock": 0.35,
-      "overlap": 0.20,
-      "recency": 0.10
+      "overlap": 0.2,
+      "recency": 0.1
     },
     "fvg": {
       "minGapSizeATR": 0.5,

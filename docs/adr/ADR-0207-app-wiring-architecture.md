@@ -10,6 +10,7 @@
 TJR Suite's app package requires a robust dependency injection (DI) system to wire together services (providers, cache, logger, Discord bot, analysis-kit) with proper lifecycle management, health monitoring, and minimal external dependencies.
 
 **Key Requirements:**
+
 1. Type-safe service registration and resolution
 2. Dependency-aware initialization and shutdown
 3. Health check aggregation across all services
@@ -30,11 +31,12 @@ export const TOKENS = {
   Config: Symbol('Config'),
   Cache: Symbol('CacheService'),
   ProviderService: Symbol('ProviderService'),
-  Discord: Symbol('DiscordService')
+  Discord: Symbol('DiscordService'),
 };
 ```
 
 **Rationale:**
+
 - Symbols provide unique, collision-free identifiers
 - Type-safe at compile time when used with TypeScript generics
 - No string-based lookups that can lead to typos
@@ -53,6 +55,7 @@ interface Service {
 ```
 
 **Rationale:**
+
 - Standardized lifecycle methods for all services
 - Explicit dependency declarations for initialization ordering
 - Built-in health check support for monitoring
@@ -61,6 +64,7 @@ interface Service {
 ### 3. Container Implementation
 
 **Core Capabilities:**
+
 - `register<T>(token, factory, metadata?)` - Register service with factory function
 - `resolve<T>(token)` - Lazily instantiate and return service
 - `has(token)` - Check if service is registered
@@ -73,6 +77,7 @@ interface Service {
 **Design Choices:**
 
 #### Singleton Pattern
+
 ```typescript
 resolve<T>(token: symbol): T {
   // Check cache first
@@ -92,18 +97,25 @@ resolve<T>(token: symbol): T {
 **Rationale:** Singleton by default reduces object creation overhead and ensures consistent state across the application. Services that need transient behavior can opt-out with `{ singleton: false }`.
 
 #### Dependency Resolution
+
 ```typescript
-container.register(TOKENS.Cache, (c) => new MemoryCache({
-  logger: c.resolve(TOKENS.Logger)  // Resolve dependencies
-}), {
-  name: 'CacheService',
-  dependencies: [TOKENS.Logger]  // Declare for init ordering
-});
+container.register(
+  TOKENS.Cache,
+  (c) =>
+    new MemoryCache({
+      logger: c.resolve(TOKENS.Logger), // Resolve dependencies
+    }),
+  {
+    name: 'CacheService',
+    dependencies: [TOKENS.Logger], // Declare for init ordering
+  }
+);
 ```
 
 **Rationale:** Factory functions receive the container, enabling explicit dependency resolution at construction time. This is clearer than constructor injection frameworks.
 
 #### Initialization Order
+
 ```typescript
 async initializeAll(): Promise<void> {
   // Topological sort based on service.dependencies
@@ -119,6 +131,7 @@ async initializeAll(): Promise<void> {
 **Rationale:** Automatic dependency-order initialization prevents "service not ready" errors. Services are initialized bottom-up (dependencies first).
 
 #### Graceful Shutdown
+
 ```typescript
 async shutdownAll(): Promise<void> {
   // Reverse dependency order (dependents before dependencies)
@@ -172,18 +185,21 @@ async healthCheckAll(): Promise<Map<string, HealthStatus>> {
 ## Alternatives Considered
 
 ### 1. InversifyJS
+
 **Pros:** Mature, feature-rich, decorator-based
 **Cons:** Heavy dependency (78KB), requires `reflect-metadata`, decorator complexity
 
 **Rejection Reason:** Too heavyweight for our needs. Manual DI is simpler and more transparent.
 
 ### 2. TSyringe
+
 **Pros:** Lighter than InversifyJS, Microsoft-maintained
 **Cons:** Still requires `reflect-metadata`, decorator magic
 
 **Rejection Reason:** Prefer explicit over implicit. Factory functions are clearer than decorators.
 
 ### 3. Simple Factory Pattern
+
 **Pros:** No framework, very simple
 **Cons:** No lifecycle management, no dependency ordering, manual wiring
 
@@ -222,33 +238,33 @@ async healthCheckAll(): Promise<Map<string, HealthStatus>> {
 // config/wiring.ts
 export function wireServices(container: Container) {
   // Logger (no dependencies)
-  container.register(TOKENS.Logger, () =>
-    createLogger({ level: 'info', format: 'json' }),
-    { name: 'Logger' }
-  );
+  container.register(TOKENS.Logger, () => createLogger({ level: 'info', format: 'json' }), {
+    name: 'Logger',
+  });
 
   // Config (no dependencies)
-  container.register(TOKENS.Config, () =>
-    loadConfigFromEnv(),
-    { name: 'Config' }
-  );
+  container.register(TOKENS.Config, () => loadConfigFromEnv(), { name: 'Config' });
 
   // Cache (depends on Logger)
-  container.register(TOKENS.Cache, (c) =>
-    new MemoryCache({
-      logger: c.resolve(TOKENS.Logger),
-      maxSize: 100 * 1024 * 1024
-    }),
+  container.register(
+    TOKENS.Cache,
+    (c) =>
+      new MemoryCache({
+        logger: c.resolve(TOKENS.Logger),
+        maxSize: 100 * 1024 * 1024,
+      }),
     { name: 'CacheService', dependencies: ['Logger'] }
   );
 
   // Provider (depends on Logger and Cache)
-  container.register(TOKENS.ProviderService, (c) =>
-    new AlpacaProvider({
-      logger: c.resolve(TOKENS.Logger),
-      cache: c.resolve(TOKENS.Cache),
-      apiKey: process.env.ALPACA_API_KEY
-    }),
+  container.register(
+    TOKENS.ProviderService,
+    (c) =>
+      new AlpacaProvider({
+        logger: c.resolve(TOKENS.Logger),
+        cache: c.resolve(TOKENS.Cache),
+        apiKey: process.env.ALPACA_API_KEY,
+      }),
     { name: 'ProviderService', dependencies: ['Logger', 'CacheService'] }
   );
 }
@@ -296,7 +312,7 @@ describe('DailyCommand', () => {
     container.register(TOKENS.Logger, () => mockLogger, { name: 'Logger' });
     container.register(TOKENS.ProviderService, () => fixtureProvider, {
       name: 'ProviderService',
-      dependencies: ['Logger']
+      dependencies: ['Logger'],
     });
 
     await container.initializeAll();
@@ -305,7 +321,7 @@ describe('DailyCommand', () => {
   it('should analyze daily data', async () => {
     const command = new DailyCommand({
       providerService: container.resolve(TOKENS.ProviderService),
-      logger: container.resolve(TOKENS.Logger)
+      logger: container.resolve(TOKENS.Logger),
     });
     // ...
   });
@@ -327,6 +343,7 @@ interface ContainerMetrics {
 ```
 
 **Recommended Monitoring:**
+
 - Alert if any service reports unhealthy
 - Track initialization time per service
 - Monitor circular dependency detection
@@ -342,13 +359,13 @@ interface ContainerMetrics {
 
 ## Decision Log
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| 2025-09-30 | Use manual DI over InversifyJS | Simpler, lighter, more explicit |
-| 2025-09-30 | Symbol tokens vs. string IDs | Type safety and collision prevention |
-| 2025-09-30 | Service interface contract | Standardize lifecycle across all services |
-| 2025-09-30 | Singleton by default | Most services should be singletons |
-| 2025-09-30 | ASCII wiring graph | Better debuggability than JSON |
+| Date       | Decision                       | Rationale                                 |
+| ---------- | ------------------------------ | ----------------------------------------- |
+| 2025-09-30 | Use manual DI over InversifyJS | Simpler, lighter, more explicit           |
+| 2025-09-30 | Symbol tokens vs. string IDs   | Type safety and collision prevention      |
+| 2025-09-30 | Service interface contract     | Standardize lifecycle across all services |
+| 2025-09-30 | Singleton by default           | Most services should be singletons        |
+| 2025-09-30 | ASCII wiring graph             | Better debuggability than JSON            |
 
 ---
 

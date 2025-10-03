@@ -11,8 +11,8 @@
  * from the data provider.
  */
 
-import type { Timeframe } from '@tjr-suite/market-data-core'
-import type { CachedBar } from './types.js'
+import type { Timeframe } from '@tjr-suite/market-data-core';
+import type { CachedBar } from './types.js';
 
 /**
  * Time-to-live policy for a specific timeframe.
@@ -24,7 +24,7 @@ export interface FreshnessPolicy {
   /**
    * Timeframe this policy applies to (e.g., '1m', '5m', '1h', '1D').
    */
-  timeframe: Timeframe
+  timeframe: Timeframe;
 
   /**
    * Time-to-live in milliseconds.
@@ -32,7 +32,7 @@ export interface FreshnessPolicy {
    * After this duration from fetchedAt, the bar is considered stale
    * and should be refreshed.
    */
-  ttlMs: number
+  ttlMs: number;
 }
 
 /**
@@ -58,7 +58,7 @@ export const DEFAULT_FRESHNESS_POLICIES: FreshnessPolicy[] = [
   { timeframe: '2h', ttlMs: 4 * 60 * 60 * 1000 }, // 4 hours
   { timeframe: '4h', ttlMs: 6 * 60 * 60 * 1000 }, // 6 hours
   { timeframe: '1D', ttlMs: 24 * 60 * 60 * 1000 }, // 24 hours
-]
+];
 
 /**
  * Default TTL fallback for unknown timeframes.
@@ -66,7 +66,7 @@ export const DEFAULT_FRESHNESS_POLICIES: FreshnessPolicy[] = [
  * Used when no specific policy exists for a timeframe.
  * Conservative value of 10 minutes.
  */
-const DEFAULT_TTL_MS = 10 * 60 * 1000
+const DEFAULT_TTL_MS = 10 * 60 * 1000;
 
 /**
  * Check if a cached bar is stale and needs refreshing.
@@ -111,23 +111,23 @@ export function isStale(
   // First check: if the bar timestamp is very old (historical data),
   // it's less likely to be updated, so consider it fresh regardless of fetchedAt.
   // This prevents unnecessary re-fetches of historical data.
-  const barAge = now - bar.timestamp
-  const isHistorical = barAge > 7 * 24 * 60 * 60 * 1000 // older than 7 days
+  const barAge = now - bar.timestamp;
+  const isHistorical = barAge > 7 * 24 * 60 * 60 * 1000; // older than 7 days
 
   if (isHistorical) {
     // Historical bars are considered fresh (finalized)
-    return false
+    return false;
   }
 
   // Find TTL policy for this timeframe
-  const policy = policies.find((p) => p.timeframe === timeframe)
-  const ttl = policy?.ttlMs ?? DEFAULT_TTL_MS
+  const policy = policies.find((p) => p.timeframe === timeframe);
+  const ttl = policy?.ttlMs ?? DEFAULT_TTL_MS;
 
   // Calculate age of cached data
-  const age = now - bar.fetchedAt
+  const age = now - bar.fetchedAt;
 
   // Bar is stale if age exceeds TTL
-  return age > ttl
+  return age > ttl;
 }
 
 /**
@@ -146,8 +146,8 @@ export function getTTL(
   timeframe: Timeframe,
   policies: FreshnessPolicy[] = DEFAULT_FRESHNESS_POLICIES
 ): number {
-  const policy = policies.find((p) => p.timeframe === timeframe)
-  return policy?.ttlMs ?? DEFAULT_TTL_MS
+  const policy = policies.find((p) => p.timeframe === timeframe);
+  return policy?.ttlMs ?? DEFAULT_TTL_MS;
 }
 
 /**
@@ -178,7 +178,7 @@ export function getStaleBars(
   policies: FreshnessPolicy[] = DEFAULT_FRESHNESS_POLICIES,
   now: number = Date.now()
 ): CachedBar[] {
-  return bars.filter((bar) => isStale(bar, timeframe, policies, now))
+  return bars.filter((bar) => isStale(bar, timeframe, policies, now));
 }
 
 /**
@@ -202,6 +202,6 @@ export function getStaleTimestamp(
   timeframe: Timeframe,
   policies: FreshnessPolicy[] = DEFAULT_FRESHNESS_POLICIES
 ): number {
-  const ttl = getTTL(timeframe, policies)
-  return bar.fetchedAt + ttl
+  const ttl = getTTL(timeframe, policies);
+  return bar.fetchedAt + ttl;
 }

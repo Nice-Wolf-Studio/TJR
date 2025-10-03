@@ -11,7 +11,7 @@ import {
   isTJRError,
   isProviderRateLimitError,
   isInsufficientBarsError,
-  isSymbolResolutionError
+  isSymbolResolutionError,
 } from '../src/errors.js';
 import { Timeframe } from '../src/timeframes.js';
 
@@ -66,10 +66,10 @@ describe('TJRError', () => {
 
 describe('ProviderRateLimitError', () => {
   it('should create rate limit error with provider data', () => {
-    const error = new ProviderRateLimitError(
-      'Rate limit exceeded',
-      { provider: 'alpaca', retryAfter: 60 }
-    );
+    const error = new ProviderRateLimitError('Rate limit exceeded', {
+      provider: 'alpaca',
+      retryAfter: 60,
+    });
 
     expect(error.name).toBe('ProviderRateLimitError');
     expect(error.code).toBe('PROVIDER_RATE_LIMIT');
@@ -79,23 +79,20 @@ describe('ProviderRateLimitError', () => {
   });
 
   it('should include optional limitType', () => {
-    const error = new ProviderRateLimitError(
-      'Rate limit exceeded',
-      {
-        provider: 'tradier',
-        retryAfter: 30,
-        limitType: 'requests_per_minute'
-      }
-    );
+    const error = new ProviderRateLimitError('Rate limit exceeded', {
+      provider: 'tradier',
+      retryAfter: 30,
+      limitType: 'requests_per_minute',
+    });
 
     expect(error.data?.limitType).toBe('requests_per_minute');
   });
 
   it('should serialize correctly', () => {
-    const error = new ProviderRateLimitError(
-      'Rate limit exceeded',
-      { provider: 'alpaca', retryAfter: 60 }
-    );
+    const error = new ProviderRateLimitError('Rate limit exceeded', {
+      provider: 'alpaca',
+      retryAfter: 60,
+    });
 
     const jsonString = JSON.stringify(error.toJSON());
     const parsed = JSON.parse(jsonString);
@@ -108,15 +105,12 @@ describe('ProviderRateLimitError', () => {
 
 describe('InsufficientBarsError', () => {
   it('should create insufficient bars error with context', () => {
-    const error = new InsufficientBarsError(
-      'Need more bars',
-      {
-        required: 50,
-        received: 30,
-        symbol: 'SPY',
-        timeframe: Timeframe.M5
-      }
-    );
+    const error = new InsufficientBarsError('Need more bars', {
+      required: 50,
+      received: 30,
+      symbol: 'SPY',
+      timeframe: Timeframe.M5,
+    });
 
     expect(error.name).toBe('InsufficientBarsError');
     expect(error.code).toBe('INSUFFICIENT_BARS');
@@ -128,15 +122,12 @@ describe('InsufficientBarsError', () => {
   });
 
   it('should serialize correctly', () => {
-    const error = new InsufficientBarsError(
-      'Need more bars',
-      {
-        required: 50,
-        received: 30,
-        symbol: 'SPY',
-        timeframe: Timeframe.M5
-      }
-    );
+    const error = new InsufficientBarsError('Need more bars', {
+      required: 50,
+      received: 30,
+      symbol: 'SPY',
+      timeframe: Timeframe.M5,
+    });
 
     const jsonString = JSON.stringify(error.toJSON());
     const parsed = JSON.parse(jsonString);
@@ -151,14 +142,11 @@ describe('InsufficientBarsError', () => {
 
 describe('SymbolResolutionError', () => {
   it('should create symbol resolution error', () => {
-    const error = new SymbolResolutionError(
-      'Symbol not found',
-      {
-        symbol: 'INVALID',
-        provider: 'alpaca',
-        suggestion: 'SPY'
-      }
-    );
+    const error = new SymbolResolutionError('Symbol not found', {
+      symbol: 'INVALID',
+      provider: 'alpaca',
+      suggestion: 'SPY',
+    });
 
     expect(error.name).toBe('SymbolResolutionError');
     expect(error.code).toBe('SYMBOL_RESOLUTION');
@@ -169,26 +157,20 @@ describe('SymbolResolutionError', () => {
   });
 
   it('should work without suggestion', () => {
-    const error = new SymbolResolutionError(
-      'Symbol not found',
-      {
-        symbol: 'INVALID',
-        provider: 'alpaca'
-      }
-    );
+    const error = new SymbolResolutionError('Symbol not found', {
+      symbol: 'INVALID',
+      provider: 'alpaca',
+    });
 
     expect(error.data?.suggestion).toBeUndefined();
   });
 
   it('should serialize correctly', () => {
-    const error = new SymbolResolutionError(
-      'Symbol not found',
-      {
-        symbol: 'INVALID',
-        provider: 'alpaca',
-        suggestion: 'SPY'
-      }
-    );
+    const error = new SymbolResolutionError('Symbol not found', {
+      symbol: 'INVALID',
+      provider: 'alpaca',
+      suggestion: 'SPY',
+    });
 
     const jsonString = JSON.stringify(error.toJSON());
     const parsed = JSON.parse(jsonString);
@@ -207,11 +189,11 @@ describe('Type Guards', () => {
     required: 50,
     received: 30,
     symbol: 'SPY',
-    timeframe: Timeframe.M5
+    timeframe: Timeframe.M5,
   });
   const symbolError = new SymbolResolutionError('message', {
     symbol: 'TEST',
-    provider: 'test'
+    provider: 'test',
   });
   const nativeError = new Error('native');
   const notError = { code: 'FAKE' };

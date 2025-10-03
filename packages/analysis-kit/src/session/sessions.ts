@@ -60,7 +60,7 @@ export function extractSessionExtremes(bars: Bar[], rthWindow: TimeWindow): Sess
   }
 
   // Filter bars within time window [start, end)
-  const sessionBars = bars.filter(bar => {
+  const sessionBars = bars.filter((bar) => {
     return bar.timestamp >= startMs && bar.timestamp < endMs;
   });
 

@@ -30,7 +30,7 @@ export enum Timeframe {
   /** 4-hour bars - swing trading timeframe */
   H4 = '240',
   /** Daily bars - daily swing analysis */
-  D1 = '1D'
+  D1 = '1D',
 }
 
 /**
@@ -44,7 +44,7 @@ const TIMEFRAME_MINUTES: Record<Timeframe, number | string> = {
   [Timeframe.M10]: 10,
   [Timeframe.H1]: 60,
   [Timeframe.H4]: 240,
-  [Timeframe.D1]: '1D'
+  [Timeframe.D1]: '1D',
 };
 
 /**
@@ -58,7 +58,7 @@ const TIMEFRAME_LABELS: Record<Timeframe, string> = {
   [Timeframe.M10]: '10 Minutes',
   [Timeframe.H1]: '1 Hour',
   [Timeframe.H4]: '4 Hours',
-  [Timeframe.D1]: 'Daily'
+  [Timeframe.D1]: 'Daily',
 };
 
 /**
@@ -124,7 +124,14 @@ export function getTimeframeLabel(timeframe: Timeframe): string {
  * ```
  */
 export function compareTimeframes(a: Timeframe, b: Timeframe): number {
-  const order = [Timeframe.M1, Timeframe.M5, Timeframe.M10, Timeframe.H1, Timeframe.H4, Timeframe.D1];
+  const order = [
+    Timeframe.M1,
+    Timeframe.M5,
+    Timeframe.M10,
+    Timeframe.H1,
+    Timeframe.H4,
+    Timeframe.D1,
+  ];
   return order.indexOf(a) - order.indexOf(b);
 }
 
@@ -143,7 +150,9 @@ export function compareTimeframes(a: Timeframe, b: Timeframe): number {
  */
 export function parseTimeframe(value: string): Timeframe {
   if (!isValidTimeframe(value)) {
-    throw new Error(`Invalid timeframe: ${value}. Must be one of: ${Object.values(Timeframe).join(', ')}`);
+    throw new Error(
+      `Invalid timeframe: ${value}. Must be one of: ${Object.values(Timeframe).join(', ')}`
+    );
   }
   return value;
 }

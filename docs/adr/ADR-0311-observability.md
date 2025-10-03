@@ -63,14 +63,20 @@ await withRequestContext(async () => {
 });
 
 // Custom ID
-await withRequestContext(async () => {
-  // ...
-}, { requestId: 'custom-id-123' });
+await withRequestContext(
+  async () => {
+    // ...
+  },
+  { requestId: 'custom-id-123' }
+);
 
 // Additional context
-await withRequestContext(async () => {
-  // ...
-}, { customField: 'value' });
+await withRequestContext(
+  async () => {
+    // ...
+  },
+  { customField: 'value' }
+);
 ```
 
 ### 2. Performance Monitoring
@@ -123,25 +129,25 @@ We defined 12 standard fields that all packages should use:
 
 **Required Fields (7):**
 
-| Field | Type | Description | Example |
-|-------|------|-------------|---------|
-| `request_id` | string | Unique operation identifier | `"7411f0a1-3f5f-4c2d-a2b0-bde2ad477f16"` |
-| `level` | string | Log level | `"info"`, `"error"`, `"warn"` |
-| `message` | string | Human-readable description | `"Bars fetched"` |
-| `timestamp` | string | ISO 8601 timestamp | `"2025-09-30T09:30:10.446Z"` |
-| `symbol` | string | Trading symbol (when applicable) | `"SPY"`, `"ES"` |
-| `timeframe` | string | Data timeframe (when applicable) | `"5m"`, `"1h"`, `"1D"` |
-| `result` | string | Operation outcome | `"success"`, `"error"`, `"partial"` |
+| Field        | Type   | Description                      | Example                                  |
+| ------------ | ------ | -------------------------------- | ---------------------------------------- |
+| `request_id` | string | Unique operation identifier      | `"7411f0a1-3f5f-4c2d-a2b0-bde2ad477f16"` |
+| `level`      | string | Log level                        | `"info"`, `"error"`, `"warn"`            |
+| `message`    | string | Human-readable description       | `"Bars fetched"`                         |
+| `timestamp`  | string | ISO 8601 timestamp               | `"2025-09-30T09:30:10.446Z"`             |
+| `symbol`     | string | Trading symbol (when applicable) | `"SPY"`, `"ES"`                          |
+| `timeframe`  | string | Data timeframe (when applicable) | `"5m"`, `"1h"`, `"1D"`                   |
+| `result`     | string | Operation outcome                | `"success"`, `"error"`, `"partial"`      |
 
 **Optional Fields (5):**
 
-| Field | Type | Description | Example |
-|-------|------|-------------|---------|
-| `provider` | string | Data provider name | `"yahoo"`, `"alphavantage"` |
-| `asOf` | string | Data timestamp (ISO 8601) | `"2025-09-30T16:00:00Z"` |
-| `duration_ms` | number | Operation duration in milliseconds | `102` |
-| `error_code` | string | Error code (when result=error) | `"RATE_LIMIT"`, `"NOT_FOUND"` |
-| `count` | number | Number of items processed | `100` |
+| Field         | Type   | Description                        | Example                       |
+| ------------- | ------ | ---------------------------------- | ----------------------------- |
+| `provider`    | string | Data provider name                 | `"yahoo"`, `"alphavantage"`   |
+| `asOf`        | string | Data timestamp (ISO 8601)          | `"2025-09-30T16:00:00Z"`      |
+| `duration_ms` | number | Operation duration in milliseconds | `102`                         |
+| `error_code`  | string | Error code (when result=error)     | `"RATE_LIMIT"`, `"NOT_FOUND"` |
+| `count`       | number | Number of items processed          | `100`                         |
 
 **Naming Conventions:**
 
@@ -253,9 +259,9 @@ export const requestIdFormat = format((info) => {
 // Applied automatically to all log entries
 const logger = winston.createLogger({
   format: format.combine(
-    requestIdFormat(),
+    requestIdFormat()
     // ... other formats
-  )
+  ),
 });
 ```
 
@@ -268,11 +274,13 @@ const logger = winston.createLogger({
 **Approach:** Pass request_id as function parameter through all async operations.
 
 **Pros:**
+
 - No AsyncLocalStorage overhead
 - Explicit propagation is easier to debug
 - Works in all JavaScript environments
 
 **Cons:**
+
 - Major refactoring required for all functions
 - Easy to forget passing through
 - Pollutes function signatures
@@ -287,12 +295,14 @@ const logger = winston.createLogger({
 **Approach:** Use OpenTelemetry SDK for observability.
 
 **Pros:**
+
 - Industry standard
 - Rich ecosystem
 - Built-in distributed tracing
 - Vendor-agnostic
 
 **Cons:**
+
 - Heavy dependency (~2MB)
 - Complexity overhead for simple use case
 - Requires collector setup for production
@@ -307,11 +317,13 @@ const logger = winston.createLogger({
 **Approach:** Extract request IDs from `X-Request-ID` or `X-Correlation-ID` headers.
 
 **Pros:**
+
 - Standard practice in distributed systems
 - Clients can provide their own IDs
 - Cross-service tracing
 
 **Cons:**
+
 - Doesn't work for CLI or background jobs
 - Requires clients to support it
 - Still need generation for missing headers
@@ -332,12 +344,14 @@ app.use((req, res, next) => {
 **Approach:** Use APM tools like New Relic, DataDog, or Elastic APM.
 
 **Pros:**
+
 - Automatic instrumentation
 - Rich dashboards
 - Alerting
 - Distributed tracing
 
 **Cons:**
+
 - Requires paid service
 - Vendor lock-in
 - Privacy concerns (sends data externally)
@@ -471,7 +485,7 @@ export async function processSymbol(symbol: string) {
 
     logger.info('Processing started', {
       symbol,
-      operation: 'process_symbol'
+      operation: 'process_symbol',
     });
 
     // ... work ...
@@ -479,7 +493,7 @@ export async function processSymbol(symbol: string) {
     logger.info('Processing completed', {
       symbol,
       duration_ms: timer.elapsed(),
-      result: 'success'
+      result: 'success',
     });
   });
 }

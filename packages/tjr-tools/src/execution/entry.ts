@@ -8,7 +8,13 @@
  */
 
 import type { MarketBar, TJRConfluence } from '@tjr/contracts';
-import type { ExecutionConfig, EntryTrigger, ConfirmationResult, FVGZone, OrderBlock } from '../types.js';
+import type {
+  ExecutionConfig,
+  EntryTrigger,
+  ConfirmationResult,
+  FVGZone,
+  OrderBlock,
+} from '../types.js';
 
 /**
  * Check for 1-minute entry trigger after 5-minute confirmation.
@@ -128,7 +134,7 @@ function checkBarInZones(
   direction: 'long' | 'short'
 ): boolean {
   // Check FVG zones
-  const activeFVGs = fvgZones.filter(z => !z.filled);
+  const activeFVGs = fvgZones.filter((z) => !z.filled);
   for (const zone of activeFVGs) {
     // For long trades, look for bullish FVGs
     // For short trades, look for bearish FVGs
@@ -143,7 +149,7 @@ function checkBarInZones(
   }
 
   // Check order blocks
-  const activeBlocks = orderBlocks.filter(b => !b.mitigated);
+  const activeBlocks = orderBlocks.filter((b) => !b.mitigated);
   for (const block of activeBlocks) {
     // For long trades, look for demand blocks
     // For short trades, look for supply blocks
@@ -237,7 +243,7 @@ export function getOptimalEntryPrice(
   }
 
   // Find the best zone level for entry
-  const zoneLevels = zones.map(z => ({
+  const zoneLevels = zones.map((z) => ({
     high: z.high,
     low: z.low,
     mid: (z.high + z.low) / 2,

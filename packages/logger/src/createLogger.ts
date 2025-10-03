@@ -150,9 +150,6 @@ export function createLogger(config: LoggerConfig): Logger {
  * reqLogger.info('Processing request'); // Includes component and request_id
  * ```
  */
-export function createChildLogger(
-  logger: Logger,
-  context: Record<string, unknown>
-): Logger {
+export function createChildLogger(logger: Logger, context: Record<string, unknown>): Logger {
   return logger.child(context);
 }

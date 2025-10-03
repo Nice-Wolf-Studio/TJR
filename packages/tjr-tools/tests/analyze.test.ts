@@ -27,7 +27,7 @@ function createTestBars(count: number): MarketBar[] {
       high: 102 + Math.sin(i * 0.1) * 2,
       low: 99 + Math.sin(i * 0.1) * 2,
       close: 101 + Math.sin(i * 0.1) * 2,
-      volume: 1000 + i * 10
+      volume: 1000 + i * 10,
     });
   }
 
@@ -41,7 +41,7 @@ describe('TJR Analysis', () => {
         symbol: 'SPY',
         timeframe: Timeframe.M5,
         bars: createTestBars(60),
-        analysisTimestamp: '2025-01-15T15:00:00.000Z'
+        analysisTimestamp: '2025-01-15T15:00:00.000Z',
       };
 
       const result = analyze(input);
@@ -76,7 +76,7 @@ describe('TJR Analysis', () => {
         symbol: 'AAPL',
         timeframe: Timeframe.M15,
         bars: createTestBars(100),
-        analysisTimestamp: '2025-01-15T16:00:00.000Z'
+        analysisTimestamp: '2025-01-15T16:00:00.000Z',
       };
 
       const result1 = analyze(input);
@@ -93,7 +93,7 @@ describe('TJR Analysis', () => {
         symbol: 'TSLA',
         timeframe: Timeframe.H1,
         bars: createTestBars(50),
-        analysisTimestamp: '2025-01-15T17:00:00.000Z'
+        analysisTimestamp: '2025-01-15T17:00:00.000Z',
       };
 
       const result = analyze(input);
@@ -108,7 +108,7 @@ describe('TJR Analysis', () => {
         symbol: 'GOOGL',
         timeframe: Timeframe.M30,
         bars: createTestBars(10), // Less than default minimum
-        analysisTimestamp: '2025-01-15T18:00:00.000Z'
+        analysisTimestamp: '2025-01-15T18:00:00.000Z',
       };
 
       const result = analyze(input);
@@ -122,7 +122,7 @@ describe('TJR Analysis', () => {
         symbol: 'MSFT',
         timeframe: Timeframe.M5,
         bars: createTestBars(60),
-        analysisTimestamp: '2025-01-15T19:00:00.000Z'
+        analysisTimestamp: '2025-01-15T19:00:00.000Z',
       };
 
       const config: TJRConfig = {
@@ -130,7 +130,7 @@ describe('TJR Analysis', () => {
         enableOrderBlock: false,
         enableTrend: true,
         enableSupportResistance: true,
-        enableVolumeProfile: true
+        enableVolumeProfile: true,
       };
 
       const result = analyze(input, config);
@@ -139,7 +139,7 @@ describe('TJR Analysis', () => {
       expect(result.confluence.factors.length).toBe(3);
 
       // Should not have FVG or Order Block factors
-      const factorNames = result.confluence.factors.map(f => f.name);
+      const factorNames = result.confluence.factors.map((f) => f.name);
       expect(factorNames).not.toContain('Fair Value Gap');
       expect(factorNames).not.toContain('Order Block');
       expect(factorNames).toContain('Trend Alignment');
@@ -152,7 +152,7 @@ describe('TJR Analysis', () => {
         symbol: 'NVDA',
         timeframe: Timeframe.M5,
         bars: createTestBars(60),
-        analysisTimestamp: '2025-01-15T20:00:00.000Z'
+        analysisTimestamp: '2025-01-15T20:00:00.000Z',
       };
 
       const result = analyze(input);
@@ -166,7 +166,7 @@ describe('TJR Analysis', () => {
         symbol: 'AMZN',
         timeframe: Timeframe.M5,
         bars: createTestBars(60),
-        analysisTimestamp: '2025-01-15T21:00:00.000Z'
+        analysisTimestamp: '2025-01-15T21:00:00.000Z',
       };
 
       const config: TJRConfig = {
@@ -174,7 +174,7 @@ describe('TJR Analysis', () => {
         enableOrderBlock: true,
         enableTrend: true,
         enableSupportResistance: true,
-        enableVolumeProfile: true
+        enableVolumeProfile: true,
       };
 
       const result = analyze(input, config);
@@ -186,11 +186,11 @@ describe('TJR Analysis', () => {
         'Order Block',
         'Trend Alignment',
         'Support/Resistance',
-        'Volume Profile'
+        'Volume Profile',
       ];
 
-      const actualFactors = result.confluence.factors.map(f => f.name);
-      expectedFactors.forEach(expected => {
+      const actualFactors = result.confluence.factors.map((f) => f.name);
+      expectedFactors.forEach((expected) => {
         expect(actualFactors).toContain(expected);
       });
     });
@@ -200,7 +200,7 @@ describe('TJR Analysis', () => {
         symbol: 'META',
         timeframe: Timeframe.M5,
         bars: createTestBars(60),
-        analysisTimestamp: '2025-01-15T22:00:00.000Z'
+        analysisTimestamp: '2025-01-15T22:00:00.000Z',
       };
 
       const result = analyze(input, {});
@@ -215,11 +215,11 @@ describe('TJR Analysis', () => {
         symbol: 'NFLX',
         timeframe: Timeframe.M5,
         bars: createTestBars(25),
-        analysisTimestamp: '2025-01-15T23:00:00.000Z'
+        analysisTimestamp: '2025-01-15T23:00:00.000Z',
       };
 
       const config: TJRConfig = {
-        minBarsRequired: 30
+        minBarsRequired: 30,
       };
 
       const result = analyze(input, config);

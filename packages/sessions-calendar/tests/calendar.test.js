@@ -28,7 +28,7 @@ test('isHoliday - detects full closure holidays', () => {
     assert.strictEqual(
       result,
       tc.expected,
-      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`,
+      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`
     );
   }
 });
@@ -54,7 +54,7 @@ test('isHoliday - detects early close days', () => {
     assert.strictEqual(
       result,
       tc.expected,
-      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`,
+      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`
     );
   }
 });
@@ -71,7 +71,7 @@ test('isHoliday - returns false for regular trading days', () => {
     assert.strictEqual(
       result,
       tc.expected,
-      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`,
+      `${tc.name} (${tc.date.toISOString()}) should be ${tc.expected ? 'a holiday' : 'not a holiday'}`
     );
   }
 });
@@ -80,7 +80,7 @@ test('isHoliday - throws error for unknown symbol', () => {
   assert.throws(
     () => isHoliday(new Date('2025-01-01'), 'INVALID'),
     /Unknown symbol: INVALID/,
-    'Should throw error for unknown symbol',
+    'Should throw error for unknown symbol'
   );
 });
 
@@ -95,11 +95,7 @@ test('rthWindow - returns null for full closure holidays', () => {
 
   for (const tc of testCases) {
     const result = rthWindow(tc.date, tc.symbol);
-    assert.strictEqual(
-      result,
-      null,
-      `${tc.name} should have no RTH window (market closed)`,
-    );
+    assert.strictEqual(result, null, `${tc.name} should have no RTH window (market closed)`);
   }
 });
 
@@ -116,7 +112,7 @@ test('rthWindow - returns window for regular trading days', () => {
     assert.ok(result.end instanceof Date, 'End should be a Date');
     assert.ok(
       result.start < result.end,
-      `Start (${result.start.toISOString()}) should be before end (${result.end.toISOString()})`,
+      `Start (${result.start.toISOString()}) should be before end (${result.end.toISOString()})`
     );
   }
 });
@@ -132,10 +128,7 @@ test('rthWindow - returns adjusted window for early close days', () => {
     assert.ok(result !== null, `${tc.name} should have RTH window (early close)`);
     assert.ok(result.start instanceof Date, 'Start should be a Date');
     assert.ok(result.end instanceof Date, 'End should be a Date');
-    assert.ok(
-      result.start < result.end,
-      `Start should be before end on early close day`,
-    );
+    assert.ok(result.start < result.end, `Start should be before end on early close day`);
   }
 });
 
@@ -143,7 +136,7 @@ test('rthWindow - throws error for unknown symbol', () => {
   assert.throws(
     () => rthWindow(new Date('2025-01-01'), 'UNKNOWN'),
     /Unknown symbol: UNKNOWN/,
-    'Should throw error for unknown symbol',
+    'Should throw error for unknown symbol'
   );
 });
 
@@ -158,11 +151,7 @@ test('getSessions - returns empty array for full closure holidays', () => {
 
   for (const tc of testCases) {
     const result = getSessions(tc.date, tc.symbol);
-    assert.strictEqual(
-      result.length,
-      0,
-      `${tc.name} should have no sessions (market closed)`,
-    );
+    assert.strictEqual(result.length, 0, `${tc.name} should have no sessions (market closed)`);
   }
 });
 
@@ -187,12 +176,12 @@ test('getSessions - returns all sessions for regular trading days', () => {
       assert.ok(session.end instanceof Date, 'Session end should be a Date');
       assert.ok(
         session.start < session.end,
-        `Session start should be before end for ${session.type}`,
+        `Session start should be before end for ${session.type}`
       );
       assert.ok(typeof session.exchange === 'string', 'Session should have exchange string');
       assert.ok(
         ['RTH', 'ETH_PRE', 'ETH_POST'].includes(session.type),
-        'Session type should be valid',
+        'Session type should be valid'
       );
     }
   }
@@ -217,7 +206,7 @@ test('getSessions - handles early close days correctly', () => {
     assert.strictEqual(
       ethPostSession,
       undefined,
-      'Should not have ETH_POST session on early close day',
+      'Should not have ETH_POST session on early close day'
     );
   }
 });
@@ -226,7 +215,7 @@ test('getSessions - throws error for unknown symbol', () => {
   assert.throws(
     () => getSessions(new Date('2025-01-01'), 'BADSTUFF'),
     /Unknown symbol: BADSTUFF/,
-    'Should throw error for unknown symbol',
+    'Should throw error for unknown symbol'
   );
 });
 
@@ -252,7 +241,7 @@ test('getSessions - handles DST spring transition day', () => {
     assert.ok(rthSession, `${tc.name} should have RTH session`);
     assert.ok(
       rthSession.start < rthSession.end,
-      `${tc.name} RTH session should have valid start/end times`,
+      `${tc.name} RTH session should have valid start/end times`
     );
   }
 });
@@ -272,7 +261,7 @@ test('getSessions - handles DST fall transition day', () => {
     assert.ok(rthSession, `${tc.name} should have RTH session`);
     assert.ok(
       rthSession.start < rthSession.end,
-      `${tc.name} RTH session should have valid start/end times`,
+      `${tc.name} RTH session should have valid start/end times`
     );
   }
 });
@@ -289,17 +278,13 @@ test('getSessions - ES and NQ return same session structure on same date', () =>
   assert.strictEqual(
     esSessions.length,
     nqSessions.length,
-    'ES and NQ should have same number of sessions',
+    'ES and NQ should have same number of sessions'
   );
 
   // Verify both have same session types
   const esTypes = esSessions.map((s) => s.type).sort();
   const nqTypes = nqSessions.map((s) => s.type).sort();
-  assert.deepStrictEqual(
-    esTypes,
-    nqTypes,
-    'ES and NQ should have same session types',
-  );
+  assert.deepStrictEqual(esTypes, nqTypes, 'ES and NQ should have same session types');
 });
 
 /**
@@ -319,12 +304,12 @@ test('getSessions - produces deterministic results', () => {
     assert.strictEqual(
       result1[i].start.getTime(),
       result2[i].start.getTime(),
-      'Session start times should match',
+      'Session start times should match'
     );
     assert.strictEqual(
       result1[i].end.getTime(),
       result2[i].end.getTime(),
-      'Session end times should match',
+      'Session end times should match'
     );
     assert.strictEqual(result1[i].exchange, result2[i].exchange, 'Exchange should match');
   }
@@ -350,14 +335,6 @@ test('rthWindow - produces deterministic results', () => {
   const result2 = rthWindow(date, symbol);
 
   assert.ok(result1 !== null && result2 !== null, 'Both should return windows');
-  assert.strictEqual(
-    result1.start.getTime(),
-    result2.start.getTime(),
-    'Start times should match',
-  );
-  assert.strictEqual(
-    result1.end.getTime(),
-    result2.end.getTime(),
-    'End times should match',
-  );
+  assert.strictEqual(result1.start.getTime(), result2.start.getTime(), 'Start times should match');
+  assert.strictEqual(result1.end.getTime(), result2.end.getTime(), 'End times should match');
 });

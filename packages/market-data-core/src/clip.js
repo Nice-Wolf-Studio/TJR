@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * Bar clipping utilities.
  *
@@ -11,7 +11,7 @@
  * All clipping operates in UTC. Provider adapters must convert local times to
  * UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.clipBars = clipBars;
 /**
  * Clips bars to a timestamp range.
@@ -72,36 +72,36 @@ exports.clipBars = clipBars;
  * unsorted, results are undefined.
  */
 function clipBars(bars, from, to, _options = {}) {
-    // Handle empty input
-    if (bars.length === 0) {
-        return [];
-    }
-    // Note: includePartialLast is reserved for future use
-    // const { includePartialLast = false } = options;
-    // Determine effective 'from' and 'to' bounds
-    const effectiveFrom = from ?? -Infinity;
-    const effectiveTo = to ?? Infinity;
-    // Handle invalid range
-    if (effectiveFrom >= effectiveTo) {
-        return [];
-    }
-    // Find start index using binary search
-    // We want the first bar with timestamp >= effectiveFrom
-    const startIdx = binarySearchGTE(bars, effectiveFrom);
-    if (startIdx === -1) {
-        // No bars >= from
-        return [];
-    }
-    // Find end index using binary search
-    // We want the last bar with timestamp < effectiveTo
-    const endIdx = binarySearchLT(bars, effectiveTo);
-    if (endIdx === -1 || endIdx < startIdx) {
-        // No bars < to, or no overlap with start range
-        return [];
-    }
-    // Extract slice [startIdx, endIdx + 1)
-    // Note: slice() is exclusive of end index, so we use endIdx + 1
-    return bars.slice(startIdx, endIdx + 1);
+  // Handle empty input
+  if (bars.length === 0) {
+    return [];
+  }
+  // Note: includePartialLast is reserved for future use
+  // const { includePartialLast = false } = options;
+  // Determine effective 'from' and 'to' bounds
+  const effectiveFrom = from ?? -Infinity;
+  const effectiveTo = to ?? Infinity;
+  // Handle invalid range
+  if (effectiveFrom >= effectiveTo) {
+    return [];
+  }
+  // Find start index using binary search
+  // We want the first bar with timestamp >= effectiveFrom
+  const startIdx = binarySearchGTE(bars, effectiveFrom);
+  if (startIdx === -1) {
+    // No bars >= from
+    return [];
+  }
+  // Find end index using binary search
+  // We want the last bar with timestamp < effectiveTo
+  const endIdx = binarySearchLT(bars, effectiveTo);
+  if (endIdx === -1 || endIdx < startIdx) {
+    // No bars < to, or no overlap with start range
+    return [];
+  }
+  // Extract slice [startIdx, endIdx + 1)
+  // Note: slice() is exclusive of end index, so we use endIdx + 1
+  return bars.slice(startIdx, endIdx + 1);
 }
 /**
  * Binary search: Find the first index where bar.timestamp >= target.
@@ -113,25 +113,23 @@ function clipBars(bars, from, to, _options = {}) {
  * @returns Index of first bar >= target, or -1 if none found
  */
 function binarySearchGTE(bars, target) {
-    let left = 0;
-    let right = bars.length - 1;
-    let result = -1;
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        const bar = bars[mid];
-        if (!bar)
-            break; // Safety check (shouldn't happen, but TS requires it)
-        if (bar.timestamp >= target) {
-            // Found a candidate, but there might be an earlier one
-            result = mid;
-            right = mid - 1;
-        }
-        else {
-            // bars[mid] is too small, search right
-            left = mid + 1;
-        }
+  let left = 0;
+  let right = bars.length - 1;
+  let result = -1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const bar = bars[mid];
+    if (!bar) break; // Safety check (shouldn't happen, but TS requires it)
+    if (bar.timestamp >= target) {
+      // Found a candidate, but there might be an earlier one
+      result = mid;
+      right = mid - 1;
+    } else {
+      // bars[mid] is too small, search right
+      left = mid + 1;
     }
-    return result;
+  }
+  return result;
 }
 /**
  * Binary search: Find the last index where bar.timestamp < target.
@@ -143,24 +141,22 @@ function binarySearchGTE(bars, target) {
  * @returns Index of last bar < target, or -1 if none found
  */
 function binarySearchLT(bars, target) {
-    let left = 0;
-    let right = bars.length - 1;
-    let result = -1;
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        const bar = bars[mid];
-        if (!bar)
-            break; // Safety check (shouldn't happen, but TS requires it)
-        if (bar.timestamp < target) {
-            // Found a candidate, but there might be a later one
-            result = mid;
-            left = mid + 1;
-        }
-        else {
-            // bars[mid] is too large, search left
-            right = mid - 1;
-        }
+  let left = 0;
+  let right = bars.length - 1;
+  let result = -1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const bar = bars[mid];
+    if (!bar) break; // Safety check (shouldn't happen, but TS requires it)
+    if (bar.timestamp < target) {
+      // Found a candidate, but there might be a later one
+      result = mid;
+      left = mid + 1;
+    } else {
+      // bars[mid] is too large, search left
+      right = mid - 1;
     }
-    return result;
+  }
+  return result;
 }
 //# sourceMappingURL=clip.js.map

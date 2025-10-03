@@ -5,7 +5,13 @@
  * Confluence analysis, Execution recommendations, and Setup configuration.
  */
 
-import type { FVGZone, OrderBlock, ConfluenceWeights, ExecutionConfig, RiskConfig } from '@tjr/tjr-tools';
+import type {
+  FVGZone,
+  OrderBlock,
+  ConfluenceWeights,
+  ExecutionConfig,
+  RiskConfig,
+} from '@tjr/tjr-tools';
 
 /**
  * Output format types for reports

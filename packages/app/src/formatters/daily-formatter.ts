@@ -107,7 +107,10 @@ export class DailyFormatter {
     lines.push('Day Profile:');
     lines.push(`  Type: ${report.analysis.profile.type}`);
 
-    if (report.analysis.profile.characteristics && report.analysis.profile.characteristics.length > 0) {
+    if (
+      report.analysis.profile.characteristics &&
+      report.analysis.profile.characteristics.length > 0
+    ) {
       lines.push('  Characteristics:');
       for (const char of report.analysis.profile.characteristics) {
         lines.push(`    - ${char}`);
@@ -189,7 +192,9 @@ export class DailyFormatter {
     lines.push(`│ Bias           │ ${this.padRight(report.analysis.bias.direction, 22)} │`);
 
     if (report.analysis.bias.confidence !== undefined) {
-      lines.push(`│ Confidence     │ ${this.padRight(`${report.analysis.bias.confidence}%`, 22)} │`);
+      lines.push(
+        `│ Confidence     │ ${this.padRight(`${report.analysis.bias.confidence}%`, 22)} │`
+      );
     }
 
     lines.push(`│ Profile        │ ${this.padRight(report.analysis.profile.type, 22)} │`);
@@ -203,9 +208,15 @@ export class DailyFormatter {
       lines.push('┌────────────────┬────────────────────────┐');
       lines.push('│ Price Level    │ Value                  │');
       lines.push('├────────────────┼────────────────────────┤');
-      lines.push(`│ High           │ ${this.padRight(this.formatPrice(report.statistics.range.high), 22)} │`);
-      lines.push(`│ Low            │ ${this.padRight(this.formatPrice(report.statistics.range.low), 22)} │`);
-      lines.push(`│ Close          │ ${this.padRight(this.formatPrice(report.statistics.range.close), 22)} │`);
+      lines.push(
+        `│ High           │ ${this.padRight(this.formatPrice(report.statistics.range.high), 22)} │`
+      );
+      lines.push(
+        `│ Low            │ ${this.padRight(this.formatPrice(report.statistics.range.low), 22)} │`
+      );
+      lines.push(
+        `│ Close          │ ${this.padRight(this.formatPrice(report.statistics.range.close), 22)} │`
+      );
       lines.push('└────────────────┴────────────────────────┘');
     }
 
@@ -280,7 +291,10 @@ export class DailyFormatter {
       lines.push(`- **Volatility**: ${report.analysis.profile.volatility.toFixed(2)}`);
     }
 
-    if (report.analysis.profile.characteristics && report.analysis.profile.characteristics.length > 0) {
+    if (
+      report.analysis.profile.characteristics &&
+      report.analysis.profile.characteristics.length > 0
+    ) {
       lines.push('');
       lines.push('**Characteristics**:');
       for (const char of report.analysis.profile.characteristics) {

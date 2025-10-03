@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @fileoverview TJR analysis input/output DTOs.
  *
@@ -10,7 +10,7 @@
  *
  * @module @tjr/contracts/tjr
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.hasExecution = hasExecution;
 /**
  * Type guard to check if a TJRResult includes execution parameters.
@@ -26,6 +26,6 @@ exports.hasExecution = hasExecution;
  * ```
  */
 function hasExecution(result) {
-    return result.execution !== undefined;
+  return result.execution !== undefined;
 }
 //# sourceMappingURL=tjr.js.map

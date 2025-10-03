@@ -10,8 +10,4 @@
 export { getBars, capabilities, aggregateToTimeframe, calculateChunks } from './databento.js';
 
 // Export types
-export type {
-  GetBarsOptions,
-  GetBarsResult,
-  DabentoCapabilities,
-} from './types.js';
+export type { GetBarsOptions, GetBarsResult, DabentoCapabilities } from './types.js';

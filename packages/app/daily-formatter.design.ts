@@ -157,7 +157,7 @@ export class DailyFormatter {
       includeMetadata: false,
       locale: 'en-US',
       timezone: 'America/New_York',
-      decimals: 2
+      decimals: 2,
     };
 
     this.loadDefaultTemplates();
@@ -176,7 +176,7 @@ export class DailyFormatter {
     this.logger.debug('Formatting daily analysis', {
       format: opts.format,
       symbol: sanitized.symbol,
-      date: sanitized.date
+      date: sanitized.date,
     });
 
     try {
@@ -198,7 +198,7 @@ export class DailyFormatter {
     } catch (error) {
       this.logger.error('Formatting error', {
         format: opts.format,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       // Fallback to simple JSON
@@ -247,7 +247,9 @@ export class DailyFormatter {
         lines.push(`  Support: ${this.formatNumber(analysis.bias.keyLevels.support, options)}`);
       }
       if (analysis.bias.keyLevels.resistance) {
-        lines.push(`  Resistance: ${this.formatNumber(analysis.bias.keyLevels.resistance, options)}`);
+        lines.push(
+          `  Resistance: ${this.formatNumber(analysis.bias.keyLevels.resistance, options)}`
+        );
       }
       if (analysis.bias.keyLevels.pivot) {
         lines.push(`  Pivot: ${this.formatNumber(analysis.bias.keyLevels.pivot, options)}`);
@@ -330,14 +332,16 @@ export class DailyFormatter {
    * Format as JSON
    */
   private formatJson(analysis: DailyAnalysis, options: FormatterOptions): string {
-    const output = options.includeMetadata ? analysis : {
-      symbol: analysis.symbol,
-      date: analysis.date,
-      bias: analysis.bias,
-      profile: analysis.profile,
-      sessions: analysis.sessions,
-      statistics: analysis.statistics
-    };
+    const output = options.includeMetadata
+      ? analysis
+      : {
+          symbol: analysis.symbol,
+          date: analysis.date,
+          bias: analysis.bias,
+          profile: analysis.profile,
+          sessions: analysis.sessions,
+          statistics: analysis.statistics,
+        };
 
     return JSON.stringify(output, null, options.verbose ? 2 : 0);
   }
@@ -357,9 +361,15 @@ export class DailyFormatter {
     lines.push(`║ Bias             │ ${this.padRight(analysis.bias.direction, 24)} ║`);
     lines.push(`║ Confidence       │ ${this.padRight(`${analysis.bias.confidence}%`, 24)} ║`);
     lines.push(`║ Profile          │ ${this.padRight(analysis.profile.type, 24)} ║`);
-    lines.push(`║ Bars Analyzed    │ ${this.padRight(String(analysis.statistics.barsAnalyzed), 24)} ║`);
-    lines.push(`║ Day High         │ ${this.padRight(this.formatNumber(analysis.statistics.range.high, options), 24)} ║`);
-    lines.push(`║ Day Low          │ ${this.padRight(this.formatNumber(analysis.statistics.range.low, options), 24)} ║`);
+    lines.push(
+      `║ Bars Analyzed    │ ${this.padRight(String(analysis.statistics.barsAnalyzed), 24)} ║`
+    );
+    lines.push(
+      `║ Day High         │ ${this.padRight(this.formatNumber(analysis.statistics.range.high, options), 24)} ║`
+    );
+    lines.push(
+      `║ Day Low          │ ${this.padRight(this.formatNumber(analysis.statistics.range.low, options), 24)} ║`
+    );
     lines.push('╚══════════════════╧══════════════════════════╝');
 
     if (analysis.sessions.length > 0) {
@@ -411,7 +421,9 @@ export class DailyFormatter {
         lines.push(`  - Support: ${this.formatNumber(analysis.bias.keyLevels.support, options)}`);
       }
       if (analysis.bias.keyLevels.resistance) {
-        lines.push(`  - Resistance: ${this.formatNumber(analysis.bias.keyLevels.resistance, options)}`);
+        lines.push(
+          `  - Resistance: ${this.formatNumber(analysis.bias.keyLevels.resistance, options)}`
+        );
       }
       if (analysis.bias.keyLevels.pivot) {
         lines.push(`  - Pivot: ${this.formatNumber(analysis.bias.keyLevels.pivot, options)}`);
@@ -453,7 +465,9 @@ export class DailyFormatter {
     lines.push('### Statistics');
     lines.push(`- **Bars Analyzed**: ${analysis.statistics.barsAnalyzed}`);
     lines.push(`- **Timeframe**: ${analysis.statistics.timeframe}`);
-    lines.push(`- **Day Range**: ${this.formatNumber(analysis.statistics.range.low, options)} - ${this.formatNumber(analysis.statistics.range.high, options)}`);
+    lines.push(
+      `- **Day Range**: ${this.formatNumber(analysis.statistics.range.low, options)} - ${this.formatNumber(analysis.statistics.range.high, options)}`
+    );
     if (analysis.statistics.range.close) {
       lines.push(`- **Close**: ${this.formatNumber(analysis.statistics.range.close, options)}`);
     }
@@ -483,17 +497,7 @@ export class DailyFormatter {
     const rows: string[][] = [];
 
     // Headers
-    rows.push([
-      'Symbol',
-      'Date',
-      'Bias',
-      'Confidence',
-      'Profile',
-      'High',
-      'Low',
-      'Close',
-      'Bars'
-    ]);
+    rows.push(['Symbol', 'Date', 'Bias', 'Confidence', 'Profile', 'High', 'Low', 'Close', 'Bars']);
 
     // Data row
     rows.push([
@@ -504,8 +508,10 @@ export class DailyFormatter {
       analysis.profile.type,
       this.formatNumber(analysis.statistics.range.high, options),
       this.formatNumber(analysis.statistics.range.low, options),
-      analysis.statistics.range.close ? this.formatNumber(analysis.statistics.range.close, options) : '',
-      String(analysis.statistics.barsAnalyzed)
+      analysis.statistics.range.close
+        ? this.formatNumber(analysis.statistics.range.close, options)
+        : '',
+      String(analysis.statistics.barsAnalyzed),
     ]);
 
     // Session rows
@@ -520,13 +526,13 @@ export class DailyFormatter {
           this.formatNumber(session.high, options),
           this.formatNumber(session.low, options),
           this.formatNumber(session.range, options),
-          String(session.barCount)
+          String(session.barCount),
         ]);
       }
     }
 
     // Convert to CSV string
-    return rows.map(row => row.map(cell => this.escapeCsv(cell)).join(',')).join('\n');
+    return rows.map((row) => row.map((cell) => this.escapeCsv(cell)).join(',')).join('\n');
   }
 
   /**
@@ -568,11 +574,15 @@ export class DailyFormatter {
     <tr><th>Characteristics</th><td>${analysis.profile.characteristics.join(', ')}</td></tr>
   </table>
 
-  ${analysis.sessions.length > 0 ? `
+  ${
+    analysis.sessions.length > 0
+      ? `
   <h3>Session Analysis</h3>
   <table>
     <tr><th>Session</th><th>High</th><th>Low</th><th>Range</th><th>Bars</th></tr>
-    ${analysis.sessions.map(s => `
+    ${analysis.sessions
+      .map(
+        (s) => `
     <tr>
       <td>${s.name}</td>
       <td>${this.formatNumber(s.high, options)}</td>
@@ -580,9 +590,13 @@ export class DailyFormatter {
       <td>${this.formatNumber(s.range, options)}</td>
       <td>${s.barCount}</td>
     </tr>
-    `).join('')}
+    `
+      )
+      .join('')}
   </table>
-  ` : ''}
+  `
+      : ''
+  }
 
   <h3>Statistics</h3>
   <table>
@@ -593,11 +607,15 @@ export class DailyFormatter {
     ${analysis.statistics.range.close ? `<tr><th>Close</th><td>${this.formatNumber(analysis.statistics.range.close, options)}</td></tr>` : ''}
   </table>
 
-  ${options.includeMetadata && analysis.metadata ? `
+  ${
+    options.includeMetadata && analysis.metadata
+      ? `
   <footer>
     <p><small>Generated at ${analysis.metadata.timestamp}</small></p>
   </footer>
-  ` : ''}
+  `
+      : ''
+  }
 </body>
 </html>
     `.trim();
@@ -619,13 +637,13 @@ export class DailyFormatter {
         confidence: analysis.bias?.confidence || 0,
         strength: analysis.bias?.strength,
         reason: analysis.bias?.reason,
-        keyLevels: analysis.bias?.keyLevels
+        keyLevels: analysis.bias?.keyLevels,
       },
       profile: {
         type: analysis.profile?.type || 'UNKNOWN',
         characteristics: analysis.profile?.characteristics || [],
         volatility: analysis.profile?.volatility,
-        trendStrength: analysis.profile?.trendStrength
+        trendStrength: analysis.profile?.trendStrength,
       },
       sessions: analysis.sessions || [],
       statistics: {
@@ -635,15 +653,15 @@ export class DailyFormatter {
           high: analysis.statistics?.range?.high || 0,
           low: analysis.statistics?.range?.low || 0,
           open: analysis.statistics?.range?.open,
-          close: analysis.statistics?.range?.close
+          close: analysis.statistics?.range?.close,
         },
         volume: analysis.statistics?.volume,
-        dataQuality: analysis.statistics?.dataQuality
+        dataQuality: analysis.statistics?.dataQuality,
       },
       metadata: analysis.metadata || {
         analysisVersion: '1.0.0',
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     };
   }
 
@@ -653,7 +671,7 @@ export class DailyFormatter {
   private formatNumber(value: number, options: FormatterOptions): string {
     return value.toLocaleString(options.locale || 'en-US', {
       minimumFractionDigits: options.decimals || 2,
-      maximumFractionDigits: options.decimals || 2
+      maximumFractionDigits: options.decimals || 2,
     });
   }
 

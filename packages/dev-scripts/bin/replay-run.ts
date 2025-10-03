@@ -75,7 +75,7 @@ async function main(): Promise<void> {
 
     // Determine modules to run
     const modulesArg = args.modules || 'analysis-kit,tjr-tools';
-    const modules = modulesArg.split(',').map(m => m.trim());
+    const modules = modulesArg.split(',').map((m) => m.trim());
 
     // Run analysis and collect metrics
     const latencyTracker = new LatencyTracker();
@@ -85,9 +85,9 @@ async function main(): Promise<void> {
     if (modules.includes('analysis-kit') || modules.includes('all')) {
       latencyTracker.start();
       // Convert MarketBar to analysis-kit Bar format (timestamp as number)
-      const bars: AnalysisBar[] = fixture.bars.map(b => ({
+      const bars: AnalysisBar[] = fixture.bars.map((b) => ({
         ...b,
-        timestamp: new Date(b.timestamp).getTime()
+        timestamp: new Date(b.timestamp).getTime(),
       }));
       const swings = detectSwings(bars, 3);
       latencyTracker.stop();
@@ -193,7 +193,9 @@ function loadBarFixture(fixturePath: string): BarFixture {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       throw new Error(`Fixture file not found: ${fixturePath}`);
     }
-    throw new Error(`Failed to parse fixture JSON: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to parse fixture JSON: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 

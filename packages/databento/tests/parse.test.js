@@ -18,4 +18,3 @@ test('resampleToH4 aggregates 4 hourly bars', () => {
   assert.equal(h4[0].low, 9);
   assert.equal(h4[0].volume, 10);
 });
-

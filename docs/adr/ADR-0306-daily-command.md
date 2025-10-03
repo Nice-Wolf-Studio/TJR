@@ -81,7 +81,7 @@ interface DailyCommandConfig {
   providers: {
     primary: {
       type: 'polygon' | 'alpaca' | 'yahoo';
-      timeout: number;  // milliseconds
+      timeout: number; // milliseconds
       apiKey?: string;
     };
     secondary: {
@@ -98,8 +98,8 @@ interface DailyCommandConfig {
   cache: {
     enabled: boolean;
     ttl: {
-      historical: number;  // milliseconds
-      realtime: number;    // milliseconds
+      historical: number; // milliseconds
+      realtime: number; // milliseconds
     };
     keyPrefix: string;
   };
@@ -123,13 +123,13 @@ interface DailyCommandConfig {
 
 ```typescript
 enum ProviderErrorType {
-  TIMEOUT = 'TIMEOUT',           // Provider exceeded timeout
-  RATE_LIMIT = 'RATE_LIMIT',     // API rate limit hit
-  AUTH_FAILED = 'AUTH_FAILED',   // Authentication failure
+  TIMEOUT = 'TIMEOUT', // Provider exceeded timeout
+  RATE_LIMIT = 'RATE_LIMIT', // API rate limit hit
+  AUTH_FAILED = 'AUTH_FAILED', // Authentication failure
   INVALID_SYMBOL = 'INVALID_SYMBOL', // Symbol not found
-  NO_DATA = 'NO_DATA',           // No data for date range
-  NETWORK = 'NETWORK',           // Network connectivity
-  UNKNOWN = 'UNKNOWN'            // Unclassified error
+  NO_DATA = 'NO_DATA', // No data for date range
+  NETWORK = 'NETWORK', // Network connectivity
+  UNKNOWN = 'UNKNOWN', // Unclassified error
 }
 
 // Error resolution strategies
@@ -144,6 +144,7 @@ interface ErrorResolution {
 ### Cache Key Strategy
 
 Cache keys are deterministic and include:
+
 - Symbol
 - Date (normalized to day boundary)
 - Timeframe
@@ -154,6 +155,7 @@ Example: `daily:SPY:2025-01-30:5m:v1`
 ### Output Format Examples
 
 #### Text Format (Default)
+
 ```
 Daily Analysis: SPY - 2025-01-30
 ==================================================
@@ -189,50 +191,58 @@ Statistics:
 ```
 
 #### Markdown Format
+
 ```markdown
 # Daily Analysis Report
 
 ## SPY - 2025-01-30
 
 ### Market Bias
+
 - **Direction**: BULLISH
 - **Confidence**: 75%
 - **Reason**: Higher highs and higher lows pattern
 
 ### Session Analysis
-| Session | High | Low | Range |
-|---------|------|-----|-------|
-| Morning | 425.50 | 423.20 | 2.30 |
-| Afternoon | 426.80 | 425.00 | 1.80 |
+
+| Session   | High   | Low    | Range |
+| --------- | ------ | ------ | ----- |
+| Morning   | 425.50 | 423.20 | 2.30  |
+| Afternoon | 426.80 | 425.00 | 1.80  |
 ```
 
 ## Implementation Path
 
 ### Phase 1: Composite Provider (Week 1)
+
 - [ ] Implement CompositeProvider class
 - [ ] Add timeout wrapper functionality
 - [ ] Create provider chain configuration
 - [ ] Unit tests for fallback logic
 
 ### Phase 2: Enhanced Cache Integration (Week 1)
+
 - [ ] Modify daily command for cache-first approach
 - [ ] Implement TTL strategies
 - [ ] Add cache key generation
 - [ ] Integration tests with cache
 
 ### Phase 3: Formatter Module (Week 2)
+
 - [ ] Create DailyFormatter class
 - [ ] Implement format handlers (text, json, table, markdown)
 - [ ] Add template system
 - [ ] Unit tests for each format
 
 ### Phase 4: Error Handling (Week 2)
+
 - [ ] Implement error classification
 - [ ] Add retry logic with backoff
 - [ ] Create partial result handling
 - [ ] Comprehensive error scenarios tests
 
 ### Phase 5: E2E Testing (Week 3)
+
 - [ ] Fixture-based E2E tests
 - [ ] Provider timeout simulation
 - [ ] Fallback scenario testing
@@ -241,18 +251,21 @@ Statistics:
 ## Testing Strategy
 
 ### Unit Tests
+
 - Provider timeout handling
 - Cache hit/miss scenarios
 - Format output determinism
 - Error classification
 
 ### Integration Tests
+
 - Provider chain fallback
 - Cache integration
 - Analysis pipeline
 - Configuration loading
 
 ### E2E Tests
+
 - Full command execution with fixtures
 - Provider failure scenarios
 - Multiple format outputs
@@ -261,12 +274,14 @@ Statistics:
 ## Monitoring and Observability
 
 ### Metrics to Track
+
 - Provider success/failure rates
 - Cache hit ratio
 - Command execution time
 - Error frequency by type
 
 ### Logging Strategy
+
 - DEBUG: Provider selection, cache operations
 - INFO: Command execution, analysis results
 - WARN: Provider failures, fallbacks used
@@ -282,6 +297,7 @@ Statistics:
 ## Consequences
 
 ### Positive
+
 - High reliability through fallback chain
 - Improved performance via caching
 - Consistent output formatting
@@ -289,12 +305,14 @@ Statistics:
 - Production-ready resilience
 
 ### Negative
+
 - Increased complexity
 - Multiple provider configurations needed
 - Cache invalidation complexity
 - More comprehensive testing required
 
 ### Mitigations
+
 - Clear documentation
 - Sensible defaults
 - Monitoring and alerting

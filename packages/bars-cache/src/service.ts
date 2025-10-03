@@ -9,12 +9,12 @@
  * and writes go through both layers.
  */
 
-import type { Timeframe } from '@tjr-suite/market-data-core'
-import type { CacheStore } from './cacheStore.js'
-import type { DbCacheStore } from './dbCacheStore.js'
-import type { CachedBar, CacheQuery } from './types.js'
-import { EventBus, createCorrectionEvent } from './events.js'
-import type { CorrectionEvent } from './events.js'
+import type { Timeframe } from '@tjr-suite/market-data-core';
+import type { CacheStore } from './cacheStore.js';
+import type { DbCacheStore } from './dbCacheStore.js';
+import type { CachedBar, CacheQuery } from './types.js';
+import { EventBus, createCorrectionEvent } from './events.js';
+import type { CorrectionEvent } from './events.js';
 
 /**
  * Market data cache service with read-through semantics.
@@ -68,10 +68,10 @@ import type { CorrectionEvent } from './events.js'
  * ```
  */
 export class MarketDataCacheService {
-  private memCache: CacheStore
-  private dbCache: DbCacheStore
-  private providerPriority: string[]
-  private eventBus: EventBus
+  private memCache: CacheStore;
+  private dbCache: DbCacheStore;
+  private providerPriority: string[];
+  private eventBus: EventBus;
 
   /**
    * Create a new market data cache service.
@@ -90,10 +90,10 @@ export class MarketDataCacheService {
     eventBus?: EventBus,
     errorHandler?: (error: Error, event: CorrectionEvent) => void
   ) {
-    this.memCache = memCache
-    this.dbCache = dbCache
-    this.providerPriority = providerPriority
-    this.eventBus = eventBus ?? new EventBus(errorHandler)
+    this.memCache = memCache;
+    this.dbCache = dbCache;
+    this.providerPriority = providerPriority;
+    this.eventBus = eventBus ?? new EventBus(errorHandler);
   }
 
   /**
@@ -111,22 +111,22 @@ export class MarketDataCacheService {
   async getBars(query: CacheQuery): Promise<CachedBar[]> {
     try {
       // Step 1: Check memory cache
-      const memBars = this.memCache.getRange(query)
+      const memBars = this.memCache.getRange(query);
 
       // If we have all bars in memory (covers full range), return them
       // This is a simplified check - in production you might want to verify
       // that the memory cache has complete coverage of the time range
       if (memBars.length > 0) {
         // Check if we have reasonable coverage (heuristic)
-        const hasGoodCoverage = this.hasReasonableCoverage(memBars, query)
+        const hasGoodCoverage = this.hasReasonableCoverage(memBars, query);
 
         if (hasGoodCoverage) {
-          return memBars
+          return memBars;
         }
       }
 
       // Step 2: Check database cache
-      const dbBars = await this.dbCache.getRange(query)
+      const dbBars = await this.dbCache.getRange(query);
 
       // Step 3: Populate memory cache with database hits
       for (const bar of dbBars) {
@@ -134,14 +134,14 @@ export class MarketDataCacheService {
           symbol: query.symbol,
           timeframe: query.timeframe,
           timestamp: bar.timestamp,
-        }
-        this.memCache.set(key, bar)
+        };
+        this.memCache.set(key, bar);
       }
 
       // Step 4: Return merged results
-      return dbBars
+      return dbBars;
     } catch (error) {
-      throw new Error(`Failed to get bars: ${error}`)
+      throw new Error(`Failed to get bars: ${error}`);
     }
   }
 
@@ -161,11 +161,7 @@ export class MarketDataCacheService {
    * @param bars - Array of cached bars to store
    * @deprecated Use upsertBars() for revision-aware storage with correction events
    */
-  async storeBars(
-    symbol: string,
-    timeframe: Timeframe,
-    bars: CachedBar[]
-  ): Promise<void> {
+  async storeBars(symbol: string, timeframe: Timeframe, bars: CachedBar[]): Promise<void> {
     try {
       // Step 1: Write to database (durable)
       for (const bar of bars) {
@@ -173,8 +169,8 @@ export class MarketDataCacheService {
           symbol,
           timeframe,
           timestamp: bar.timestamp,
-        }
-        await this.dbCache.setWithKey(key, bar)
+        };
+        await this.dbCache.setWithKey(key, bar);
       }
 
       // Step 2: Write to memory (hot cache)
@@ -183,11 +179,11 @@ export class MarketDataCacheService {
           symbol,
           timeframe,
           timestamp: bar.timestamp,
-        }
-        this.memCache.set(key, bar)
+        };
+        this.memCache.set(key, bar);
       }
     } catch (error) {
-      throw new Error(`Failed to store bars: ${error}`)
+      throw new Error(`Failed to store bars: ${error}`);
     }
   }
 
@@ -236,23 +232,23 @@ export class MarketDataCacheService {
   ): Promise<CorrectionEvent[]> {
     // Validate inputs
     if (!symbol || symbol.trim().length === 0) {
-      throw new Error('Symbol must be a non-empty string')
+      throw new Error('Symbol must be a non-empty string');
     }
 
     if (bars.length === 0) {
-      return [] // Early return for empty array
+      return []; // Early return for empty array
     }
 
     for (const bar of bars) {
       if (bar.revision < 1) {
-        throw new Error(`Invalid revision ${bar.revision}, must be >= 1`)
+        throw new Error(`Invalid revision ${bar.revision}, must be >= 1`);
       }
       if (bar.timestamp < 0) {
-        throw new Error(`Invalid timestamp ${bar.timestamp}, must be >= 0`)
+        throw new Error(`Invalid timestamp ${bar.timestamp}, must be >= 0`);
       }
     }
 
-    const correctionEvents: CorrectionEvent[] = []
+    const correctionEvents: CorrectionEvent[] = [];
 
     try {
       for (const newBar of bars) {
@@ -260,10 +256,10 @@ export class MarketDataCacheService {
           symbol,
           timeframe,
           timestamp: newBar.timestamp,
-        }
+        };
 
         // Step 1: Check for existing bar
-        let existingBar = this.memCache.get(key)
+        let existingBar = this.memCache.get(key);
         if (!existingBar) {
           // Check database cache
           const dbBars = await this.dbCache.getRange({
@@ -271,12 +267,12 @@ export class MarketDataCacheService {
             timeframe,
             start: newBar.timestamp,
             end: newBar.timestamp + 1,
-          })
-          existingBar = dbBars.length > 0 ? dbBars[0] : null
+          });
+          existingBar = dbBars.length > 0 ? dbBars[0] : null;
         }
 
         // Step 2: Determine winning bar using merge logic
-        const winner = this.selectWinningBar(existingBar, newBar)
+        const winner = this.selectWinningBar(existingBar, newBar);
 
         // Step 3: If bar changed, emit correction event
         if (winner === newBar && existingBar !== null) {
@@ -288,22 +284,22 @@ export class MarketDataCacheService {
               newBar.timestamp,
               existingBar,
               newBar
-            )
-            correctionEvents.push(event)
-            this.eventBus.emit('correction', event)
+            );
+            correctionEvents.push(event);
+            this.eventBus.emit('correction', event);
           }
         }
 
         // Step 4: Store winning bar (only if it's the new bar)
         if (winner === newBar) {
-          await this.dbCache.setWithKey(key, newBar)
-          this.memCache.set(key, newBar)
+          await this.dbCache.setWithKey(key, newBar);
+          this.memCache.set(key, newBar);
         }
       }
 
-      return correctionEvents
+      return correctionEvents;
     } catch (error) {
-      throw new Error(`Failed to upsert bars: ${error}`)
+      throw new Error(`Failed to upsert bars: ${error}`);
     }
   }
 
@@ -320,30 +316,27 @@ export class MarketDataCacheService {
    * @param newBar - Incoming bar
    * @returns Winning bar
    */
-  private selectWinningBar(
-    existingBar: CachedBar | null,
-    newBar: CachedBar
-  ): CachedBar {
+  private selectWinningBar(existingBar: CachedBar | null, newBar: CachedBar): CachedBar {
     // No existing bar: new bar wins
     if (existingBar === null) {
-      return newBar
+      return newBar;
     }
 
     // Same provider: higher revision wins
     if (existingBar.provider === newBar.provider) {
-      return newBar.revision > existingBar.revision ? newBar : existingBar
+      return newBar.revision > existingBar.revision ? newBar : existingBar;
     }
 
     // Different providers: use priority
-    const existingPriority = this.getProviderPriority(existingBar.provider)
-    const newPriority = this.getProviderPriority(newBar.provider)
+    const existingPriority = this.getProviderPriority(existingBar.provider);
+    const newPriority = this.getProviderPriority(newBar.provider);
 
     // Lower index = higher priority
     if (newPriority < existingPriority) {
-      return newBar
+      return newBar;
     }
 
-    return existingBar
+    return existingBar;
   }
 
   /**
@@ -356,8 +349,8 @@ export class MarketDataCacheService {
    * @returns Priority index (lower is better)
    */
   private getProviderPriority(provider: string): number {
-    const index = this.providerPriority.indexOf(provider)
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index
+    const index = this.providerPriority.indexOf(provider);
+    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
   }
 
   /**
@@ -378,7 +371,7 @@ export class MarketDataCacheService {
       oldBar.volume !== newBar.volume ||
       oldBar.provider !== newBar.provider ||
       oldBar.revision !== newBar.revision
-    )
+    );
   }
 
   /**
@@ -395,7 +388,7 @@ export class MarketDataCacheService {
    * ```
    */
   getEventBus(): EventBus {
-    return this.eventBus
+    return this.eventBus;
   }
 
   /**
@@ -414,22 +407,18 @@ export class MarketDataCacheService {
    * await service.warmCache('AAPL', '5m', 30 * 86400000);
    * ```
    */
-  async warmCache(
-    symbol: string,
-    timeframe: Timeframe,
-    lookbackMs: number
-  ): Promise<void> {
+  async warmCache(symbol: string, timeframe: Timeframe, lookbackMs: number): Promise<void> {
     try {
-      const now = Date.now()
+      const now = Date.now();
       const query: CacheQuery = {
         symbol,
         timeframe,
         start: now - lookbackMs,
         end: now,
-      }
+      };
 
       // Load from database
-      const bars = await this.dbCache.getRange(query)
+      const bars = await this.dbCache.getRange(query);
 
       // Populate memory cache
       for (const bar of bars) {
@@ -437,11 +426,11 @@ export class MarketDataCacheService {
           symbol,
           timeframe,
           timestamp: bar.timestamp,
-        }
-        this.memCache.set(key, bar)
+        };
+        this.memCache.set(key, bar);
       }
     } catch (error) {
-      throw new Error(`Failed to warm cache: ${error}`)
+      throw new Error(`Failed to warm cache: ${error}`);
     }
   }
 
@@ -458,24 +447,21 @@ export class MarketDataCacheService {
    * @param query - Original query
    * @returns true if coverage seems reasonable
    */
-  private hasReasonableCoverage(
-    bars: CachedBar[],
-    query: CacheQuery
-  ): boolean {
+  private hasReasonableCoverage(bars: CachedBar[], query: CacheQuery): boolean {
     if (bars.length === 0) {
-      return false
+      return false;
     }
 
     // Calculate expected number of bars based on timeframe
-    const rangeMs = query.end - query.start
-    const intervalMs = this.timeframeToMilliseconds(query.timeframe)
-    const expectedBars = Math.floor(rangeMs / intervalMs)
+    const rangeMs = query.end - query.start;
+    const intervalMs = this.timeframeToMilliseconds(query.timeframe);
+    const expectedBars = Math.floor(rangeMs / intervalMs);
 
     // Require at least 50% coverage (accounting for market hours, holidays, etc.)
-    const coverageThreshold = 0.5
-    const hasGoodCoverage = bars.length >= expectedBars * coverageThreshold
+    const coverageThreshold = 0.5;
+    const hasGoodCoverage = bars.length >= expectedBars * coverageThreshold;
 
-    return hasGoodCoverage
+    return hasGoodCoverage;
   }
 
   /**
@@ -495,9 +481,9 @@ export class MarketDataCacheService {
       '2h': 2 * 60 * 60 * 1000,
       '4h': 4 * 60 * 60 * 1000,
       '1D': 24 * 60 * 60 * 1000,
-    }
+    };
 
-    return timeframeMap[timeframe] || 60 * 1000
+    return timeframeMap[timeframe] || 60 * 1000;
   }
 
   /**
@@ -508,7 +494,7 @@ export class MarketDataCacheService {
   getStats(): { memCacheSize: number } {
     return {
       memCacheSize: this.memCache.size(),
-    }
+    };
   }
 
   /**
@@ -517,6 +503,6 @@ export class MarketDataCacheService {
    * Note: This does NOT clear the database cache.
    */
   clearMemoryCache(): void {
-    this.memCache.clear()
+    this.memCache.clear();
   }
 }

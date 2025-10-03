@@ -115,18 +115,18 @@ export class AlphaVantageProvider {
       // Native: 1m, 5m, 60m (1h), 1D
       // Aggregated: 10m (from 5m), 4h (from 1h)
       supportsTimeframes: [
-        '1' as Timeframe,    // 1 minute
-        '5' as Timeframe,    // 5 minutes
-        '10' as Timeframe,   // 10 minutes (aggregated from 5m)
-        '60' as Timeframe,   // 60 minutes (1 hour)
-        '240' as Timeframe,  // 240 minutes (4 hours, aggregated from 1h)
-        '1D' as Timeframe,   // 1 day
+        '1' as Timeframe, // 1 minute
+        '5' as Timeframe, // 5 minutes
+        '10' as Timeframe, // 10 minutes (aggregated from 5m)
+        '60' as Timeframe, // 60 minutes (1 hour)
+        '240' as Timeframe, // 240 minutes (4 hours, aggregated from 1h)
+        '1D' as Timeframe, // 1 day
       ],
       maxBarsPerRequest: 100, // Compact output size (default)
       requiresAuthentication: true,
       rateLimits: {
-        requestsPerMinute: 5,   // Free tier: 5 requests per minute
-        requestsPerDay: 500,    // Free tier: 500 requests per day
+        requestsPerMinute: 5, // Free tier: 5 requests per minute
+        requestsPerDay: 500, // Free tier: 500 requests per day
       },
       supportsExtendedHours: false,
       historicalDataFrom: '2000-01-01T00:00:00.000Z', // Alpha Vantage provides ~20 years of data
@@ -198,7 +198,7 @@ export class AlphaVantageProvider {
       });
 
       const parseResult = parseDailyResponse(response);
-      parsedBars = parseResult.bars.map(bar => ({
+      parsedBars = parseResult.bars.map((bar) => ({
         timestamp: bar.timestamp,
         open: bar.open,
         high: bar.high,
@@ -215,7 +215,7 @@ export class AlphaVantageProvider {
       });
 
       const parseResult = parseIntradayResponse(response);
-      parsedBars = parseResult.bars.map(bar => ({
+      parsedBars = parseResult.bars.map((bar) => ({
         timestamp: bar.timestamp,
         open: bar.open,
         high: bar.high,
@@ -317,9 +317,9 @@ export class AlphaVantageProvider {
 
     // Native intraday timeframes
     const nativeTimeframes: Timeframe[] = [
-      '1' as Timeframe,   // 1 minute
-      '5' as Timeframe,   // 5 minutes
-      '60' as Timeframe,  // 60 minutes (1 hour)
+      '1' as Timeframe, // 1 minute
+      '5' as Timeframe, // 5 minutes
+      '60' as Timeframe, // 60 minutes (1 hour)
     ];
 
     if (nativeTimeframes.includes(timeframe)) {
@@ -341,8 +341,7 @@ export class AlphaVantageProvider {
         break;
       default:
         throw new Error(
-          `Unsupported timeframe: ${timeframe}. ` +
-          `Supported: 1m, 5m, 10m, 60m, 4h, 1D`
+          `Unsupported timeframe: ${timeframe}. ` + `Supported: 1m, 5m, 10m, 60m, 4h, 1D`
         );
     }
 
@@ -370,7 +369,7 @@ export class AlphaVantageProvider {
     const fromDate = new Date(from);
     const toDate = to ? new Date(to) : new Date('9999-12-31T23:59:59.999Z');
 
-    return bars.filter(bar => {
+    return bars.filter((bar) => {
       const barDate = new Date(bar.timestamp);
       return barDate >= fromDate && barDate <= toDate;
     });
@@ -395,7 +394,7 @@ export class AlphaVantageProvider {
    */
   private aggregateBars(bars: MarketBar[], targetTimeframe: Timeframe): MarketBar[] {
     // Convert MarketBar to CoreBar format (timestamp string -> number)
-    const coreBars: CoreBar[] = bars.map(bar => ({
+    const coreBars: CoreBar[] = bars.map((bar) => ({
       timestamp: new Date(bar.timestamp).getTime(),
       open: bar.open,
       high: bar.high,
@@ -411,7 +410,7 @@ export class AlphaVantageProvider {
     const aggregated = aggregateBars(coreBars, coreTimeframe);
 
     // Convert back to MarketBar format (timestamp number -> string)
-    return aggregated.map(bar => ({
+    return aggregated.map((bar) => ({
       timestamp: new Date(bar.timestamp).toISOString(),
       open: bar.open,
       high: bar.high,
@@ -435,19 +434,18 @@ export class AlphaVantageProvider {
    */
   private toMarketDataCoreTimeframe(tf: Timeframe): MarketDataCoreTimeframe {
     const mapping: Record<string, MarketDataCoreTimeframe> = {
-      '1': '1m',      // 1 minute
-      '5': '5m',      // 5 minutes
-      '10': '10m',    // 10 minutes
-      '60': '1h',     // 60 minutes (1 hour)
-      '240': '4h',    // 240 minutes (4 hours)
-      '1D': '1D',     // 1 day
+      '1': '1m', // 1 minute
+      '5': '5m', // 5 minutes
+      '10': '10m', // 10 minutes
+      '60': '1h', // 60 minutes (1 hour)
+      '240': '4h', // 240 minutes (4 hours)
+      '1D': '1D', // 1 day
     };
 
     const result = mapping[tf];
     if (!result) {
       throw new Error(
-        `Cannot map timeframe ${tf} for aggregation. ` +
-        `Supported: 1m, 5m, 10m, 1h, 4h, 1D`
+        `Cannot map timeframe ${tf} for aggregation. ` + `Supported: 1m, 5m, 10m, 1h, 4h, 1D`
       );
     }
     return result;

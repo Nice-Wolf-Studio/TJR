@@ -37,7 +37,7 @@ async function start(): Promise<void> {
       dryRun: args.includes('--dry-run'),
       verbose: args.includes('--verbose') || args.includes('-v'),
       help: args.includes('--help') || args.includes('-h'),
-      version: args.includes('--version')
+      version: args.includes('--version'),
     };
 
     // Show help if requested
@@ -62,7 +62,7 @@ async function start(): Promise<void> {
     // Create root logger
     logger = createLogger({
       level: config.logging.level,
-      json: config.logging.format === 'json'
+      json: config.logging.format === 'json',
     });
 
     // Attach global error handlers
@@ -77,7 +77,7 @@ async function start(): Promise<void> {
 
       logger.info('Starting TJR Suite', {
         ...getConfigSummary(config),
-        operation: 'app_startup'
+        operation: 'app_startup',
       });
 
       // Create DI container
@@ -93,13 +93,13 @@ async function start(): Promise<void> {
       logger.info('Services initialized', {
         operation: 'service_init',
         duration_ms: initTimer.stop(),
-        result: 'success'
+        result: 'success',
       });
 
       logger.info('TJR Suite startup complete', {
         operation: 'app_startup',
         duration_ms: startupTimer.stop(),
-        result: 'success'
+        result: 'success',
       });
     });
 
@@ -110,9 +110,9 @@ async function start(): Promise<void> {
     // Print wiring graph
     if (config.app.verbose) {
       console.log('\nService Wiring Graph:');
-      console.log('=' .repeat(50));
+      console.log('='.repeat(50));
       console.log(container.getWiringGraph());
-      console.log('=' .repeat(50));
+      console.log('='.repeat(50));
       console.log('');
     }
 
@@ -124,7 +124,6 @@ async function start(): Promise<void> {
       logger.info('Starting CLI interface...');
       await startCLI(container, config, logger);
     }
-
   } catch (error) {
     if (logger) {
       logger.error('Application startup failed', { error });
@@ -162,7 +161,7 @@ async function registerServices(
     return new MemoryCache({
       logger: logger.child({ service: 'cache' }),
       defaultTTL: config.cache.defaultTTL,
-      maxSize: config.cache.maxSize
+      maxSize: config.cache.maxSize,
     });
   });
 
@@ -171,7 +170,7 @@ async function registerServices(
     return new FixtureProvider({
       logger: logger.child({ service: 'provider' }),
       simulateLatency: !config.app.dryRun,
-      latencyMs: 50
+      latencyMs: 50,
     });
   });
 
@@ -180,7 +179,7 @@ async function registerServices(
     return new DiscordStub({
       logger: logger.child({ service: 'discord' }),
       enabled: config.discord.enabled,
-      simulateLatency: !config.app.dryRun
+      simulateLatency: !config.app.dryRun,
     });
   });
 
@@ -188,7 +187,7 @@ async function registerServices(
   container.register(TOKENS.HealthCommand, () => {
     return new HealthCommand({
       container,
-      logger: logger.child({ service: 'health-command' })
+      logger: logger.child({ service: 'health-command' }),
     });
   });
 
@@ -196,12 +195,12 @@ async function registerServices(
     const providerService = container.resolve(TOKENS.ProviderService) as ProviderService;
     return new DailyCommand({
       providerService,
-      logger: logger.child({ service: 'daily-command' })
+      logger: logger.child({ service: 'daily-command' }),
     });
   });
 
   logger.info('Services registered', {
-    count: 7
+    count: 7,
   });
 }
 
@@ -222,7 +221,7 @@ async function startDiscordBot(
   discord.registerCommand(dailyCommand);
 
   logger.info('Discord bot started with commands', {
-    commands: ['health', 'daily']
+    commands: ['health', 'daily'],
   });
 
   // Keep process alive
@@ -236,12 +235,8 @@ async function startDiscordBot(
 /**
  * Start CLI interface
  */
-async function startCLI(
-  container: IContainer,
-  config: Config,
-  logger: Logger
-): Promise<void> {
-  const args = process.argv.slice(2).filter(arg => !arg.startsWith('--'));
+async function startCLI(container: IContainer, config: Config, logger: Logger): Promise<void> {
+  const args = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 
   if (args.length === 0) {
     // Interactive mode
@@ -285,7 +280,7 @@ async function startInteractiveCLI(
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: 'tjr> '
+    prompt: 'tjr> ',
   });
 
   rl.prompt();
@@ -300,7 +295,7 @@ async function startInteractiveCLI(
         case '/health':
           const healthResult = await healthCommand.execute(args, {
             format: 'text',
-            verbose: config.app.verbose
+            verbose: config.app.verbose,
           });
           console.log(healthResult.output);
           break;
@@ -308,7 +303,7 @@ async function startInteractiveCLI(
         case '/daily':
           const dailyResult = await dailyCommand.execute(args, {
             format: 'text',
-            dryRun: config.app.dryRun
+            dryRun: config.app.dryRun,
           });
           console.log(dailyResult.output);
           break;
@@ -372,7 +367,7 @@ async function executeCommand(
     const result = await command.execute(args, {
       format: 'text',
       dryRun: config.app.dryRun,
-      verbose: config.app.verbose
+      verbose: config.app.verbose,
     });
 
     if (result.output) {
@@ -433,7 +428,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Start the application
-start().catch(error => {
+start().catch((error) => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

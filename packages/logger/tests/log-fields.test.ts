@@ -18,11 +18,7 @@ import {
 describe('Log Fields', () => {
   describe('containsPII', () => {
     it('should detect email addresses', () => {
-      const tests = [
-        'user@example.com',
-        'test.user+tag@domain.co.uk',
-        'Contact: admin@site.org',
-      ];
+      const tests = ['user@example.com', 'test.user+tag@domain.co.uk', 'Contact: admin@site.org'];
 
       for (const test of tests) {
         const result = containsPII(test);
@@ -32,12 +28,7 @@ describe('Log Fields', () => {
     });
 
     it('should detect phone numbers', () => {
-      const tests = [
-        '555-123-4567',
-        '(555) 123-4567',
-        '+1 555 123 4567',
-        '5551234567',
-      ];
+      const tests = ['555-123-4567', '(555) 123-4567', '+1 555 123 4567', '5551234567'];
 
       for (const test of tests) {
         const result = containsPII(test);
@@ -229,10 +220,7 @@ describe('Log Fields', () => {
       const result = validateLogFields(fields);
       assert.strictEqual(result.isValid, false, 'Should be invalid');
       // Should have warnings about either the email field name or the PII content
-      assert.ok(
-        result.warnings.length > 0,
-        'Should have warnings about nested email field or PII'
-      );
+      assert.ok(result.warnings.length > 0, 'Should have warnings about nested email field or PII');
     });
   });
 
@@ -351,10 +339,7 @@ describe('Log Fields', () => {
       const parsed = new Date(formatted);
 
       assert.ok(!isNaN(parsed.getTime()), 'Should be valid date');
-      assert.ok(
-        Math.abs(Date.now() - parsed.getTime()) < 1000,
-        'Should be current time'
-      );
+      assert.ok(Math.abs(Date.now() - parsed.getTime()) < 1000, 'Should be current time');
     });
   });
 

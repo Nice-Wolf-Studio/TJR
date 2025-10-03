@@ -96,11 +96,21 @@ function generateFixtureBars(config: {
 
 ```json
 {
-  "bars": [ /* 78 bars */ ],
-  "fvgs": [ /* detected Fair Value Gaps */ ],
-  "orderBlocks": [ /* detected Order Blocks */ ],
-  "confluences": [ /* confluence scoring */ ],
-  "executionZones": [ /* generated zones */ ],
+  "bars": [
+    /* 78 bars */
+  ],
+  "fvgs": [
+    /* detected Fair Value Gaps */
+  ],
+  "orderBlocks": [
+    /* detected Order Blocks */
+  ],
+  "confluences": [
+    /* confluence scoring */
+  ],
+  "executionZones": [
+    /* generated zones */
+  ],
   "metadata": {
     "scenario": "scenario-01",
     "generated": "2025-09-30T00:00:00Z"
@@ -236,11 +246,13 @@ jobs:
 **Approach:** Mock individual packages and test integrations with test doubles
 
 **Pros:**
+
 - Fine-grained control over test conditions
 - Can test error scenarios easily
 - Faster than E2E tests
 
 **Cons:**
+
 - Doesn't validate real component interactions
 - Mocks can diverge from real implementations
 - High maintenance burden (mocks per package)
@@ -255,11 +267,13 @@ jobs:
 **Approach:** Run E2E tests against live provider APIs
 
 **Pros:**
+
 - Tests real provider integrations
 - Validates actual API responses
 - Catches provider-specific issues
 
 **Cons:**
+
 - Slow (network latency, rate limits)
 - Flaky (network issues, API changes)
 - Expensive (API costs)
@@ -275,11 +289,13 @@ jobs:
 **Approach:** Generate random inputs and validate properties hold
 
 **Pros:**
+
 - Finds edge cases automatically
 - Validates invariants across all inputs
 - Good for algorithm testing
 
 **Cons:**
+
 - Non-deterministic (can't snapshot)
 - Harder to debug failures
 - Slower (needs many iterations)
@@ -294,11 +310,13 @@ jobs:
 **Approach:** Rely on human testers to validate pipeline
 
 **Pros:**
+
 - Can test UI/UX aspects
 - Flexible and adaptive
 - Catches usability issues
 
 **Cons:**
+
 - Slow feedback (hours/days)
 - Inconsistent coverage
 - Expensive (human time)

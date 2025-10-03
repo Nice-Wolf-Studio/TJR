@@ -54,7 +54,7 @@ export class CommandHandler {
    * Register multiple commands
    */
   public registerCommands(commands: Command[]): void {
-    commands.forEach(command => this.registerCommand(command));
+    commands.forEach((command) => this.registerCommand(command));
   }
 
   /**
@@ -130,14 +130,16 @@ export class CommandHandler {
 
     // Add options if they exist
     if (schema.options) {
-      schema.options.forEach(option => {
+      schema.options.forEach((option) => {
         switch (option.type) {
           case 3: // STRING
-            builder.addStringOption(opt => {
+            builder.addStringOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               if (option.choices) {
-                opt.addChoices(...option.choices.map(c => ({ name: c.name, value: String(c.value) })));
+                opt.addChoices(
+                  ...option.choices.map((c) => ({ name: c.name, value: String(c.value) }))
+                );
               }
               if (option.minLength) opt.setMinLength(option.minLength);
               if (option.maxLength) opt.setMaxLength(option.maxLength);
@@ -146,11 +148,13 @@ export class CommandHandler {
             });
             break;
           case 4: // INTEGER
-            builder.addIntegerOption(opt => {
+            builder.addIntegerOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               if (option.choices) {
-                opt.addChoices(...option.choices.map(c => ({ name: c.name, value: Number(c.value) })));
+                opt.addChoices(
+                  ...option.choices.map((c) => ({ name: c.name, value: Number(c.value) }))
+                );
               }
               if (option.minValue) opt.setMinValue(option.minValue);
               if (option.maxValue) opt.setMaxValue(option.maxValue);
@@ -158,39 +162,41 @@ export class CommandHandler {
             });
             break;
           case 5: // BOOLEAN
-            builder.addBooleanOption(opt => {
+            builder.addBooleanOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               return opt;
             });
             break;
           case 6: // USER
-            builder.addUserOption(opt => {
+            builder.addUserOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               return opt;
             });
             break;
           case 7: // CHANNEL
-            builder.addChannelOption(opt => {
+            builder.addChannelOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               return opt;
             });
             break;
           case 8: // ROLE
-            builder.addRoleOption(opt => {
+            builder.addRoleOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               return opt;
             });
             break;
           case 10: // NUMBER
-            builder.addNumberOption(opt => {
+            builder.addNumberOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               if (option.choices) {
-                opt.addChoices(...option.choices.map(c => ({ name: c.name, value: Number(c.value) })));
+                opt.addChoices(
+                  ...option.choices.map((c) => ({ name: c.name, value: Number(c.value) }))
+                );
               }
               if (option.minValue) opt.setMinValue(option.minValue);
               if (option.maxValue) opt.setMaxValue(option.maxValue);
@@ -198,7 +204,7 @@ export class CommandHandler {
             });
             break;
           case 11: // ATTACHMENT
-            builder.addAttachmentOption(opt => {
+            builder.addAttachmentOption((opt) => {
               opt.setName(option.name).setDescription(option.description);
               if (option.required) opt.setRequired(option.required);
               return opt;
@@ -215,7 +221,7 @@ export class CommandHandler {
    * Convert commands to JSON for registration
    */
   public toJSON(): any[] {
-    return this.getAllCommands().map(command => {
+    return this.getAllCommands().map((command) => {
       const builder = this.buildCommand(command.schema);
       return builder.toJSON();
     });
@@ -225,7 +231,7 @@ export class CommandHandler {
    * Generate command manifest
    */
   public generateManifest(): any {
-    const commands = this.getAllCommands().map(cmd => cmd.schema);
+    const commands = this.getAllCommands().map((cmd) => cmd.schema);
     const hash = this.generateHash(JSON.stringify(commands));
 
     return {

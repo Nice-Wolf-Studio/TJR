@@ -53,12 +53,14 @@ Price
 ```
 
 **Algorithm:**
+
 1. Find pivot highs (local maxima over lookback window)
 2. Find pivot lows (local minima over lookback window)
 3. Classify each pivot by comparing to previous pivot of same type
 4. Return chronologically sorted swing points
 
 **Edge cases:**
+
 - First/last `lookback` bars cannot be pivots (insufficient context)
 - First pivot of each type is not classified (no reference)
 - Equal pivots treated as continuation
@@ -72,7 +74,9 @@ Calculates market bias (bullish/bearish/neutral) based on price action relative 
 ```typescript
 import { calculateDailyBias } from '@tjr/analysis-kit';
 
-const bars = [/* ... */];
+const bars = [
+  /* ... */
+];
 const sessionExtremes = {
   rthOpen: 100,
   rthClose: 108,
@@ -104,11 +108,13 @@ Low   99 |-----------------------| 0%
 ```
 
 **Classification:**
+
 - **Bullish:** Close > open AND close in upper 40% of range
 - **Bearish:** Close < open AND close in lower 40% of range
 - **Neutral:** Mixed signals or close near midpoint
 
 **Confidence:**
+
 - High (0.75-1.0): Strong directional signals
 - Medium (0.5-0.75): Moderate signals
 - Low (0.25-0.5): Weak or conflicting signals
@@ -122,7 +128,9 @@ Extracts OHLC values for a specific trading session (RTH only).
 ```typescript
 import { extractSessionExtremes } from '@tjr/analysis-kit';
 
-const bars = [/* ... */];
+const bars = [
+  /* ... */
+];
 const rthWindow = {
   start: new Date('2025-01-15T09:30:00Z'),
   end: new Date('2025-01-15T16:00:00Z'),
@@ -138,11 +146,13 @@ const extremes = extractSessionExtremes(bars, rthWindow);
 ```
 
 **Algorithm:**
+
 1. Filter bars within time window `[start, end)`
 2. Extract open (first bar's open) and close (last bar's close)
 3. Find high (max of all highs) and low (min of all lows)
 
 **Edge cases:**
+
 - No bars in window: Returns `null`
 - Single bar: Uses that bar's OHLC
 
@@ -155,8 +165,12 @@ Classifies daily price action into profile types.
 ```typescript
 import { classifyDayProfile } from '@tjr/analysis-kit';
 
-const bars = [/* ... */];
-const sessionExtremes = {/* ... */};
+const bars = [
+  /* ... */
+];
+const sessionExtremes = {
+  /* ... */
+};
 
 const profile = classifyDayProfile(bars, sessionExtremes);
 // Returns: {
@@ -168,11 +182,11 @@ const profile = classifyDayProfile(bars, sessionExtremes);
 
 **Profile Types:**
 
-| Type | Name | Description | Characteristics |
-|------|------|-------------|-----------------|
-| **P** | Trend Day | Strong directional move, limited retracement | Large range (>70% ATR), close near extreme |
-| **K** | Range Day | Balanced, mean-reverting, narrow range | Small range (<30% ATR), close near middle |
-| **D** | Distribution | Wide range, rotational, failed breakout | Large range, close in middle (not at extreme) |
+| Type  | Name         | Description                                  | Characteristics                               |
+| ----- | ------------ | -------------------------------------------- | --------------------------------------------- |
+| **P** | Trend Day    | Strong directional move, limited retracement | Large range (>70% ATR), close near extreme    |
+| **K** | Range Day    | Balanced, mean-reverting, narrow range       | Small range (<30% ATR), close near middle     |
+| **D** | Distribution | Wide range, rotational, failed breakout      | Large range, close in middle (not at extreme) |
 
 **Trend Day (P) Visualization:**
 
@@ -235,7 +249,7 @@ interface Bar {
 
 interface TimeWindow {
   start: Date; // UTC
-  end: Date;   // UTC
+  end: Date; // UTC
 }
 
 interface SwingPoint {
@@ -272,6 +286,7 @@ interface DayProfile {
 Detects swing points using lookback window.
 
 **Parameters:**
+
 - `bars` - Array of price bars (chronologically ordered)
 - `lookback` - Number of bars on each side for pivot identification (typically 3-10)
 
@@ -286,6 +301,7 @@ Detects swing points using lookback window.
 Calculates market bias from bar data and session extremes.
 
 **Parameters:**
+
 - `bars` - Array of price bars
 - `sessionExtremes` - RTH OHLC values
 
@@ -298,6 +314,7 @@ Calculates market bias from bar data and session extremes.
 Extracts RTH OHLC from bars within time window.
 
 **Parameters:**
+
 - `bars` - Array of price bars
 - `rthWindow` - Time window defining RTH session
 
@@ -312,6 +329,7 @@ Extracts RTH OHLC from bars within time window.
 Classifies day profile from bar data.
 
 **Parameters:**
+
 - `bars` - Array of price bars
 - `sessionExtremes` - RTH OHLC values
 

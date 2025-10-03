@@ -36,17 +36,17 @@ Define a strict set of supported timeframes with normalized representation:
 
 **Supported Timeframes:**
 
-| Notation | Milliseconds | Notes |
-|----------|--------------|-------|
-| `1m` | 60,000 | Most common base timeframe |
-| `5m` | 300,000 | Standard intraday chart |
-| `10m` | 600,000 | Common for scalping strategies |
-| `15m` | 900,000 | Popular day-trading timeframe |
-| `30m` | 1,800,000 | Pre-market/after-hours boundary |
-| `1h` | 3,600,000 | Hourly bar (standard) |
-| `2h` | 7,200,000 | Useful for swing trading |
-| `4h` | 14,400,000 | Major support/resistance timeframe |
-| `1D` | 86,400,000 | Daily bar (UTC 00:00 aligned) |
+| Notation | Milliseconds | Notes                              |
+| -------- | ------------ | ---------------------------------- |
+| `1m`     | 60,000       | Most common base timeframe         |
+| `5m`     | 300,000      | Standard intraday chart            |
+| `10m`    | 600,000      | Common for scalping strategies     |
+| `15m`    | 900,000      | Popular day-trading timeframe      |
+| `30m`    | 1,800,000    | Pre-market/after-hours boundary    |
+| `1h`     | 3,600,000    | Hourly bar (standard)              |
+| `2h`     | 7,200,000    | Useful for swing trading           |
+| `4h`     | 14,400,000   | Major support/resistance timeframe |
+| `1D`     | 86,400,000   | Daily bar (UTC 00:00 aligned)      |
 
 **Normalization Rules:**
 
@@ -78,13 +78,13 @@ function normalizeTimeframe(input: string): Timeframe {
 
 **Alignment Rules:**
 
-| Timeframe | Boundary | Example |
-|-----------|----------|---------|
-| 1m | Every minute `:00.000` | 14:32:00.000 UTC |
-| 5m | Every 5 minutes `:00.000`, `:05.000`, ... | 14:35:00.000 UTC |
-| 1h | Top of the hour `:00:00.000` | 14:00:00.000 UTC |
-| 4h | 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC | 16:00:00.000 UTC |
-| 1D | 00:00:00.000 UTC | 2025-09-29T00:00:00.000Z |
+| Timeframe | Boundary                                     | Example                  |
+| --------- | -------------------------------------------- | ------------------------ |
+| 1m        | Every minute `:00.000`                       | 14:32:00.000 UTC         |
+| 5m        | Every 5 minutes `:00.000`, `:05.000`, ...    | 14:35:00.000 UTC         |
+| 1h        | Top of the hour `:00:00.000`                 | 14:00:00.000 UTC         |
+| 4h        | 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC | 16:00:00.000 UTC         |
+| 1D        | 00:00:00.000 UTC                             | 2025-09-29T00:00:00.000Z |
 
 **Implementation:**
 
@@ -105,10 +105,10 @@ function normalizeTimeframe(input: string): Timeframe {
 function alignTimestamp(
   timestamp: number,
   timeframe: Timeframe,
-  direction: "floor" | "ceil"
+  direction: 'floor' | 'ceil'
 ): number {
   const tfMs = toMillis(timeframe);
-  if (direction === "floor") {
+  if (direction === 'floor') {
     return Math.floor(timestamp / tfMs) * tfMs;
   } else {
     return Math.ceil(timestamp / tfMs) * tfMs;
@@ -152,16 +152,18 @@ When fetching bars from providers that use local time (e.g., US equity markets):
 
 ```typescript
 // Provider returns bars in America/New_York time
-const rawBars = await polygon.getBars("AAPL", "1m");
+const rawBars = await polygon.getBars('AAPL', '1m');
 
 // Convert to UTC before aggregating
-const utcBars = rawBars.map(bar => ({
+const utcBars = rawBars.map((bar) => ({
   ...bar,
-  timestamp: luxon.DateTime.fromMillis(bar.timestamp, { zone: "America/New_York" }).toUTC().toMillis(),
+  timestamp: luxon.DateTime.fromMillis(bar.timestamp, { zone: 'America/New_York' })
+    .toUTC()
+    .toMillis(),
 }));
 
 // Now safe to aggregate with market-data-core
-const aggregated = aggregateBars(utcBars, "5m");
+const aggregated = aggregateBars(utcBars, '5m');
 ```
 
 **DST Edge Case: 2025-03-09 02:00 EST → EDT (Spring Forward)**
@@ -221,32 +223,32 @@ function aggregateBars(
 
 **OHLC Aggregation Rules:**
 
-| Field | Aggregation | Notes |
-|-------|-------------|-------|
-| **Open** | First bar's open | Bar that starts the period |
-| **High** | Max of all highs | Highest price in period |
-| **Low** | Min of all lows | Lowest price in period |
-| **Close** | Last bar's close | Bar that ends the period |
-| **Volume** | Sum of all volumes | Total traded volume |
+| Field      | Aggregation        | Notes                      |
+| ---------- | ------------------ | -------------------------- |
+| **Open**   | First bar's open   | Bar that starts the period |
+| **High**   | Max of all highs   | Highest price in period    |
+| **Low**    | Min of all lows    | Lowest price in period     |
+| **Close**  | Last bar's close   | Bar that ends the period   |
+| **Volume** | Sum of all volumes | Total traded volume        |
 
 **Partial Bar Handling:**
 
 ```typescript
 // Example: Aggregating 1m bars to 5m, last bar incomplete
 const bars = [
-  { timestamp: ts("14:00"), o: 100, h: 101, l: 99, c: 100.5, v: 1000 },
-  { timestamp: ts("14:01"), o: 100.5, h: 102, l: 100, c: 101, v: 1200 },
+  { timestamp: ts('14:00'), o: 100, h: 101, l: 99, c: 100.5, v: 1000 },
+  { timestamp: ts('14:01'), o: 100.5, h: 102, l: 100, c: 101, v: 1200 },
   // ... 3 more bars ...
-  { timestamp: ts("14:05"), o: 101, h: 101.5, l: 100.5, c: 101, v: 900 },
-  { timestamp: ts("14:06"), o: 101, h: 101.2, l: 100.8, c: 101.1, v: 800 },
+  { timestamp: ts('14:05'), o: 101, h: 101.5, l: 100.5, c: 101, v: 900 },
+  { timestamp: ts('14:06'), o: 101, h: 101.2, l: 100.8, c: 101.1, v: 800 },
   // Only 2 bars in last 5m period (incomplete)
 ];
 
 // Default: exclude partial last bar
-const agg1 = aggregateBars(bars, "5m"); // Returns only 14:00-14:05 bar
+const agg1 = aggregateBars(bars, '5m'); // Returns only 14:00-14:05 bar
 
 // Include partial: useful for live data
-const agg2 = aggregateBars(bars, "5m", { includePartialLast: true });
+const agg2 = aggregateBars(bars, '5m', { includePartialLast: true });
 // Returns 14:00-14:05 bar + partial 14:05-14:10 bar (only 14:05, 14:06)
 ```
 
@@ -306,7 +308,7 @@ function clipBars(
 /**
  * Canonical timeframe representation.
  */
-export type Timeframe = "1m" | "5m" | "10m" | "15m" | "30m" | "1h" | "2h" | "4h" | "1D";
+export type Timeframe = '1m' | '5m' | '10m' | '15m' | '30m' | '1h' | '2h' | '4h' | '1D';
 
 /**
  * OHLCV bar structure.
@@ -319,12 +321,12 @@ export type Timeframe = "1m" | "5m" | "10m" | "15m" | "30m" | "1h" | "2h" | "4h"
  *   - volume >= 0
  */
 export interface Bar {
-  timestamp: number;  // Unix epoch milliseconds (UTC)
-  open: number;       // Opening price
-  high: number;       // Highest price
-  low: number;        // Lowest price
-  close: number;      // Closing price
-  volume: number;     // Traded volume
+  timestamp: number; // Unix epoch milliseconds (UTC)
+  open: number; // Opening price
+  high: number; // Highest price
+  low: number; // Lowest price
+  close: number; // Closing price
+  volume: number; // Traded volume
 }
 ```
 
@@ -336,13 +338,13 @@ export interface Bar {
 
 ```typescript
 // Unsupported timeframe
-aggregateBars(bars, "3m");  // Error: Unsupported timeframe: 3m
+aggregateBars(bars, '3m'); // Error: Unsupported timeframe: 3m
 
 // Unsorted input
-aggregateBars([bar2, bar1], "5m");  // Error: Bars must be sorted ascending by timestamp
+aggregateBars([bar2, bar1], '5m'); // Error: Bars must be sorted ascending by timestamp
 
 // Invalid aggregation direction
-aggregateBars(fiveMinBars, "1m");  // Error: Cannot disaggregate from 5m to 1m
+aggregateBars(fiveMinBars, '1m'); // Error: Cannot disaggregate from 5m to 1m
 ```
 
 **Soft Warnings (Logged, Not Thrown):**
@@ -372,12 +374,12 @@ aggregateBars(bars, "5m");
 
 **Golden Test Cases:**
 
-| Input | Target TF | Expected Output |
-|-------|-----------|-----------------|
-| 10× 1m bars (14:00-14:09) | 5m | 2× 5m bars (14:00, 14:05) |
-| 10× 1m bars (14:00-14:09) | 10m | 1× 10m bar (14:00) |
-| 6× 60m bars (00:00-05:00) | 4h | 1× 4h bar (00:00), partial at 04:00 (excluded) |
-| 1440× 1m bars (full day) | 1D | 1× daily bar (00:00 UTC) |
+| Input                     | Target TF | Expected Output                                |
+| ------------------------- | --------- | ---------------------------------------------- |
+| 10× 1m bars (14:00-14:09) | 5m        | 2× 5m bars (14:00, 14:05)                      |
+| 10× 1m bars (14:00-14:09) | 10m       | 1× 10m bar (14:00)                             |
+| 6× 60m bars (00:00-05:00) | 4h        | 1× 4h bar (00:00), partial at 04:00 (excluded) |
+| 1440× 1m bars (full day)  | 1D        | 1× daily bar (00:00 UTC)                       |
 
 **DST Boundary Fixtures:**
 

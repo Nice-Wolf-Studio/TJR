@@ -3,12 +3,7 @@
  * Run with: npx tsx examples/observability-demo.ts
  */
 
-import {
-  createLogger,
-  withRequestContext,
-  startTimer,
-  getRequestId,
-} from '../src/index.js';
+import { createLogger, withRequestContext, startTimer, getRequestId } from '../src/index.js';
 
 // Create logger with JSON output
 const logger = createLogger({

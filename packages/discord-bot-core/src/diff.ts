@@ -8,8 +8,8 @@ export interface DiffEntry {
 
 export function diffManifests(local: Manifest, deployed: Manifest): DiffEntry[] {
   const diffs: DiffEntry[] = [];
-  const lmap = new Map(local.commands.map(c => [c.name, c]));
-  const dmap = new Map(deployed.commands.map(c => [c.name, c]));
+  const lmap = new Map(local.commands.map((c) => [c.name, c]));
+  const dmap = new Map(deployed.commands.map((c) => [c.name, c]));
   for (const [name, lc] of lmap) {
     if (!dmap.has(name)) diffs.push({ type: 'added', path: `commands[${name}]` });
     else {
@@ -24,4 +24,3 @@ export function diffManifests(local: Manifest, deployed: Manifest): DiffEntry[] 
   }
   return diffs;
 }
-

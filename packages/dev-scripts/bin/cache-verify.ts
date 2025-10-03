@@ -141,7 +141,9 @@ async function main(): Promise<void> {
 
     if (bars.length === 0) {
       const result = createResult('cache-verify', false, null, {
-        warnings: [`No cached bars found for ${args.symbol} ${args.timeframe} in the last ${args.window} bars`],
+        warnings: [
+          `No cached bars found for ${args.symbol} ${args.timeframe} in the last ${args.window} bars`,
+        ],
       });
       outputResult(result, args.pretty);
       process.exit(1);
@@ -257,7 +259,9 @@ function parseCustomArgs(args: string[]): {
       const timeframe = args[++i];
       const validTimeframes = ['1m', '5m', '10m', '15m', '30m', '1h', '2h', '4h', '1D'];
       if (!validTimeframes.includes(timeframe)) {
-        throw new Error(`Invalid timeframe: ${timeframe}. Valid options: ${validTimeframes.join(', ')}`);
+        throw new Error(
+          `Invalid timeframe: ${timeframe}. Valid options: ${validTimeframes.join(', ')}`
+        );
       }
       result.timeframe = timeframe;
     } else if (arg === '--window' && i + 1 < args.length) {

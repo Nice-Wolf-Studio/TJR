@@ -115,7 +115,7 @@ export class CompositeProvider implements ProviderService {
       cacheMisses: 0,
       subscriptions: 0,
       providerFailures: new Map(),
-      providerSuccesses: new Map()
+      providerSuccesses: new Map(),
     };
   }
 
@@ -125,7 +125,7 @@ export class CompositeProvider implements ProviderService {
   async initialize(): Promise<void> {
     this.logger.info('Composite provider initializing', {
       providers: Array.from(this.providers.keys()),
-      defaultTimeout: this.defaultTimeout
+      defaultTimeout: this.defaultTimeout,
     });
 
     // Initialize all providers
@@ -136,7 +136,7 @@ export class CompositeProvider implements ProviderService {
       } catch (error) {
         this.logger.warn('Provider initialization failed', {
           provider: chain.name,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
         this.updateHealth(chain.name, false, error);
       }
@@ -150,11 +150,11 @@ export class CompositeProvider implements ProviderService {
     this.logger.info('Composite provider shutting down');
 
     // Shutdown all providers
-    const shutdownPromises = Array.from(this.providers.values()).map(chain =>
-      chain.provider.shutdown().catch(error => {
+    const shutdownPromises = Array.from(this.providers.values()).map((chain) =>
+      chain.provider.shutdown().catch((error) => {
         this.logger.error('Provider shutdown error', {
           provider: chain.name,
-          error
+          error,
         });
       })
     );
@@ -166,8 +166,9 @@ export class CompositeProvider implements ProviderService {
    * Health check
    */
   healthCheck(): HealthStatus {
-    const healthyProviders = Array.from(this.healthTracking.values())
-      .filter(h => h.healthy).length;
+    const healthyProviders = Array.from(this.healthTracking.values()).filter(
+      (h) => h.healthy
+    ).length;
 
     const totalProviders = this.providers.size;
     const healthPercent = (healthyProviders / totalProviders) * 100;
@@ -183,12 +184,12 @@ export class CompositeProvider implements ProviderService {
               healthy: health.healthy,
               successRate: health.successRate,
               avgLatencyMs: health.avgLatencyMs,
-              circuitState: health.circuitState
-            }
+              circuitState: health.circuitState,
+            },
           ])
         ),
-        stats: this.stats
-      }
+        stats: this.stats,
+      },
     };
   }
 
@@ -235,7 +236,7 @@ export class CompositeProvider implements ProviderService {
             provider: chain.name,
             symbol: params.symbol,
             bars: result.length,
-            latencyMs: this.stats.latencyMs
+            latencyMs: this.stats.latencyMs,
           });
 
           return result;
@@ -264,20 +265,16 @@ export class CompositeProvider implements ProviderService {
 
     // Merge capabilities (simplified - take most permissive)
     return {
-      supportsTimeframes: Array.from(new Set(
-        capabilities.flatMap(c => c.supportsTimeframes)
-      )),
-      maxBarsPerRequest: Math.max(...capabilities.map(c => c.maxBarsPerRequest)),
-      requiresAuthentication: capabilities.some(c => c.requiresAuthentication),
+      supportsTimeframes: Array.from(new Set(capabilities.flatMap((c) => c.supportsTimeframes))),
+      maxBarsPerRequest: Math.max(...capabilities.map((c) => c.maxBarsPerRequest)),
+      requiresAuthentication: capabilities.some((c) => c.requiresAuthentication),
       rateLimits: {
         requestsPerMinute: Math.min(
-          ...capabilities.map(c => c.rateLimits?.requestsPerMinute || Infinity)
-        )
+          ...capabilities.map((c) => c.rateLimits?.requestsPerMinute || Infinity)
+        ),
       },
-      supportsExtendedHours: capabilities.some(c => c.supportsExtendedHours),
-      historicalDataFrom: capabilities
-        .map(c => c.historicalDataFrom)
-        .sort()[0] // Earliest date
+      supportsExtendedHours: capabilities.some((c) => c.supportsExtendedHours),
+      historicalDataFrom: capabilities.map((c) => c.historicalDataFrom).sort()[0], // Earliest date
     };
   }
 
@@ -286,7 +283,7 @@ export class CompositeProvider implements ProviderService {
    */
   subscribe(symbol: string, handler: (bar: MarketBar) => void): () => void {
     // Find first healthy provider that supports subscriptions
-    const provider = this.getHealthyProviders().find(chain => {
+    const provider = this.getHealthyProviders().find((chain) => {
       const caps = chain.provider.getCapabilities();
       return caps.supportsRealtime !== false;
     });
@@ -317,7 +314,7 @@ export class CompositeProvider implements ProviderService {
 
     for (const chain of this.providers.values()) {
       const subs = chain.provider.getSubscriptions();
-      subs.forEach(s => allSubscriptions.add(s));
+      subs.forEach((s) => allSubscriptions.add(s));
     }
 
     return Array.from(allSubscriptions);
@@ -357,18 +354,17 @@ export class CompositeProvider implements ProviderService {
         healthy: true,
         successRate: 100,
         avgLatencyMs: 0,
-        circuitState: 'CLOSED'
+        circuitState: 'CLOSED',
       });
     }
   }
 
   private getSortedProviders(): ProviderChain[] {
-    return Array.from(this.providers.values())
-      .sort((a, b) => a.priority - b.priority);
+    return Array.from(this.providers.values()).sort((a, b) => a.priority - b.priority);
   }
 
   private getHealthyProviders(): ProviderChain[] {
-    return this.getSortedProviders().filter(chain => {
+    return this.getSortedProviders().filter((chain) => {
       const health = this.healthTracking.get(chain.name);
       return health?.healthy && health.circuitState !== 'OPEN';
     });
@@ -395,20 +391,14 @@ export class CompositeProvider implements ProviderService {
     return true;
   }
 
-  private async tryProvider(
-    chain: ProviderChain,
-    params: GetBarsParams
-  ): Promise<MarketBar[]> {
+  private async tryProvider(chain: ProviderChain, params: GetBarsParams): Promise<MarketBar[]> {
     const timeout = chain.timeout || this.defaultTimeout;
 
     // Apply retry logic
     let lastError: Error | undefined;
     for (let attempt = 1; attempt <= this.retryPolicy.maxAttempts; attempt++) {
       try {
-        return await this.withTimeout(
-          chain.provider.getBars(params),
-          timeout
-        );
+        return await this.withTimeout(chain.provider.getBars(params), timeout);
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
 
@@ -436,15 +426,13 @@ export class CompositeProvider implements ProviderService {
     );
 
     // Add jitter if configured
-    const jitter = this.retryPolicy.jitterMs
-      ? Math.random() * this.retryPolicy.jitterMs
-      : 0;
+    const jitter = this.retryPolicy.jitterMs ? Math.random() * this.retryPolicy.jitterMs : 0;
 
     return exponentialDelay + jitter;
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private buildCacheKey(params: GetBarsParams): string {
@@ -496,7 +484,7 @@ export class CompositeProvider implements ProviderService {
   private handleProviderError(provider: string, error: Error): void {
     this.logger.warn('Provider failed', {
       provider,
-      error: error.message
+      error: error.message,
     });
 
     this.updateHealth(provider, false, error);

@@ -40,8 +40,12 @@ export function parseYahooBar(raw: YahooRawBar): MarketBar {
   if (!raw.date) {
     throw new Error('Yahoo bar missing required field: date');
   }
-  if (typeof raw.open !== 'number' || typeof raw.high !== 'number' ||
-      typeof raw.low !== 'number' || typeof raw.close !== 'number') {
+  if (
+    typeof raw.open !== 'number' ||
+    typeof raw.high !== 'number' ||
+    typeof raw.low !== 'number' ||
+    typeof raw.close !== 'number'
+  ) {
     throw new Error('Yahoo bar has invalid OHLC data');
   }
   if (typeof raw.volume !== 'number' || raw.volume < 0) {
@@ -74,7 +78,7 @@ export function parseYahooBar(raw: YahooRawBar): MarketBar {
     high: raw.high,
     low: raw.low,
     close: raw.close,
-    volume: raw.volume
+    volume: raw.volume,
   };
 }
 

@@ -1,11 +1,46 @@
 {
   "symbol": "BTC-USDT",
   "bars5m": [
-    { "timestamp": "2025-09-30T09:30:00Z", "open": 64500, "high": 64550, "low": 64480, "close": 64520, "volume": 800 },
-    { "timestamp": "2025-09-30T09:35:00Z", "open": 64520, "high": 64580, "low": 64510, "close": 64560, "volume": 750 },
-    { "timestamp": "2025-09-30T09:40:00Z", "open": 64560, "high": 64600, "low": 64540, "close": 64580, "volume": 820 },
-    { "timestamp": "2025-09-30T09:45:00Z", "open": 64580, "high": 64620, "low": 64570, "close": 64600, "volume": 780 },
-    { "timestamp": "2025-09-30T09:50:00Z", "open": 64600, "high": 64650, "low": 64590, "close": 64630, "volume": 760 }
+    {
+      "timestamp": "2025-09-30T09:30:00Z",
+      "open": 64500,
+      "high": 64550,
+      "low": 64480,
+      "close": 64520,
+      "volume": 800
+    },
+    {
+      "timestamp": "2025-09-30T09:35:00Z",
+      "open": 64520,
+      "high": 64580,
+      "low": 64510,
+      "close": 64560,
+      "volume": 750
+    },
+    {
+      "timestamp": "2025-09-30T09:40:00Z",
+      "open": 64560,
+      "high": 64600,
+      "low": 64540,
+      "close": 64580,
+      "volume": 820
+    },
+    {
+      "timestamp": "2025-09-30T09:45:00Z",
+      "open": 64580,
+      "high": 64620,
+      "low": 64570,
+      "close": 64600,
+      "volume": 780
+    },
+    {
+      "timestamp": "2025-09-30T09:50:00Z",
+      "open": 64600,
+      "high": 64650,
+      "low": 64590,
+      "close": 64630,
+      "volume": 760
+    }
   ],
   "bars1m": [],
   "result": {

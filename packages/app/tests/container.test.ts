@@ -25,7 +25,7 @@ class MockService implements Service {
   healthCheck(): HealthStatus {
     return {
       healthy: true,
-      message: 'Mock service is healthy'
+      message: 'Mock service is healthy',
     };
   }
 }
@@ -53,7 +53,7 @@ class DependentService implements Service {
   healthCheck(): HealthStatus {
     return {
       healthy: this.mockService.initialized,
-      message: 'Dependent service is healthy'
+      message: 'Dependent service is healthy',
     };
   }
 }
@@ -120,11 +120,11 @@ describe('Container', () => {
     it('should generate dependency graph', () => {
       container.register(TOKENS.Logger, () => 'logger', {
         name: 'Logger',
-        dependencies: []
+        dependencies: [],
       });
       container.register(TOKENS.Config, () => ({}), {
         name: 'Config',
-        dependencies: [TOKENS.Logger]
+        dependencies: [TOKENS.Logger],
       });
 
       const graph = container.getDependencyGraph();
@@ -136,22 +136,22 @@ describe('Container', () => {
     it('should include dependency relationships', () => {
       container.register(TOKENS.Logger, () => 'logger', {
         name: 'Logger',
-        dependencies: []
+        dependencies: [],
       });
       container.register(TOKENS.Config, () => ({}), {
         name: 'Config',
-        dependencies: [TOKENS.Logger]
+        dependencies: [TOKENS.Logger],
       });
 
       const graph = container.getDependencyGraph();
-      const configNode = graph.find(n => n.name === 'Config');
+      const configNode = graph.find((n) => n.name === 'Config');
 
       expect(configNode).toBeDefined();
     });
 
     it('should render wiring graph as ASCII', () => {
       container.register(TOKENS.Logger, () => 'logger', {
-        name: 'Logger'
+        name: 'Logger',
       });
 
       const ascii = container.getWiringGraph();
@@ -166,7 +166,7 @@ describe('Container', () => {
       const mockService = new MockService();
       const mockToken = Symbol('mock');
       container.register(mockToken, () => mockService, {
-        name: 'MockService'
+        name: 'MockService',
       });
 
       await container.initializeAll();
@@ -181,10 +181,10 @@ describe('Container', () => {
       const mockToken = Symbol('mock');
       const dependentToken = Symbol('dependent');
       container.register(mockToken, () => mockService, {
-        name: 'MockService'
+        name: 'MockService',
       });
       container.register(dependentToken, () => dependentService, {
-        name: 'DependentService'
+        name: 'DependentService',
       });
 
       await container.initializeAll();
@@ -204,7 +204,7 @@ describe('Container', () => {
       const mockService = new MockService();
       const mockToken = Symbol('mock');
       container.register(mockToken, () => mockService, {
-        name: 'MockService'
+        name: 'MockService',
       });
 
       await container.initializeAll();
@@ -223,12 +223,12 @@ describe('Container', () => {
         },
         healthCheck() {
           return { healthy: true };
-        }
+        },
       };
 
       const errorToken = Symbol('error');
       container.register(errorToken, () => errorService, {
-        name: 'ErrorService'
+        name: 'ErrorService',
       });
       await container.initializeAll();
 
@@ -241,7 +241,7 @@ describe('Container', () => {
       const mockService = new MockService();
       const mockToken = Symbol('mock');
       container.register(mockToken, () => mockService, {
-        name: 'MockService'
+        name: 'MockService',
       });
 
       await container.initializeAll();
@@ -256,7 +256,7 @@ describe('Container', () => {
       const mockService = new MockService();
       const mockToken = Symbol('mock');
       container.register(mockToken, () => mockService, {
-        name: 'MockService'
+        name: 'MockService',
       });
 
       await container.initializeAll();
@@ -274,12 +274,12 @@ describe('Container', () => {
         async shutdown() {},
         healthCheck() {
           throw new Error('Health check failed');
-        }
+        },
       };
 
       const unhealthyToken = Symbol('unhealthy');
       container.register(unhealthyToken, () => unhealthyService, {
-        name: 'UnhealthyService'
+        name: 'UnhealthyService',
       });
       await container.initializeAll();
 

@@ -87,7 +87,7 @@ export class TJRError extends Error {
       message: this.message,
       data: this.data,
       timestamp: this.timestamp,
-      stack: this.stack
+      stack: this.stack,
     };
   }
 }

@@ -5,7 +5,12 @@
  * in multiple output formats (text, JSON, table, markdown).
  */
 
-import type { ExecutionReport, TJRFormatter, OutputFormat, ValidationResult } from '../reports/types.js';
+import type {
+  ExecutionReport,
+  TJRFormatter,
+  OutputFormat,
+  ValidationResult,
+} from '../reports/types.js';
 
 /**
  * Formatter for execution recommendation reports
@@ -127,7 +132,9 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
       if (report.riskManagement.accountSize) {
         lines.push(`  Account Size: $${report.riskManagement.accountSize.toLocaleString()}`);
       }
-      lines.push(`  Max Risk Per Trade: ${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`);
+      lines.push(
+        `  Max Risk Per Trade: ${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`
+      );
       lines.push(`  Max Risk Amount: $${report.riskManagement.maxRiskAmount.toFixed(2)}`);
       lines.push(`  Position Size: ${report.riskManagement.positionSize} shares`);
 
@@ -142,7 +149,9 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
       if (report.riskManagement.partialExits && report.riskManagement.partialExits.length > 0) {
         lines.push('  Partial Exit Levels:');
         for (const exit of report.riskManagement.partialExits) {
-          lines.push(`    - ${exit.description}: ${this.formatPrice(exit.price)} (${exit.percentage * 100}% position)`);
+          lines.push(
+            `    - ${exit.description}: ${this.formatPrice(exit.price)} (${exit.percentage * 100}% position)`
+          );
         }
       }
       lines.push('');
@@ -201,11 +210,17 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
     lines.push('│        Execution Analysis Summary           │');
     lines.push('├─────────────────────────────────────────────┤');
     lines.push(`│ Symbol:        ${this.padRight(report.symbol, 27)} │`);
-    lines.push(`│ 5m Confirmed:  ${this.padRight(report.confirmation.confirmed ? 'Yes' : 'No', 27)} │`);
+    lines.push(
+      `│ 5m Confirmed:  ${this.padRight(report.confirmation.confirmed ? 'Yes' : 'No', 27)} │`
+    );
     if (report.entryTrigger) {
-      lines.push(`│ 1m Triggered:  ${this.padRight(report.entryTrigger.triggered ? 'Yes' : 'No', 27)} │`);
+      lines.push(
+        `│ 1m Triggered:  ${this.padRight(report.entryTrigger.triggered ? 'Yes' : 'No', 27)} │`
+      );
     }
-    lines.push(`│ Trade Setup:   ${this.padRight(report.execution ? 'Available' : 'Not Available', 27)} │`);
+    lines.push(
+      `│ Trade Setup:   ${this.padRight(report.execution ? 'Available' : 'Not Available', 27)} │`
+    );
     lines.push('└─────────────────────────────────────────────┘');
     lines.push('');
 
@@ -214,14 +229,30 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
       lines.push('┌─────────────────────┬───────────────────┐');
       lines.push('│ Execution Parameter │       Value       │');
       lines.push('├─────────────────────┼───────────────────┤');
-      lines.push(`│ Direction           │ ${this.padLeft(report.execution.direction.toUpperCase(), 17)} │`);
-      lines.push(`│ Entry Price         │ ${this.padLeft(this.formatPrice(report.execution.entryPrice), 17)} │`);
-      lines.push(`│ Stop Loss           │ ${this.padLeft(this.formatPrice(report.execution.stopLoss), 17)} │`);
-      lines.push(`│ Take Profit         │ ${this.padLeft(this.formatPrice(report.execution.takeProfit), 17)} │`);
-      lines.push(`│ Position Size       │ ${this.padLeft(String(report.execution.positionSize), 17)} │`);
-      lines.push(`│ Risk Amount         │ ${this.padLeft(`$${report.execution.riskAmount.toFixed(2)}`, 17)} │`);
-      lines.push(`│ Reward Amount       │ ${this.padLeft(`$${report.execution.rewardAmount.toFixed(2)}`, 17)} │`);
-      lines.push(`│ Risk/Reward Ratio   │ ${this.padLeft(`${report.execution.riskRewardRatio.toFixed(2)}R`, 17)} │`);
+      lines.push(
+        `│ Direction           │ ${this.padLeft(report.execution.direction.toUpperCase(), 17)} │`
+      );
+      lines.push(
+        `│ Entry Price         │ ${this.padLeft(this.formatPrice(report.execution.entryPrice), 17)} │`
+      );
+      lines.push(
+        `│ Stop Loss           │ ${this.padLeft(this.formatPrice(report.execution.stopLoss), 17)} │`
+      );
+      lines.push(
+        `│ Take Profit         │ ${this.padLeft(this.formatPrice(report.execution.takeProfit), 17)} │`
+      );
+      lines.push(
+        `│ Position Size       │ ${this.padLeft(String(report.execution.positionSize), 17)} │`
+      );
+      lines.push(
+        `│ Risk Amount         │ ${this.padLeft(`$${report.execution.riskAmount.toFixed(2)}`, 17)} │`
+      );
+      lines.push(
+        `│ Reward Amount       │ ${this.padLeft(`$${report.execution.rewardAmount.toFixed(2)}`, 17)} │`
+      );
+      lines.push(
+        `│ Risk/Reward Ratio   │ ${this.padLeft(`${report.execution.riskRewardRatio.toFixed(2)}R`, 17)} │`
+      );
       lines.push('└─────────────────────┴───────────────────┘');
       lines.push('');
     }
@@ -232,11 +263,19 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
       lines.push('│ Risk Management          │    Value     │');
       lines.push('├──────────────────────────┼──────────────┤');
       if (report.riskManagement.accountSize) {
-        lines.push(`│ Account Size             │ ${this.padLeft(`$${report.riskManagement.accountSize.toLocaleString()}`, 12)} │`);
+        lines.push(
+          `│ Account Size             │ ${this.padLeft(`$${report.riskManagement.accountSize.toLocaleString()}`, 12)} │`
+        );
       }
-      lines.push(`│ Max Risk Per Trade       │ ${this.padLeft(`${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`, 12)} │`);
-      lines.push(`│ Max Risk Amount          │ ${this.padLeft(`$${report.riskManagement.maxRiskAmount.toFixed(2)}`, 12)} │`);
-      lines.push(`│ Can Take New Trade       │ ${this.padLeft(report.riskManagement.canTakeNewTrade ? 'Yes' : 'No', 12)} │`);
+      lines.push(
+        `│ Max Risk Per Trade       │ ${this.padLeft(`${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`, 12)} │`
+      );
+      lines.push(
+        `│ Max Risk Amount          │ ${this.padLeft(`$${report.riskManagement.maxRiskAmount.toFixed(2)}`, 12)} │`
+      );
+      lines.push(
+        `│ Can Take New Trade       │ ${this.padLeft(report.riskManagement.canTakeNewTrade ? 'Yes' : 'No', 12)} │`
+      );
       lines.push('└──────────────────────────┴──────────────┘');
     }
 
@@ -258,7 +297,9 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
     // Confirmation Status
     lines.push('### 5-Minute Confirmation');
     lines.push('');
-    lines.push(`**Status**: ${report.confirmation.confirmed ? '✅ CONFIRMED' : '❌ NOT CONFIRMED'}`);
+    lines.push(
+      `**Status**: ${report.confirmation.confirmed ? '✅ CONFIRMED' : '❌ NOT CONFIRMED'}`
+    );
     lines.push('');
     lines.push(`**Reason**: ${report.confirmation.reason}`);
     lines.push('');
@@ -271,7 +312,9 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
     if (report.entryTrigger) {
       lines.push('### 1-Minute Entry Trigger');
       lines.push('');
-      lines.push(`**Status**: ${report.entryTrigger.triggered ? '✅ TRIGGERED' : '❌ NOT TRIGGERED'}`);
+      lines.push(
+        `**Status**: ${report.entryTrigger.triggered ? '✅ TRIGGERED' : '❌ NOT TRIGGERED'}`
+      );
       lines.push('');
       lines.push(`**Reason**: ${report.entryTrigger.reason}`);
       lines.push('');
@@ -316,15 +359,21 @@ export class ExecutionFormatter implements TJRFormatter<ExecutionReport> {
       if (report.riskManagement.accountSize) {
         lines.push(`- **Account Size**: $${report.riskManagement.accountSize.toLocaleString()}`);
       }
-      lines.push(`- **Max Risk Per Trade**: ${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`);
+      lines.push(
+        `- **Max Risk Per Trade**: ${(report.riskManagement.maxRiskPerTrade * 100).toFixed(2)}%`
+      );
       lines.push(`- **Max Risk Amount**: $${report.riskManagement.maxRiskAmount.toFixed(2)}`);
-      lines.push(`- **Can Take New Trade**: ${report.riskManagement.canTakeNewTrade ? 'Yes' : 'No'}`);
+      lines.push(
+        `- **Can Take New Trade**: ${report.riskManagement.canTakeNewTrade ? 'Yes' : 'No'}`
+      );
 
       if (report.riskManagement.partialExits && report.riskManagement.partialExits.length > 0) {
         lines.push('');
         lines.push('**Partial Exit Levels**:');
         for (const exit of report.riskManagement.partialExits) {
-          lines.push(`- ${exit.description}: ${this.formatPrice(exit.price)} (${exit.percentage * 100}%)`);
+          lines.push(
+            `- ${exit.description}: ${this.formatPrice(exit.price)} (${exit.percentage * 100}%)`
+          );
         }
       }
       lines.push('');

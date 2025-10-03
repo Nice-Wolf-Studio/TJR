@@ -14,4 +14,3 @@ test('in-memory DB basic ops', async () => {
   await db.clear();
   assert.equal(await db.get('a'), null);
 });
-

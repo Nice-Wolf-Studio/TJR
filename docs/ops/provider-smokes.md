@@ -24,6 +24,7 @@ Run provider smoke tests in these scenarios:
 6. **Monthly Health Checks**: Periodic validation of provider integrations
 
 **DO NOT RUN:**
+
 - On pull requests (wastes API quota)
 - In automated CI pipelines (creates noise and quota issues)
 - Without understanding cost implications (see Cost Estimation below)
@@ -87,6 +88,7 @@ curl -X POST \
 ## Input Parameters
 
 ### Provider
+
 - **Type**: Choice (`yahoo`, `polygon`, `all`)
 - **Default**: `all`
 - **Description**: Which provider(s) to test
@@ -96,6 +98,7 @@ curl -X POST \
   - `all`: Test all providers in parallel
 
 ### Symbol
+
 - **Type**: String
 - **Default**: `ES=F`
 - **Description**: Trading symbol to request data for
@@ -109,6 +112,7 @@ curl -X POST \
   - `BTC-USD` (Bitcoin - Yahoo)
 
 ### Timeframe
+
 - **Type**: Choice (`1m`, `5m`, `1h`, `1D`)
 - **Default**: `1h`
 - **Description**: Timeframe/interval for historical data request
@@ -120,6 +124,7 @@ curl -X POST \
   - `1D`: Daily bars (lowest API cost)
 
 ### Dry-run
+
 - **Type**: Boolean
 - **Default**: `false`
 - **Description**: Validate workflow setup without making API calls
@@ -190,6 +195,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: GitHub Secret not set for the repository
 
 **Resolution**:
+
 1. Go to repository Settings > Secrets and variables > Actions
 2. Click "New repository secret"
 3. Add secret:
@@ -206,6 +212,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: Too many API requests in short time period
 
 **Resolution**:
+
 1. Wait for rate limit window to reset (varies by provider)
 2. Use higher timeframes (1h, 1D) to reduce API calls
 3. Run tests individually instead of `all` providers
@@ -214,6 +221,7 @@ SKIPPING: Smoke test script not implemented yet
    - Yahoo: Check API tier limits
 
 **Prevention**:
+
 - Space out test runs (wait 5-10 minutes between runs)
 - Use dry-run mode for workflow validation
 - Monitor API usage dashboards
@@ -225,6 +233,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: Monthly/daily API quota limit reached
 
 **Resolution**:
+
 1. Check provider dashboard for quota usage:
    - Polygon: https://polygon.io/dashboard
    - Yahoo: Check account dashboard
@@ -233,6 +242,7 @@ SKIPPING: Smoke test script not implemented yet
 4. Use cached data or mock responses for development
 
 **Prevention**:
+
 - Run smoke tests sparingly (only when necessary)
 - Use dry-run mode for CI/workflow testing
 - Implement cost estimation (see below)
@@ -244,6 +254,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: Symbol format doesn't match provider expectations
 
 **Resolution**:
+
 - **Yahoo**: Use futures notation with `=F` suffix (e.g., `ES=F`, `NQ=F`)
 - **Polygon**: Use standard ticker without suffix (e.g., `ES`, `NQ`)
 - **Stocks**: Use standard ticker (e.g., `AAPL`, `MSFT`)
@@ -258,6 +269,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: Provider package not built or build output missing
 
 **Resolution**:
+
 1. Workflow automatically builds packages - check build step logs
 2. Verify `dist/` directory exists in provider package
 3. Check for TypeScript compilation errors
@@ -272,6 +284,7 @@ SKIPPING: Smoke test script not implemented yet
 **Cause**: API request hanging or extremely slow response
 
 **Resolution**:
+
 1. Check provider API status pages
 2. Verify network connectivity (unlikely in GitHub Actions)
 3. Review smoke test implementation for infinite loops
@@ -300,6 +313,7 @@ The workflow implements multiple security measures:
 ### What Gets Logged
 
 **SAFE** (visible in logs):
+
 - Provider name
 - Symbol
 - Timeframe
@@ -309,6 +323,7 @@ The workflow implements multiple security measures:
 - Validation results
 
 **MASKED** (never visible):
+
 - API keys
 - Complete API request URLs with keys
 - Authentication tokens
@@ -330,12 +345,14 @@ The workflow implements multiple security measures:
 Provider smoke tests consume API quota. Estimate costs before running:
 
 #### Yahoo Finance
+
 - **Free Tier**: Varies by endpoint, generally limited to 100 requests/hour
 - **Per Test Run**: 1-5 API calls depending on timeframe
 - **Monthly Limit**: Check API dashboard (typically 2,000-10,000 calls/month)
 - **Cost**: Usually free for basic historical data
 
 #### Polygon.io
+
 - **Free Tier**: 5 API calls/minute, limited features
 - **Starter Tier** ($29/month): 100 calls/minute, 100,000 calls/month
 - **Developer Tier** ($99/month): 1,000 calls/minute, unlimited calls
@@ -344,20 +361,20 @@ Provider smoke tests consume API quota. Estimate costs before running:
 
 ### Test Run Scenarios
 
-| Scenario | Providers | Calls | Yahoo Cost | Polygon Cost |
-|----------|-----------|-------|------------|--------------|
-| Single provider (1h) | 1 | 1-2 | Free | $0.0003-$0.001 |
-| All providers (1h) | 2 | 2-4 | Free | $0.0006-$0.002 |
-| Single provider (1m) | 1 | 5-10 | Free | $0.0015-$0.01 |
-| All providers (1m) | 2 | 10-20 | Free | $0.003-$0.02 |
+| Scenario             | Providers | Calls | Yahoo Cost | Polygon Cost   |
+| -------------------- | --------- | ----- | ---------- | -------------- |
+| Single provider (1h) | 1         | 1-2   | Free       | $0.0003-$0.001 |
+| All providers (1h)   | 2         | 2-4   | Free       | $0.0006-$0.002 |
+| Single provider (1m) | 1         | 5-10  | Free       | $0.0015-$0.01  |
+| All providers (1m)   | 2         | 10-20 | Free       | $0.003-$0.02   |
 
 ### Monthly Cost Estimates
 
-| Usage Pattern | Yahoo | Polygon (Free) | Polygon (Starter) |
-|---------------|-------|----------------|-------------------|
-| 10 runs/month | Free | ~40 calls (OK) | ~40 calls (OK) |
-| 50 runs/month | Free | ~200 calls (May exceed) | ~200 calls (OK) |
-| 100 runs/month | Free | ~400 calls (Exceeds) | ~400 calls (OK) |
+| Usage Pattern  | Yahoo | Polygon (Free)          | Polygon (Starter) |
+| -------------- | ----- | ----------------------- | ----------------- |
+| 10 runs/month  | Free  | ~40 calls (OK)          | ~40 calls (OK)    |
+| 50 runs/month  | Free  | ~200 calls (May exceed) | ~200 calls (OK)   |
+| 100 runs/month | Free  | ~400 calls (Exceeds)    | ~400 calls (OK)   |
 
 ### Cost Optimization Tips
 
@@ -384,6 +401,7 @@ As of Phase 3.B5, the smoke test workflow is created but **providers do not yet 
 Each provider needs a `test:smoke` script added to its `package.json`:
 
 **packages/provider-yahoo/package.json**:
+
 ```json
 {
   "scripts": {
@@ -393,6 +411,7 @@ Each provider needs a `test:smoke` script added to its `package.json`:
 ```
 
 **packages/provider-polygon/package.json**:
+
 ```json
 {
   "scripts": {
@@ -402,6 +421,7 @@ Each provider needs a `test:smoke` script added to its `package.json`:
 ```
 
 Each smoke test script should:
+
 - Accept `--symbol` and `--timeframe` CLI arguments
 - Make a single API request to the provider
 - Validate response structure and data quality

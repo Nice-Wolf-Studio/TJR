@@ -58,29 +58,22 @@ export function calculateStopLoss(
   const structureStop = getStructureBasedStop(entryPrice, direction, bars);
 
   // Calculate default percentage-based stop
-  const percentStop = direction === 'long'
-    ? entryPrice * (1 - defaultStopPercent)
-    : entryPrice * (1 + defaultStopPercent);
+  const percentStop =
+    direction === 'long'
+      ? entryPrice * (1 - defaultStopPercent)
+      : entryPrice * (1 + defaultStopPercent);
 
   // Choose the most conservative stop (closest to entry)
   let stopLoss: number;
 
   if (direction === 'long') {
     // For longs, use the highest stop (closest to entry, most conservative)
-    stopLoss = Math.max(
-      zoneStop ?? 0,
-      structureStop ?? 0,
-      percentStop
-    );
+    stopLoss = Math.max(zoneStop ?? 0, structureStop ?? 0, percentStop);
     // But not above entry
     stopLoss = Math.min(stopLoss, entryPrice * 0.995);
   } else {
     // For shorts, use the lowest stop (closest to entry, most conservative)
-    stopLoss = Math.min(
-      zoneStop ?? Infinity,
-      structureStop ?? Infinity,
-      percentStop
-    );
+    stopLoss = Math.min(zoneStop ?? Infinity, structureStop ?? Infinity, percentStop);
     // But not below entry
     stopLoss = Math.max(stopLoss, entryPrice * 1.005);
   }
@@ -134,8 +127,8 @@ function getZoneBasedStop(
   fvgZones: FVGZone[],
   orderBlocks: OrderBlock[]
 ): number | null {
-  const activeFVGs = fvgZones.filter(z => !z.filled);
-  const activeBlocks = orderBlocks.filter(b => !b.mitigated);
+  const activeFVGs = fvgZones.filter((z) => !z.filled);
+  const activeBlocks = orderBlocks.filter((b) => !b.mitigated);
 
   if (direction === 'long') {
     // For longs, place stop below demand zones or bullish FVGs
@@ -252,21 +245,9 @@ export function calculatePriceLevels(
   orderBlocks: OrderBlock[],
   config: ExecutionConfig
 ): PriceLevels {
-  const stopLoss = calculateStopLoss(
-    entryPrice,
-    direction,
-    bars,
-    fvgZones,
-    orderBlocks,
-    config
-  );
+  const stopLoss = calculateStopLoss(entryPrice, direction, bars, fvgZones, orderBlocks, config);
 
-  const takeProfit = calculateTakeProfit(
-    entryPrice,
-    stopLoss,
-    direction,
-    config
-  );
+  const takeProfit = calculateTakeProfit(entryPrice, stopLoss, direction, config);
 
   const riskAmount = Math.abs(entryPrice - stopLoss);
   const rewardAmount = Math.abs(takeProfit - entryPrice);
@@ -289,10 +270,7 @@ export function calculatePriceLevels(
  * @param direction - Trade direction
  * @returns True if levels are valid
  */
-export function validatePriceLevels(
-  levels: PriceLevels,
-  direction: 'long' | 'short'
-): boolean {
+export function validatePriceLevels(levels: PriceLevels, direction: 'long' | 'short'): boolean {
   const { entry, stopLoss, takeProfit } = levels;
 
   if (direction === 'long') {

@@ -9,7 +9,7 @@ import { commands } from '../src/commands/index.js';
 describe('Command Manifest Generation', () => {
   it('should generate a deterministic manifest', () => {
     const handler = new CommandHandler({} as any);
-    commands.forEach(cmd => handler.registerCommand(cmd));
+    commands.forEach((cmd) => handler.registerCommand(cmd));
 
     const manifest = handler.generateManifest();
 
@@ -28,7 +28,7 @@ describe('Command Manifest Generation', () => {
     const handler1 = new CommandHandler({} as any);
     const handler2 = new CommandHandler({} as any);
 
-    commands.forEach(cmd => {
+    commands.forEach((cmd) => {
       handler1.registerCommand(cmd);
       handler2.registerCommand(cmd);
     });
@@ -41,7 +41,7 @@ describe('Command Manifest Generation', () => {
   });
 
   it('should match snapshot for health command', () => {
-    const healthCommand = commands.find(cmd => cmd.schema.name === 'health');
+    const healthCommand = commands.find((cmd) => cmd.schema.name === 'health');
     expect(healthCommand?.schema).toMatchInlineSnapshot(`
       {
         "description": "Check bot health and status",
@@ -60,7 +60,7 @@ describe('Command Manifest Generation', () => {
   });
 
   it('should match snapshot for daily command', () => {
-    const dailyCommand = commands.find(cmd => cmd.schema.name === 'daily');
+    const dailyCommand = commands.find((cmd) => cmd.schema.name === 'daily');
     expect(dailyCommand?.schema).toMatchInlineSnapshot(`
       {
         "description": "Get daily trading report and analysis",
@@ -112,7 +112,7 @@ describe('Command Manifest Generation', () => {
 
   it('should generate valid Discord command JSON', () => {
     const handler = new CommandHandler({} as any);
-    commands.forEach(cmd => handler.registerCommand(cmd));
+    commands.forEach((cmd) => handler.registerCommand(cmd));
 
     const json = handler.toJSON();
 

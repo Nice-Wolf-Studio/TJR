@@ -12,13 +12,6 @@
       "@tjr-suite/*": ["../../packages/*/dist"]
     }
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests",
-    "__fixtures__"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests", "__fixtures__"]
 }

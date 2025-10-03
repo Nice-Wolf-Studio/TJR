@@ -13,7 +13,7 @@ export function sanitizeError(error: unknown, includeStack = false): Record<stri
   if (error instanceof Error) {
     const sanitized: Record<string, any> = {
       message: error.message,
-      name: error.name
+      name: error.name,
     };
 
     // Only include stack traces in development or when explicitly requested
@@ -27,6 +27,6 @@ export function sanitizeError(error: unknown, includeStack = false): Record<stri
   // For non-Error objects, convert to string safely
   return {
     message: String(error),
-    name: 'Unknown'
+    name: 'Unknown',
   };
 }

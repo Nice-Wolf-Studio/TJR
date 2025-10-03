@@ -228,16 +228,16 @@ export class AlphaVantageClient {
    */
   private mapTimeframeToInterval(timeframe: Timeframe): string {
     const mapping: Record<string, string> = {
-      '1': '1min',    // 1 minute
-      '5': '5min',    // 5 minutes
-      '60': '60min',  // 60 minutes (1 hour)
+      '1': '1min', // 1 minute
+      '5': '5min', // 5 minutes
+      '60': '60min', // 60 minutes (1 hour)
     };
 
     const interval = mapping[timeframe];
     if (!interval) {
       throw new Error(
         `Timeframe ${timeframe} cannot be mapped to Alpha Vantage interval. ` +
-        `Supported: 1m, 5m, 60m`
+          `Supported: 1m, 5m, 60m`
       );
     }
 
@@ -282,7 +282,7 @@ export class AlphaVantageClient {
     } catch (error) {
       throw new Error(
         `Failed to load intraday fixture: ${fixturePath}. ` +
-        `Error: ${error instanceof Error ? error.message : String(error)}`
+          `Error: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }
@@ -312,7 +312,7 @@ export class AlphaVantageClient {
     } catch (error) {
       throw new Error(
         `Failed to load daily fixture: ${fixturePath}. ` +
-        `Error: ${error instanceof Error ? error.message : String(error)}`
+          `Error: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }

@@ -7,7 +7,7 @@ import {
   generateFixtureBars,
   generateSessionBars,
   generateTrendDay,
-  loadFixtures
+  loadFixtures,
 } from '../src/fixtures/index.js';
 
 describe('Fixture Generation', () => {
@@ -17,7 +17,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 78
+        count: 78,
       });
 
       expect(bars).toHaveLength(78);
@@ -28,7 +28,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 10
+        count: 10,
       });
 
       for (const bar of bars) {
@@ -44,7 +44,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 1
+        count: 1,
       });
 
       const bar = bars[0];
@@ -64,7 +64,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 10
+        count: 10,
       });
 
       for (const bar of bars) {
@@ -78,7 +78,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 10
+        count: 10,
       });
 
       for (const bar of bars) {
@@ -91,7 +91,7 @@ describe('Fixture Generation', () => {
     it('should generate bars for full trading day', () => {
       const bars = generateSessionBars({
         symbol: 'SPY',
-        date: new Date('2025-09-29')
+        date: new Date('2025-09-29'),
       });
 
       expect(bars.length).toBeGreaterThan(60); // At least an hour of 5m bars
@@ -100,18 +100,18 @@ describe('Fixture Generation', () => {
     it('should include different session characteristics', () => {
       const bars = generateSessionBars({
         symbol: 'SPY',
-        date: new Date('2025-09-29')
+        date: new Date('2025-09-29'),
       });
 
       // Should have bars across different hours
-      const hours = new Set(bars.map(bar => new Date(bar.timestamp).getHours()));
+      const hours = new Set(bars.map((bar) => new Date(bar.timestamp).getHours()));
       expect(hours.size).toBeGreaterThan(3); // Multiple trading sessions
     });
 
     it('should maintain price continuity', () => {
       const bars = generateSessionBars({
         symbol: 'SPY',
-        date: new Date('2025-09-29')
+        date: new Date('2025-09-29'),
       });
 
       for (let i = 1; i < bars.length; i++) {
@@ -136,7 +136,7 @@ describe('Fixture Generation', () => {
       const bars = generateTrendDay({
         symbol: 'SPY',
         date: new Date('2025-09-29'),
-        direction: 'up'
+        direction: 'up',
       });
 
       const firstClose = bars[0].close;
@@ -149,7 +149,7 @@ describe('Fixture Generation', () => {
       const bars = generateTrendDay({
         symbol: 'SPY',
         date: new Date('2025-09-29'),
-        direction: 'down'
+        direction: 'down',
       });
 
       const firstClose = bars[0].close;
@@ -162,7 +162,7 @@ describe('Fixture Generation', () => {
       const bars = generateTrendDay({
         symbol: 'SPY',
         date: new Date('2025-09-29'),
-        direction: 'up'
+        direction: 'up',
       });
 
       expect(bars).toHaveLength(78); // 6.5 hours * 12 bars/hour
@@ -172,7 +172,7 @@ describe('Fixture Generation', () => {
       const bars = generateTrendDay({
         symbol: 'SPY',
         date: new Date('2025-09-29'),
-        direction: 'up'
+        direction: 'up',
       });
 
       const firstVolume = bars[0].volume;
@@ -248,7 +248,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 20
+        count: 20,
       });
 
       for (let i = 1; i < bars.length; i++) {
@@ -263,7 +263,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 10
+        count: 10,
       });
 
       for (let i = 1; i < bars.length; i++) {
@@ -280,7 +280,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 1
+        count: 1,
       });
 
       const firstBarTime = new Date(bars[0].timestamp);
@@ -295,7 +295,7 @@ describe('Fixture Generation', () => {
         symbol: 'SPY',
         date: new Date('2025-09-29'),
         timeframe: '5m',
-        count: 50
+        count: 50,
       });
 
       // Calculate max single-bar move

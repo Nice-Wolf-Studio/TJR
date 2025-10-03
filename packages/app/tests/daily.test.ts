@@ -16,17 +16,17 @@ describe('DailyCommand', () => {
   beforeEach(() => {
     logger = createLogger({
       level: 'error', // Quiet during tests
-      format: 'json'
+      format: 'json',
     });
 
     providerService = new FixtureProvider({
       logger: logger.child({ service: 'provider' }),
-      simulateLatency: false
+      simulateLatency: false,
     });
 
     dailyCommand = new DailyCommand({
       providerService,
-      logger: logger.child({ service: 'daily-command' })
+      logger: logger.child({ service: 'daily-command' }),
     });
   });
 
@@ -133,7 +133,7 @@ describe('DailyCommand', () => {
     it('should include bias analysis', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -144,7 +144,7 @@ describe('DailyCommand', () => {
     it('should include profile classification', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -155,7 +155,7 @@ describe('DailyCommand', () => {
     it('should include session analysis', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -166,7 +166,7 @@ describe('DailyCommand', () => {
     it('should include statistics', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -184,7 +184,7 @@ describe('DailyCommand', () => {
     it('should format as JSON', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       expect(() => JSON.parse(result.output)).not.toThrow();
@@ -196,7 +196,7 @@ describe('DailyCommand', () => {
     it('should format as text', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'text'
+        format: 'text',
       });
 
       expect(typeof result.output).toBe('string');
@@ -208,7 +208,7 @@ describe('DailyCommand', () => {
     it('should format as table', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'table'
+        format: 'table',
       });
 
       expect(typeof result.output).toBe('string');
@@ -220,7 +220,7 @@ describe('DailyCommand', () => {
     it('should include all sections in text format', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'text'
+        format: 'text',
       });
 
       expect(result.output).toContain('Market Bias');
@@ -239,14 +239,14 @@ describe('DailyCommand', () => {
       // Create a provider that returns no data
       const emptyProvider = new FixtureProvider({
         logger: logger.child({ service: 'provider' }),
-        simulateLatency: false
+        simulateLatency: false,
       });
 
       emptyProvider.getBars = async () => [];
 
       const emptyCommand = new DailyCommand({
         providerService: emptyProvider,
-        logger: logger.child({ service: 'daily-command' })
+        logger: logger.child({ service: 'daily-command' }),
       });
 
       const result = await emptyCommand.execute(['SPY'], { dryRun: true });
@@ -258,7 +258,7 @@ describe('DailyCommand', () => {
     it('should handle provider errors', async () => {
       const errorProvider = new FixtureProvider({
         logger: logger.child({ service: 'provider' }),
-        simulateLatency: false
+        simulateLatency: false,
       });
 
       errorProvider.getBars = async () => {
@@ -267,7 +267,7 @@ describe('DailyCommand', () => {
 
       const errorCommand = new DailyCommand({
         providerService: errorProvider,
-        logger: logger.child({ service: 'daily-command' })
+        logger: logger.child({ service: 'daily-command' }),
       });
 
       const result = await errorCommand.execute(['SPY'], { dryRun: true });
@@ -293,11 +293,11 @@ describe('DailyCommand', () => {
     it('should provide deterministic results', async () => {
       const result1 = await dailyCommand.execute(['SPY', '2025-09-29'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
       const result2 = await dailyCommand.execute(['SPY', '2025-09-29'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output1 = JSON.parse(result1.output);
@@ -316,7 +316,7 @@ describe('DailyCommand', () => {
     it('should call bias calculation', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -328,7 +328,7 @@ describe('DailyCommand', () => {
     it('should call profile classification', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);
@@ -338,7 +338,7 @@ describe('DailyCommand', () => {
     it('should call session analysis', async () => {
       const result = await dailyCommand.execute(['SPY'], {
         dryRun: true,
-        format: 'json'
+        format: 'json',
       });
 
       const output = JSON.parse(result.output);

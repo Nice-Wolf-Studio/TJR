@@ -20,10 +20,7 @@ import type { PriceLevels } from './price-levels.js';
  * @param config - Execution configuration
  * @returns Position size in units or normalized value
  */
-export function calculatePositionSize(
-  levels: PriceLevels,
-  config: ExecutionConfig
-): number {
+export function calculatePositionSize(levels: PriceLevels, config: ExecutionConfig): number {
   const { maxRiskPerTrade, accountSize } = config.risk;
 
   // If no account size provided, return normalized position
@@ -81,9 +78,9 @@ export function adjustPositionByConfidence(
   confidence: 'low' | 'medium' | 'high'
 ): number {
   const multipliers = {
-    high: 1.0,   // Full position
+    high: 1.0, // Full position
     medium: 0.75, // 75% of full position
-    low: 0.5,     // 50% of full position
+    low: 0.5, // 50% of full position
   };
 
   return Math.floor(baseSize * multipliers[confidence]);
@@ -98,10 +95,7 @@ export function adjustPositionByConfidence(
  * @param entry1m - Whether trade has 1m entry
  * @returns Expected duration string
  */
-export function calculateExpectedDuration(
-  confirmation5m: boolean,
-  entry1m: boolean
-): string {
+export function calculateExpectedDuration(confirmation5m: boolean, entry1m: boolean): string {
   if (confirmation5m && entry1m) {
     // Both timeframes aligned, likely shorter-term trade
     return '15-60 minutes';
@@ -128,11 +122,12 @@ export function generateExecutionNotes(
   confluenceFactors: string[]
 ): string {
   const riskRewardFormatted = levels.riskRewardRatio.toFixed(1);
-  const factorsText = confluenceFactors.length > 0
-    ? confluenceFactors.join(', ')
-    : 'No specific factors';
+  const factorsText =
+    confluenceFactors.length > 0 ? confluenceFactors.join(', ') : 'No specific factors';
 
-  return `${confidence} confidence setup with ${riskRewardFormatted}:1 R:R. ` +
+  return (
+    `${confidence} confidence setup with ${riskRewardFormatted}:1 R:R. ` +
     `Active factors: ${factorsText}. ` +
-    `Risk: ${(levels.riskAmount / levels.entry * 100).toFixed(1)}% from entry.`;
+    `Risk: ${((levels.riskAmount / levels.entry) * 100).toFixed(1)}% from entry.`
+  );
 }

@@ -10,7 +10,11 @@ import type { Logger } from '@tjr/logger';
 import type { MarketBar } from '@tjr/contracts';
 import type { CacheService } from '../services/cache/types.js';
 import type { CompositeProvider } from '../services/providers/composite-provider.js';
-import type { DailyFormatter, DailyAnalysis, FormatterOptions } from '../formatters/daily-formatter.js';
+import type {
+  DailyFormatter,
+  DailyAnalysis,
+  FormatterOptions,
+} from '../formatters/daily-formatter.js';
 import { Timeframe } from '@tjr/contracts';
 import { calculateDailyBias, classifyDayProfile, extractSessionExtremes } from '@tjr/analysis-kit';
 
@@ -33,7 +37,7 @@ export interface EnhancedDailyCommandConfig {
     defaultFormat: 'text' | 'json' | 'table' | 'markdown';
     cacheTTL: {
       historical: number; // ms
-      realtime: number;   // ms
+      realtime: number; // ms
     };
     sessions: SessionDefinition[];
     errorHandling: {
@@ -50,7 +54,7 @@ export interface EnhancedDailyCommandConfig {
 export interface SessionDefinition {
   name: string;
   start: string; // HH:MM format
-  end: string;   // HH:MM format
+  end: string; // HH:MM format
   required?: boolean;
 }
 
@@ -106,7 +110,7 @@ export class EnhancedDailyCommand implements Command {
         symbol: request.symbol,
         date: request.date.toISOString(),
         format: request.format,
-        force: request.force
+        force: request.force,
       });
 
       // 2. Build cache key
@@ -121,7 +125,7 @@ export class EnhancedDailyCommand implements Command {
           const formatted = this.formatter.format(cached, {
             format: request.format as any,
             verbose: request.verbose,
-            includeMetadata: request.metadata
+            includeMetadata: request.metadata,
           });
 
           return {
@@ -131,8 +135,8 @@ export class EnhancedDailyCommand implements Command {
             metadata: {
               symbol: request.symbol,
               date: request.date.toISOString(),
-              cached: true
-            }
+              cached: true,
+            },
           };
         }
       }
@@ -155,7 +159,7 @@ export class EnhancedDailyCommand implements Command {
       const formatted = this.formatter.format(analysis, {
         format: request.format as any,
         verbose: request.verbose,
-        includeMetadata: request.metadata
+        includeMetadata: request.metadata,
       });
 
       return {
@@ -166,10 +170,9 @@ export class EnhancedDailyCommand implements Command {
           symbol: request.symbol,
           date: request.date.toISOString(),
           barsAnalyzed: bars.length,
-          cached: false
-        }
+          cached: false,
+        },
       };
-
     } catch (error) {
       return this.handleError(error, args, options, startTime);
     }
@@ -206,7 +209,7 @@ export class EnhancedDailyCommand implements Command {
       format: options.format || this.settings.defaultFormat,
       force: options.force || false,
       verbose: options.verbose || false,
-      metadata: options.metadata || false
+      metadata: options.metadata || false,
     };
   }
 
@@ -227,7 +230,7 @@ export class EnhancedDailyCommand implements Command {
     } catch (error) {
       this.logger.warn('Cache check failed', {
         key,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return null;
     }
@@ -249,22 +252,21 @@ export class EnhancedDailyCommand implements Command {
         symbol: request.symbol,
         timeframe: Timeframe.M5,
         from: from.toISOString(),
-        to: to.toISOString()
+        to: to.toISOString(),
       });
 
       this.logger.info('Fetched bars successfully', {
         symbol: request.symbol,
         date: request.date.toISOString(),
-        count: bars.length
+        count: bars.length,
       });
 
       return bars;
-
     } catch (error) {
       this.logger.error('Failed to fetch bars from all providers', {
         symbol: request.symbol,
         date: request.date.toISOString(),
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
 
       // If allowed, try to use stale cache data
@@ -292,28 +294,28 @@ export class EnhancedDailyCommand implements Command {
     const analysisStart = Date.now();
 
     // Convert to analysis-kit format
-    const analysisBars = bars.map(bar => ({
+    const analysisBars = bars.map((bar) => ({
       timestamp: new Date(bar.timestamp).getTime(),
       open: bar.open,
       high: bar.high,
       low: bar.low,
       close: bar.close,
-      volume: bar.volume
+      volume: bar.volume,
     }));
 
     // Calculate session extremes
     const sessionExtremes = {
       rthOpen: analysisBars[0]?.open ?? 0,
       rthClose: analysisBars[analysisBars.length - 1]?.close ?? 0,
-      rthHigh: Math.max(...analysisBars.map(b => b.high)),
-      rthLow: Math.min(...analysisBars.map(b => b.low))
+      rthHigh: Math.max(...analysisBars.map((b) => b.high)),
+      rthLow: Math.min(...analysisBars.map((b) => b.low)),
     };
 
     // Run parallel analysis
     const [bias, profile, sessions] = await Promise.allSettled([
       this.analyzeBias(analysisBars, sessionExtremes),
       this.analyzeProfile(analysisBars, sessionExtremes),
-      this.analyzeSessions(analysisBars, request.date)
+      this.analyzeSessions(analysisBars, request.date),
     ]);
 
     // Handle partial results if allowed
@@ -348,8 +350,8 @@ export class EnhancedDailyCommand implements Command {
         timestamp: new Date().toISOString(),
         provider: this.compositeProvider.name,
         cached: false,
-        processingTimeMs: Date.now() - analysisStart
-      }
+        processingTimeMs: Date.now() - analysisStart,
+      },
     };
 
     return analysis;
@@ -371,13 +373,13 @@ export class EnhancedDailyCommand implements Command {
         key,
         ttl,
         symbol: analysis.symbol,
-        date: analysis.date
+        date: analysis.date,
       });
     } catch (error) {
       // Cache failure is not critical
       this.logger.warn('Failed to cache analysis', {
         key,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
     }
   }
@@ -417,7 +419,7 @@ export class EnhancedDailyCommand implements Command {
       confidence: result.confidence,
       strength: this.mapStrength(result.confidence),
       reason: result.reason,
-      keyLevels: result.keyLevels
+      keyLevels: result.keyLevels,
     };
   }
 
@@ -431,7 +433,7 @@ export class EnhancedDailyCommand implements Command {
       type: result.type,
       characteristics: result.characteristics,
       volatility: result.volatility,
-      trendStrength: result.trendStrength
+      trendStrength: result.trendStrength,
     };
   }
 
@@ -458,8 +460,8 @@ export class EnhancedDailyCommand implements Command {
           barCount: sessionBars.length,
           timeRange: {
             start: session.start,
-            end: session.end
-          }
+            end: session.end,
+          },
         });
       } else if (session.required) {
         // Add placeholder for required sessions
@@ -471,8 +473,8 @@ export class EnhancedDailyCommand implements Command {
           barCount: 0,
           timeRange: {
             start: session.start,
-            end: session.end
-          }
+            end: session.end,
+          },
         });
       }
     }
@@ -484,9 +486,9 @@ export class EnhancedDailyCommand implements Command {
    * Calculate statistics from bars
    */
   private calculateStatistics(bars: MarketBar[]): any {
-    const highs = bars.map(b => b.high);
-    const lows = bars.map(b => b.low);
-    const volumes = bars.map(b => b.volume);
+    const highs = bars.map((b) => b.high);
+    const lows = bars.map((b) => b.low);
+    const volumes = bars.map((b) => b.volume);
 
     return {
       barsAnalyzed: bars.length,
@@ -495,16 +497,16 @@ export class EnhancedDailyCommand implements Command {
         high: Math.max(...highs),
         low: Math.min(...lows),
         open: bars[0]?.open,
-        close: bars[bars.length - 1]?.close
+        close: bars[bars.length - 1]?.close,
       },
       volume: {
         total: volumes.reduce((a, b) => a + b, 0),
-        average: volumes.reduce((a, b) => a + b, 0) / volumes.length
+        average: volumes.reduce((a, b) => a + b, 0) / volumes.length,
       },
       dataQuality: {
         gaps: this.detectGaps(bars),
-        missingBars: this.detectMissingBars(bars)
-      }
+        missingBars: this.detectMissingBars(bars),
+      },
     };
   }
 
@@ -519,7 +521,7 @@ export class EnhancedDailyCommand implements Command {
     const [startHour, startMin] = session.start.split(':').map(Number);
     const [endHour, endMin] = session.end.split(':').map(Number);
 
-    return bars.filter(bar => {
+    return bars.filter((bar) => {
       const barTime = new Date(bar.timestamp);
       const minutes = barTime.getHours() * 60 + barTime.getMinutes();
       const startMinutes = startHour * 60 + startMin;
@@ -534,11 +536,11 @@ export class EnhancedDailyCommand implements Command {
    */
   private calculateSessionExtremes(bars: any[]): any {
     return {
-      high: Math.max(...bars.map(b => b.high)),
-      low: Math.min(...bars.map(b => b.low)),
+      high: Math.max(...bars.map((b) => b.high)),
+      low: Math.min(...bars.map((b) => b.low)),
       open: bars[0]?.open || 0,
       close: bars[bars.length - 1]?.close || 0,
-      totalVolume: bars.reduce((sum, b) => sum + (b.volume || 0), 0)
+      totalVolume: bars.reduce((sum, b) => sum + (b.volume || 0), 0),
     };
   }
 
@@ -590,7 +592,7 @@ export class EnhancedDailyCommand implements Command {
       direction: 'NEUTRAL',
       confidence: 0,
       strength: 'WEAK',
-      reason: 'Analysis unavailable'
+      reason: 'Analysis unavailable',
     };
   }
 
@@ -601,7 +603,7 @@ export class EnhancedDailyCommand implements Command {
     return {
       type: 'UNKNOWN',
       characteristics: ['Analysis unavailable'],
-      volatility: 0
+      volatility: 0,
     };
   }
 
@@ -615,7 +617,7 @@ export class EnhancedDailyCommand implements Command {
   private handleNoData(request: AnalysisRequest, startTime: number): CommandResult {
     this.logger.warn('No data available for analysis', {
       symbol: request.symbol,
-      date: request.date.toISOString()
+      date: request.date.toISOString(),
     });
 
     const message = `No market data available for ${request.symbol} on ${request.date.toISOString().split('T')[0]}`;
@@ -627,8 +629,8 @@ export class EnhancedDailyCommand implements Command {
       metadata: {
         symbol: request.symbol,
         date: request.date.toISOString(),
-        error: 'NO_DATA'
-      }
+        error: 'NO_DATA',
+      },
     };
   }
 
@@ -645,7 +647,7 @@ export class EnhancedDailyCommand implements Command {
       args,
       options,
       error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     });
 
     // Check for special error cases
@@ -654,7 +656,7 @@ export class EnhancedDailyCommand implements Command {
         success: false,
         output: 'Data providers unavailable, stale cache data exists',
         error: error,
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
       };
     }
 
@@ -662,7 +664,7 @@ export class EnhancedDailyCommand implements Command {
       success: false,
       output: null,
       error: error instanceof Error ? error : new Error(String(error)),
-      duration: Date.now() - startTime
+      duration: Date.now() - startTime,
     };
   }
 }
@@ -680,7 +682,7 @@ export const DEFAULT_SESSIONS: SessionDefinition[] = [
   { name: 'Lunch', start: '11:30', end: '13:30', required: true },
   { name: 'Afternoon', start: '13:30', end: '15:30', required: true },
   { name: 'Close', start: '15:30', end: '16:00', required: true },
-  { name: 'After-Hours', start: '16:00', end: '20:00' }
+  { name: 'After-Hours', start: '16:00', end: '20:00' },
 ];
 
 /**
@@ -690,13 +692,13 @@ export const DEFAULT_SETTINGS = {
   defaultSymbol: 'SPY',
   defaultFormat: 'text' as const,
   cacheTTL: {
-    historical: 86400000,  // 24 hours
-    realtime: 300000       // 5 minutes
+    historical: 86400000, // 24 hours
+    realtime: 300000, // 5 minutes
   },
   sessions: DEFAULT_SESSIONS,
   errorHandling: {
     allowPartialResults: true,
     fallbackToCache: true,
-    maxRetries: 3
-  }
+    maxRetries: 3,
+  },
 };

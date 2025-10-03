@@ -22,8 +22,8 @@ class MockHealthyService implements Service {
       message: 'All systems operational',
       details: {
         uptime: 12345,
-        connections: 5
-      }
+        connections: 5,
+      },
     };
   }
 }
@@ -40,8 +40,8 @@ class MockUnhealthyService implements Service {
       healthy: false,
       message: 'Service degraded',
       details: {
-        error: 'Connection timeout'
-      }
+        error: 'Connection timeout',
+      },
     };
   }
 }
@@ -55,7 +55,7 @@ describe('HealthCommand', () => {
     container = new Container();
     logger = createLogger({
       level: 'error', // Quiet during tests
-      format: 'json'
+      format: 'json',
     });
     healthCommand = new HealthCommand({ container, logger });
   });
@@ -181,7 +181,7 @@ describe('HealthCommand', () => {
     it('should include wiring graph when verbose', async () => {
       const result = await healthCommand.execute([], {
         format: 'json',
-        verbose: true
+        verbose: true,
       });
 
       const output = JSON.parse(result.output);
@@ -192,7 +192,7 @@ describe('HealthCommand', () => {
     it('should not include wiring graph when not verbose', async () => {
       const result = await healthCommand.execute([], {
         format: 'json',
-        verbose: false
+        verbose: false,
       });
 
       const output = JSON.parse(result.output);
@@ -210,7 +210,7 @@ describe('HealthCommand', () => {
 
       const errorHealthCommand = new HealthCommand({
         container: errorContainer,
-        logger
+        logger,
       });
 
       const result = await errorHealthCommand.execute([], {});
@@ -227,7 +227,7 @@ describe('HealthCommand', () => {
 
       const errorHealthCommand = new HealthCommand({
         container: errorContainer,
-        logger
+        logger,
       });
 
       const result = await errorHealthCommand.execute([], {});

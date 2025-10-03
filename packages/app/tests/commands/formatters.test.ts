@@ -23,17 +23,11 @@ import { promises as fs } from 'fs';
 
 // Load config fixtures
 const defaultConfig = JSON.parse(
-  await fs.readFile(
-    new URL('./fixtures/configs/default-config.json', import.meta.url),
-    'utf-8'
-  )
+  await fs.readFile(new URL('./fixtures/configs/default-config.json', import.meta.url), 'utf-8')
 );
 
 const customConfig = JSON.parse(
-  await fs.readFile(
-    new URL('./fixtures/configs/custom-config.json', import.meta.url),
-    'utf-8'
-  )
+  await fs.readFile(new URL('./fixtures/configs/custom-config.json', import.meta.url), 'utf-8')
 );
 
 // Load confluence fixture
@@ -66,12 +60,12 @@ describe('SetupFormatter', () => {
       formatting: defaultConfig.formatting,
       cache: defaultConfig.cache,
       validation: {
-        valid: true
+        valid: true,
       },
       timestamp: '2025-09-30T10:00:00Z',
       metadata: {
-        configPath: '/tmp/test-user.json'
-      }
+        configPath: '/tmp/test-user.json',
+      },
     };
   });
 
@@ -157,8 +151,8 @@ describe('SetupFormatter', () => {
         ...sampleReport,
         validation: {
           valid: false,
-          errors: ['Weight sum incorrect']
-        }
+          errors: ['Weight sum incorrect'],
+        },
       };
 
       const output = formatter.format(invalidReport, 'text');
@@ -257,8 +251,8 @@ describe('SetupFormatter', () => {
         validation: {
           valid: false,
           errors: ['Error 1', 'Error 2'],
-          warnings: ['Warning 1']
-        }
+          warnings: ['Warning 1'],
+        },
       };
 
       const output = formatter.format(invalidReport, 'markdown');
@@ -284,23 +278,23 @@ describe('ConfluenceFormatter', () => {
         {
           name: 'Fair Value Gaps',
           weight: 0.35,
-          value: 0.90,
-          description: 'Strong FVG presence'
+          value: 0.9,
+          description: 'Strong FVG presence',
         },
         {
           name: 'Order Blocks',
           weight: 0.35,
           value: 0.85,
-          description: 'Clear order block formation'
-        }
+          description: 'Clear order block formation',
+        },
       ],
       fvgZones: btcConfluenceFixture.result.fvgZones,
       orderBlocks: btcConfluenceFixture.result.orderBlocks,
       overlaps: btcConfluenceFixture.result.overlaps,
       metadata: {
         barsAnalyzed: 10,
-        cacheHit: false
-      }
+        cacheHit: false,
+      },
     };
   });
 
@@ -478,8 +472,8 @@ describe('ExecutionFormatter', () => {
       metadata: {
         bars5mAnalyzed: 7,
         bars1mAnalyzed: 5,
-        cacheHit: false
-      }
+        cacheHit: false,
+      },
     };
   });
 
@@ -567,7 +561,7 @@ describe('ExecutionFormatter', () => {
         confirmation: { confirmed: false, reason: 'Score too low' },
         entryTrigger: undefined,
         execution: undefined,
-        riskManagement: undefined
+        riskManagement: undefined,
       };
 
       const output = formatter.format(noExecReport, 'text');
@@ -660,7 +654,7 @@ describe('ExecutionFormatter', () => {
     it('should handle report without entry trigger', () => {
       const noTriggerReport = {
         ...sampleReport,
-        entryTrigger: undefined
+        entryTrigger: undefined,
       };
 
       const output = formatter.format(noTriggerReport, 'text');
@@ -671,7 +665,7 @@ describe('ExecutionFormatter', () => {
       const noExecReport = {
         ...sampleReport,
         execution: undefined,
-        riskManagement: undefined
+        riskManagement: undefined,
       };
 
       const output = formatter.format(noExecReport, 'text');
@@ -681,7 +675,7 @@ describe('ExecutionFormatter', () => {
     it('should handle report without risk management', () => {
       const noRiskReport = {
         ...sampleReport,
-        riskManagement: undefined
+        riskManagement: undefined,
       };
 
       const output = formatter.format(noRiskReport, 'text');

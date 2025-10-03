@@ -140,14 +140,7 @@ function timeframeToMs(timeframe: Timeframe): number {
  * ```
  */
 export async function getBars(options: GetBarsOptions): Promise<GetBarsResult> {
-  const {
-    symbol,
-    timeframe,
-    from,
-    to,
-    enableChunking = true,
-    maxDaysPerChunk = 30,
-  } = options;
+  const { symbol, timeframe, from, to, enableChunking = true, maxDaysPerChunk = 30 } = options;
 
   // Validate inputs
   if (from >= to) {
@@ -155,9 +148,7 @@ export async function getBars(options: GetBarsOptions): Promise<GetBarsResult> {
   }
 
   // Calculate chunks if enabled
-  const chunks = enableChunking
-    ? calculateChunks(from, to, maxDaysPerChunk)
-    : [{ from, to }];
+  const chunks = enableChunking ? calculateChunks(from, to, maxDaysPerChunk) : [{ from, to }];
 
   // Fetch all chunks
   const allBars: Bar[] = [];

@@ -30,7 +30,7 @@ describe('PII Redaction', () => {
       password: 'secret123',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"username":"alice"'), 'Username should not be redacted');
@@ -52,7 +52,7 @@ describe('PII Redaction', () => {
       PASSWORD: 'secret3',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(!logContent.includes('secret1'), 'passwd should be redacted');
@@ -75,7 +75,7 @@ describe('PII Redaction', () => {
       secret: 'my-secret',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(!logContent.includes('sk-abc123'), 'api_key should be redacted');
@@ -98,7 +98,7 @@ describe('PII Redaction', () => {
       auth: 'Basic xyz789',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"method":"GET"'), 'Non-sensitive fields should remain');
@@ -120,12 +120,15 @@ describe('PII Redaction', () => {
       public_key: 'safe-to-log',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(!logContent.includes('BEGIN PRIVATE KEY'), 'private_key should be redacted');
     assert.ok(!logContent.includes('MIIEvQIBADANBgkqhkiG9w0BA'), 'privateKey should be redacted');
-    assert.ok(logContent.includes('"public_key":"safe-to-log"'), 'public_key should not be redacted');
+    assert.ok(
+      logContent.includes('"public_key":"safe-to-log"'),
+      'public_key should not be redacted'
+    );
   });
 
   it('should redact credit card and SSN', async () => {
@@ -142,7 +145,7 @@ describe('PII Redaction', () => {
       ssn: '123-45-6789',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(!logContent.includes('4111-1111-1111-1111'), 'credit_card should be redacted');
@@ -169,7 +172,7 @@ describe('PII Redaction', () => {
       },
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"username":"alice"'), 'Nested username should remain');
@@ -193,7 +196,7 @@ describe('PII Redaction', () => {
       ],
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"username":"alice"'), 'Array usernames should remain');
@@ -217,12 +220,15 @@ describe('PII Redaction', () => {
       description: 'password reset feature',
     });
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(logContent.includes('"username":"alice"'), 'username should not be redacted');
     assert.ok(logContent.includes('"email":"alice@example.com"'), 'email should not be redacted');
     assert.ok(logContent.includes('"user_id":"12345"'), 'user_id should not be redacted');
-    assert.ok(logContent.includes('password reset feature'), 'description content should not be redacted');
+    assert.ok(
+      logContent.includes('password reset feature'),
+      'description content should not be redacted'
+    );
   });
 });

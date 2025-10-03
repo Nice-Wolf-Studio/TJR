@@ -59,7 +59,7 @@ function redactSensitiveFields(obj: any): any {
 
   // Handle arrays
   if (Array.isArray(obj)) {
-    return obj.map(item => redactSensitiveFields(item));
+    return obj.map((item) => redactSensitiveFields(item));
   }
 
   // Handle plain objects
@@ -69,9 +69,7 @@ function redactSensitiveFields(obj: any): any {
     }
 
     // Check if field name matches any sensitive pattern
-    const isSensitive = SENSITIVE_FIELD_PATTERNS.some(pattern =>
-      pattern.test(key)
-    );
+    const isSensitive = SENSITIVE_FIELD_PATTERNS.some((pattern) => pattern.test(key));
 
     if (isSensitive) {
       // Redact the field value
@@ -114,9 +112,7 @@ export const redactPII = format((info) => {
       redacted[key] = redactSensitiveFields(redacted[key]);
     } else if (!coreFields.includes(key)) {
       // Check if the key itself is sensitive
-      const isSensitive = SENSITIVE_FIELD_PATTERNS.some(pattern =>
-        pattern.test(key)
-      );
+      const isSensitive = SENSITIVE_FIELD_PATTERNS.some((pattern) => pattern.test(key));
       if (isSensitive) {
         redacted[key] = REDACTED;
       }

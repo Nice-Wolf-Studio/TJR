@@ -3,11 +3,7 @@
  */
 
 import type { Logger } from '@tjr/logger';
-import type {
-  DiscordService,
-  DiscordEmbed,
-  DiscordStatus
-} from './types.js';
+import type { DiscordService, DiscordEmbed, DiscordStatus } from './types.js';
 import type { Command } from '../../commands/types.js';
 import type { HealthStatus } from '../../container/types.js';
 
@@ -43,7 +39,7 @@ export class DiscordStub implements DiscordService {
   async initialize(): Promise<void> {
     this.logger.info('Discord stub service initializing', {
       enabled: this.enabled,
-      simulateLatency: this.simulateLatency
+      simulateLatency: this.simulateLatency,
     });
 
     if (this.enabled) {
@@ -65,8 +61,8 @@ export class DiscordStub implements DiscordService {
       details: {
         enabled: this.enabled,
         commandsRegistered: this.commands.size,
-        eventHandlers: this.eventHandlers.size
-      }
+        eventHandlers: this.eventHandlers.size,
+      },
     };
   }
 
@@ -75,14 +71,14 @@ export class DiscordStub implements DiscordService {
 
     this.logger.info('Discord stub sending message', {
       channel,
-      message: message.substring(0, 100) // Log first 100 chars
+      message: message.substring(0, 100), // Log first 100 chars
     });
 
     // Simulate message sent event
     this.emit('messageSent', {
       channel,
       content: message,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -92,21 +88,21 @@ export class DiscordStub implements DiscordService {
     this.logger.info('Discord stub sending embed', {
       channel,
       title: embed.title,
-      fields: embed.fields?.length || 0
+      fields: embed.fields?.length || 0,
     });
 
     // Simulate embed sent event
     this.emit('embedSent', {
       channel,
       embed,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
   registerCommand(command: Command): void {
     this.logger.info('Discord stub registering command', {
       name: command.name,
-      description: command.description
+      description: command.description,
     });
 
     this.commands.set(command.name, command);
@@ -139,7 +135,7 @@ export class DiscordStub implements DiscordService {
       uptime: Date.now() - this.startTime,
       guilds: 1, // Simulated
       channels: 5, // Simulated
-      users: 10 // Simulated
+      users: 10, // Simulated
     };
   }
 
@@ -154,7 +150,7 @@ export class DiscordStub implements DiscordService {
 
     this.logger.info('Discord stub simulating command', {
       command: commandName,
-      args
+      args,
     });
 
     const result = await command.execute(args, {});
@@ -163,20 +159,20 @@ export class DiscordStub implements DiscordService {
 
   private async simulateDelay(): Promise<void> {
     if (this.simulateLatency) {
-      await new Promise(resolve => setTimeout(resolve, this.latencyMs));
+      await new Promise((resolve) => setTimeout(resolve, this.latencyMs));
     }
   }
 
   private emit(event: string, data: any): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         try {
           handler(data);
         } catch (error) {
           this.logger.error('Discord stub event handler error', {
             event,
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       });

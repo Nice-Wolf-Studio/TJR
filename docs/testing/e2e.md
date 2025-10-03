@@ -73,12 +73,14 @@ gh workflow run e2e-fixtures.yml -f scenario=01
 **Description:** Full pipeline test with SPY on a strong uptrend day (2025-09-29)
 
 **Fixture:**
+
 - Symbol: SPY
 - Date: 2025-09-29
 - Timeframe: 5m
 - Type: Trending up
 
 **Expected Outputs:**
+
 - 78 bars (full trading day)
 - Multiple Fair Value Gaps detected
 - Multiple Order Blocks identified
@@ -96,12 +98,14 @@ gh workflow run e2e-fixtures.yml -f scenario=01
 **Description:** Full pipeline test with QQQ on a consolidation/ranging day
 
 **Fixture:**
+
 - Symbol: QQQ
 - Date: 2025-09-27
 - Timeframe: 5m
 - Type: Ranging/consolidation
 
 **Expected Outputs:**
+
 - 78 bars (full trading day)
 - Some Fair Value Gaps detected
 - Some Order Blocks identified
@@ -119,12 +123,14 @@ gh workflow run e2e-fixtures.yml -f scenario=01
 **Description:** Test multi-timeframe analysis with 5m and 1m bars for SPY
 
 **Fixture:**
+
 - Symbol: SPY
 - Date: 2025-09-29
 - Timeframes: 5m, 1m
 - Type: Trending up
 
 **Expected Outputs:**
+
 - 5m: 78 bars with FVGs and Order Blocks
 - 1m: 390 bars with FVGs and Order Blocks
 - Timeframe alignment detected
@@ -141,12 +147,14 @@ gh workflow run e2e-fixtures.yml -f scenario=01
 **Description:** Complete pipeline from provider to execution zones with confluence scoring
 
 **Fixture:**
+
 - Symbol: IWM
 - Date: 2025-09-29
 - Timeframe: 5m
 - Type: Trending up
 
 **Expected Outputs:**
+
 - 78 bars
 - Fair Value Gaps and Order Blocks detected
 - Confluences identified (score >= 2)
@@ -164,12 +172,14 @@ gh workflow run e2e-fixtures.yml -f scenario=01
 **Description:** Test cache behavior with cold start (miss) and warm cache (hit)
 
 **Fixture:**
+
 - Symbol: SPY
 - Date: 2025-09-29
 - Timeframe: 5m
 - Type: Trending up
 
 **Expected Outputs:**
+
 - Cold start: Cache miss, loads from provider (fixture)
 - Warm cache: Cache hit, loads from cache
 - Both produce identical outputs
@@ -188,6 +198,7 @@ Snapshots are JSON files containing the expected outputs for each scenario. They
 **Location:** `e2e/specs/snapshots/scenario-*.json`
 
 **Contents:**
+
 - Bars data
 - Detected FVGs
 - Identified Order Blocks
@@ -204,6 +215,7 @@ Update snapshots when:
 3. **New features:** Added execution zones, risk levels, etc.
 
 **Do NOT update snapshots if:**
+
 - Tests fail unexpectedly (investigate first!)
 - Outputs look wrong (fix the bug, don't hide it)
 - You don't understand why outputs changed
@@ -259,12 +271,7 @@ Create `e2e/specs/scenarios/scenario-XX-name.json`:
     "minOrderBlockCount": 1
   },
   "pipeline": {
-    "steps": [
-      "provider-fixture",
-      "composite-bars",
-      "analysis-kit",
-      "tjr-tools-confluences"
-    ]
+    "steps": ["provider-fixture", "composite-bars", "analysis-kit", "tjr-tools-confluences"]
   },
   "tags": ["your", "tags", "here"]
 }
@@ -293,6 +300,7 @@ echo $?  # Should be 0
 ### Step 4: Document in README
 
 Update this file with:
+
 - Scenario description
 - Purpose and use case
 - Expected behavior
@@ -309,15 +317,17 @@ Update this file with:
 **Cause:** Fixture generator produced different number of bars than expected
 
 **Solution:**
+
 1. Check fixture configuration in scenario JSON
 2. Verify `barCount` in `expectedOutputs` matches fixture type
-3. Full trading day = 78 bars (6.5 hours * 12 five-minute bars/hour)
+3. Full trading day = 78 bars (6.5 hours \* 12 five-minute bars/hour)
 
 #### "FVG count below minimum"
 
 **Cause:** FVG detection logic changed or fixture data doesn't produce enough gaps
 
 **Solution:**
+
 1. Review FVG detection algorithm in `@tjr/tjr-tools`
 2. Check if fixture data has sufficient price gaps
 3. Adjust `minFvgCount` if expectations were too high
@@ -328,6 +338,7 @@ Update this file with:
 **Cause:** Running test before generating snapshot
 
 **Solution:**
+
 ```bash
 # Generate snapshot first
 pnpm e2e:update
@@ -341,6 +352,7 @@ pnpm e2e
 **Cause:** Code changes altered outputs
 
 **Solution:**
+
 1. Review what changed: `git diff e2e/specs/snapshots/`
 2. If changes are correct: `pnpm e2e:update`
 3. If changes are wrong: Fix the bug, don't update snapshot
@@ -350,11 +362,13 @@ pnpm e2e
 #### Tests taking too long (>2 minutes)
 
 **Causes:**
+
 - Too many scenarios
 - Complex fixture generation
 - Inefficient validation
 
 **Solutions:**
+
 - Profile with `time pnpm e2e`
 - Simplify fixture data
 - Optimize validation logic
@@ -363,11 +377,13 @@ pnpm e2e
 #### CI timeout (>10 minutes)
 
 **Causes:**
+
 - Network issues (shouldn't happen with fixtures)
 - Dependency installation slow
 - Test runner hanging
 
 **Solutions:**
+
 - Check CI logs for bottlenecks
 - Verify pnpm cache is working
 - Ensure no live API calls (should be fixtures only)

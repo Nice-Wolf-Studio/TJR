@@ -50,7 +50,7 @@ export function parseIntradayResponse(response: AlphaVantageIntradayResponse): P
 
   // Find time series data
   // Key format: "Time Series (1min)", "Time Series (5min)", etc.
-  const timeSeriesKey = Object.keys(response).find(key => key.startsWith('Time Series'));
+  const timeSeriesKey = Object.keys(response).find((key) => key.startsWith('Time Series'));
 
   if (!timeSeriesKey) {
     throw new ParseError('No time series data found in Alpha Vantage response', response);
@@ -335,7 +335,7 @@ export function validateBars(bars: ParsedBar[]): string[] {
   }
 
   // Check for zero volume bars
-  const zeroVolumeBars = bars.filter(bar => bar.volume === 0);
+  const zeroVolumeBars = bars.filter((bar) => bar.volume === 0);
   if (zeroVolumeBars.length > 0) {
     warnings.push(`Found ${zeroVolumeBars.length} bars with zero volume`);
   }

@@ -61,7 +61,7 @@ concurrency:
 
 # Restrict permissions to minimum required (read-only access to code)
 permissions:
-  contents: read  # Only needs to read code for checkout
+  contents: read # Only needs to read code for checkout
 
 jobs:
   # Job: Run smoke tests per provider
@@ -75,14 +75,14 @@ jobs:
       matrix:
         # Dynamically set matrix based on input
         provider: ${{ fromJSON(inputs.provider == 'all' && '["yahoo", "polygon"]' || format('["{0}"]', inputs.provider)) }}
-      fail-fast: false  # Continue testing other providers if one fails
+      fail-fast: false # Continue testing other providers if one fails
 
     steps:
       # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1  # Shallow clone for faster checkout
+          fetch-depth: 1 # Shallow clone for faster checkout
 
       # Step 2: Setup Node.js with pnpm caching
       - name: Setup Node.js

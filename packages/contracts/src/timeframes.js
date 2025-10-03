@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @fileoverview Timeframe enumeration and utilities for TJR trading system.
  *
@@ -7,7 +7,7 @@
  *
  * @module @tjr/contracts/timeframes
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.Timeframe = void 0;
 exports.isValidTimeframe = isValidTimeframe;
 exports.timeframeToMinutes = timeframeToMinutes;
@@ -28,18 +28,18 @@ exports.getAllTimeframes = getAllTimeframes;
  */
 var Timeframe;
 (function (Timeframe) {
-    /** 1-minute bars - highest resolution intraday */
-    Timeframe["M1"] = "1";
-    /** 5-minute bars - common intraday timeframe */
-    Timeframe["M5"] = "5";
-    /** 10-minute bars - reduced noise intraday */
-    Timeframe["M10"] = "10";
-    /** 1-hour bars - hourly analysis */
-    Timeframe["H1"] = "60";
-    /** 4-hour bars - swing trading timeframe */
-    Timeframe["H4"] = "240";
-    /** Daily bars - daily swing analysis */
-    Timeframe["D1"] = "1D";
+  /** 1-minute bars - highest resolution intraday */
+  Timeframe['M1'] = '1';
+  /** 5-minute bars - common intraday timeframe */
+  Timeframe['M5'] = '5';
+  /** 10-minute bars - reduced noise intraday */
+  Timeframe['M10'] = '10';
+  /** 1-hour bars - hourly analysis */
+  Timeframe['H1'] = '60';
+  /** 4-hour bars - swing trading timeframe */
+  Timeframe['H4'] = '240';
+  /** Daily bars - daily swing analysis */
+  Timeframe['D1'] = '1D';
 })(Timeframe || (exports.Timeframe = Timeframe = {}));
 /**
  * Maps timeframe enum to minutes (for intraday) or special string (for daily).
@@ -47,12 +47,12 @@ var Timeframe;
  * @internal
  */
 const TIMEFRAME_MINUTES = {
-    [Timeframe.M1]: 1,
-    [Timeframe.M5]: 5,
-    [Timeframe.M10]: 10,
-    [Timeframe.H1]: 60,
-    [Timeframe.H4]: 240,
-    [Timeframe.D1]: '1D'
+  [Timeframe.M1]: 1,
+  [Timeframe.M5]: 5,
+  [Timeframe.M10]: 10,
+  [Timeframe.H1]: 60,
+  [Timeframe.H4]: 240,
+  [Timeframe.D1]: '1D',
 };
 /**
  * Timeframe display names for UI/logging.
@@ -60,12 +60,12 @@ const TIMEFRAME_MINUTES = {
  * @internal
  */
 const TIMEFRAME_LABELS = {
-    [Timeframe.M1]: '1 Minute',
-    [Timeframe.M5]: '5 Minutes',
-    [Timeframe.M10]: '10 Minutes',
-    [Timeframe.H1]: '1 Hour',
-    [Timeframe.H4]: '4 Hours',
-    [Timeframe.D1]: 'Daily'
+  [Timeframe.M1]: '1 Minute',
+  [Timeframe.M5]: '5 Minutes',
+  [Timeframe.M10]: '10 Minutes',
+  [Timeframe.H1]: '1 Hour',
+  [Timeframe.H4]: '4 Hours',
+  [Timeframe.D1]: 'Daily',
 };
 /**
  * Validates whether a string is a valid Timeframe enum value.
@@ -80,7 +80,7 @@ const TIMEFRAME_LABELS = {
  * ```
  */
 function isValidTimeframe(value) {
-    return Object.values(Timeframe).includes(value);
+  return Object.values(Timeframe).includes(value);
 }
 /**
  * Converts Timeframe to minutes (or 'D' for daily).
@@ -96,7 +96,7 @@ function isValidTimeframe(value) {
  * ```
  */
 function timeframeToMinutes(timeframe) {
-    return TIMEFRAME_MINUTES[timeframe];
+  return TIMEFRAME_MINUTES[timeframe];
 }
 /**
  * Gets human-readable label for a timeframe.
@@ -111,7 +111,7 @@ function timeframeToMinutes(timeframe) {
  * ```
  */
 function getTimeframeLabel(timeframe) {
-    return TIMEFRAME_LABELS[timeframe];
+  return TIMEFRAME_LABELS[timeframe];
 }
 /**
  * Compares two timeframes by duration.
@@ -127,8 +127,15 @@ function getTimeframeLabel(timeframe) {
  * ```
  */
 function compareTimeframes(a, b) {
-    const order = [Timeframe.M1, Timeframe.M5, Timeframe.M10, Timeframe.H1, Timeframe.H4, Timeframe.D1];
-    return order.indexOf(a) - order.indexOf(b);
+  const order = [
+    Timeframe.M1,
+    Timeframe.M5,
+    Timeframe.M10,
+    Timeframe.H1,
+    Timeframe.H4,
+    Timeframe.D1,
+  ];
+  return order.indexOf(a) - order.indexOf(b);
 }
 /**
  * Parses a string into a Timeframe, throwing if invalid.
@@ -144,10 +151,12 @@ function compareTimeframes(a, b) {
  * ```
  */
 function parseTimeframe(value) {
-    if (!isValidTimeframe(value)) {
-        throw new Error(`Invalid timeframe: ${value}. Must be one of: ${Object.values(Timeframe).join(', ')}`);
-    }
-    return value;
+  if (!isValidTimeframe(value)) {
+    throw new Error(
+      `Invalid timeframe: ${value}. Must be one of: ${Object.values(Timeframe).join(', ')}`
+    );
+  }
+  return value;
 }
 /**
  * Returns all supported timeframes in ascending order (smallest to largest).
@@ -160,6 +169,6 @@ function parseTimeframe(value) {
  * ```
  */
 function getAllTimeframes() {
-    return [Timeframe.M1, Timeframe.M5, Timeframe.M10, Timeframe.H1, Timeframe.H4, Timeframe.D1];
+  return [Timeframe.M1, Timeframe.M5, Timeframe.M10, Timeframe.H1, Timeframe.H4, Timeframe.D1];
 }
 //# sourceMappingURL=timeframes.js.map

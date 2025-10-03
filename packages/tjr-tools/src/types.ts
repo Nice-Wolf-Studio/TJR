@@ -7,7 +7,12 @@ import type { MarketBar } from '@tjr/contracts';
 import type { RiskConfig, RiskCalculationInput } from './risk/index.js';
 
 export type { MarketBar } from '@tjr/contracts';
-export type { RiskConfig, RiskCalculationInput, RiskManagementResult, PartialExitLevel } from './risk/index.js';
+export type {
+  RiskConfig,
+  RiskCalculationInput,
+  RiskManagementResult,
+  PartialExitLevel,
+} from './risk/index.js';
 
 /**
  * Fair Value Gap (FVG) zone detected in price action.

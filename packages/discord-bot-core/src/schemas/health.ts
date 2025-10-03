@@ -32,8 +32,11 @@ export interface HealthResponse {
   latency?: number;
   timestamp: string;
   version?: string;
-  services?: Record<string, {
-    status: 'up' | 'down' | 'unknown';
-    latency?: number;
-  }>;
+  services?: Record<
+    string,
+    {
+      status: 'up' | 'down' | 'unknown';
+      latency?: number;
+    }
+  >;
 }

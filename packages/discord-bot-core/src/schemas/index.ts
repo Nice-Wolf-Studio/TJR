@@ -12,21 +12,18 @@ import type { CommandSchema } from '../types/index.js';
 /**
  * All available command schemas
  */
-export const schemas: CommandSchema[] = [
-  healthSchema,
-  dailySchema,
-];
+export const schemas: CommandSchema[] = [healthSchema, dailySchema];
 
 /**
  * Get schema by name
  */
 export function getSchema(name: string): CommandSchema | undefined {
-  return schemas.find(schema => schema.name === name);
+  return schemas.find((schema) => schema.name === name);
 }
 
 /**
  * Get all schema names
  */
 export function getSchemaNames(): string[] {
-  return schemas.map(schema => schema.name);
+  return schemas.map((schema) => schema.name);
 }

@@ -85,7 +85,7 @@ export const DEFAULT_USER_CONFIG: UserConfig = {
     enabled: true,
     ttl: {
       confluence: 300000, // 5 minutes
-      execution: 60000,   // 1 minute
+      execution: 60000, // 1 minute
     },
   },
 };
@@ -214,24 +214,39 @@ export class FileConfigService implements ConfigService {
     });
 
     // Validate FVG options
-    if (config.confluence.fvg.minGapSizeATR !== undefined && config.confluence.fvg.minGapSizeATR <= 0) {
+    if (
+      config.confluence.fvg.minGapSizeATR !== undefined &&
+      config.confluence.fvg.minGapSizeATR <= 0
+    ) {
       errors.push('FVG minGapSizeATR must be positive');
     }
 
     // Validate Order Block options
-    if (config.confluence.orderBlock.minVolumeRatio !== undefined && config.confluence.orderBlock.minVolumeRatio < 1) {
+    if (
+      config.confluence.orderBlock.minVolumeRatio !== undefined &&
+      config.confluence.orderBlock.minVolumeRatio < 1
+    ) {
       warnings.push('Order Block minVolumeRatio below 1.0 may produce many false positives');
     }
-    if (config.confluence.orderBlock.minRejection !== undefined &&
-        (config.confluence.orderBlock.minRejection < 0 || config.confluence.orderBlock.minRejection > 1)) {
+    if (
+      config.confluence.orderBlock.minRejection !== undefined &&
+      (config.confluence.orderBlock.minRejection < 0 ||
+        config.confluence.orderBlock.minRejection > 1)
+    ) {
       errors.push('Order Block minRejection must be between 0 and 1');
     }
 
     // Validate execution thresholds
-    if (config.execution.confirmation5m.minConfluenceScore < 0 || config.execution.confirmation5m.minConfluenceScore > 100) {
+    if (
+      config.execution.confirmation5m.minConfluenceScore < 0 ||
+      config.execution.confirmation5m.minConfluenceScore > 100
+    ) {
       errors.push('5m minConfluenceScore must be between 0 and 100');
     }
-    if (config.execution.entry1m.minConfluenceScore < 0 || config.execution.entry1m.minConfluenceScore > 100) {
+    if (
+      config.execution.entry1m.minConfluenceScore < 0 ||
+      config.execution.entry1m.minConfluenceScore > 100
+    ) {
       errors.push('1m minConfluenceScore must be between 0 and 100');
     }
 
@@ -239,7 +254,10 @@ export class FileConfigService implements ConfigService {
     if (config.execution.risk.maxRiskPerTrade <= 0 || config.execution.risk.maxRiskPerTrade > 0.1) {
       warnings.push('maxRiskPerTrade outside typical range (0-10%)');
     }
-    if (config.execution.risk.defaultStopPercent <= 0 || config.execution.risk.defaultStopPercent > 0.1) {
+    if (
+      config.execution.risk.defaultStopPercent <= 0 ||
+      config.execution.risk.defaultStopPercent > 0.1
+    ) {
       warnings.push('defaultStopPercent outside typical range (0-10%)');
     }
     if (config.execution.risk.defaultRiskReward < 1) {
@@ -273,7 +291,7 @@ export class FileConfigService implements ConfigService {
     if (sanitizedUserId !== userId) {
       this.logger.warn('UserId was sanitized to prevent path traversal', {
         original: userId,
-        sanitized: sanitizedUserId
+        sanitized: sanitizedUserId,
       });
     }
 
@@ -288,7 +306,10 @@ export class FileConfigService implements ConfigService {
       confluence: {
         weights: { ...DEFAULT_USER_CONFIG.confluence.weights, ...userConfig.confluence?.weights },
         fvg: { ...DEFAULT_USER_CONFIG.confluence.fvg, ...userConfig.confluence?.fvg },
-        orderBlock: { ...DEFAULT_USER_CONFIG.confluence.orderBlock, ...userConfig.confluence?.orderBlock },
+        orderBlock: {
+          ...DEFAULT_USER_CONFIG.confluence.orderBlock,
+          ...userConfig.confluence?.orderBlock,
+        },
       },
       execution: {
         confirmation5m: {
@@ -305,7 +326,9 @@ export class FileConfigService implements ConfigService {
         },
         dryRun: userConfig.execution?.dryRun,
       },
-      risk: userConfig.risk ? { ...DEFAULT_USER_CONFIG.risk, ...userConfig.risk } : DEFAULT_USER_CONFIG.risk,
+      risk: userConfig.risk
+        ? { ...DEFAULT_USER_CONFIG.risk, ...userConfig.risk }
+        : DEFAULT_USER_CONFIG.risk,
       formatting: { ...DEFAULT_USER_CONFIG.formatting, ...userConfig.formatting },
       cache: {
         ...DEFAULT_USER_CONFIG.cache,

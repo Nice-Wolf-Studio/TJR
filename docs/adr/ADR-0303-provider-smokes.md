@@ -266,12 +266,12 @@ Multiple features to minimize API quota consumption and costs.
 
 **Cost Estimation (Per Run):**
 
-| Configuration | API Calls | Polygon Cost (Starter) | Yahoo Cost |
-|---------------|-----------|------------------------|------------|
-| Single provider, 1h | 1-2 | $0.0003-$0.001 | Free |
-| All providers, 1h | 2-4 | $0.0006-$0.002 | Free |
-| Single provider, 1m | 5-10 | $0.0015-$0.01 | Free |
-| All providers, 1m | 10-20 | $0.003-$0.02 | Free |
+| Configuration       | API Calls | Polygon Cost (Starter) | Yahoo Cost |
+| ------------------- | --------- | ---------------------- | ---------- |
+| Single provider, 1h | 1-2       | $0.0003-$0.001         | Free       |
+| All providers, 1h   | 2-4       | $0.0006-$0.002         | Free       |
+| Single provider, 1m | 5-10      | $0.0015-$0.01          | Free       |
+| All providers, 1m   | 10-20     | $0.003-$0.02           | Free       |
 
 ---
 
@@ -308,12 +308,12 @@ Multiple features to minimize API quota consumption and costs.
 
 ### Input Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `provider` | choice | `all` | Provider to test (`yahoo`, `polygon`, `all`) |
-| `symbol` | string | `ES=F` | Trading symbol (provider-specific format) |
-| `timeframe` | choice | `1h` | Data timeframe (`1m`, `5m`, `1h`, `1D`) |
-| `dry-run` | boolean | `false` | Validate setup without API calls |
+| Parameter   | Type    | Default | Description                                  |
+| ----------- | ------- | ------- | -------------------------------------------- |
+| `provider`  | choice  | `all`   | Provider to test (`yahoo`, `polygon`, `all`) |
+| `symbol`    | string  | `ES=F`  | Trading symbol (provider-specific format)    |
+| `timeframe` | choice  | `1h`    | Data timeframe (`1m`, `5m`, `1h`, `1D`)      |
+| `dry-run`   | boolean | `false` | Validate setup without API calls             |
 
 ### Secret Management
 

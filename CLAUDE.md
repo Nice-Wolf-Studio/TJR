@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **This repository follows the [Wolf Agents](https://github.com/Nice-Wolf-Studio/WolfAgents) multi-agent development framework.**
 
 ### Core Wolf Ethos
+
 - **Evidence first; opinions last** - Make decisions based on data and testing
 - **Smallest viable, reversible change** - Prefer incremental, rollback-friendly changes
 - **Additive before destructive** - Use shims, flags, and adapters before breaking changes
@@ -14,19 +15,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Readability/operability are features** - Code must be maintainable and debuggable
 
 ### Phase Lifecycle
+
 All work follows the Wolf Agents Phase Lifecycle:
+
 1. **Seed Brief** - Phase objectives and context (start of phase)
 2. **Pre-Phase Sweeps** - Meta + Governance setup (before shard work)
 3. **Shard Work** - Intake → Research/ADR → Implementation → Review → Merge
 4. **Close-Out Sweeps** - Meta + Governance validation (end of phase)
 
 ### Journaling Requirements
+
 - **Fragments**: Create journal entries in `docs/journal/_fragments/<phase>/`
 - **Append-only**: Never replace journals, only append
 - **Roll-up**: Fragments consolidate to `docs/journals/PHASE-[X].md` at phase closeout
 
 ### Command Grammar
+
 Control agent behavior with prefixes:
+
 - `OOC:` - Out of character (normal conversation)
 - `AS:Agent:` - Act as different agent temporarily
 - `META:` - System/meta discussion
@@ -37,6 +43,7 @@ Control agent behavior with prefixes:
 TJR Suite is a TypeScript monorepo for trading analysis and automation, using pnpm workspaces with strict TypeScript configuration and project references for incremental builds.
 
 **Key Technologies:**
+
 - Package Manager: pnpm 8.15.0 (frozen lockfile in CI)
 - Build System: TypeScript project references (incremental builds)
 - Code Quality: ESLint + Prettier (enforced in CI)
@@ -47,6 +54,7 @@ TJR Suite is a TypeScript monorepo for trading analysis and automation, using pn
 ## Common Commands
 
 ### Development Workflow
+
 ```bash
 # Install dependencies (use pnpm, not npm)
 pnpm install
@@ -77,6 +85,7 @@ pnpm clean
 ```
 
 ### Working with Packages
+
 ```bash
 # Build a specific package (from root)
 pnpm --filter @tjr/contracts build
@@ -90,6 +99,7 @@ node dist/bin/replay-run.js --fixture=path.json
 ```
 
 ### Versioning and Releases
+
 ```bash
 # Create a changeset for your changes
 pnpm changeset
@@ -161,6 +171,7 @@ contracts (zero dependencies)
 ### Pure Function Requirements (Analysis Kit)
 
 When working with `packages/analysis-kit/`, all functions MUST:
+
 - Be deterministic (same input → same output)
 - Have no side effects (no I/O, no wall-clock access)
 - Not mutate input parameters
@@ -170,6 +181,7 @@ When working with `packages/analysis-kit/`, all functions MUST:
 ### Error Handling
 
 Structured errors from `@tjr/contracts`:
+
 - Base class: `TJRError` with `code`, `data`, `timestamp`
 - Specialized errors: `ProviderRateLimitError`, `InsufficientBarsError`, `SymbolResolutionError`
 - All errors are serializable (JSON.stringify safe)
@@ -177,6 +189,7 @@ Structured errors from `@tjr/contracts`:
 ### CLI Design Philosophy (Dev Scripts)
 
 All CLI tools in `dev-scripts/` follow:
+
 1. **Dry-run by default**: Mutating ops require `--execute` flag
 2. **JSON output**: Machine-readable by default, `--pretty` for humans
 3. **Consistent exit codes**: 0 = success, 1 = partial failure/diffs, 2 = fatal error
@@ -185,6 +198,7 @@ All CLI tools in `dev-scripts/` follow:
 ## CI/CD
 
 **GitHub Actions Workflow** (`.github/workflows/ci.yml`):
+
 - Triggers: Push to `main`, `phase-**` branches; PRs to `main`
 - Steps: Install → Build → Test → Lint → Format Check
 - Additional: Dev-scripts smoke tests (CLI help commands)
@@ -212,7 +226,9 @@ All CLI tools in `dev-scripts/` follow:
 5. **Contracts as single source of truth**: All packages consume shared types, zero circular deps
 
 ### Wolf Agents Alignment
+
 Following Wolf Ethos principles:
+
 - **Additive strategy**: New packages don't break existing ones (contracts first)
 - **Reversibility**: Build tooling supports incremental rollback (TypeScript project references)
 - **Observability**: Structured logging via `@tjr-suite/logger` with PII redaction
@@ -262,7 +278,9 @@ pnpm --filter @tjr/contracts test
 ## Wolf Agents Workflow Integration
 
 ### Definition of Done (Wolf Ethos)
+
 For each change:
+
 - ✅ Reversible slice merged (flagged/seamed if needed)
 - ✅ Deterministic checks green (CI passes)
 - ✅ Evidence validates (tests, benchmarks, ADRs)
@@ -270,6 +288,7 @@ For each change:
 - ✅ Operability note for debugging
 
 ### Shard Workflow
+
 1. **Intake** - Create issue with clear acceptance criteria
 2. **Research/ADR** - Document decision before implementation
 3. **Implementation** - Create PR with journal fragment
@@ -277,13 +296,16 @@ For each change:
 5. **Merge** - Integrate after all checks pass
 
 ### Required Artifacts Per Shard
+
 - **Journal Fragment**: `docs/journal/_fragments/<phase>/<shard>-<description>.md`
 - **ADR** (if architectural): `docs/adr/ADR-<number>-<title>.md`
 - **Tests**: Unit and integration tests for new functionality
 - **Output Summary**: Links to PRs and journal entries
 
 ### Research Before Code
+
 **Mandatory**: ADR or research comment required before implementation for:
+
 - New packages or major features
 - Breaking changes
 - Security-sensitive code
@@ -293,15 +315,18 @@ For each change:
 ### Quality Gates by Risk Level
 
 **Low Risk** (typos, docs):
+
 - Comment-only governance
 - Fast path to merge
 
 **Standard** (features, bug fixes):
+
 - Code Reviewer approval
 - QA evidence (tests passing)
 - Deterministic checks green
 
 **High Risk** (security, breaking changes):
+
 - Code Reviewer + QA/Security + Architect
 - Agentic verification
 - Feature flags mandatory

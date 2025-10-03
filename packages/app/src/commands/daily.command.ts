@@ -9,7 +9,11 @@ import { Timeframe } from '@tjr/contracts';
 import { calculateDailyBias, classifyDayProfile, extractSessionExtremes } from '@tjr/analysis-kit';
 import type { ProviderService } from '../services/providers/types.js';
 import type { CacheService } from '../services/cache/types.js';
-import { DailyFormatter, type DailyAnalysisReport, type OutputFormat } from '../formatters/daily-formatter.js';
+import {
+  DailyFormatter,
+  type DailyAnalysisReport,
+  type OutputFormat,
+} from '../formatters/daily-formatter.js';
 import { sanitizeError } from '../utils/error-sanitizer.js';
 
 export interface DailyCommandConfig {
@@ -57,7 +61,7 @@ export class DailyCommand implements Command {
         symbol,
         date: date.toISOString(),
         format,
-        options
+        options,
       });
 
       // Check cache first if enabled
@@ -72,7 +76,7 @@ export class DailyCommand implements Command {
             cached.metadata = {
               ...cached.metadata,
               cacheHit: true,
-              latencyMs: Date.now() - startTime
+              latencyMs: Date.now() - startTime,
             };
           }
 
@@ -84,8 +88,8 @@ export class DailyCommand implements Command {
             metadata: {
               symbol,
               date: date.toISOString(),
-              cacheHit: true
-            }
+              cacheHit: true,
+            },
           };
         }
       }
@@ -97,33 +101,33 @@ export class DailyCommand implements Command {
         return {
           success: false,
           output: 'No data available for specified date',
-          duration: Date.now() - startTime
+          duration: Date.now() - startTime,
         };
       }
 
       // Convert bars to analysis-kit format
-      const analysisBars = bars.map(bar => ({
+      const analysisBars = bars.map((bar) => ({
         timestamp: new Date(bar.timestamp).getTime(),
         open: bar.open,
         high: bar.high,
         low: bar.low,
         close: bar.close,
-        volume: bar.volume
+        volume: bar.volume,
       }));
 
       // Calculate session extremes from full day
       const sessionExtremes = {
         rthOpen: analysisBars[0]?.open ?? 0,
         rthClose: analysisBars[analysisBars.length - 1]?.close ?? 0,
-        rthHigh: Math.max(...analysisBars.map(b => b.high)),
-        rthLow: Math.min(...analysisBars.map(b => b.low))
+        rthHigh: Math.max(...analysisBars.map((b) => b.high)),
+        rthLow: Math.min(...analysisBars.map((b) => b.low)),
       };
 
       // Perform analysis
       const [bias, profile, sessions] = await Promise.all([
         this.runBiasAnalysis(analysisBars, sessionExtremes),
         this.runProfileAnalysis(analysisBars, sessionExtremes),
-        this.runSessionAnalysis(analysisBars)
+        this.runSessionAnalysis(analysisBars),
       ]);
 
       // Build analysis report
@@ -133,18 +137,18 @@ export class DailyCommand implements Command {
         analysis: {
           bias,
           profile,
-          sessions
+          sessions,
         },
         statistics: {
           barsAnalyzed: bars.length,
           timeframe: '5m',
           range: {
-            high: Math.max(...bars.map(b => b.high)),
-            low: Math.min(...bars.map(b => b.low)),
-            close: bars[bars.length - 1]?.close ?? 0
-          }
+            high: Math.max(...bars.map((b) => b.high)),
+            low: Math.min(...bars.map((b) => b.low)),
+            close: bars[bars.length - 1]?.close ?? 0,
+          },
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // Add metadata if requested
@@ -152,7 +156,7 @@ export class DailyCommand implements Command {
         report.metadata = {
           provider: 'composite',
           cacheHit: false,
-          latencyMs: Date.now() - startTime
+          latencyMs: Date.now() - startTime,
         };
       }
 
@@ -162,7 +166,7 @@ export class DailyCommand implements Command {
         await this.cacheService.set(cacheKey, report, cacheTTL);
         this.logger.debug('Cached analysis report', {
           key: cacheKey,
-          ttl: cacheTTL
+          ttl: cacheTTL,
         });
       }
 
@@ -177,8 +181,8 @@ export class DailyCommand implements Command {
           symbol,
           date: date.toISOString(),
           barsAnalyzed: bars.length,
-          cacheHit: false
-        }
+          cacheHit: false,
+        },
       };
     } catch (error) {
       this.logger.error('Daily command failed', { error: sanitizeError(error, options.verbose) });
@@ -187,16 +191,12 @@ export class DailyCommand implements Command {
         success: false,
         output: null,
         error: error instanceof Error ? error : new Error(String(error)),
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
       };
     }
   }
 
-  private async fetchDayBars(
-    symbol: string,
-    date: Date,
-    dryRun?: boolean
-  ): Promise<MarketBar[]> {
+  private async fetchDayBars(symbol: string, date: Date, dryRun?: boolean): Promise<MarketBar[]> {
     // For dry run, use fixture data
     if (dryRun) {
       this.logger.info('Using fixture data for dry run');
@@ -213,7 +213,7 @@ export class DailyCommand implements Command {
     this.logger.info('Fetching bars for date range', {
       symbol,
       from: from.toISOString(),
-      to: to.toISOString()
+      to: to.toISOString(),
     });
 
     // Fetch 5-minute bars
@@ -221,13 +221,13 @@ export class DailyCommand implements Command {
       symbol,
       timeframe: Timeframe.M5,
       from: from.toISOString(),
-      to: to.toISOString()
+      to: to.toISOString(),
     });
 
     this.logger.info('Fetched bars for analysis', {
       symbol,
       date: date.toISOString(),
-      count: bars.length
+      count: bars.length,
     });
 
     return bars;
@@ -239,14 +239,14 @@ export class DailyCommand implements Command {
       return {
         direction: typeof result.bias === 'string' ? result.bias.toUpperCase() : result.bias,
         confidence: result.confidence,
-        reason: result.reason
+        reason: result.reason,
       };
     } catch (error) {
       this.logger.warn('Bias analysis failed', { error: sanitizeError(error) });
       return {
         direction: 'NEUTRAL',
         confidence: 0,
-        reason: 'Analysis failed'
+        reason: 'Analysis failed',
       };
     }
   }
@@ -257,14 +257,14 @@ export class DailyCommand implements Command {
       return {
         type: result.type,
         characteristics: result.characteristics,
-        volatility: result.volatility
+        volatility: result.volatility,
       };
     } catch (error) {
       this.logger.warn('Profile analysis failed', { error });
       return {
         type: 'K',
         characteristics: ['analysis failed'],
-        volatility: 0
+        volatility: 0,
       };
     }
   }
@@ -277,7 +277,7 @@ export class DailyCommand implements Command {
         { name: 'Morning', start: '09:30', end: '11:30' },
         { name: 'Lunch', start: '11:30', end: '13:30' },
         { name: 'Afternoon', start: '13:30', end: '15:30' },
-        { name: 'Close', start: '15:30', end: '16:00' }
+        { name: 'Close', start: '15:30', end: '16:00' },
       ];
 
       const sessionResults: any[] = [];
@@ -303,7 +303,7 @@ export class DailyCommand implements Command {
               high: extremes.rthHigh,
               low: extremes.rthLow,
               range: extremes.rthHigh - extremes.rthLow,
-              barCount: sessionBars.length
+              barCount: sessionBars.length,
             });
           }
         }
@@ -320,7 +320,7 @@ export class DailyCommand implements Command {
     const [startHour, startMin] = startTime.split(':').map(Number);
     const [endHour, endMin] = endTime.split(':').map(Number);
 
-    return bars.filter(bar => {
+    return bars.filter((bar) => {
       const barDate = new Date(bar.timestamp);
       const barMinutes = barDate.getHours() * 60 + barDate.getMinutes();
       const startMinutes = startHour! * 60 + startMin!;

@@ -222,7 +222,7 @@ async function executePipeline(scenario: ScenarioDefinition): Promise<any> {
       score: c.score,
       risk: {
         stopLoss: c.level * 0.995,
-        takeProfit: c.level * 1.010,
+        takeProfit: c.level * 1.01,
         riskRewardRatio: 2.0,
       },
     }));
@@ -238,9 +238,7 @@ function validateOutputs(scenario: ScenarioDefinition, output: any): string[] {
 
   // Validate bar count
   if (expected.barCount && output.bars.length !== expected.barCount) {
-    errors.push(
-      `Bar count mismatch: expected ${expected.barCount}, got ${output.bars.length}`
-    );
+    errors.push(`Bar count mismatch: expected ${expected.barCount}, got ${output.bars.length}`);
   }
 
   // Validate FVG presence
@@ -314,11 +312,15 @@ function compareSnapshot(
   const errors: string[] = [];
 
   if (snapshot.bars.length !== output.bars.length) {
-    errors.push(`Bar count mismatch: snapshot=${snapshot.bars.length}, output=${output.bars.length}`);
+    errors.push(
+      `Bar count mismatch: snapshot=${snapshot.bars.length}, output=${output.bars.length}`
+    );
   }
 
   if (snapshot.fvgs.length !== output.fvgs.length) {
-    errors.push(`FVG count mismatch: snapshot=${snapshot.fvgs.length}, output=${output.fvgs.length}`);
+    errors.push(
+      `FVG count mismatch: snapshot=${snapshot.fvgs.length}, output=${output.fvgs.length}`
+    );
   }
 
   if (snapshot.orderBlocks.length !== output.orderBlocks.length) {

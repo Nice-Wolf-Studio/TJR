@@ -94,8 +94,8 @@ export interface AlphaVantageDailyResponse {
  */
 export interface AlphaVantageErrorResponse {
   'Error Message'?: string;
-  'Note'?: string;
-  'Information'?: string;
+  Note?: string;
+  Information?: string;
 }
 
 /**

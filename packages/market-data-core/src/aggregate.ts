@@ -14,8 +14,8 @@
  * times to UTC before calling these functions.
  */
 
-import { Bar, Timeframe } from "./types.js";
-import { toMillis, alignTimestamp, isAligned } from "./timeframe.js";
+import { Bar, Timeframe } from './types.js';
+import { toMillis, alignTimestamp, isAligned } from './timeframe.js';
 
 /**
  * Options for aggregateBars function.
@@ -138,8 +138,8 @@ export function aggregateBars(
       if (curr.timestamp <= prev.timestamp) {
         throw new Error(
           `Bars must be sorted ascending by timestamp. ` +
-          `Found bars[${i - 1}].timestamp=${prev.timestamp}, ` +
-          `bars[${i}].timestamp=${curr.timestamp}`
+            `Found bars[${i - 1}].timestamp=${prev.timestamp}, ` +
+            `bars[${i}].timestamp=${curr.timestamp}`
         );
       }
     }
@@ -160,7 +160,7 @@ export function aggregateBars(
   if (sourceMs !== undefined && targetMs < sourceMs) {
     throw new Error(
       `Cannot disaggregate from ${sourceMs}ms to ${targetMs}ms. ` +
-      `Target timeframe must be >= source timeframe.`
+        `Target timeframe must be >= source timeframe.`
     );
   }
 
@@ -170,7 +170,7 @@ export function aggregateBars(
 
   for (const bar of bars) {
     // Align bar timestamp to target boundary (floor)
-    const boundary = alignTimestamp(bar.timestamp, targetTimeframe, "floor");
+    const boundary = alignTimestamp(bar.timestamp, targetTimeframe, 'floor');
 
     // Gap detection: Warn if there's a gap in the bar sequence
     if (warnOnGaps && sourceMs !== undefined && lastExpectedTs !== undefined) {
@@ -178,7 +178,7 @@ export function aggregateBars(
       if (gap > sourceMs) {
         console.warn(
           `Gap detected: Expected bar at ${lastExpectedTs}, ` +
-          `found bar at ${bar.timestamp} (gap: ${gap}ms)`
+            `found bar at ${bar.timestamp} (gap: ${gap}ms)`
         );
       }
     }
@@ -220,7 +220,7 @@ export function aggregateBars(
     // 2. It's the last group AND includePartialLast=true, OR
     // 3. It's the last group AND the last bar is in the second half of the period
     const nextBoundary = boundary + targetMs;
-    const threshold = nextBoundary - (targetMs / 2); // Midpoint of the period
+    const threshold = nextBoundary - targetMs / 2; // Midpoint of the period
     const isComplete =
       !isLastGroup || // Not the last group (so we know it's complete)
       (isLastGroup && includePartialLast) || // Last group, but we're including partials

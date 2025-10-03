@@ -47,16 +47,13 @@ program
     try {
       log.heading(`Discord Commands Diff - ${options.env.toUpperCase()}`);
 
-      const registrarPath = path.join(
-        __dirname,
-        '../../discord-bot-core/dist/cli/registrar.js'
-      );
+      const registrarPath = path.join(__dirname, '../../discord-bot-core/dist/cli/registrar.js');
 
       // Run registrar in dry-run mode
       const cmd = `node ${registrarPath} --env ${options.env} --dry-run`;
       const output = execSync(cmd, {
         encoding: 'utf-8',
-        stdio: options.json ? 'pipe' : 'inherit'
+        stdio: options.json ? 'pipe' : 'inherit',
       });
 
       if (options.json) {
@@ -71,7 +68,7 @@ program
         };
 
         let currentSection = null;
-        lines.forEach(line => {
+        lines.forEach((line) => {
           if (line.includes('Commands to Add:')) currentSection = 'toAdd';
           else if (line.includes('Commands to Update:')) currentSection = 'toUpdate';
           else if (line.includes('Commands to Remove:')) currentSection = 'toRemove';
@@ -101,24 +98,18 @@ program
     try {
       log.heading(`Validating ${options.env.toUpperCase()} Environment`);
 
-      const registrarPath = path.join(
-        __dirname,
-        '../../discord-bot-core/dist/cli/registrar.js'
-      );
+      const registrarPath = path.join(__dirname, '../../discord-bot-core/dist/cli/registrar.js');
 
       // Run registrar in validate-only mode
       const cmd = `node ${registrarPath} --env ${options.env} --validate-only`;
       execSync(cmd, {
         encoding: 'utf-8',
-        stdio: 'inherit'
+        stdio: 'inherit',
       });
 
       // Check for required environment variables
       const envPrefix = `DISCORD_${options.env.toUpperCase()}`;
-      const requiredVars = [
-        `${envPrefix}_TOKEN`,
-        `${envPrefix}_APPLICATION_ID`,
-      ];
+      const requiredVars = [`${envPrefix}_TOKEN`, `${envPrefix}_APPLICATION_ID`];
 
       if (options.env !== 'prod') {
         requiredVars.push(`${envPrefix}_GUILD_IDS`);
@@ -128,7 +119,7 @@ program
       const missing = [];
       const present = [];
 
-      requiredVars.forEach(varName => {
+      requiredVars.forEach((varName) => {
         if (process.env[varName]) {
           present.push(varName);
           if (options.verbose) {
@@ -162,10 +153,7 @@ program
     try {
       log.heading(`Deploying to ${options.env.toUpperCase()}`);
 
-      const registrarPath = path.join(
-        __dirname,
-        '../../discord-bot-core/dist/cli/registrar.js'
-      );
+      const registrarPath = path.join(__dirname, '../../discord-bot-core/dist/cli/registrar.js');
 
       // Create backup of current manifest if it exists
       if (options.backup) {
@@ -184,7 +172,7 @@ program
       log.info('Applying changes to Discord...');
       execSync(cmd, {
         encoding: 'utf-8',
-        stdio: 'inherit'
+        stdio: 'inherit',
       });
 
       log.success(`Successfully deployed to ${options.env}`);
@@ -222,7 +210,7 @@ program
 
       if (manifest.commands?.length > 0) {
         log.info(`\nDeployed commands (${manifest.commands.length}):`);
-        manifest.commands.forEach(cmd => {
+        manifest.commands.forEach((cmd) => {
           console.log(`  • /${cmd.name} - ${cmd.description}`);
         });
       }
@@ -250,7 +238,7 @@ program
         // Find most recent backup
         const files = fs.readdirSync(manifestDir);
         const backups = files
-          .filter(f => f.startsWith(`${options.env}-manifest.backup.`))
+          .filter((f) => f.startsWith(`${options.env}-manifest.backup.`))
           .sort()
           .reverse();
 
@@ -277,15 +265,12 @@ program
 
       // Apply the restored manifest
       log.info('Applying restored configuration...');
-      const registrarPath = path.join(
-        __dirname,
-        '../../discord-bot-core/dist/cli/registrar.js'
-      );
+      const registrarPath = path.join(__dirname, '../../discord-bot-core/dist/cli/registrar.js');
       const cmd = `node ${registrarPath} --env ${options.env} --force`;
 
       execSync(cmd, {
         encoding: 'utf-8',
-        stdio: 'inherit'
+        stdio: 'inherit',
       });
 
       log.success('Rollback completed successfully');

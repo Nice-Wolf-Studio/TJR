@@ -48,17 +48,17 @@ const params: GetBarsParams = {
   timeframe: Timeframe.M5,
   from: '2025-01-01T00:00:00.000Z',
   to: '2025-01-31T23:59:59.999Z',
-  limit: 1000
+  limit: 1000,
 };
 
 // OHLCV bars
 const bar: MarketBar = {
   timestamp: '2025-01-15T14:30:00.000Z',
-  open: 100.50,
+  open: 100.5,
   high: 101.25,
-  low: 100.00,
-  close: 101.00,
-  volume: 1500000
+  low: 100.0,
+  close: 101.0,
+  volume: 1500000,
 };
 
 // Provider capabilities
@@ -66,27 +66,24 @@ const caps: ProviderCapabilities = {
   supportsTimeframes: [Timeframe.M1, Timeframe.M5, Timeframe.H1, Timeframe.D1],
   maxBarsPerRequest: 10000,
   requiresAuthentication: true,
-  rateLimits: { requestsPerMinute: 200 }
+  rateLimits: { requestsPerMinute: 200 },
 };
 ```
 
 ### TJR Analysis
 
 ```typescript
-import type {
-  TJRAnalysisInput,
-  TJRResult,
-  TJRConfluence,
-  TJRExecution
-} from '@tjr/contracts';
+import type { TJRAnalysisInput, TJRResult, TJRConfluence, TJRExecution } from '@tjr/contracts';
 import { hasExecution } from '@tjr/contracts';
 
 // Input for analysis
 const input: TJRAnalysisInput = {
   symbol: 'SPY',
   timeframe: Timeframe.M5,
-  bars: [/* array of MarketBar */],
-  analysisTimestamp: new Date().toISOString()
+  bars: [
+    /* array of MarketBar */
+  ],
+  analysisTimestamp: new Date().toISOString(),
 };
 
 // Confluence scoring
@@ -96,18 +93,18 @@ const confluence: TJRConfluence = {
     { name: 'Support/Resistance', weight: 0.3, value: 0.9 },
     { name: 'Trend Alignment', weight: 0.25, value: 0.8 },
     // ... more factors
-  ]
+  ],
 };
 
 // Execution parameters
 const execution: TJRExecution = {
-  entryPrice: 100.50,
-  stopLoss: 99.00,
-  takeProfit: 103.50,
+  entryPrice: 100.5,
+  stopLoss: 99.0,
+  takeProfit: 103.5,
   positionSize: 100,
   direction: 'long',
   riskRewardRatio: 2.0,
-  confidence: 'high'
+  confidence: 'high',
 };
 
 // Complete result
@@ -115,7 +112,7 @@ const result: TJRResult = {
   input,
   confluence,
   execution,
-  warnings: []
+  warnings: [],
 };
 
 // Type-safe execution check
@@ -133,7 +130,7 @@ import {
   InsufficientBarsError,
   SymbolResolutionError,
   isProviderRateLimitError,
-  isInsufficientBarsError
+  isInsufficientBarsError,
 } from '@tjr/contracts';
 
 try {
@@ -141,15 +138,12 @@ try {
   const bars = await provider.getBars(params);
 
   if (bars.length < 50) {
-    throw new InsufficientBarsError(
-      'Need at least 50 bars for TJR analysis',
-      {
-        required: 50,
-        received: bars.length,
-        symbol: 'SPY',
-        timeframe: Timeframe.M5
-      }
-    );
+    throw new InsufficientBarsError('Need at least 50 bars for TJR analysis', {
+      required: 50,
+      received: bars.length,
+      symbol: 'SPY',
+      timeframe: Timeframe.M5,
+    });
   }
 } catch (err) {
   if (isProviderRateLimitError(err)) {

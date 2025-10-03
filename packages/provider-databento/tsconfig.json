@@ -8,7 +8,5 @@
     "moduleResolution": "bundler"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../market-data-core" }
-  ]
+  "references": [{ "path": "../market-data-core" }]
 }

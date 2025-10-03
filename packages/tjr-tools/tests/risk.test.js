@@ -99,7 +99,7 @@ test('Position Sizing - Use Kelly Criterion when configured', () => {
 
   assert.strictEqual(result.method, 'kelly');
   assert.ok(result.shares <= 50);
-  assert.ok(result.warnings.some(w => w.includes('Kelly')));
+  assert.ok(result.warnings.some((w) => w.includes('Kelly')));
 });
 
 test('Position Sizing - Respect maximum position percentage', () => {
@@ -112,7 +112,7 @@ test('Position Sizing - Respect maximum position percentage', () => {
   const result = calculatePositionSize(100, 90, config);
 
   assert.ok(result.shares <= 10);
-  assert.ok(result.warnings.some(w => w.includes('max position percentage')));
+  assert.ok(result.warnings.some((w) => w.includes('max position percentage')));
 });
 
 test('Position Sizing - Round to lot sizes', () => {
@@ -135,7 +135,7 @@ test('Position Sizing - Handle zero stop distance', () => {
 
   assert.strictEqual(result.shares, 0);
   assert.strictEqual(result.dollarRisk, 0);
-  assert.ok(result.warnings.some(w => w.includes('zero')));
+  assert.ok(result.warnings.some((w) => w.includes('zero')));
 });
 
 test('Position Sizing - Deterministic calculation', () => {
@@ -189,9 +189,7 @@ test('Daily Stop - Filter trades to current day only', () => {
 });
 
 test('Daily Stop - Detect when daily limit reached', () => {
-  const trades = [
-    { timestamp: '2025-01-15T14:30:00Z', pnl: -300 },
-  ];
+  const trades = [{ timestamp: '2025-01-15T14:30:00Z', pnl: -300 }];
   const currentTime = '2025-01-15T16:00:00Z';
 
   const result = calculateDailyStop(trades, currentTime, DEFAULT_RISK_CONFIG);
@@ -202,9 +200,7 @@ test('Daily Stop - Detect when daily limit reached', () => {
 });
 
 test('Daily Stop - Include open position risk', () => {
-  const trades = [
-    { timestamp: '2025-01-15T14:30:00Z', pnl: -100 },
-  ];
+  const trades = [{ timestamp: '2025-01-15T14:30:00Z', pnl: -100 }];
   const currentTime = '2025-01-15T16:00:00Z';
 
   const result = calculateDailyStop(trades, currentTime, DEFAULT_RISK_CONFIG, 150);
@@ -251,9 +247,7 @@ test('Daily Stop - Handle empty trade history', () => {
 });
 
 test('Daily Stop - Deterministic calculation', () => {
-  const trades = [
-    { timestamp: '2025-01-15T14:30:00Z', pnl: -100 },
-  ];
+  const trades = [{ timestamp: '2025-01-15T14:30:00Z', pnl: -100 }];
   const currentTime = '2025-01-15T16:00:00Z';
 
   const result1 = calculateDailyStop(trades, currentTime, DEFAULT_RISK_CONFIG);
@@ -360,16 +354,14 @@ test('Complete Risk Calculation - Reject when daily limit reached', () => {
     stopLoss: 448,
     direction: 'long',
     currentTimestamp: '2025-01-15T16:00:00Z',
-    tradeHistory: [
-      { timestamp: '2025-01-15T14:00:00Z', pnl: -300 },
-    ],
+    tradeHistory: [{ timestamp: '2025-01-15T14:00:00Z', pnl: -300 }],
   };
 
   const result = calculateRisk(input, DEFAULT_RISK_CONFIG);
 
   assert.strictEqual(result.dailyStop.isLimitReached, true);
   assert.strictEqual(result.recommendation.canTrade, false);
-  assert.ok(result.recommendation.reasons.some(r => r.includes('Daily loss limit')));
+  assert.ok(result.recommendation.reasons.some((r) => r.includes('Daily loss limit')));
 });
 
 test('Complete Risk Calculation - Lower confidence on consecutive losses', () => {
@@ -401,9 +393,7 @@ test('Complete Risk Calculation - Deterministic result', () => {
     takeProfit: 456,
     direction: 'long',
     currentTimestamp: '2025-01-15T16:00:00Z',
-    tradeHistory: [
-      { timestamp: '2025-01-15T14:00:00Z', pnl: -50 },
-    ],
+    tradeHistory: [{ timestamp: '2025-01-15T14:00:00Z', pnl: -50 }],
   };
 
   const result1 = calculateRisk(input, DEFAULT_RISK_CONFIG);

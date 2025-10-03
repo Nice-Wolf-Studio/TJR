@@ -1,6 +1,7 @@
 # ADR-0208: TJR-Tools Skeleton & API
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,12 +9,14 @@ Accepted
 The TJR Suite requires a core analysis package that implements The Judas Renko (TJR) trading methodology. This package will serve as the central analysis engine, processing market data to identify high-probability trading setups through confluence detection.
 
 The implementation follows a phased approach:
+
 1. **Phase 2.F0** (this ADR): Establish the API surface and package skeleton
 2. **Phase 2.F1** (Issue #28): Implement actual confluence detection algorithms
 3. **Phase 2.G1** (Issue #26): Integrate with the application layer
 4. **Phase 2.G3** (Issue #29): Enable backtesting capabilities
 
 This skeleton phase is critical for:
+
 - Defining a stable API contract that downstream packages can code against
 - Establishing the package structure and build configuration
 - Enabling parallel development of dependent features
@@ -26,11 +29,13 @@ We will create the `@tjr/tjr-tools` package with the following characteristics:
 ### API Surface
 
 The package exposes a single primary function:
+
 ```typescript
 analyze(input: TJRAnalysisInput, config?: TJRConfig): TJRResult
 ```
 
 This function:
+
 - Accepts market data and analysis parameters
 - Returns deterministic results for the same input
 - Provides confluence scores and optional execution parameters
@@ -58,6 +63,7 @@ packages/tjr-tools/
 ### Type Dependencies
 
 The package depends on `@tjr/contracts` for canonical type definitions:
+
 - `TJRAnalysisInput`: Input data structure
 - `TJRResult`: Output data structure
 - `TJRConfluence`: Confluence scoring details
@@ -68,6 +74,7 @@ The package depends on `@tjr/contracts` for canonical type definitions:
 ### Configuration Options
 
 The `TJRConfig` interface provides runtime configuration:
+
 - Confluence thresholds
 - Risk management parameters
 - Feature toggles for different confluence types
@@ -78,11 +85,13 @@ All configuration fields are optional with sensible defaults.
 ### Stub Implementation
 
 For this skeleton phase, confluence detection returns deterministic empty results:
+
 - All confluence factors return 0 confidence
 - No execution parameters are generated
 - Warnings indicate which features are not yet implemented
 
 This allows:
+
 - Full API testing without implementation complexity
 - Downstream development to proceed with known output shapes
 - Clear separation between API design and algorithm implementation
@@ -94,6 +103,7 @@ This allows:
 We considered implementing the complete analysis logic in one phase.
 
 **Rejected because:**
+
 - Would delay downstream development by weeks
 - Increases risk of API changes after integration
 - Prevents parallel work on Issues #26, #28, and #29
@@ -104,6 +114,7 @@ We considered implementing the complete analysis logic in one phase.
 We considered creating a simple mock package without proper structure.
 
 **Rejected because:**
+
 - Would require significant refactoring when adding real implementation
 - Doesn't validate build and test infrastructure
 - Provides less confidence in the API design
@@ -114,6 +125,7 @@ We considered creating a simple mock package without proper structure.
 We considered exposing separate functions for each confluence type.
 
 **Rejected because:**
+
 - Creates a more complex API surface
 - Makes it harder to coordinate multiple confluences
 - Increases coupling between packages
@@ -126,6 +138,7 @@ We considered exposing separate functions for each confluence type.
 **Risk:** The API may need changes once real algorithms are implemented.
 
 **Mitigation:**
+
 - API designed based on established TJR methodology requirements
 - Using TypeScript for compile-time validation
 - Keeping the surface minimal and focused
@@ -136,6 +149,7 @@ We considered exposing separate functions for each confluence type.
 **Risk:** Skeleton doesn't reveal performance characteristics.
 
 **Mitigation:**
+
 - Performance requirements documented in comments
 - Benchmark tests to be added with implementation
 - Async API considered but deferred (can add later if needed)
@@ -146,6 +160,7 @@ We considered exposing separate functions for each confluence type.
 **Risk:** Additional confluence factors may be needed.
 
 **Mitigation:**
+
 - Configuration uses feature toggles for easy addition
 - Factor system is extensible (array of weighted factors)
 - Weights are normalized automatically

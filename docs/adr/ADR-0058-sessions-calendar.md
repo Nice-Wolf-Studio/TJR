@@ -19,6 +19,7 @@ The TJR Suite requires deterministic, pure-function access to trading session wi
 - **Testability:** Reproducible outputs for any date/symbol combination
 
 Without this package, we face:
+
 - Non-deterministic behavior from external API calls in critical data processing
 - Inconsistent holiday/session handling across different modules
 - Complex DST edge cases scattered throughout the codebase
@@ -33,12 +34,14 @@ Without this package, we face:
 We will implement `@tjr/sessions-calendar` as a pure, deterministic module with no I/O operations.
 
 **Rationale:**
+
 - **Predictability:** Same inputs always produce same outputs
 - **Performance:** No network latency or file system overhead
 - **Testability:** Easy to verify correctness with matrix tests
 - **Simplicity:** No caching, retries, or error handling for I/O failures
 
 **Data strategy:**
+
 - Static JSON files embedded in package at build time
 - Sample CME calendar data sufficient for tests
 - Future: Extended datasets via separate data packages
@@ -59,6 +62,7 @@ rthWindow(date: Date, symbol: string): { start: Date; end: Date }
 ```
 
 **Types:**
+
 ```typescript
 interface Session {
   type: 'RTH' | 'ETH_PRE' | 'ETH_POST';
@@ -69,6 +73,7 @@ interface Session {
 ```
 
 **Rationale:**
+
 - **Simple:** Three core functions cover most use cases
 - **Type-safe:** Leverages TypeScript for compile-time checks
 - **Timezone-aware:** Returns Date objects in UTC, caller converts as needed
@@ -78,11 +83,13 @@ interface Session {
 ### 3. **Calendar Data Sources**
 
 Initial implementation uses **CME Group** calendar data:
+
 - Regular Trading Hours (RTH): 9:30 AM - 4:00 PM ET for equity futures
 - Extended Trading Hours (ETH): Pre-market and post-market sessions
 - Holidays: CME official holiday calendar (New Year's Day, Good Friday, Thanksgiving, Christmas, etc.)
 
 **Data format (JSON):**
+
 ```json
 {
   "exchange": "CME",
@@ -101,6 +108,7 @@ Initial implementation uses **CME Group** calendar data:
 ```
 
 **Assumptions:**
+
 1. **Symbol mapping:** Symbols map to exchanges (e.g., ES → CME, SPY → NYSE)
 2. **Timezone consistency:** All times stored in exchange local time, converted to UTC at runtime
 3. **Calendar completeness:** Covers 2025-2027; stale data returns empty sessions with warning comment
@@ -112,11 +120,13 @@ Initial implementation uses **CME Group** calendar data:
 **Rule:** Use IANA timezone database (`America/New_York`, `America/Chicago`) via `Intl.DateTimeFormat` or `date-fns-tz`.
 
 **Behavior:**
+
 - **Spring forward (lose 1 hour):** If session spans the gap (2:00-3:00 AM), truncate start to 3:00 AM
 - **Fall back (gain 1 hour):** If session spans the repeat (1:00-2:00 AM), use first occurrence
 - **RTH sessions (9:30-16:00 ET):** Unaffected by DST transitions (occur during stable hours)
 
 **Rationale:**
+
 - **Correctness:** IANA database is authoritative for historical and future DST rules
 - **No manual offsets:** Avoid hardcoding UTC-4/UTC-5; library handles transitions
 - **Edge case clarity:** Explicit policy for gap/overlap scenarios
@@ -137,11 +147,14 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ## Alternatives Considered
 
 ### Dynamic Fetch from External APIs
+
 **Pros:**
+
 - Always up-to-date
 - No package updates needed
 
 **Cons:**
+
 - Non-deterministic (API downtime, rate limits)
 - Adds network dependency and error handling
 - Slower (latency + caching complexity)
@@ -152,10 +165,13 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ---
 
 ### Embed Full Multi-Year Calendars
+
 **Pros:**
+
 - No data staleness issues for years
 
 **Cons:**
+
 - Large package size (holidays + sessions for all symbols/exchanges)
 - Most users only need current year + next year
 - Maintenance burden (updating 10+ exchange calendars)
@@ -165,11 +181,14 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ---
 
 ### Use Third-Party Library (e.g., `trading-calendars`)
+
 **Pros:**
+
 - Already maintained
 - Comprehensive coverage
 
 **Cons:**
+
 - Python-only (no TypeScript port with active maintenance)
 - Includes I/O (file reads, pandas dependencies)
 - Opinionated schema (hard to extend)
@@ -181,8 +200,10 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ## Risks and Mitigations
 
 ### Risk 1: Stale calendar data breaks production
+
 **Impact:** Wrong trading hours after data expires (e.g., using 2025 calendar in 2028)
 **Mitigation:**
+
 - Add data version metadata (`validFrom`, `validTo`)
 - Emit warnings when querying dates outside valid range
 - CI check: Fail build if data expiry within 90 days
@@ -190,8 +211,10 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ---
 
 ### Risk 2: DST bugs near transitions
+
 **Impact:** Incorrect session times on DST change days (rare but critical)
 **Mitigation:**
+
 - Comprehensive matrix tests: All DST transitions 2024-2027
 - Use well-tested library (`date-fns-tz`) instead of manual UTC math
 - Document edge cases in code comments
@@ -199,8 +222,10 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ---
 
 ### Risk 3: Symbol→Exchange mapping errors
+
 **Impact:** Wrong calendar applied to symbol (e.g., ES using NYSE hours)
 **Mitigation:**
+
 - Explicit mapping table in code (symbol → exchange)
 - Return error if symbol unmapped (fail fast)
 - Tests verify known symbols (ES, NQ, etc.)
@@ -208,8 +233,10 @@ These are acceptable tradeoffs for Phase 51 (initial implementation). Future sha
 ---
 
 ### Risk 4: Performance degradation with large calendars
+
 **Impact:** Slow queries if calendar data grows to thousands of entries
 **Mitigation:**
+
 - Index holidays by year-month for O(1) lookup
 - Keep sessions map flat (symbol → hours) instead of nested loops
 - Benchmark: Sub-1ms queries for 10-year calendar

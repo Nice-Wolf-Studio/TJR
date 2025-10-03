@@ -98,7 +98,7 @@ export const DEFAULT_CONFIG: Required<TJRConfig> = {
   enableSupportResistance: true,
   enableVolumeProfile: true,
   minBarsRequired: 50,
-  debug: false
+  debug: false,
 };
 
 /**
@@ -110,6 +110,6 @@ export const DEFAULT_CONFIG: Required<TJRConfig> = {
 export function mergeConfig(userConfig?: TJRConfig): Required<TJRConfig> {
   return {
     ...DEFAULT_CONFIG,
-    ...userConfig
+    ...userConfig,
   };
 }

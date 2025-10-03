@@ -19,7 +19,7 @@
  * Note: Only these canonical timeframes are supported. Arbitrary intervals
  * (e.g., "7m", "3h") are not supported in Phase 51.
  */
-export type Timeframe = "1m" | "5m" | "10m" | "15m" | "30m" | "1h" | "2h" | "4h" | "1D";
+export type Timeframe = '1m' | '5m' | '10m' | '15m' | '30m' | '1h' | '2h' | '4h' | '1D';
 /**
  * OHLCV (Open-High-Low-Close-Volume) bar structure.
  *
@@ -48,40 +48,40 @@ export type Timeframe = "1m" | "5m" | "10m" | "15m" | "30m" | "1h" | "2h" | "4h"
  * ```
  */
 export interface Bar {
-    /**
-     * Unix epoch timestamp in milliseconds (UTC).
-     *
-     * This timestamp represents the START of the bar period. For example, a
-     * 5-minute bar with timestamp 14:00:00.000 covers the period from 14:00:00.000
-     * (inclusive) to 14:05:00.000 (exclusive).
-     *
-     * All timestamps must be in UTC to avoid DST-related bugs and ensure
-     * deterministic behavior across different server timezones.
-     */
-    timestamp: number;
-    /**
-     * Opening price (first trade in the bar period).
-     */
-    open: number;
-    /**
-     * Highest price during the bar period.
-     */
-    high: number;
-    /**
-     * Lowest price during the bar period.
-     */
-    low: number;
-    /**
-     * Closing price (last trade in the bar period).
-     */
-    close: number;
-    /**
-     * Total traded volume during the bar period.
-     *
-     * Units depend on the instrument (shares for stocks, contracts for futures,
-     * base currency for crypto). Volume can be zero for illiquid instruments
-     * or during pre-market/after-hours sessions.
-     */
-    volume: number;
+  /**
+   * Unix epoch timestamp in milliseconds (UTC).
+   *
+   * This timestamp represents the START of the bar period. For example, a
+   * 5-minute bar with timestamp 14:00:00.000 covers the period from 14:00:00.000
+   * (inclusive) to 14:05:00.000 (exclusive).
+   *
+   * All timestamps must be in UTC to avoid DST-related bugs and ensure
+   * deterministic behavior across different server timezones.
+   */
+  timestamp: number;
+  /**
+   * Opening price (first trade in the bar period).
+   */
+  open: number;
+  /**
+   * Highest price during the bar period.
+   */
+  high: number;
+  /**
+   * Lowest price during the bar period.
+   */
+  low: number;
+  /**
+   * Closing price (last trade in the bar period).
+   */
+  close: number;
+  /**
+   * Total traded volume during the bar period.
+   *
+   * Units depend on the instrument (shares for stocks, contracts for futures,
+   * base currency for crypto). Volume can be zero for illiquid instruments
+   * or during pre-market/after-hours sessions.
+   */
+  volume: number;
 }
 //# sourceMappingURL=types.d.ts.map

@@ -7,24 +7,24 @@
  * - Range queries with efficient indexing
  */
 
-import type { DbConnection } from '@tjr-suite/db-simple'
-import type { CachedBar, CacheKey, CacheQuery } from './types.js'
+import type { DbConnection } from '@tjr-suite/db-simple';
+import type { CachedBar, CacheKey, CacheQuery } from './types.js';
 
 /**
  * Database row type for bars_cache table.
  */
 interface BarRow {
-  symbol: string
-  timeframe: string
-  timestamp: number
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
-  provider: string
-  revision: number
-  fetched_at: number
+  symbol: string;
+  timeframe: string;
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  provider: string;
+  revision: number;
+  fetched_at: number;
 }
 
 /**
@@ -66,8 +66,8 @@ interface BarRow {
  * ```
  */
 export class DbCacheStore {
-  private db: DbConnection
-  private providerPriority: string[]
+  private db: DbConnection;
+  private providerPriority: string[];
 
   /**
    * Create a new database cache store.
@@ -77,8 +77,8 @@ export class DbCacheStore {
    *                           Example: ['polygon', 'yahoo'] prefers polygon over yahoo
    */
   constructor(db: DbConnection, providerPriority: string[] = []) {
-    this.db = db
-    this.providerPriority = providerPriority
+    this.db = db;
+    this.providerPriority = providerPriority;
   }
 
   /**
@@ -105,19 +105,19 @@ export class DbCacheStore {
           fetched_at INTEGER NOT NULL,
           PRIMARY KEY (symbol, timeframe, timestamp, provider)
         )
-      `
+      `;
 
-      await this.db.exec(createTableSQL)
+      await this.db.exec(createTableSQL);
 
       // Create index for efficient range queries
       const createIndexSQL = `
         CREATE INDEX IF NOT EXISTS idx_bars_cache_lookup
         ON bars_cache (symbol, timeframe, timestamp)
-      `
+      `;
 
-      await this.db.exec(createIndexSQL)
+      await this.db.exec(createIndexSQL);
     } catch (error) {
-      throw new Error(`Failed to initialize bars_cache table: ${error}`)
+      throw new Error(`Failed to initialize bars_cache table: ${error}`);
     }
   }
 
@@ -138,20 +138,20 @@ export class DbCacheStore {
         FROM bars_cache
         WHERE symbol = ? AND timeframe = ? AND timestamp = ?
         ORDER BY revision DESC
-      `
+      `;
 
-      const params = [key.symbol, key.timeframe, key.timestamp]
-      const rows = await this.db.query<BarRow>(sql, params)
+      const params = [key.symbol, key.timeframe, key.timestamp];
+      const rows = await this.db.query<BarRow>(sql, params);
 
       if (rows.length === 0) {
-        return null
+        return null;
       }
 
       // Select best bar based on provider priority and revision
-      const bestBar = this.selectBestBar(rows)
+      const bestBar = this.selectBestBar(rows);
 
       if (!bestBar) {
-        return null
+        return null;
       }
 
       return {
@@ -164,9 +164,9 @@ export class DbCacheStore {
         provider: bestBar.provider,
         revision: bestBar.revision,
         fetchedAt: bestBar.fetched_at,
-      }
+      };
     } catch (error) {
-      throw new Error(`Failed to get bar from database: ${error}`)
+      throw new Error(`Failed to get bar from database: ${error}`);
     }
   }
 
@@ -184,7 +184,7 @@ export class DbCacheStore {
     // We need to extract symbol and timeframe from somewhere
     // Since CachedBar extends Bar which doesn't have these fields,
     // we need to pass them separately. Use setWithKey() instead.
-    throw new Error('set() requires symbol and timeframe - use setWithKey() instead')
+    throw new Error('set() requires symbol and timeframe - use setWithKey() instead');
   }
 
   /**
@@ -212,7 +212,7 @@ export class DbCacheStore {
             revision = excluded.revision,
             fetched_at = excluded.fetched_at
           WHERE excluded.revision > bars_cache.revision
-        `
+        `;
 
         const params = [
           key.symbol,
@@ -226,9 +226,9 @@ export class DbCacheStore {
           bar.provider,
           bar.revision,
           bar.fetchedAt,
-        ]
+        ];
 
-        await this.db.exec(sql, params)
+        await this.db.exec(sql, params);
       } else {
         // PostgreSQL UPSERT syntax
         const sql = `
@@ -246,7 +246,7 @@ export class DbCacheStore {
             revision = EXCLUDED.revision,
             fetched_at = EXCLUDED.fetched_at
           WHERE EXCLUDED.revision > bars_cache.revision
-        `
+        `;
 
         const params = [
           key.symbol,
@@ -260,12 +260,12 @@ export class DbCacheStore {
           bar.provider,
           bar.revision,
           bar.fetchedAt,
-        ]
+        ];
 
-        await this.db.exec(sql, params)
+        await this.db.exec(sql, params);
       }
     } catch (error) {
-      throw new Error(`Failed to set bar in database: ${error}`)
+      throw new Error(`Failed to set bar in database: ${error}`);
     }
   }
 
@@ -289,28 +289,28 @@ export class DbCacheStore {
           AND timestamp >= ?
           AND timestamp < ?
         ORDER BY timestamp ASC, revision DESC
-      `
+      `;
 
-      const params = [query.symbol, query.timeframe, query.start, query.end]
-      const rows = await this.db.query<BarRow>(sql, params)
+      const params = [query.symbol, query.timeframe, query.start, query.end];
+      const rows = await this.db.query<BarRow>(sql, params);
 
       // Group by timestamp and select best bar for each
-      const barsByTimestamp = new Map<number, BarRow[]>()
+      const barsByTimestamp = new Map<number, BarRow[]>();
 
       for (const row of rows) {
-        const existing = barsByTimestamp.get(row.timestamp)
+        const existing = barsByTimestamp.get(row.timestamp);
         if (!existing) {
-          barsByTimestamp.set(row.timestamp, [row])
+          barsByTimestamp.set(row.timestamp, [row]);
         } else {
-          existing.push(row)
+          existing.push(row);
         }
       }
 
       // Select best bar for each timestamp
-      const results: CachedBar[] = []
+      const results: CachedBar[] = [];
 
       for (const [, bars] of barsByTimestamp) {
-        const bestBar = this.selectBestBar(bars)
+        const bestBar = this.selectBestBar(bars);
         if (bestBar) {
           results.push({
             timestamp: bestBar.timestamp,
@@ -322,13 +322,13 @@ export class DbCacheStore {
             provider: bestBar.provider,
             revision: bestBar.revision,
             fetchedAt: bestBar.fetched_at,
-          })
+          });
         }
       }
 
-      return results
+      return results;
     } catch (error) {
-      throw new Error(`Failed to get range from database: ${error}`)
+      throw new Error(`Failed to get range from database: ${error}`);
     }
   }
 
@@ -344,37 +344,34 @@ export class DbCacheStore {
    */
   private selectBestBar(bars: BarRow[]): BarRow | null {
     if (bars.length === 0) {
-      return null
+      return null;
     }
 
     if (bars.length === 1) {
-      return bars[0]
+      return bars[0];
     }
 
     // If no provider priority specified, return highest revision
     if (this.providerPriority.length === 0) {
-      return bars.reduce((best, current) =>
-        current.revision > best.revision ? current : best
-      )
+      return bars.reduce((best, current) => (current.revision > best.revision ? current : best));
     }
 
     // Score each bar: lower score = higher priority
     const scored = bars.map((bar) => {
-      const priorityIndex = this.providerPriority.indexOf(bar.provider)
-      const priorityScore =
-        priorityIndex >= 0 ? priorityIndex : this.providerPriority.length
+      const priorityIndex = this.providerPriority.indexOf(bar.provider);
+      const priorityScore = priorityIndex >= 0 ? priorityIndex : this.providerPriority.length;
 
-      return { bar, priorityScore }
-    })
+      return { bar, priorityScore };
+    });
 
     // Sort by priority (ascending), then revision (descending)
     scored.sort((a, b) => {
       if (a.priorityScore !== b.priorityScore) {
-        return a.priorityScore - b.priorityScore
+        return a.priorityScore - b.priorityScore;
       }
-      return b.bar.revision - a.bar.revision
-    })
+      return b.bar.revision - a.bar.revision;
+    });
 
-    return scored[0]?.bar ?? null
+    return scored[0]?.bar ?? null;
   }
 }

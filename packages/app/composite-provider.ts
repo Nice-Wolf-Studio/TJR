@@ -34,7 +34,7 @@ export enum ProviderErrorType {
   INVALID_SYMBOL = 'INVALID_SYMBOL',
   NO_DATA = 'NO_DATA',
   NETWORK = 'NETWORK',
-  UNKNOWN = 'UNKNOWN'
+  UNKNOWN = 'UNKNOWN',
 }
 
 interface ProviderError extends Error {
@@ -71,7 +71,7 @@ export class CompositeProvider implements ProviderService {
     latencyMs: 0,
     cacheHits: 0,
     cacheMisses: 0,
-    subscriptions: 0
+    subscriptions: 0,
   };
   private circuitBreakers = new Map<string, CircuitBreakerState>();
   private subscriptions = new Map<string, Set<(bar: MarketBar) => void>>();
@@ -89,7 +89,7 @@ export class CompositeProvider implements ProviderService {
     this.cacheEnabled = config.cacheEnabled ?? true;
     this.cacheTTL = config.cacheTTL ?? {
       historical: 3600000, // 1 hour for historical data
-      realtime: 60000 // 1 minute for recent data
+      realtime: 60000, // 1 minute for recent data
     };
 
     // Initialize circuit breakers
@@ -97,15 +97,15 @@ export class CompositeProvider implements ProviderService {
       this.circuitBreakers.set(provider.name, {
         failures: 0,
         lastFailure: 0,
-        state: 'CLOSED'
+        state: 'CLOSED',
       });
     }
   }
 
   async initialize(): Promise<void> {
     this.logger.info('Composite provider initializing', {
-      providers: this.providers.map(p => p.name),
-      cacheEnabled: this.cacheEnabled
+      providers: this.providers.map((p) => p.name),
+      cacheEnabled: this.cacheEnabled,
     });
 
     // Initialize all providers
@@ -116,7 +116,7 @@ export class CompositeProvider implements ProviderService {
       } catch (error) {
         this.logger.error('Provider initialization failed', {
           name: item.name,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
@@ -132,7 +132,7 @@ export class CompositeProvider implements ProviderService {
       } catch (error) {
         this.logger.error('Provider shutdown failed', {
           name: item.name,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
@@ -141,16 +141,18 @@ export class CompositeProvider implements ProviderService {
   }
 
   healthCheck(): HealthStatus {
-    const providerHealth = this.providers.map(item => {
+    const providerHealth = this.providers.map((item) => {
       const breaker = this.circuitBreakers.get(item.name);
       return {
         name: item.name,
         status: item.provider.healthCheck(),
-        circuitBreaker: breaker?.state
+        circuitBreaker: breaker?.state,
       };
     });
 
-    const allHealthy = providerHealth.every(p => p.status.healthy && p.circuitBreaker === 'CLOSED');
+    const allHealthy = providerHealth.every(
+      (p) => p.status.healthy && p.circuitBreaker === 'CLOSED'
+    );
 
     return {
       healthy: allHealthy,
@@ -160,8 +162,8 @@ export class CompositeProvider implements ProviderService {
       details: {
         providers: providerHealth,
         stats: this.stats,
-        cacheEnabled: this.cacheEnabled
-      }
+        cacheEnabled: this.cacheEnabled,
+      },
     };
   }
 
@@ -181,7 +183,7 @@ export class CompositeProvider implements ProviderService {
           this.logger.debug('Cache hit for bars', {
             symbol: params.symbol,
             key: cacheKey,
-            count: cached.length
+            count: cached.length,
           });
           return cached;
         }
@@ -197,7 +199,7 @@ export class CompositeProvider implements ProviderService {
         if (!this.canAttemptProvider(item.name)) {
           this.logger.warn('Provider circuit breaker open', {
             provider: item.name,
-            state: this.circuitBreakers.get(item.name)?.state
+            state: this.circuitBreakers.get(item.name)?.state,
           });
           continue;
         }
@@ -205,7 +207,7 @@ export class CompositeProvider implements ProviderService {
         try {
           this.logger.debug('Attempting provider', {
             provider: item.name,
-            timeout: item.timeout
+            timeout: item.timeout,
           });
 
           const bars = await this.executeWithTimeout(
@@ -225,14 +227,14 @@ export class CompositeProvider implements ProviderService {
             this.logger.debug('Cached bars', {
               key: cacheKey,
               count: bars.length,
-              ttl
+              ttl,
             });
           }
 
           this.logger.info('Provider succeeded', {
             provider: item.name,
             count: bars.length,
-            latencyMs: this.stats.latencyMs
+            latencyMs: this.stats.latencyMs,
           });
 
           return bars;
@@ -245,7 +247,7 @@ export class CompositeProvider implements ProviderService {
             provider: item.name,
             errorType: providerError.type,
             retryable: providerError.retryable,
-            message: providerError.message
+            message: providerError.message,
           });
 
           // Continue to next provider if retryable
@@ -259,13 +261,13 @@ export class CompositeProvider implements ProviderService {
       this.stats.errors++;
       this.stats.latencyMs = Date.now() - startTime;
 
-      const errorMessage = `All providers failed: ${errors.map(e => `${e.provider}(${e.type})`).join(', ')}`;
+      const errorMessage = `All providers failed: ${errors.map((e) => `${e.provider}(${e.type})`).join(', ')}`;
       this.logger.error('All providers exhausted', {
-        errors: errors.map(e => ({
+        errors: errors.map((e) => ({
           provider: e.provider,
           type: e.type,
-          message: e.message
-        }))
+          message: e.message,
+        })),
       });
 
       throw new Error(errorMessage);
@@ -327,7 +329,7 @@ export class CompositeProvider implements ProviderService {
       } catch (error) {
         this.logger.error('Provider unsubscribe failed', {
           provider: item.name,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
@@ -351,7 +353,7 @@ export class CompositeProvider implements ProviderService {
         this.logger.debug('Symbol validation failed', {
           provider: item.name,
           symbol,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
         });
       }
     }
@@ -404,7 +406,7 @@ export class CompositeProvider implements ProviderService {
           error.retryable = true;
           reject(error);
         }, timeoutMs);
-      })
+      }),
     ]);
   }
 
@@ -440,7 +442,11 @@ export class CompositeProvider implements ProviderService {
     } else if (message.includes('no data')) {
       providerError.type = ProviderErrorType.NO_DATA;
       providerError.retryable = true;
-    } else if (message.includes('network') || message.includes('econnrefused') || message.includes('enotfound')) {
+    } else if (
+      message.includes('network') ||
+      message.includes('econnrefused') ||
+      message.includes('enotfound')
+    ) {
       providerError.type = ProviderErrorType.NETWORK;
       providerError.retryable = true;
     } else {
@@ -511,7 +517,7 @@ export class CompositeProvider implements ProviderService {
       breaker.state = 'OPEN';
       this.logger.warn('Circuit breaker opened', {
         provider: providerName,
-        failures: breaker.failures
+        failures: breaker.failures,
       });
     }
   }

@@ -52,9 +52,7 @@ describe('detectSwings', () => {
   });
 
   it('should return empty array for insufficient data', () => {
-    const bars = [
-      { timestamp: 1000, open: 100, high: 105, low: 99, close: 104 },
-    ];
+    const bars = [{ timestamp: 1000, open: 100, high: 105, low: 99, close: 104 }];
 
     const result = detectSwings(bars, 5);
     assert.strictEqual(result.length, 0, 'Should return empty array when insufficient bars');
@@ -66,9 +64,7 @@ describe('detectSwings', () => {
   });
 
   it('should throw error for invalid lookback', () => {
-    const bars = [
-      { timestamp: 1000, open: 100, high: 105, low: 99, close: 104 },
-    ];
+    const bars = [{ timestamp: 1000, open: 100, high: 105, low: 99, close: 104 }];
 
     assert.throws(() => detectSwings(bars, 0), /Lookback must be at least 1/);
   });
@@ -106,8 +102,14 @@ describe('calculateDailyBias', () => {
     const result = calculateDailyBias(bars, sessionExtremes);
 
     assert.strictEqual(result.bias, expected.bias, 'Should detect bullish bias');
-    assert.ok(result.confidence >= expected.confidenceMin, `Confidence should be >= ${expected.confidenceMin}`);
-    assert.ok(result.reason.toLowerCase().includes(expected.reasonContains.toLowerCase()), 'Reason should mention key signal');
+    assert.ok(
+      result.confidence >= expected.confidenceMin,
+      `Confidence should be >= ${expected.confidenceMin}`
+    );
+    assert.ok(
+      result.reason.toLowerCase().includes(expected.reasonContains.toLowerCase()),
+      'Reason should mention key signal'
+    );
   });
 
   it('should return neutral for empty bars', () => {
@@ -182,9 +184,7 @@ describe('extractSessionExtremes', () => {
   });
 
   it('should return null when no bars in window', () => {
-    const bars = [
-      { timestamp: 5000, open: 100, high: 105, low: 99, close: 104 },
-    ];
+    const bars = [{ timestamp: 5000, open: 100, high: 105, low: 99, close: 104 }];
 
     const window = {
       start: new Date(1000),
@@ -229,11 +229,16 @@ describe('classifyDayProfile', () => {
     const result = classifyDayProfile(bars, sessionExtremes);
 
     assert.strictEqual(result.type, expected.type, 'Should classify as trend day (P)');
-    assert.ok(result.volatility >= expected.volatilityMin, `Volatility should be >= ${expected.volatilityMin}`);
+    assert.ok(
+      result.volatility >= expected.volatilityMin,
+      `Volatility should be >= ${expected.volatilityMin}`
+    );
 
     // Check that all expected characteristics are present
     for (const char of expected.characteristicsContains) {
-      const found = result.characteristics.some(c => c.toLowerCase().includes(char.toLowerCase()));
+      const found = result.characteristics.some((c) =>
+        c.toLowerCase().includes(char.toLowerCase())
+      );
       assert.ok(found, `Characteristics should include "${char}"`);
     }
   });

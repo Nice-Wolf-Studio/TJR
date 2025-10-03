@@ -5,7 +5,7 @@
  * support for multiple providers, revisions, and time-based queries.
  */
 
-import { Bar, Timeframe } from '@tjr-suite/market-data-core'
+import { Bar, Timeframe } from '@tjr-suite/market-data-core';
 
 /**
  * Cached bar with provider metadata and versioning.
@@ -37,7 +37,7 @@ export interface CachedBar extends Bar {
    * Used for provider priority resolution when multiple providers
    * have data for the same bar.
    */
-  provider: string
+  provider: string;
 
   /**
    * Monotonic revision number for handling late corrections.
@@ -46,7 +46,7 @@ export interface CachedBar extends Bar {
    * publish corrections or adjustments. Higher revision numbers
    * take precedence over lower ones.
    */
-  revision: number
+  revision: number;
 
   /**
    * Unix timestamp (milliseconds) when this bar was fetched and cached.
@@ -54,7 +54,7 @@ export interface CachedBar extends Bar {
    * Used for TTL checks and cache staleness detection. All timestamps
    * are in UTC to avoid DST-related issues.
    */
-  fetchedAt: number
+  fetchedAt: number;
 }
 
 /**
@@ -77,12 +77,12 @@ export interface CacheKey {
   /**
    * Symbol/ticker identifier (e.g., 'AAPL', 'BTC-USD').
    */
-  symbol: string
+  symbol: string;
 
   /**
    * Timeframe for the bar (e.g., '1m', '5m', '1h', '1D').
    */
-  timeframe: Timeframe
+  timeframe: Timeframe;
 
   /**
    * Bar timestamp (Unix milliseconds, UTC).
@@ -90,7 +90,7 @@ export interface CacheKey {
    * This should be the start of the bar period, aligned to the
    * timeframe boundary.
    */
-  timestamp: number
+  timestamp: number;
 }
 
 /**
@@ -112,20 +112,20 @@ export interface CacheQuery {
   /**
    * Symbol/ticker identifier (e.g., 'AAPL', 'BTC-USD').
    */
-  symbol: string
+  symbol: string;
 
   /**
    * Timeframe for the bars (e.g., '1m', '5m', '1h', '1D').
    */
-  timeframe: Timeframe
+  timeframe: Timeframe;
 
   /**
    * Start of time range (Unix milliseconds, UTC, inclusive).
    */
-  start: number
+  start: number;
 
   /**
    * End of time range (Unix milliseconds, UTC, exclusive).
    */
-  end: number
+  end: number;
 }

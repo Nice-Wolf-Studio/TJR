@@ -11,7 +11,7 @@
  * UTC before calling these functions.
  */
 
-import { Bar } from "./types.js";
+import { Bar } from './types.js';
 
 /**
  * Options for clipBars function.

@@ -11,6 +11,7 @@ The backtesting CLI (`replay-run`) computes comprehensive metrics for evaluating
 **Purpose**: Measure the success rate of trading signals
 
 **Metrics**:
+
 - `overall`: Overall success percentage across all trades
 - `long`: Success rate for long trades only
 - `short`: Success rate for short trades only
@@ -19,17 +20,20 @@ The backtesting CLI (`replay-run`) computes comprehensive metrics for evaluating
 - `failed`: Count of failed signals (hit SL before TP)
 
 **Formula**:
+
 ```
 hit_rate = (successful_trades / total_trades) * 100
 ```
 
 **Interpretation**:
+
 - < 50%: Strategy is losing money
 - 50-60%: Break-even to modest gains
 - 60-70%: Good performance
 - \> 70%: Excellent performance
 
 **Example**:
+
 ```json
 {
   "hitRate": {
@@ -48,27 +52,32 @@ hit_rate = (successful_trades / total_trades) * 100
 **Purpose**: Measure relevance of top-K ranked predictions
 
 **Metrics**:
+
 - `k1`: Precision at top 1 (most important)
 - `k3`: Precision at top 3
 - `k5`: Precision at top 5
 - `k10`: Precision at top 10
 
 **Formula**:
+
 ```
 precision@k = (relevant_items_in_top_k / k) * 100
 ```
 
 **Use Cases**:
+
 - Evaluating confluence scoring systems
 - Validating zone ranking algorithms
 - Comparing different scoring approaches
 
 **Interpretation**:
+
 - k1 = 100%: Best-scored item is always relevant
 - k3 > 66%: Top 3 are mostly relevant
 - Declining precision with higher K is normal
 
 **Example**:
+
 ```json
 {
   "precisionAtK": {
@@ -85,6 +94,7 @@ precision@k = (relevant_items_in_top_k / k) * 100
 **Purpose**: Performance benchmarking and regression detection
 
 **Metrics**:
+
 - `min`: Fastest execution time (ms)
 - `max`: Slowest execution time (ms)
 - `mean`: Average execution time (ms)
@@ -94,16 +104,19 @@ precision@k = (relevant_items_in_top_k / k) * 100
 - `total`: Sum of all execution times (ms)
 
 **Interpretation**:
+
 - Use for performance regression testing
 - Compare across code changes
 - Identify bottlenecks in analysis pipeline
 
 **Performance Targets**:
+
 - analysis-kit: < 5ms per bar
 - tjr-tools: < 10ms per bar
 - Full day (78 bars): < 100ms total
 
 **Example**:
+
 ```json
 {
   "latency": {
@@ -123,6 +136,7 @@ precision@k = (relevant_items_in_top_k / k) * 100
 **Purpose**: Count detected patterns and signals
 
 **Metrics**:
+
 - `fvgs`: Fair Value Gaps detected
 - `orderBlocks`: Order Blocks detected
 - `executions`: Execution triggers generated
@@ -130,11 +144,13 @@ precision@k = (relevant_items_in_top_k / k) * 100
 - `avgConfluence`: Average confluence score
 
 **Use Cases**:
+
 - Validating detection algorithms
 - Comparing module outputs
 - Regression testing for pattern counts
 
 **Example**:
+
 ```json
 {
   "signals": {
@@ -176,6 +192,7 @@ replay-run --fixture samples/day.json --pretty
 ```
 
 Output:
+
 ```
 === Backtest Summary ===
 Fixture: samples/day.json
@@ -194,12 +211,14 @@ Signals:
 ## Determinism
 
 All metrics are deterministic:
+
 - Same input always produces same output
 - Floating-point values rounded to 1 decimal
 - Arrays sorted consistently
 - No randomness in computation
 
 This enables:
+
 - Reliable regression testing
 - CI/CD integration
 - Snapshot testing
@@ -207,11 +226,13 @@ This enables:
 ## Module Support
 
 ### analysis-kit
+
 - Swing detection
 - Day profile classification
 - Session extremes
 
 ### tjr-tools
+
 - FVG detection
 - Order Block detection
 - Confluence scoring

@@ -35,17 +35,17 @@ import type { Timeframe } from './timeframes.js';
  * ```
  */
 export interface TJRAnalysisInput {
-    /** Symbol being analyzed */
-    symbol: string;
-    /** Timeframe of the bars */
-    timeframe: Timeframe;
-    /**
-     * Historical bars for analysis (must be in ascending timestamp order).
-     * Minimum count depends on TJR requirements (typically 50+ for reliable analysis).
-     */
-    bars: MarketBar[];
-    /** Timestamp when analysis was requested (ISO 8601 UTC) */
-    analysisTimestamp: string;
+  /** Symbol being analyzed */
+  symbol: string;
+  /** Timeframe of the bars */
+  timeframe: Timeframe;
+  /**
+   * Historical bars for analysis (must be in ascending timestamp order).
+   * Minimum count depends on TJR requirements (typically 50+ for reliable analysis).
+   */
+  bars: MarketBar[];
+  /** Timestamp when analysis was requested (ISO 8601 UTC) */
+  analysisTimestamp: string;
 }
 /**
  * Confluence score and contributing factors.
@@ -73,27 +73,27 @@ export interface TJRAnalysisInput {
  * ```
  */
 export interface TJRConfluence {
+  /**
+   * Overall confluence score (0-100).
+   * Weighted average of all factors scaled to percentage.
+   */
+  score: number;
+  /**
+   * Individual confluence factors with their contributions.
+   */
+  factors: Array<{
+    /** Factor name/identifier */
+    name: string;
+    /** Weight in overall score (0-1, should sum to 1.0 across all factors) */
+    weight: number;
     /**
-     * Overall confluence score (0-100).
-     * Weighted average of all factors scaled to percentage.
+     * Factor value/strength (0-1).
+     * 0 = no confluence, 1 = perfect confluence
      */
-    score: number;
-    /**
-     * Individual confluence factors with their contributions.
-     */
-    factors: Array<{
-        /** Factor name/identifier */
-        name: string;
-        /** Weight in overall score (0-1, should sum to 1.0 across all factors) */
-        weight: number;
-        /**
-         * Factor value/strength (0-1).
-         * 0 = no confluence, 1 = perfect confluence
-         */
-        value: number;
-        /** Optional: Human-readable description */
-        description?: string;
-    }>;
+    value: number;
+    /** Optional: Human-readable description */
+    description?: string;
+  }>;
 }
 /**
  * Trade execution parameters derived from TJR analysis.
@@ -120,30 +120,30 @@ export interface TJRConfluence {
  * ```
  */
 export interface TJRExecution {
-    /** Price at which to enter the trade */
-    entryPrice: number;
-    /** Stop-loss price (risk management) */
-    stopLoss: number;
-    /** Take-profit target price */
-    takeProfit: number;
-    /** Number of shares/contracts/units to trade */
-    positionSize: number;
-    /** Trade direction */
-    direction: 'long' | 'short';
-    /**
-     * Risk-reward ratio (reward / risk).
-     * Example: 2.0 means $2 potential profit for every $1 risked.
-     */
-    riskRewardRatio: number;
-    /**
-     * Confidence level for this trade.
-     * Derived from confluence score and market conditions.
-     */
-    confidence: 'low' | 'medium' | 'high';
-    /** Optional: Expected trade duration */
-    expectedDuration?: string;
-    /** Optional: Additional notes/reasoning */
-    notes?: string;
+  /** Price at which to enter the trade */
+  entryPrice: number;
+  /** Stop-loss price (risk management) */
+  stopLoss: number;
+  /** Take-profit target price */
+  takeProfit: number;
+  /** Number of shares/contracts/units to trade */
+  positionSize: number;
+  /** Trade direction */
+  direction: 'long' | 'short';
+  /**
+   * Risk-reward ratio (reward / risk).
+   * Example: 2.0 means $2 potential profit for every $1 risked.
+   */
+  riskRewardRatio: number;
+  /**
+   * Confidence level for this trade.
+   * Derived from confluence score and market conditions.
+   */
+  confidence: 'low' | 'medium' | 'high';
+  /** Optional: Expected trade duration */
+  expectedDuration?: string;
+  /** Optional: Additional notes/reasoning */
+  notes?: string;
 }
 /**
  * Complete TJR analysis result.
@@ -171,31 +171,31 @@ export interface TJRExecution {
  * ```
  */
 export interface TJRResult {
-    /** Input data snapshot (for audit trail) */
-    input: TJRAnalysisInput;
-    /** Confluence analysis results */
-    confluence: TJRConfluence;
-    /**
-     * Execution parameters (if trade is recommended).
-     * Omitted if confluence score below threshold or no valid setup.
-     */
-    execution?: TJRExecution;
-    /**
-     * Warnings about data quality, missing indicators, or analysis limitations.
-     * Empty array if no warnings.
-     */
-    warnings: string[];
-    /**
-     * Optional metadata about the analysis.
-     */
-    metadata?: {
-        /** Version of TJR analysis engine */
-        analysisVersion?: string;
-        /** Time taken to compute (milliseconds) */
-        computeTimeMs?: number;
-        /** Additional context */
-        [key: string]: unknown;
-    };
+  /** Input data snapshot (for audit trail) */
+  input: TJRAnalysisInput;
+  /** Confluence analysis results */
+  confluence: TJRConfluence;
+  /**
+   * Execution parameters (if trade is recommended).
+   * Omitted if confluence score below threshold or no valid setup.
+   */
+  execution?: TJRExecution;
+  /**
+   * Warnings about data quality, missing indicators, or analysis limitations.
+   * Empty array if no warnings.
+   */
+  warnings: string[];
+  /**
+   * Optional metadata about the analysis.
+   */
+  metadata?: {
+    /** Version of TJR analysis engine */
+    analysisVersion?: string;
+    /** Time taken to compute (milliseconds) */
+    computeTimeMs?: number;
+    /** Additional context */
+    [key: string]: unknown;
+  };
 }
 /**
  * Type guard to check if a TJRResult includes execution parameters.
@@ -211,6 +211,6 @@ export interface TJRResult {
  * ```
  */
 export declare function hasExecution(result: TJRResult): result is TJRResult & {
-    execution: TJRExecution;
+  execution: TJRExecution;
 };
 //# sourceMappingURL=tjr.d.ts.map

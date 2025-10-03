@@ -168,9 +168,7 @@ export function validateLogFields(fields: Record<string, unknown>): {
     if (typeof value === 'string') {
       const piiCheck = containsPII(value);
       if (piiCheck.hasPII) {
-        warnings.push(
-          `Field "${key}" contains potential PII (pattern: ${piiCheck.pattern})`
-        );
+        warnings.push(`Field "${key}" contains potential PII (pattern: ${piiCheck.pattern})`);
       }
     }
 
@@ -258,9 +256,7 @@ export function formatTimestamp(date: Date = new Date()): string {
  * // Returns: { symbol: 'SPY', email: '[REDACTED]' }
  * ```
  */
-export function sanitizeLogFields(
-  fields: Record<string, unknown>
-): Record<string, unknown> {
+export function sanitizeLogFields(fields: Record<string, unknown>): Record<string, unknown> {
   const sanitized: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(fields)) {
@@ -307,9 +303,7 @@ export function sanitizeLogFields(
  * });
  * ```
  */
-export function createLogFields(
-  fields: Partial<StandardLogFields>
-): StandardLogFields {
+export function createLogFields(fields: Partial<StandardLogFields>): StandardLogFields {
   // Import dynamically to avoid circular dependencies
   // The request_id will be added by the logger if available
   return {

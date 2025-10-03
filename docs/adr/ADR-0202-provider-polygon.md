@@ -135,8 +135,8 @@ Provider exposes rate limit information via capabilities:
 ```typescript
 interface ProviderCapabilities {
   rateLimit: {
-    requestsPerMinute: number;  // e.g., 5 for free tier
-    burstLimit?: number;         // e.g., 10 for burst allowance
+    requestsPerMinute: number; // e.g., 5 for free tier
+    burstLimit?: number; // e.g., 10 for burst allowance
   };
 }
 ```
@@ -194,7 +194,7 @@ interface ProviderCapabilities {
 ```typescript
 function parsePolygonBar(raw: PolygonBar): Bar {
   return {
-    timestamp: raw.t,  // Already in Unix epoch milliseconds (UTC)
+    timestamp: raw.t, // Already in Unix epoch milliseconds (UTC)
     open: raw.o,
     high: raw.h,
     low: raw.l,
@@ -206,15 +206,15 @@ function parsePolygonBar(raw: PolygonBar): Bar {
 
 **Field Mapping:**
 
-| Polygon Field | Canonical Field | Notes |
-|---------------|-----------------|-------|
-| `T` | (symbol, not in Bar) | Used for validation, not stored in Bar |
-| `t` | `timestamp` | Unix epoch milliseconds (UTC) |
-| `o` | `open` | Opening price |
-| `h` | `high` | Highest price |
-| `l` | `low` | Lowest price |
-| `c` | `close` | Closing price |
-| `v` | `volume` | Traded volume |
+| Polygon Field | Canonical Field      | Notes                                  |
+| ------------- | -------------------- | -------------------------------------- |
+| `T`           | (symbol, not in Bar) | Used for validation, not stored in Bar |
+| `t`           | `timestamp`          | Unix epoch milliseconds (UTC)          |
+| `o`           | `open`               | Opening price                          |
+| `h`           | `high`               | Highest price                          |
+| `l`           | `low`                | Lowest price                           |
+| `c`           | `close`              | Closing price                          |
+| `v`           | `volume`             | Traded volume                          |
 
 **Timezone Handling:**
 
@@ -226,10 +226,7 @@ function parsePolygonBar(raw: PolygonBar): Bar {
 // For intraday bars only
 import { DateTime } from 'luxon';
 
-const utcTimestamp = DateTime
-  .fromMillis(raw.t, { zone: 'America/New_York' })
-  .toUTC()
-  .toMillis();
+const utcTimestamp = DateTime.fromMillis(raw.t, { zone: 'America/New_York' }).toUTC().toMillis();
 ```
 
 **Validation:**
@@ -349,21 +346,25 @@ The provider adapter is **stateless** and does not cache bars.
 
 **Error Categories:**
 
-| Error Type | HTTP Status | Handling |
-|------------|-------------|----------|
-| **Authentication** | 401 | Throw `AuthenticationError`, log API key issue |
-| **Rate Limit** | 429 | Retry with exponential backoff (max 3 attempts) |
-| **Invalid Symbol** | 404 | Throw `SymbolNotFoundError`, log symbol |
-| **Network Failure** | - | Retry once, then throw `NetworkError` |
-| **Server Error** | 500-599 | Log, throw `ProviderError` (no retry, likely Polygon outage) |
-| **Invalid Response** | 200 (malformed JSON) | Throw `DataFormatError`, log raw response |
+| Error Type           | HTTP Status          | Handling                                                     |
+| -------------------- | -------------------- | ------------------------------------------------------------ |
+| **Authentication**   | 401                  | Throw `AuthenticationError`, log API key issue               |
+| **Rate Limit**       | 429                  | Retry with exponential backoff (max 3 attempts)              |
+| **Invalid Symbol**   | 404                  | Throw `SymbolNotFoundError`, log symbol                      |
+| **Network Failure**  | -                    | Retry once, then throw `NetworkError`                        |
+| **Server Error**     | 500-599              | Log, throw `ProviderError` (no retry, likely Polygon outage) |
+| **Invalid Response** | 200 (malformed JSON) | Throw `DataFormatError`, log raw response                    |
 
 **Error Classes:**
 
 ```typescript
 // From @tjr-suite/contracts
 class ProviderError extends Error {
-  constructor(public provider: string, message: string, public cause?: Error) {
+  constructor(
+    public provider: string,
+    message: string,
+    public cause?: Error
+  ) {
     super(`[${provider}] ${message}`);
   }
 }
@@ -441,7 +442,7 @@ test('getBars: daily bars for AAPL', async () => {
   const provider = new PolygonProvider({ apiKey: 'test-key' });
   const bars = await provider.getBars('AAPL', '1D', new Date('2025-01-01'), new Date('2025-01-31'));
 
-  assert.equal(bars.length, 21);  // 21 trading days in January 2025
+  assert.equal(bars.length, 21); // 21 trading days in January 2025
   assert.equal(bars[0].open, 142.0);
   assert.equal(bars[0].high, 143.5);
   // ... more assertions

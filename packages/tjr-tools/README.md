@@ -7,12 +7,14 @@
 `@tjr/tjr-tools` provides comprehensive trading analysis for the TJR (Trading Journal Research) methodology:
 
 ### Confluence Detection
+
 - **Fair Value Gaps (FVG)**: Price inefficiencies created by rapid market moves
 - **Order Blocks**: Institutional supply/demand zones marked by high volume and rejection
 - **Zone Overlap**: Confluence of multiple technical factors
 - **Weighted Scoring**: Calculates probability of successful trades
 
 ### Trade Execution (New in v0.2.0)
+
 - **Two-Stage Execution**: 5-minute confirmation + 1-minute entry
 - **Multi-Timeframe Analysis**: Combines higher timeframe setup with lower timeframe entry
 - **Risk Management**: Automatic stop loss and take profit calculation
@@ -98,6 +100,7 @@ const aggressiveResult = analyze(input, {
 Main analysis function that detects confluences and calculates scores.
 
 **Parameters:**
+
 - `input: TJRAnalysisInput` - Market data and context
 - `options?: AnalyzeOptions` - Detection and scoring options
 
@@ -114,6 +117,7 @@ Detect Order Blocks in price data.
 ## Execution Configuration
 
 ### Default Configuration
+
 ```typescript
 {
   confirmation5m: {
@@ -137,23 +141,24 @@ Detect Order Blocks in price data.
 
 ### Configuration Options
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `confirmation5m.minConfluenceScore` | Minimum score for 5m confirmation | 70 |
-| `confirmation5m.requiredFactors` | Factors that must be present | ['Fair Value Gaps', 'Order Blocks'] |
-| `confirmation5m.lookbackBars` | Bars to look back for confirmation | 20 |
-| `entry1m.minConfluenceScore` | Minimum score for 1m entry | 60 |
-| `entry1m.maxBarsAfterConfirmation` | Max bars between confirmation and entry | 5 |
-| `entry1m.requireZoneEntry` | Entry must be within FVG/Order Block | true |
-| `risk.maxRiskPerTrade` | Maximum risk as fraction of account | 0.01 |
-| `risk.accountSize` | Account size for position sizing | optional |
-| `risk.defaultStopPercent` | Default stop loss percentage | 0.015 |
-| `risk.defaultRiskReward` | Target risk-reward ratio | 2.0 |
-| `dryRun` | Test mode without generating execution | false |
+| Parameter                           | Description                             | Default                             |
+| ----------------------------------- | --------------------------------------- | ----------------------------------- |
+| `confirmation5m.minConfluenceScore` | Minimum score for 5m confirmation       | 70                                  |
+| `confirmation5m.requiredFactors`    | Factors that must be present            | ['Fair Value Gaps', 'Order Blocks'] |
+| `confirmation5m.lookbackBars`       | Bars to look back for confirmation      | 20                                  |
+| `entry1m.minConfluenceScore`        | Minimum score for 1m entry              | 60                                  |
+| `entry1m.maxBarsAfterConfirmation`  | Max bars between confirmation and entry | 5                                   |
+| `entry1m.requireZoneEntry`          | Entry must be within FVG/Order Block    | true                                |
+| `risk.maxRiskPerTrade`              | Maximum risk as fraction of account     | 0.01                                |
+| `risk.accountSize`                  | Account size for position sizing        | optional                            |
+| `risk.defaultStopPercent`           | Default stop loss percentage            | 0.015                               |
+| `risk.defaultRiskReward`            | Target risk-reward ratio                | 2.0                                 |
+| `dryRun`                            | Test mode without generating execution  | false                               |
 
 ## Features
 
 ### Confluence Detection
+
 - ✅ Fair Value Gap detection (bullish & bearish)
 - ✅ Order Block detection (demand & supply)
 - ✅ Weighted confluence scoring
@@ -161,6 +166,7 @@ Detect Order Blocks in price data.
 - ✅ Recency-based prioritization
 
 ### Trade Execution
+
 - ✅ Two-stage execution (5m confirmation + 1m entry)
 - ✅ Multi-timeframe analysis support
 - ✅ Zone-based stop loss placement
@@ -170,6 +176,7 @@ Detect Order Blocks in price data.
 - ✅ Configuration presets (conservative/default/aggressive)
 
 ### Technical
+
 - ✅ Pure functions (no side effects)
 - ✅ Fully typed with TypeScript
 - ✅ Deterministic results

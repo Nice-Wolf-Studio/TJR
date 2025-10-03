@@ -9,7 +9,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       include: ['dist/**/*.js'],
-      exclude: ['dist/**/*.d.ts', 'dist/**/*.map']
-    }
-  }
+      exclude: ['dist/**/*.d.ts', 'dist/**/*.map'],
+    },
+  },
 });

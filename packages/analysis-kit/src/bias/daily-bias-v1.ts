@@ -96,8 +96,12 @@ export function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes
   const { rthOpen, rthClose, rthHigh, rthLow } = sessionExtremes;
 
   // Validate session extremes
-  if (!Number.isFinite(rthOpen) || !Number.isFinite(rthClose) ||
-      !Number.isFinite(rthHigh) || !Number.isFinite(rthLow)) {
+  if (
+    !Number.isFinite(rthOpen) ||
+    !Number.isFinite(rthClose) ||
+    !Number.isFinite(rthHigh) ||
+    !Number.isFinite(rthLow)
+  ) {
     return {
       bias: 'neutral',
       confidence: 0,
@@ -107,8 +111,8 @@ export function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes
 
   // 1. Macro directional move: open to close
   const macroMove = rthClose - rthOpen;
-  const macroDirection = macroMove > PRICE_EPSILON ? 'bullish' :
-                        macroMove < -PRICE_EPSILON ? 'bearish' : 'neutral';
+  const macroDirection =
+    macroMove > PRICE_EPSILON ? 'bullish' : macroMove < -PRICE_EPSILON ? 'bearish' : 'neutral';
 
   // 2. Micro position: where is close within the RTH range?
   const rangePosition = calculateRangePosition(rthClose, rthLow, rthHigh);
@@ -122,12 +126,12 @@ export function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes
     // Strong bullish: closed above open AND in upper 40% of range
     bias = 'bullish';
     confidence = CONFIDENCE.HIGH + (rangePosition - 0.6) * 0.25; // 0.75-1.0
-    reason = `Close (${rthClose.toFixed(2)}) is ${((rangePosition * 100).toFixed(0))}% through RTH range, above open (${rthOpen.toFixed(2)})`;
+    reason = `Close (${rthClose.toFixed(2)}) is ${(rangePosition * 100).toFixed(0)}% through RTH range, above open (${rthOpen.toFixed(2)})`;
   } else if (macroDirection === 'bearish' && rangePosition <= 0.4) {
     // Strong bearish: closed below open AND in lower 40% of range
     bias = 'bearish';
     confidence = CONFIDENCE.HIGH + (0.4 - rangePosition) * 0.25; // 0.75-1.0
-    reason = `Close (${rthClose.toFixed(2)}) is ${((rangePosition * 100).toFixed(0))}% through RTH range, below open (${rthOpen.toFixed(2)})`;
+    reason = `Close (${rthClose.toFixed(2)}) is ${(rangePosition * 100).toFixed(0)}% through RTH range, below open (${rthOpen.toFixed(2)})`;
   } else if (macroDirection === 'bullish' && rangePosition >= 0.5) {
     // Medium bullish: closed above open AND above midpoint
     bias = 'bullish';
@@ -141,7 +145,7 @@ export function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes
   } else if (macroDirection === 'bullish') {
     // Weak bullish: closed above open but in lower half of range
     bias = 'bullish';
-    confidence = CONFIDENCE.LOW + (rangePosition) * 0.25; // 0.25-0.5
+    confidence = CONFIDENCE.LOW + rangePosition * 0.25; // 0.25-0.5
     reason = `Close (${rthClose.toFixed(2)}) above open (${rthOpen.toFixed(2)}) but in lower half of range`;
   } else if (macroDirection === 'bearish') {
     // Weak bearish: closed below open but in upper half of range

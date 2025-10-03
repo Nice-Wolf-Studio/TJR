@@ -45,7 +45,8 @@ export async function healthHandler(interaction: ChatInputCommandInteraction): P
   // Detailed response
   const embed = {
     title: '🏥 Health Report',
-    color: health.status === 'healthy' ? 0x00ff00 : health.status === 'degraded' ? 0xffff00 : 0xff0000,
+    color:
+      health.status === 'healthy' ? 0x00ff00 : health.status === 'degraded' ? 0xffff00 : 0xff0000,
     fields: [
       {
         name: 'Status',

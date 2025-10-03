@@ -6,7 +6,7 @@
     "expectedResult": {
       "symbol": "ES",
       "price": 5850.25,
-      "change": 12.50,
+      "change": 12.5,
       "volume": 15234
     }
   },
@@ -16,7 +16,7 @@
     "timestamp": "2024-10-01T10:00:00Z",
     "expectedResult": {
       "symbol": "ES",
-      "price": 5848.00,
+      "price": 5848.0,
       "change": -2.25,
       "volume": 12456
     }
@@ -38,7 +38,7 @@
     "timestamp": "2024-10-01T11:00:00Z",
     "expectedResult": {
       "symbol": "ES",
-      "price": 5849.50,
+      "price": 5849.5,
       "change": -2.25,
       "volume": 14567
     }
@@ -49,8 +49,8 @@
     "timestamp": "2024-10-01T11:30:00Z",
     "expectedResult": {
       "symbol": "ES",
-      "price": 5853.00,
-      "change": 3.50,
+      "price": 5853.0,
+      "change": 3.5,
       "volume": 16789
     }
   },
@@ -72,7 +72,7 @@
     "expectedResult": {
       "symbol": "ES",
       "price": 5852.75,
-      "change": -2.50,
+      "change": -2.5,
       "volume": 19234
     }
   },
@@ -82,7 +82,7 @@
     "timestamp": "2024-10-01T14:30:00Z",
     "expectedResult": {
       "symbol": "ES",
-      "price": 5856.00,
+      "price": 5856.0,
       "change": 3.25,
       "volume": 17890
     }

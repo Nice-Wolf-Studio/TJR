@@ -148,7 +148,9 @@ async function main(): Promise<void> {
 
     // Determine which modules to run
     const modulesArg = (args as { modules?: string }).modules;
-    const modules = modulesArg ? modulesArg.split(',').map((m: string) => m.trim()) : ['analysis-kit'];
+    const modules = modulesArg
+      ? modulesArg.split(',').map((m: string) => m.trim())
+      : ['analysis-kit'];
 
     // Run analysis and collect metrics
     const startTime = Date.now();
@@ -194,7 +196,9 @@ function loadBarFixture(fixturePath: string): BarFixture {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       throw new Error(`Fixture file not found: ${fixturePath}`);
     }
-    throw new Error(`Failed to parse fixture JSON: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to parse fixture JSON: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 

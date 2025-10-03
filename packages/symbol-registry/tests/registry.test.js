@@ -12,4 +12,3 @@ test('normalizeSymbol canonicalizes ES aliases', () => {
 test('toDatabentoContinuous mapping', () => {
   assert.equal(toDatabentoContinuous('ES'), 'ES.c.0');
 });
-

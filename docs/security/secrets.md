@@ -59,6 +59,7 @@ PROVIDER_NAME_SECRET_TYPE[_ENVIRONMENT]
 ### Examples
 
 #### Single Environment Secrets
+
 ```bash
 # Market data providers (same key across environments or local only)
 ALPHAVANTAGE_API_KEY=your_alphavantage_key_here
@@ -69,6 +70,7 @@ DATABASE_URL=postgresql://user:password@host:5432/dbname
 ```
 
 #### Multi-Environment Secrets
+
 ```bash
 # Discord bot tokens (separate per environment)
 DISCORD_DEV_TOKEN=your_development_bot_token
@@ -106,6 +108,7 @@ Regular secret rotation reduces the window of opportunity for compromised creden
 - `DISCORD_*_TOKEN` - Complete bot control
 
 **Rotation Procedure:**
+
 1. Generate new credential in provider portal
 2. Update secret in environment (CI/CD, production)
 3. Deploy and verify service continuity
@@ -120,6 +123,7 @@ Regular secret rotation reduces the window of opportunity for compromised creden
 - `ALPHAVANTAGE_API_KEY` - Free tier, public data only
 
 **Rotation Procedure:**
+
 1. Generate new API key in provider portal
 2. Update in all environments
 3. Test data retrieval
@@ -138,6 +142,7 @@ Rotate immediately (within 1 hour) if:
 - Third-party breach announced
 
 **Emergency Rotation Procedure:**
+
 1. Immediately revoke compromised secret at provider
 2. Generate replacement secret
 3. Update all environments ASAP
@@ -163,12 +168,14 @@ Q4 (October): Rotate MEDIUM priority secrets
 ### Initial Setup
 
 1. **Copy the example file:**
+
    ```bash
    cp .env.example .env
    ```
 
 2. **Never commit .env:**
    Verify it's in `.gitignore`:
+
    ```bash
    grep -q "^\.env$" .gitignore && echo "✓ Protected" || echo "✗ NOT PROTECTED"
    ```
@@ -215,12 +222,14 @@ Q4 (October): Rotate MEDIUM priority secrets
 ### Sharing Secrets Within Team
 
 **NEVER share secrets via:**
+
 - Email
 - Slack/Discord messages
 - Shared documents
 - Screenshot/photo
 
 **DO use:**
+
 - Secure secret management tools (1Password, Bitwarden)
 - Encrypted communication channels
 - In-person secure transfer (for highly sensitive)
@@ -237,11 +246,13 @@ All CI/CD secrets are stored in GitHub repository secrets, never in workflow fil
 #### Setting Up Secrets
 
 1. **Navigate to repository settings:**
+
    ```
    Settings > Secrets and variables > Actions > New repository secret
    ```
 
 2. **Add required secrets:**
+
    ```
    ALPHAVANTAGE_API_KEY - For smoke tests
    DATABENTO_API_KEY - For smoke tests
@@ -269,7 +280,7 @@ GitHub Actions automatically masks secrets in logs, but follow these practices:
 
 # BAD - might expose secret in logs
 - name: Debug
-  run: echo "Key is ${{ secrets.MY_API_KEY }}"  # NEVER DO THIS
+  run: echo "Key is ${{ secrets.MY_API_KEY }}" # NEVER DO THIS
 ```
 
 ### Workflow Secret Lint
@@ -291,6 +302,7 @@ jobs:
 ```
 
 This scans for:
+
 - API keys and tokens
 - Database connection strings
 - Private keys
@@ -304,6 +316,7 @@ This scans for:
 ### NEVER Commit
 
 **Credential Files:**
+
 - `.env` (local environment files)
 - `.env.local`, `.env.*.local`
 - `credentials.json`
@@ -312,15 +325,17 @@ This scans for:
 - `*.key`, `*.pem`, `*.crt`, `*.p12`
 
 **Code with Hardcoded Secrets:**
+
 ```typescript
 // BAD - hardcoded secret
-const API_KEY = "abc123def456";
+const API_KEY = 'abc123def456';
 
 // GOOD - from environment
 const API_KEY = process.env.ALPHAVANTAGE_API_KEY;
 ```
 
 **Configuration with Actual Secrets:**
+
 ```json
 // BAD - config.json with real credentials
 {
@@ -364,6 +379,7 @@ config.local.json
 ```
 
 Check if a file would be ignored:
+
 ```bash
 git check-ignore -v .env
 # Should output: .gitignore:27:.env	.env
@@ -450,12 +466,14 @@ git push --force-with-lease
 ### Database Credentials
 
 **Format:**
+
 ```
 postgresql://username:password@hostname:port/database
 sqlite:path/to/database.db
 ```
 
 **Security Guidelines:**
+
 - Use strong passwords (16+ characters, mixed case, numbers, symbols)
 - Different passwords per environment
 - Enable SSL/TLS for production connections
@@ -464,6 +482,7 @@ sqlite:path/to/database.db
 - Rotate every 90 days
 
 **Example:**
+
 ```bash
 # Development (SQLite - no secrets)
 DATABASE_URL=sqlite:data/dev.db
@@ -482,11 +501,13 @@ DATABASE_URL=postgresql://tjr_prod:Xy9$mK2!nP8@qR5vL3wN@db.example.com:5432/tjr_
 **Rotation:** Every 180 days or if compromised
 
 **Security Guidelines:**
+
 - Free tier key is low risk but should still be protected
 - Monitor rate limit usage for anomalies
 - Use fixture mode for local dev when possible
 
 **Example:**
+
 ```bash
 ALPHAVANTAGE_API_KEY=A1B2C3D4E5F6G7H8
 ```
@@ -499,6 +520,7 @@ ALPHAVANTAGE_API_KEY=A1B2C3D4E5F6G7H8
 **Rotation:** Every 90 days or immediately if compromised
 
 **Security Guidelines:**
+
 - Treat as high-value secret
 - Monitor usage closely
 - Set up billing alerts
@@ -506,6 +528,7 @@ ALPHAVANTAGE_API_KEY=A1B2C3D4E5F6G7H8
 - Revoke immediately if exposed
 
 **Example:**
+
 ```bash
 DATABENTO_API_KEY=db-1234567890abcdef-1234567890abcdef
 ```
@@ -518,6 +541,7 @@ DATABENTO_API_KEY=db-1234567890abcdef-1234567890abcdef
 **Rotation:** Every 90 days or immediately if compromised
 
 **Security Guidelines:**
+
 - NEVER share or log tokens
 - Use separate bots for dev/staging/prod
 - Enable 2FA on Discord developer account
@@ -526,6 +550,7 @@ DATABENTO_API_KEY=db-1234567890abcdef-1234567890abcdef
 - Revoke immediately if suspicious activity
 
 **Token Structure:**
+
 ```
 MTk4NjIyNDgzNDcxOTI1MjQ4.Cl2FMQ.ZnCjm1XVW7vRze4b7Cq4se7kKWs
 └─────────────┬────────────┘ └──┬─┘ └──────────┬─────────┘
@@ -533,6 +558,7 @@ MTk4NjIyNDgzNDcxOTI1MjQ4.Cl2FMQ.ZnCjm1XVW7vRze4b7Cq4se7kKWs
 ```
 
 **Example:**
+
 ```bash
 # Development bot
 DISCORD_DEV_TOKEN=MTk4NjIyNDgzNDcxOTI1MjQ4.REPLACE.WITH_YOUR_DEV_BOT_TOKEN
@@ -566,6 +592,7 @@ node scripts/validate-env.js
 ```
 
 This checks:
+
 - All required secrets are set
 - Secret formats are valid
 - No placeholder values in production
@@ -589,6 +616,7 @@ npm start
 ### CI/CD Testing
 
 The secret-lint workflow runs automatically on:
+
 - Every push to any branch
 - Every pull request
 - Manual workflow dispatch

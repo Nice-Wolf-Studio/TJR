@@ -45,18 +45,18 @@ export function calculateHitRate(signals: TradingSignal[]): HitRateMetrics {
   }
 
   // Count overall success/failure
-  const successful = signals.filter(s => s.successful === true).length;
-  const failed = signals.filter(s => s.successful === false).length;
+  const successful = signals.filter((s) => s.successful === true).length;
+  const failed = signals.filter((s) => s.successful === false).length;
   const overall = (successful / signals.length) * 100;
 
   // Count long trades
-  const longSignals = signals.filter(s => s.direction === 'long');
-  const longSuccessful = longSignals.filter(s => s.successful === true).length;
+  const longSignals = signals.filter((s) => s.direction === 'long');
+  const longSuccessful = longSignals.filter((s) => s.successful === true).length;
   const longHitRate = longSignals.length > 0 ? (longSuccessful / longSignals.length) * 100 : 0;
 
   // Count short trades
-  const shortSignals = signals.filter(s => s.direction === 'short');
-  const shortSuccessful = shortSignals.filter(s => s.successful === true).length;
+  const shortSignals = signals.filter((s) => s.direction === 'short');
+  const shortSuccessful = shortSignals.filter((s) => s.successful === true).length;
   const shortHitRate = shortSignals.length > 0 ? (shortSuccessful / shortSignals.length) * 100 : 0;
 
   return {

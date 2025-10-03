@@ -18,28 +18,28 @@
  * Parsed command-line arguments
  */
 export interface ParsedArgs {
-  help: boolean;           // --help: Show help text
-  execute: boolean;        // --execute: Actually perform mutating operation (vs dry-run)
-  dryRun: boolean;         // --dry-run: Preview what would happen (default for mutating ops)
-  pretty: boolean;         // --pretty: Human-readable formatted output
-  csv: boolean;            // --csv: Output in CSV format
-  json: boolean;           // --json: Output in JSON format (default)
-  fixture?: string;        // --fixture=path: Path to fixture file (for replay-run)
-  modules?: string;        // --modules=list: Comma-separated module names
-  remaining: string[];     // Positional arguments (non-flag args)
+  help: boolean; // --help: Show help text
+  execute: boolean; // --execute: Actually perform mutating operation (vs dry-run)
+  dryRun: boolean; // --dry-run: Preview what would happen (default for mutating ops)
+  pretty: boolean; // --pretty: Human-readable formatted output
+  csv: boolean; // --csv: Output in CSV format
+  json: boolean; // --json: Output in JSON format (default)
+  fixture?: string; // --fixture=path: Path to fixture file (for replay-run)
+  modules?: string; // --modules=list: Comma-separated module names
+  remaining: string[]; // Positional arguments (non-flag args)
 }
 
 /**
  * Standard result object structure returned by all CLIs
  */
 export interface CliResult {
-  success: boolean;        // Overall operation success status
-  command: string;         // Name of the command that ran
-  timestamp: string;       // ISO 8601 timestamp of execution
-  dryRun?: boolean;        // Whether this was a dry-run (omitted for read-only ops)
-  data: unknown;           // Command-specific data (diff, cache stats, etc.)
-  warnings?: string[];     // Non-fatal warnings
-  errors?: string[];       // Fatal errors
+  success: boolean; // Overall operation success status
+  command: string; // Name of the command that ran
+  timestamp: string; // ISO 8601 timestamp of execution
+  dryRun?: boolean; // Whether this was a dry-run (omitted for read-only ops)
+  data: unknown; // Command-specific data (diff, cache stats, etc.)
+  warnings?: string[]; // Non-fatal warnings
+  errors?: string[]; // Fatal errors
 }
 
 /**
@@ -82,11 +82,11 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
       args.help = true;
     } else if (arg === '--execute') {
       args.execute = true;
-      args.dryRun = false;  // Execute mode disables dry-run
+      args.dryRun = false; // Execute mode disables dry-run
       sawExecute = true;
     } else if (arg === '--dry-run') {
       args.dryRun = true;
-      args.execute = false;  // Dry-run mode disables execute
+      args.execute = false; // Dry-run mode disables execute
       sawDryRun = true;
     } else if (arg === '--pretty') {
       args.pretty = true;
@@ -127,11 +127,7 @@ export function parseArgs(argv: string[], defaultDryRun: boolean = false): Parse
  * printHelp('replay-run', 'Re-run historical bars through parsers',
  *   'Required: --fixture=path.json');
  */
-export function printHelp(
-  commandName: string,
-  description: string,
-  additionalHelp?: string
-): void {
+export function printHelp(commandName: string, description: string, additionalHelp?: string): void {
   console.log(`
 ${commandName} - ${description}
 
@@ -190,12 +186,12 @@ export function outputResult(result: CliResult, pretty: boolean): void {
 
     if (result.warnings && result.warnings.length > 0) {
       console.log('\nWarnings:');
-      result.warnings.forEach(w => console.log(`  - ${w}`));
+      result.warnings.forEach((w) => console.log(`  - ${w}`));
     }
 
     if (result.errors && result.errors.length > 0) {
       console.log('\nErrors:');
-      result.errors.forEach(e => console.log(`  - ${e}`));
+      result.errors.forEach((e) => console.log(`  - ${e}`));
     }
 
     console.log('');

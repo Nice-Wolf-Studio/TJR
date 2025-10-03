@@ -113,11 +113,7 @@ export function registerTJRCommands(config: RegisterTJRCommandsConfig): void {
   }
 
   logger.info('TJR commands registration complete', {
-    commandsRegistered: [
-      setupCommand.name,
-      confluencesCommand.name,
-      executionCommand.name,
-    ],
+    commandsRegistered: [setupCommand.name, confluencesCommand.name, executionCommand.name],
   });
 }
 
@@ -125,11 +121,7 @@ export function registerTJRCommands(config: RegisterTJRCommandsConfig): void {
  * Get list of registered TJR command names
  */
 export function getTJRCommandNames(): string[] {
-  return [
-    'tjr-setup',
-    'tjr-confluences',
-    'tjr-execution',
-  ];
+  return ['tjr-setup', 'tjr-confluences', 'tjr-execution'];
 }
 
 /**

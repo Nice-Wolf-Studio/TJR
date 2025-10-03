@@ -3,10 +3,7 @@
  * Supports Express-like middleware and Discord.js command handlers
  */
 
-import {
-  withRequestContext,
-  generateRequestId,
-} from './request-context.js';
+import { withRequestContext, generateRequestId } from './request-context.js';
 
 /**
  * Express-like request/response interface for middleware
@@ -49,8 +46,7 @@ export function requestIdMiddleware() {
   return (req: Request, res: Response, next: NextFunction): void => {
     // Extract request ID from header or generate new one
     const existingId = req.headers?.['x-request-id'];
-    const requestId =
-      typeof existingId === 'string' ? existingId : generateRequestId();
+    const requestId = typeof existingId === 'string' ? existingId : generateRequestId();
 
     // Set response header for client tracking
     if (res.setHeader) {
@@ -91,14 +87,10 @@ export function withDiscordRequestContext<TInteraction, TResult>(
   handler: (interaction: TInteraction) => Promise<TResult>
 ): (interaction: TInteraction) => Promise<TResult> {
   return async (interaction: TInteraction): Promise<TResult> => {
-    return withRequestContext(
-      () => handler(interaction),
-      generateRequestId(),
-      {
-        context: 'discord',
-        interaction_type: getInteractionType(interaction),
-      }
-    );
+    return withRequestContext(() => handler(interaction), generateRequestId(), {
+      context: 'discord',
+      interaction_type: getInteractionType(interaction),
+    });
   };
 }
 
@@ -145,11 +137,7 @@ export function withRequestContextWrapper<TArgs extends unknown[], TResult>(
   contextFields?: Record<string, unknown>
 ): (...args: TArgs) => Promise<TResult> {
   return async (...args: TArgs): Promise<TResult> => {
-    return withRequestContext(
-      () => fn(...args),
-      generateRequestId(),
-      contextFields
-    );
+    return withRequestContext(() => fn(...args), generateRequestId(), contextFields);
   };
 }
 
@@ -171,10 +159,7 @@ export function withRequestContextWrapper<TArgs extends unknown[], TResult>(
  * });
  * ```
  */
-export function withCLIRequestContext(
-  operation: string,
-  args?: Record<string, unknown>
-) {
+export function withCLIRequestContext(operation: string, args?: Record<string, unknown>) {
   return async <T>(fn: () => Promise<T>): Promise<T> => {
     return withRequestContext(() => fn(), generateRequestId(), {
       context: 'cli',
@@ -204,10 +189,7 @@ export function withCLIRequestContext(
  * });
  * ```
  */
-export function withJobRequestContext(
-  jobName: string,
-  metadata?: Record<string, unknown>
-) {
+export function withJobRequestContext(jobName: string, metadata?: Record<string, unknown>) {
   return async <T>(fn: () => Promise<T>): Promise<T> => {
     return withRequestContext(() => fn(), generateRequestId(), {
       context: 'job',

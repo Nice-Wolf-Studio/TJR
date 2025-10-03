@@ -28,12 +28,16 @@
  *
  * @packageDocumentation
  */
-export type { Bar, Timeframe } from "./types.js";
-export { toMillis, normalizeTimeframe, alignTimestamp, isAligned, } from "./timeframe.js";
-export { aggregateBars } from "./aggregate.js";
-export type { AggregateOptions } from "./aggregate.js";
-export { clipBars } from "./clip.js";
-export type { ClipOptions } from "./clip.js";
-export { selectProvider, loadCapabilities } from "./composite.js";
-export type { ProviderCapabilities, SelectProviderOptions, ProviderSelectionResult, } from "./composite.js";
+export type { Bar, Timeframe } from './types.js';
+export { toMillis, normalizeTimeframe, alignTimestamp, isAligned } from './timeframe.js';
+export { aggregateBars } from './aggregate.js';
+export type { AggregateOptions } from './aggregate.js';
+export { clipBars } from './clip.js';
+export type { ClipOptions } from './clip.js';
+export { selectProvider, loadCapabilities } from './composite.js';
+export type {
+  ProviderCapabilities,
+  SelectProviderOptions,
+  ProviderSelectionResult,
+} from './composite.js';
 //# sourceMappingURL=index.d.ts.map

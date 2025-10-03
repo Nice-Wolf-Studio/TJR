@@ -130,10 +130,7 @@ export class TJRSetupCommand extends BaseTJRCommand {
     }
 
     // Should never reach here
-    throw new TJRCommandError(
-      TJRErrorCode.INVALID_ARGS,
-      `Unhandled action: ${action}`
-    );
+    throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, `Unhandled action: ${action}`);
   }
 
   /**
@@ -163,10 +160,7 @@ export class TJRSetupCommand extends BaseTJRCommand {
         return this.handleValidate(userConfig, format);
 
       default:
-        throw new TJRCommandError(
-          TJRErrorCode.INTERNAL_ERROR,
-          `Unhandled action: ${action}`
-        );
+        throw new TJRCommandError(TJRErrorCode.INTERNAL_ERROR, `Unhandled action: ${action}`);
     }
   }
 
@@ -252,9 +246,7 @@ export class TJRSetupCommand extends BaseTJRCommand {
     const report = await this.buildSetupReport(updatedConfig);
 
     // Add success message to output
-    let output = key
-      ? `Configuration reset: ${key}\n\n`
-      : `Configuration reset to defaults\n\n`;
+    let output = key ? `Configuration reset: ${key}\n\n` : `Configuration reset to defaults\n\n`;
     output += this.formatter.format(report, format);
 
     return {

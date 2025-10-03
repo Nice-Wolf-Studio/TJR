@@ -118,7 +118,9 @@ export function calculatePositionSize(
 
   // Final validation
   if (positionSize < config.constraints.minPositionSize) {
-    warnings.push(`Position size ${positionSize} below minimum ${config.constraints.minPositionSize}`);
+    warnings.push(
+      `Position size ${positionSize} below minimum ${config.constraints.minPositionSize}`
+    );
     if (config.constraints.minPositionSize > 0) {
       warnings.push('Trade may not be viable with current risk parameters');
     }
@@ -217,7 +219,9 @@ function applyConstraints(
 
   if (constrained > maxShares) {
     constrained = maxShares;
-    warnings.push(`Position size limited by max position percentage (${config.constraints.maxPositionPercent}%)`);
+    warnings.push(
+      `Position size limited by max position percentage (${config.constraints.maxPositionPercent}%)`
+    );
   }
 
   // Ensure we don't exceed account balance
@@ -239,7 +243,9 @@ function applyConstraints(
   // Apply minimum constraint
   if (constrained < config.constraints.minPositionSize) {
     if (constrained > 0) {
-      warnings.push(`Position size ${constrained} below minimum ${config.constraints.minPositionSize}`);
+      warnings.push(
+        `Position size ${constrained} below minimum ${config.constraints.minPositionSize}`
+      );
     }
     // Don't force minimum - let caller decide
   }

@@ -53,13 +53,10 @@ describe('TJRConfluencesCommand', () => {
 
     logger = createLogger({
       level: 'error',
-      format: 'json'
+      format: 'json',
     });
 
-    configService = new FileConfigService(
-      logger.child({ service: 'config' }),
-      testConfigDir
-    );
+    configService = new FileConfigService(logger.child({ service: 'config' }), testConfigDir);
 
     // Mock provider service that returns fixture data
     providerService = {
@@ -70,7 +67,7 @@ describe('TJRConfluencesCommand', () => {
           return ethConfluenceFixture.bars;
         }
         return [];
-      })
+      }),
     } as any;
 
     // Mock cache service
@@ -85,7 +82,7 @@ describe('TJRConfluencesCommand', () => {
       }),
       clear: vi.fn(async () => {
         cacheStore.clear();
-      })
+      }),
     } as any;
 
     confluencesCommand = new TJRConfluencesCommand({
@@ -93,7 +90,7 @@ describe('TJRConfluencesCommand', () => {
       configService,
       cacheService,
       logger: logger.child({ service: 'tjr-confluences' }),
-      userId: 'test-user'
+      userId: 'test-user',
     });
   });
 
@@ -182,7 +179,7 @@ describe('TJRConfluencesCommand', () => {
       expect(providerService.getBars).toHaveBeenCalledWith(
         expect.objectContaining({
           symbol: 'BTC-USDT',
-          timeframe: Timeframe.M5
+          timeframe: Timeframe.M5,
         })
       );
     });
@@ -228,7 +225,7 @@ describe('TJRConfluencesCommand', () => {
     it('should override weights from options', async () => {
       const result = await confluencesCommand.execute(['BTC-USDT'], {
         format: 'json',
-        weights: '{"fvg":0.5,"orderBlock":0.3,"overlap":0.15,"recency":0.05}'
+        weights: '{"fvg":0.5,"orderBlock":0.3,"overlap":0.15,"recency":0.05}',
       });
 
       expect(result.success).toBe(true);
@@ -236,7 +233,7 @@ describe('TJRConfluencesCommand', () => {
 
     it('should error on invalid weights JSON', async () => {
       const result = await confluencesCommand.execute(['BTC-USDT'], {
-        weights: '{invalid json}'
+        weights: '{invalid json}',
       });
 
       expect(result.success).toBe(false);
@@ -429,8 +426,14 @@ describe('TJRConfluencesCommand', () => {
     });
 
     it('should be deterministic for same input', async () => {
-      const result1 = await confluencesCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
-      const result2 = await confluencesCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
+      const result1 = await confluencesCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
+      const result2 = await confluencesCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
 
       const output1 = JSON.parse(result1.output);
       const output2 = JSON.parse(result2.output);
@@ -533,7 +536,7 @@ describe('TJRConfluencesCommand', () => {
     it('should handle analysis errors gracefully', async () => {
       // Return malformed bar data
       providerService.getBars = vi.fn(async () => [
-        { timestamp: 'invalid', open: 'bad', high: null } as any
+        { timestamp: 'invalid', open: 'bad', high: null } as any,
       ]);
 
       const result = await confluencesCommand.execute(['BTC-USDT'], {});
@@ -548,8 +551,14 @@ describe('TJRConfluencesCommand', () => {
 
   describe('Deterministic Results', () => {
     it('should produce same results for same input', async () => {
-      const result1 = await confluencesCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
-      const result2 = await confluencesCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
+      const result1 = await confluencesCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
+      const result2 = await confluencesCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
 
       expect(result1.output).toBe(result2.output);
     });

@@ -5,8 +5,8 @@
  * Polygon.io market data provider adapter.
  */
 
-import type { Logger } from "@tjr/logger";
-import type { Timeframe } from "@tjr/contracts";
+import type { Logger } from '@tjr/logger';
+import type { Timeframe } from '@tjr/contracts';
 
 /**
  * Configuration for creating a Polygon.io provider instance.
@@ -203,12 +203,12 @@ export interface Provider {
    * @param options - Bar fetch options
    * @returns Promise resolving to array of bars
    */
-  getBars: (options: GetBarsOptions) => Promise<import("@tjr-suite/market-data-core").Bar[]>;
+  getBars: (options: GetBarsOptions) => Promise<import('@tjr-suite/market-data-core').Bar[]>;
 
   /**
    * Returns the provider's capabilities.
    *
    * @returns Provider capabilities object
    */
-  capabilities: () => import("@tjr/contracts").ProviderCapabilities;
+  capabilities: () => import('@tjr/contracts').ProviderCapabilities;
 }

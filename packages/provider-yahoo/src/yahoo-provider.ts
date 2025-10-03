@@ -28,7 +28,7 @@ function toMarketDataCoreTimeframe(tf: Timeframe): MarketDataCoreTimeframe {
     '10': '10m',
     '60': '1h',
     '240': '4h',
-    '1D': '1D'
+    '1D': '1D',
   };
 
   const result = mapping[tf];
@@ -70,15 +70,22 @@ export class YahooProvider {
    */
   capabilities(): ProviderCapabilities {
     return {
-      supportsTimeframes: ['1' as Timeframe, '5' as Timeframe, '10' as Timeframe, '60' as Timeframe, '240' as Timeframe, '1D' as Timeframe],
+      supportsTimeframes: [
+        '1' as Timeframe,
+        '5' as Timeframe,
+        '10' as Timeframe,
+        '60' as Timeframe,
+        '240' as Timeframe,
+        '1D' as Timeframe,
+      ],
       maxBarsPerRequest: 10000,
       requiresAuthentication: false,
       rateLimits: {
         requestsPerMinute: 60,
-        requestsPerDay: 2000
+        requestsPerDay: 2000,
       },
       supportsExtendedHours: false,
-      historicalDataFrom: '2000-01-01T00:00:00.000Z'
+      historicalDataFrom: '2000-01-01T00:00:00.000Z',
     };
   }
 
@@ -181,8 +188,16 @@ export class YahooProvider {
    * @param timeframe - Target timeframe
    * @returns Aggregation info (needsAggregation, sourceTimeframe)
    */
-  private analyzeTimeframe(timeframe: Timeframe): { needsAggregation: boolean; sourceTimeframe: Timeframe } {
-    const nativeTimeframes: Timeframe[] = ['1' as Timeframe, '5' as Timeframe, '60' as Timeframe, '1D' as Timeframe];
+  private analyzeTimeframe(timeframe: Timeframe): {
+    needsAggregation: boolean;
+    sourceTimeframe: Timeframe;
+  } {
+    const nativeTimeframes: Timeframe[] = [
+      '1' as Timeframe,
+      '5' as Timeframe,
+      '60' as Timeframe,
+      '1D' as Timeframe,
+    ];
 
     if (nativeTimeframes.includes(timeframe)) {
       return { needsAggregation: false, sourceTimeframe: timeframe };
@@ -222,7 +237,7 @@ export class YahooProvider {
       '10': '1m', // Will aggregate from 1m
       '60': '1h',
       '240': '1h', // Will aggregate from 1h
-      '1D': '1d'
+      '1D': '1d',
     };
 
     const tfLabel = timeframeMap[timeframe];
@@ -252,7 +267,7 @@ export class YahooProvider {
     const fromDate = new Date(from);
     const toDate = to ? new Date(to) : new Date('9999-12-31T23:59:59.999Z');
 
-    return bars.filter(bar => {
+    return bars.filter((bar) => {
       const barDate = new Date(bar.timestamp);
       return barDate >= fromDate && barDate <= toDate;
     });
@@ -267,13 +282,13 @@ export class YahooProvider {
    */
   private aggregateBars(bars: MarketBar[], targetTimeframe: Timeframe): MarketBar[] {
     // Convert MarketBar to CoreBar format (timestamp string -> number)
-    const coreBars: CoreBar[] = bars.map(bar => ({
+    const coreBars: CoreBar[] = bars.map((bar) => ({
       timestamp: new Date(bar.timestamp).getTime(),
       open: bar.open,
       high: bar.high,
       low: bar.low,
       close: bar.close,
-      volume: bar.volume
+      volume: bar.volume,
     }));
 
     // Map timeframe using type-safe function
@@ -281,13 +296,13 @@ export class YahooProvider {
     const aggregated = aggregateBars(coreBars, coreTimeframe);
 
     // Convert back to MarketBar format (timestamp number -> string)
-    return aggregated.map(bar => ({
+    return aggregated.map((bar) => ({
       timestamp: new Date(bar.timestamp).toISOString(),
       open: bar.open,
       high: bar.high,
       low: bar.low,
       close: bar.close,
-      volume: bar.volume
+      volume: bar.volume,
     }));
   }
 }

@@ -1,13 +1,17 @@
 # ADR-0305: Discord Bot Multi-Environment Deployment
 
 ## Status
+
 Accepted
 
 ## Date
+
 2024-01-30
 
 ## Context
+
 The TJR Discord bot needs to support multiple deployment environments (development, staging, production) with different configurations and command sets. We require a system that ensures:
+
 - Environment-specific command registration
 - Idempotent deployments
 - Clear separation between environments
@@ -17,6 +21,7 @@ The TJR Discord bot needs to support multiple deployment environments (developme
 Currently, the bot has basic command registration but lacks environment awareness and deployment management.
 
 ## Decision
+
 We will implement a profile-based deployment system with the following components:
 
 1. **Environment Profiles**: Predefined configurations for dev, stage, and prod environments
@@ -27,10 +32,11 @@ We will implement a profile-based deployment system with the following component
 ## Architecture
 
 ### Profile Configuration
+
 ```typescript
 interface ProfileConfig {
   environment: 'dev' | 'stage' | 'prod';
-  global: boolean;  // Global vs guild-specific registration
+  global: boolean; // Global vs guild-specific registration
   guildIds?: string[];
   enabledCommands: string[];
   commandOverrides?: Record<string, CommandOverrides>;
@@ -39,6 +45,7 @@ interface ProfileConfig {
 ```
 
 ### Deployment Flow
+
 ```
 1. Load environment profile
 2. Validate credentials
@@ -49,6 +56,7 @@ interface ProfileConfig {
 ```
 
 ### Manifest Structure
+
 ```json
 {
   "version": "1.0.0",
@@ -63,11 +71,13 @@ interface ProfileConfig {
 ## Implementation Details
 
 ### Environment Separation
+
 - **Dev**: Guild-specific, all commands, test servers only
 - **Stage**: Guild-specific, all commands, staging server
 - **Prod**: Global registration, production commands only
 
 ### Credential Management
+
 ```bash
 DISCORD_<ENV>_TOKEN
 DISCORD_<ENV>_APPLICATION_ID
@@ -75,6 +85,7 @@ DISCORD_<ENV>_GUILD_IDS  # Not needed for prod
 ```
 
 ### CLI Commands
+
 ```bash
 commands-deploy diff --env <env>      # Show changes
 commands-deploy validate --env <env>  # Validate config
@@ -84,6 +95,7 @@ commands-deploy rollback --env <env>  # Restore previous
 ```
 
 ### Idempotency Guarantees
+
 - Manifest comparison before deployment
 - No-op when no changes detected
 - Dry-run mode for preview
@@ -92,6 +104,7 @@ commands-deploy rollback --env <env>  # Restore previous
 ## Consequences
 
 ### Positive
+
 - **Environment isolation**: Clear separation between dev/stage/prod
 - **Safe deployments**: Dry-run and diff capabilities
 - **Rollback support**: Can restore previous configurations
@@ -100,12 +113,14 @@ commands-deploy rollback --env <env>  # Restore previous
 - **Idempotent**: Same command produces same result
 
 ### Negative
+
 - **Additional complexity**: More configuration to manage
 - **Manifest maintenance**: Need to track manifest files
 - **Environment setup**: Requires multiple Discord applications
 - **Credential management**: More secrets to secure
 
 ### Neutral
+
 - **Build requirement**: Must build TypeScript before deployment
 - **Storage overhead**: Manifest files per environment
 - **Learning curve**: Team needs to understand new deployment process
@@ -113,16 +128,19 @@ commands-deploy rollback --env <env>  # Restore previous
 ## Alternatives Considered
 
 ### 1. Single Bot with Feature Flags
+
 - **Pros**: Simpler setup, one set of credentials
 - **Cons**: Risk of affecting production, complex runtime logic
 - **Rejected**: Environment isolation is critical
 
 ### 2. Manual Discord Developer Portal Management
+
 - **Pros**: No custom tooling needed
 - **Cons**: Error-prone, no automation, no audit trail
 - **Rejected**: Doesn't scale with team or command count
 
 ### 3. Infrastructure as Code (Terraform/Pulumi)
+
 - **Pros**: Industry standard, declarative
 - **Cons**: Overkill for Discord commands, requires additional tooling
 - **Rejected**: Too heavy for current needs

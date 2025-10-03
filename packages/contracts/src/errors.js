@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @fileoverview Error taxonomy for TJR trading system.
  *
@@ -12,8 +12,12 @@
  *
  * @module @tjr/contracts/errors
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SymbolResolutionError = exports.InsufficientBarsError = exports.ProviderRateLimitError = exports.TJRError = void 0;
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.SymbolResolutionError =
+  exports.InsufficientBarsError =
+  exports.ProviderRateLimitError =
+  exports.TJRError =
+    void 0;
 exports.isTJRError = isTJRError;
 exports.isProviderRateLimitError = isProviderRateLimitError;
 exports.isInsufficientBarsError = isInsufficientBarsError;
@@ -36,59 +40,59 @@ exports.isSymbolResolutionError = isSymbolResolutionError;
  * ```
  */
 class TJRError extends Error {
-    /**
-     * Machine-readable error code (e.g., 'PROVIDER_RATE_LIMIT').
-     * Use for error categorization and handling logic.
-     */
-    code;
-    /**
-     * Structured error data for debugging and retry logic.
-     * Format varies by error type.
-     */
-    data;
-    /**
-     * ISO 8601 timestamp when error was created.
-     */
-    timestamp;
-    /**
-     * Creates a new TJRError.
-     *
-     * @param code - Error code constant
-     * @param message - Human-readable error message
-     * @param data - Optional structured context data
-     */
-    constructor(code, message, data) {
-        super(message);
-        this.name = 'TJRError';
-        this.code = code;
-        this.data = data;
-        this.timestamp = new Date().toISOString();
-        // Maintains proper stack trace for where error was thrown (V8 only)
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, this.constructor);
-        }
+  /**
+   * Machine-readable error code (e.g., 'PROVIDER_RATE_LIMIT').
+   * Use for error categorization and handling logic.
+   */
+  code;
+  /**
+   * Structured error data for debugging and retry logic.
+   * Format varies by error type.
+   */
+  data;
+  /**
+   * ISO 8601 timestamp when error was created.
+   */
+  timestamp;
+  /**
+   * Creates a new TJRError.
+   *
+   * @param code - Error code constant
+   * @param message - Human-readable error message
+   * @param data - Optional structured context data
+   */
+  constructor(code, message, data) {
+    super(message);
+    this.name = 'TJRError';
+    this.code = code;
+    this.data = data;
+    this.timestamp = new Date().toISOString();
+    // Maintains proper stack trace for where error was thrown (V8 only)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
     }
-    /**
-     * Serializes error to JSON-safe object.
-     *
-     * @returns Plain object representation
-     *
-     * @example
-     * ```typescript
-     * const err = new TJRError('TEST', 'Test error');
-     * JSON.stringify(err.toJSON());
-     * ```
-     */
-    toJSON() {
-        return {
-            name: this.name,
-            code: this.code,
-            message: this.message,
-            data: this.data,
-            timestamp: this.timestamp,
-            stack: this.stack
-        };
-    }
+  }
+  /**
+   * Serializes error to JSON-safe object.
+   *
+   * @returns Plain object representation
+   *
+   * @example
+   * ```typescript
+   * const err = new TJRError('TEST', 'Test error');
+   * JSON.stringify(err.toJSON());
+   * ```
+   */
+  toJSON() {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+      data: this.data,
+      timestamp: this.timestamp,
+      stack: this.stack,
+    };
+  }
 }
 exports.TJRError = TJRError;
 /**
@@ -105,19 +109,19 @@ exports.TJRError = TJRError;
  * ```
  */
 class ProviderRateLimitError extends TJRError {
-    /**
-     * Creates a new ProviderRateLimitError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.provider - Provider name (e.g., 'alpaca', 'tradier')
-     * @param data.retryAfter - Optional: seconds to wait before retry
-     * @param data.limitType - Optional: type of limit hit (e.g., 'requests_per_minute')
-     */
-    constructor(message, data) {
-        super('PROVIDER_RATE_LIMIT', message, data);
-        this.name = 'ProviderRateLimitError';
-    }
+  /**
+   * Creates a new ProviderRateLimitError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.provider - Provider name (e.g., 'alpaca', 'tradier')
+   * @param data.retryAfter - Optional: seconds to wait before retry
+   * @param data.limitType - Optional: type of limit hit (e.g., 'requests_per_minute')
+   */
+  constructor(message, data) {
+    super('PROVIDER_RATE_LIMIT', message, data);
+    this.name = 'ProviderRateLimitError';
+  }
 }
 exports.ProviderRateLimitError = ProviderRateLimitError;
 /**
@@ -139,20 +143,20 @@ exports.ProviderRateLimitError = ProviderRateLimitError;
  * ```
  */
 class InsufficientBarsError extends TJRError {
-    /**
-     * Creates a new InsufficientBarsError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.required - Minimum bars required
-     * @param data.received - Actual bars received
-     * @param data.symbol - Symbol being queried
-     * @param data.timeframe - Timeframe being queried
-     */
-    constructor(message, data) {
-        super('INSUFFICIENT_BARS', message, data);
-        this.name = 'InsufficientBarsError';
-    }
+  /**
+   * Creates a new InsufficientBarsError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.required - Minimum bars required
+   * @param data.received - Actual bars received
+   * @param data.symbol - Symbol being queried
+   * @param data.timeframe - Timeframe being queried
+   */
+  constructor(message, data) {
+    super('INSUFFICIENT_BARS', message, data);
+    this.name = 'InsufficientBarsError';
+  }
 }
 exports.InsufficientBarsError = InsufficientBarsError;
 /**
@@ -173,19 +177,19 @@ exports.InsufficientBarsError = InsufficientBarsError;
  * ```
  */
 class SymbolResolutionError extends TJRError {
-    /**
-     * Creates a new SymbolResolutionError.
-     *
-     * @param message - Human-readable description
-     * @param data - Context data
-     * @param data.symbol - Symbol that failed to resolve
-     * @param data.provider - Provider where resolution failed
-     * @param data.suggestion - Optional: suggested correct symbol
-     */
-    constructor(message, data) {
-        super('SYMBOL_RESOLUTION', message, data);
-        this.name = 'SymbolResolutionError';
-    }
+  /**
+   * Creates a new SymbolResolutionError.
+   *
+   * @param message - Human-readable description
+   * @param data - Context data
+   * @param data.symbol - Symbol that failed to resolve
+   * @param data.provider - Provider where resolution failed
+   * @param data.suggestion - Optional: suggested correct symbol
+   */
+  constructor(message, data) {
+    super('SYMBOL_RESOLUTION', message, data);
+    this.name = 'SymbolResolutionError';
+  }
 }
 exports.SymbolResolutionError = SymbolResolutionError;
 /**
@@ -206,7 +210,7 @@ exports.SymbolResolutionError = SymbolResolutionError;
  * ```
  */
 function isTJRError(error) {
-    return error instanceof TJRError;
+  return error instanceof TJRError;
 }
 /**
  * Type guard to check if an error is a ProviderRateLimitError.
@@ -225,7 +229,7 @@ function isTJRError(error) {
  * ```
  */
 function isProviderRateLimitError(error) {
-    return error instanceof ProviderRateLimitError;
+  return error instanceof ProviderRateLimitError;
 }
 /**
  * Type guard to check if an error is an InsufficientBarsError.
@@ -234,7 +238,7 @@ function isProviderRateLimitError(error) {
  * @returns True if error is an InsufficientBarsError
  */
 function isInsufficientBarsError(error) {
-    return error instanceof InsufficientBarsError;
+  return error instanceof InsufficientBarsError;
 }
 /**
  * Type guard to check if an error is a SymbolResolutionError.
@@ -243,6 +247,6 @@ function isInsufficientBarsError(error) {
  * @returns True if error is a SymbolResolutionError
  */
 function isSymbolResolutionError(error) {
-    return error instanceof SymbolResolutionError;
+  return error instanceof SymbolResolutionError;
 }
 //# sourceMappingURL=errors.js.map

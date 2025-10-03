@@ -61,12 +61,12 @@ Function `normalizeSymbol(raw: string): CanonicalSymbol` standardizes vendor-spe
 
 **Mapping examples:**
 
-| Vendor Format | Canonical |
-|---------------|-----------|
-| `ES=F` (Yahoo) | `ES` |
-| `@ES` (IQFeed) | `ES` |
-| `/ES` (TradingView) | `ES` |
-| `ESH2025` (CME) | `ESH25` |
+| Vendor Format       | Canonical |
+| ------------------- | --------- |
+| `ES=F` (Yahoo)      | `ES`      |
+| `@ES` (IQFeed)      | `ES`      |
+| `/ES` (TradingView) | `ES`      |
+| `ESH2025` (CME)     | `ESH25`   |
 
 ---
 

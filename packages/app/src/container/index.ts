@@ -8,7 +8,7 @@ import type {
   ServiceFactory,
   ServiceRegistration,
   DependencyNode,
-  HealthStatus
+  HealthStatus,
 } from './types.js';
 import { getTokenName } from './tokens.js';
 
@@ -35,7 +35,7 @@ export class Container implements IContainer {
       name: metadata?.name || getTokenName(token),
       factory,
       singleton: metadata?.singleton !== false,
-      dependencies: metadata?.dependencies || []
+      dependencies: metadata?.dependencies || [],
     });
   }
 
@@ -86,15 +86,16 @@ export class Container implements IContainer {
           name: getTokenName(token),
           token,
           dependencies: [],
-          metadata: { circular: true }
+          metadata: { circular: true },
         };
       }
 
       visited.add(token);
       const registration = this.registrations.get(token);
 
-      const dependencies = (registration?.dependencies || [])
-        .map(depToken => buildNode(depToken));
+      const dependencies = (registration?.dependencies || []).map((depToken) =>
+        buildNode(depToken)
+      );
 
       return {
         name: registration?.name || getTokenName(token),
@@ -102,8 +103,8 @@ export class Container implements IContainer {
         dependencies,
         metadata: {
           singleton: registration?.singleton,
-          initialized: this.initialized.has(token)
-        }
+          initialized: this.initialized.has(token),
+        },
       };
     };
 
@@ -140,7 +141,7 @@ export class Container implements IContainer {
 
       // Initialize dependencies first
       for (const depName of service.dependencies) {
-        const dep = services.find(s => s.name === depName);
+        const dep = services.find((s) => s.name === depName);
         if (dep) {
           await initialize(dep);
         }
@@ -151,8 +152,9 @@ export class Container implements IContainer {
       initialized.add(service.name);
 
       // Mark token as initialized
-      const token = Array.from(this.registrations.entries())
-        .find(([_, reg]) => reg.name === service.name)?.[0];
+      const token = Array.from(this.registrations.entries()).find(
+        ([_, reg]) => reg.name === service.name
+      )?.[0];
       if (token) {
         this.initialized.add(token);
       }
@@ -224,13 +226,13 @@ export class Container implements IContainer {
           const status = await instance.healthCheck();
           results.set(instance.name, {
             ...status,
-            lastCheck: new Date()
+            lastCheck: new Date(),
           });
         } catch (error) {
           results.set(instance.name, {
             healthy: false,
             message: `Health check failed: ${error}`,
-            lastCheck: new Date()
+            lastCheck: new Date(),
           });
         }
       }
@@ -269,12 +271,14 @@ export class Container implements IContainer {
  * Type guard for Service interface
  */
 function isService(obj: any): obj is Service {
-  return obj &&
+  return (
+    obj &&
     typeof obj.name === 'string' &&
     Array.isArray(obj.dependencies) &&
     typeof obj.initialize === 'function' &&
     typeof obj.shutdown === 'function' &&
-    typeof obj.healthCheck === 'function';
+    typeof obj.healthCheck === 'function'
+  );
 }
 
 // Re-export types

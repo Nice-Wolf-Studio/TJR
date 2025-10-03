@@ -15,7 +15,7 @@
  * @packageDocumentation
  */
 
-import type { Timeframe } from "./types.js";
+import type { Timeframe } from './types.js';
 
 /**
  * Provider capabilities metadata.
@@ -211,7 +211,7 @@ export function selectProvider(
     if (freshProviders.length === 0) {
       return {
         providerId: null,
-        reason: `No providers meet freshness constraint ${options.maxStalenessSec}s (capable providers: ${capableProviders.map((p) => p.providerId).join(", ")})`,
+        reason: `No providers meet freshness constraint ${options.maxStalenessSec}s (capable providers: ${capableProviders.map((p) => p.providerId).join(', ')})`,
         excluded,
       };
     }
@@ -219,29 +219,23 @@ export function selectProvider(
 
   // Step 3: If preferProviderId is specified and capable, select it
   if (options.preferProviderId) {
-    const preferred = freshProviders.find(
-      (p) => p.providerId === options.preferProviderId
-    );
+    const preferred = freshProviders.find((p) => p.providerId === options.preferProviderId);
 
     if (preferred) {
       return {
         providerId: preferred.providerId,
-        reason: `Selected ${preferred.providerId} (preferred): supports ${options.timeframe} timeframe, ${options.assetClass} asset class, ${options.lookbackDays}d lookback${options.maxStalenessSec !== undefined ? `, freshness ${preferred.freshnessSeconds}s <= ${options.maxStalenessSec}s max` : ""}, priority ${preferred.priority}`,
+        reason: `Selected ${preferred.providerId} (preferred): supports ${options.timeframe} timeframe, ${options.assetClass} asset class, ${options.lookbackDays}d lookback${options.maxStalenessSec !== undefined ? `, freshness ${preferred.freshnessSeconds}s <= ${options.maxStalenessSec}s max` : ''}, priority ${preferred.priority}`,
         excluded,
       };
     } else {
       // Preferred provider not capable, log why
-      const preferredProvider = providers.find(
-        (p) => p.providerId === options.preferProviderId
-      );
+      const preferredProvider = providers.find((p) => p.providerId === options.preferProviderId);
       if (preferredProvider) {
-        const preferredExclusion = excluded.find(
-          (e) => e.providerId === options.preferProviderId
-        );
+        const preferredExclusion = excluded.find((e) => e.providerId === options.preferProviderId);
         if (!preferredExclusion) {
           excluded.push({
             providerId: options.preferProviderId,
-            reason: "preferred but not capable (unknown reason)",
+            reason: 'preferred but not capable (unknown reason)',
           });
         }
       }
@@ -255,7 +249,7 @@ export function selectProvider(
 
   return {
     providerId: selected.providerId,
-    reason: `Selected ${selected.providerId}: supports ${options.timeframe} timeframe, ${options.assetClass} asset class, ${options.lookbackDays}d lookback${options.maxStalenessSec !== undefined ? `, freshness ${selected.freshnessSeconds}s <= ${options.maxStalenessSec}s max` : ""}, priority ${selected.priority}`,
+    reason: `Selected ${selected.providerId}: supports ${options.timeframe} timeframe, ${options.assetClass} asset class, ${options.lookbackDays}d lookback${options.maxStalenessSec !== undefined ? `, freshness ${selected.freshnessSeconds}s <= ${options.maxStalenessSec}s max` : ''}, priority ${selected.priority}`,
     excluded,
   };
 }
@@ -278,8 +272,8 @@ export function selectProvider(
  * });
  * ```
  */
-export function loadCapabilities(
-  capabilitiesConfig: { providers: readonly ProviderCapabilities[] }
-): readonly ProviderCapabilities[] {
+export function loadCapabilities(capabilitiesConfig: {
+  providers: readonly ProviderCapabilities[];
+}): readonly ProviderCapabilities[] {
   return capabilitiesConfig.providers;
 }

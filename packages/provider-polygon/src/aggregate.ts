@@ -6,21 +6,21 @@
  * that Polygon doesn't directly support.
  */
 
-import type { Bar, Timeframe as CoreTimeframe } from "@tjr-suite/market-data-core";
-import { aggregateBars } from "@tjr-suite/market-data-core";
-import { Timeframe } from "@tjr/contracts";
+import type { Bar, Timeframe as CoreTimeframe } from '@tjr-suite/market-data-core';
+import { aggregateBars } from '@tjr-suite/market-data-core';
+import { Timeframe } from '@tjr/contracts';
 
 /**
  * Converts contracts Timeframe enum to market-data-core string format.
  */
 function toCoreTimeframe(timeframe: Timeframe): CoreTimeframe {
   const mapping: Record<Timeframe, CoreTimeframe> = {
-    [Timeframe.M1]: "1m",
-    [Timeframe.M5]: "5m",
-    [Timeframe.M10]: "10m",
-    [Timeframe.H1]: "1h",
-    [Timeframe.H4]: "4h",
-    [Timeframe.D1]: "1D",
+    [Timeframe.M1]: '1m',
+    [Timeframe.M5]: '5m',
+    [Timeframe.M10]: '10m',
+    [Timeframe.H1]: '1h',
+    [Timeframe.H4]: '4h',
+    [Timeframe.D1]: '1D',
   };
   return mapping[timeframe];
 }
@@ -91,8 +91,8 @@ export function getSourceTimeframe(targetTimeframe: Timeframe): Timeframe {
     [Timeframe.D1]: Timeframe.D1,
 
     // Aggregated timeframes (source -> target)
-    [Timeframe.M10]: Timeframe.M5,  // 2x 5m bars = 1x 10m bar
-    [Timeframe.H4]: Timeframe.H1,   // 4x 1h bars = 1x 4h bar
+    [Timeframe.M10]: Timeframe.M5, // 2x 5m bars = 1x 10m bar
+    [Timeframe.H4]: Timeframe.H1, // 4x 1h bars = 1x 4h bar
   };
 
   return aggregationMap[targetTimeframe] || targetTimeframe;
@@ -119,12 +119,12 @@ export function getSourceTimeframe(targetTimeframe: Timeframe): Timeframe {
  */
 export function toPolygonParams(timeframe: Timeframe): { multiplier: number; timespan: string } {
   const paramsMap: Partial<Record<Timeframe, { multiplier: number; timespan: string }>> = {
-    [Timeframe.M1]: { multiplier: 1, timespan: "minute" },
-    [Timeframe.M5]: { multiplier: 5, timespan: "minute" },
-    [Timeframe.M10]: { multiplier: 10, timespan: "minute" }, // Not used (we aggregate from 5m)
-    [Timeframe.H1]: { multiplier: 1, timespan: "hour" },
-    [Timeframe.H4]: { multiplier: 4, timespan: "hour" }, // Not used (we aggregate from 1h)
-    [Timeframe.D1]: { multiplier: 1, timespan: "day" },
+    [Timeframe.M1]: { multiplier: 1, timespan: 'minute' },
+    [Timeframe.M5]: { multiplier: 5, timespan: 'minute' },
+    [Timeframe.M10]: { multiplier: 10, timespan: 'minute' }, // Not used (we aggregate from 5m)
+    [Timeframe.H1]: { multiplier: 1, timespan: 'hour' },
+    [Timeframe.H4]: { multiplier: 4, timespan: 'hour' }, // Not used (we aggregate from 1h)
+    [Timeframe.D1]: { multiplier: 1, timespan: 'day' },
   };
 
   const params = paramsMap[timeframe];
@@ -204,9 +204,9 @@ export function estimateAggregatedCount(
 
   // Calculate aggregation ratio
   const ratioMap: Record<string, number> = {
-    "5m->10m": 2,
-    "1h->2h": 2,
-    "1h->4h": 4,
+    '5m->10m': 2,
+    '1h->2h': 2,
+    '1h->4h': 4,
   };
 
   const key = `${sourceTimeframe}->${targetTimeframe}`;

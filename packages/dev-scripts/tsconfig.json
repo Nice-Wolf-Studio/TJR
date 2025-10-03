@@ -14,23 +14,11 @@
   },
 
   // Include all TypeScript source files
-  "include": [
-    "bin/**/*.ts",
-    "src/**/*.ts"
-  ],
+  "include": ["bin/**/*.ts", "src/**/*.ts"],
 
   // Exclude test files and output directories
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests/**/*.js",
-    "bin/cache-verify.ts",
-    "bin/cache-warm.ts"
-  ],
+  "exclude": ["node_modules", "dist", "tests/**/*.js", "bin/cache-verify.ts", "bin/cache-warm.ts"],
 
   // Project references for TypeScript composite builds
-  "references": [
-    { "path": "../analysis-kit" },
-    { "path": "../tjr-tools" }
-  ]
+  "references": [{ "path": "../analysis-kit" }, { "path": "../tjr-tools" }]
 }

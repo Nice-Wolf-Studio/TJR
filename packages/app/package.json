@@ -32,6 +32,7 @@
   "dependencies": {
     "@tjr/analysis-kit": "workspace:*",
     "@tjr/contracts": "workspace:*",
+    "@tjr/provider-composite": "workspace:*",
     "@tjr-suite/db-simple": "workspace:*",
     "@tjr/logger": "workspace:*",
     "@tjr/tjr-tools": "workspace:*",

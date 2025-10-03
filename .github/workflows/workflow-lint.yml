@@ -37,8 +37,8 @@ concurrency:
 
 # Restrict permissions to minimum required
 permissions:
-  contents: read        # Read code for checkout
-  pull-requests: write  # Post comments on PRs (used by reviewdog)
+  contents: read # Read code for checkout
+  pull-requests: write # Post comments on PRs (used by reviewdog)
 
 jobs:
   lint:
@@ -51,7 +51,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1  # Shallow clone for faster checkout
+          fetch-depth: 1 # Shallow clone for faster checkout
 
       # Step 2: Run actionlint using official action
       # actionlint is a static checker for GitHub Actions workflow files

@@ -28,6 +28,7 @@ The TJR Suite now has comprehensive analysis capabilities through @tjr/tjr-tools
 ### Current Architecture Context
 
 **Existing Command Infrastructure:**
+
 - Command interface at `/packages/app/src/commands/types.ts`
 - DI container for service injection
 - Existing patterns: `health.command.ts`, `daily.command.ts`
@@ -36,6 +37,7 @@ The TJR Suite now has comprehensive analysis capabilities through @tjr/tjr-tools
 - Provider service abstraction
 
 **@tjr/tjr-tools Capabilities:**
+
 - `analyze()` function returns `TJRToolsResult` with:
   - Confluence scoring (FVG, Order Blocks, overlap, recency)
   - Execution parameters (entry, stop, take profit, position size)
@@ -87,18 +89,21 @@ abstract class BaseTJRCommand implements Command {
 ### 2. Three Commands
 
 **TJRSetupCommand** - Configuration management
+
 - Display current configuration
 - Set confluence weights, execution thresholds, risk parameters
 - Validate configuration
 - Save/load user preferences
 
 **TJRConfluencesCommand** - Confluence analysis
+
 - Detect FVG zones and Order Blocks
 - Calculate confluence score with weighted factors
 - Display zone overlaps and recency analysis
 - Multiple output formats
 
 **TJRExecutionCommand** - Trade execution recommendations
+
 - 5-minute confirmation check
 - 1-minute entry trigger
 - Price level calculation (entry, stop, take profit)
@@ -123,7 +128,7 @@ export interface UserConfig {
   };
   cache: {
     enabled: boolean;
-    ttl: { confluence: number; execution: number; };
+    ttl: { confluence: number; execution: number };
   };
 }
 ```
@@ -144,6 +149,7 @@ export interface TJRFormatter<TReport> {
 ```
 
 **Formats**:
+
 - `text`: Human-readable console output
 - `json`: Structured data for API consumers
 - `table`: Box-drawing table format
@@ -165,7 +171,7 @@ export enum TJRErrorCode {
   CACHE_ERROR = 'CACHE_ERROR',
   ANALYSIS_ERROR = 'ANALYSIS_ERROR',
   FORMAT_ERROR = 'FORMAT_ERROR',
-  VALIDATION_ERROR = 'VALIDATION_ERROR'
+  VALIDATION_ERROR = 'VALIDATION_ERROR',
 }
 ```
 
@@ -197,6 +203,7 @@ packages/app/tests/commands/
 ### Deterministic Outputs
 
 All tests use fixtures to ensure:
+
 - Same input → same output
 - No flaky tests
 - Reproducible results
@@ -236,30 +243,35 @@ All tests use fixtures to ensure:
 ## Implementation Phases
 
 ### Phase 1: Foundation
+
 - Base command class with template method
 - ConfigService with file storage
 - Report types and interfaces
 - Fixture infrastructure
 
 ### Phase 2: Setup Command
+
 - TJRSetupCommand implementation
 - SetupFormatter
 - Config validation
 - Integration tests
 
 ### Phase 3: Confluences Command
+
 - TJRConfluencesCommand implementation
 - ConfluenceFormatter (all formats)
 - tjr-tools integration
 - Report transformation
 
 ### Phase 4: Execution Command
+
 - TJRExecutionCommand implementation
 - ExecutionFormatter (all formats)
 - Multi-timeframe handling
 - Risk integration
 
 ### Phase 5: Integration
+
 - Command registration
 - Cache integration
 - Error handling
@@ -293,7 +305,7 @@ All tests use fixtures to ensure:
 
 ## References
 
-- **Issue:** #38 [P3][G4] /tjr-* commands integration
+- **Issue:** #38 [P3][G4] /tjr-\* commands integration
 - **Dependencies:**
   - ADR-0209: TJR Confluences
   - ADR-0307: TJR Execution

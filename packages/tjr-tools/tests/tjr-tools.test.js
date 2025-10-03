@@ -26,7 +26,7 @@ test('FVG Detection - Bullish', () => {
   const fvgs = detectFVGs(fixture.bars);
 
   assert.ok(fvgs.length >= 1, 'Should detect at least one FVG');
-  const bullishFVG = fvgs.find(f => f.type === 'bullish');
+  const bullishFVG = fvgs.find((f) => f.type === 'bullish');
   assert.ok(bullishFVG, 'Should detect bullish FVG');
   assert.strictEqual(bullishFVG.low, fixture.expected.gapLow);
   assert.strictEqual(bullishFVG.high, fixture.expected.gapHigh);
@@ -41,7 +41,7 @@ test('Order Block Detection - Demand', () => {
   assert.ok(Array.isArray(blocks), 'Should return array of blocks');
   // If blocks are detected, verify structure
   if (blocks.length > 0) {
-    const demandBlock = blocks.find(b => b.type === 'demand');
+    const demandBlock = blocks.find((b) => b.type === 'demand');
     if (demandBlock) {
       assert.ok(demandBlock.strength > 0, 'Block should have positive strength');
     }
@@ -53,10 +53,38 @@ test('analyze() function with valid input', () => {
     symbol: 'TEST',
     timeframe: 'M5',
     bars: [
-      { timestamp: '2025-01-15T14:00:00Z', open: 100, high: 101, low: 99, close: 100, volume: 1000 },
-      { timestamp: '2025-01-15T14:05:00Z', open: 100, high: 105, low: 100, close: 104, volume: 2500 },
-      { timestamp: '2025-01-15T14:10:00Z', open: 104, high: 106, low: 103, close: 105, volume: 1200 },
-      { timestamp: '2025-01-15T14:15:00Z', open: 105, high: 107, low: 104, close: 106, volume: 1100 },
+      {
+        timestamp: '2025-01-15T14:00:00Z',
+        open: 100,
+        high: 101,
+        low: 99,
+        close: 100,
+        volume: 1000,
+      },
+      {
+        timestamp: '2025-01-15T14:05:00Z',
+        open: 100,
+        high: 105,
+        low: 100,
+        close: 104,
+        volume: 2500,
+      },
+      {
+        timestamp: '2025-01-15T14:10:00Z',
+        open: 104,
+        high: 106,
+        low: 103,
+        close: 105,
+        volume: 1200,
+      },
+      {
+        timestamp: '2025-01-15T14:15:00Z',
+        open: 105,
+        high: 107,
+        low: 104,
+        close: 106,
+        volume: 1100,
+      },
     ],
     analysisTimestamp: '2025-01-15T14:20:00Z',
   };
@@ -66,7 +94,10 @@ test('analyze() function with valid input', () => {
   assert.ok(result, 'Should return a result');
   assert.ok(result.confluence, 'Should have confluence data');
   assert.ok(typeof result.confluence.score === 'number', 'Score should be a number');
-  assert.ok(result.confluence.score >= 0 && result.confluence.score <= 100, 'Score should be 0-100');
+  assert.ok(
+    result.confluence.score >= 0 && result.confluence.score <= 100,
+    'Score should be 0-100'
+  );
   assert.ok(Array.isArray(result.confluence.factors), 'Should have factors array');
   assert.ok(Array.isArray(result.fvgZones), 'Should have fvgZones array');
   assert.ok(Array.isArray(result.orderBlocks), 'Should have orderBlocks array');
@@ -133,10 +164,38 @@ test('Determinism - same input produces same output', () => {
     symbol: 'TEST',
     timeframe: 'M5',
     bars: [
-      { timestamp: '2025-01-15T14:00:00Z', open: 100, high: 101, low: 99, close: 100, volume: 1000 },
-      { timestamp: '2025-01-15T14:05:00Z', open: 100, high: 105, low: 100, close: 104, volume: 2500 },
-      { timestamp: '2025-01-15T14:10:00Z', open: 104, high: 106, low: 103, close: 105, volume: 1200 },
-      { timestamp: '2025-01-15T14:15:00Z', open: 105, high: 107, low: 104, close: 106, volume: 1100 },
+      {
+        timestamp: '2025-01-15T14:00:00Z',
+        open: 100,
+        high: 101,
+        low: 99,
+        close: 100,
+        volume: 1000,
+      },
+      {
+        timestamp: '2025-01-15T14:05:00Z',
+        open: 100,
+        high: 105,
+        low: 100,
+        close: 104,
+        volume: 2500,
+      },
+      {
+        timestamp: '2025-01-15T14:10:00Z',
+        open: 104,
+        high: 106,
+        low: 103,
+        close: 105,
+        volume: 1200,
+      },
+      {
+        timestamp: '2025-01-15T14:15:00Z',
+        open: 105,
+        high: 107,
+        low: 104,
+        close: 106,
+        volume: 1100,
+      },
     ],
     analysisTimestamp: '2025-01-15T14:20:00Z',
   };
@@ -144,9 +203,17 @@ test('Determinism - same input produces same output', () => {
   const result1 = analyze(input);
   const result2 = analyze(input);
 
-  assert.strictEqual(result1.confluence.score, result2.confluence.score, 'Scores should be identical');
+  assert.strictEqual(
+    result1.confluence.score,
+    result2.confluence.score,
+    'Scores should be identical'
+  );
   assert.strictEqual(result1.fvgZones.length, result2.fvgZones.length, 'FVG counts should match');
-  assert.strictEqual(result1.orderBlocks.length, result2.orderBlocks.length, 'Order block counts should match');
+  assert.strictEqual(
+    result1.orderBlocks.length,
+    result2.orderBlocks.length,
+    'Order block counts should match'
+  );
 });
 
 test('Edge case - insufficient data', () => {
@@ -154,7 +221,14 @@ test('Edge case - insufficient data', () => {
     symbol: 'TEST',
     timeframe: 'M5',
     bars: [
-      { timestamp: '2025-01-15T14:00:00Z', open: 100, high: 101, low: 99, close: 100, volume: 1000 },
+      {
+        timestamp: '2025-01-15T14:00:00Z',
+        open: 100,
+        high: 101,
+        low: 99,
+        close: 100,
+        volume: 1000,
+      },
     ],
     analysisTimestamp: '2025-01-15T14:05:00Z',
   };

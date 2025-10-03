@@ -7,7 +7,11 @@ function capture(fn) {
   const orig = console.log;
   const out = [];
   console.log = (line) => out.push(line);
-  try { fn(); } finally { console.log = orig; }
+  try {
+    fn();
+  } finally {
+    console.log = orig;
+  }
   return out;
 }
 

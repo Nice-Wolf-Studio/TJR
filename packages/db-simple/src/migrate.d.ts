@@ -6,7 +6,7 @@ import { DbConnection, Logger } from './connect.js';
  * Migration runner options
  */
 export interface MigrateOptions {
-    logger?: Logger;
+  logger?: Logger;
 }
 /**
  * Run migrations from a directory
@@ -20,5 +20,9 @@ export interface MigrateOptions {
  * await runMigrations('./migrations', db)
  * await db.close()
  */
-export declare function runMigrations(migrationsDir: string, db: DbConnection, options?: MigrateOptions): Promise<void>;
+export declare function runMigrations(
+  migrationsDir: string,
+  db: DbConnection,
+  options?: MigrateOptions
+): Promise<void>;
 //# sourceMappingURL=migrate.d.ts.map

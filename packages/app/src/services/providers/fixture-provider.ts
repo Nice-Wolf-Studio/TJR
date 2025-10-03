@@ -31,7 +31,7 @@ export class FixtureProvider implements ProviderService {
     latencyMs: 0,
     cacheHits: 0,
     cacheMisses: 0,
-    subscriptions: 0
+    subscriptions: 0,
   };
   private simulateLatency: boolean;
   private latencyMs: number;
@@ -60,8 +60,8 @@ export class FixtureProvider implements ProviderService {
       details: {
         fixturesLoaded: this.fixtures.size,
         subscriptions: this.subscriptions.size,
-        stats: this.stats
-      }
+        stats: this.stats,
+      },
     };
   }
 
@@ -74,9 +74,10 @@ export class FixtureProvider implements ProviderService {
 
       // If specific from/to dates are requested, generate fresh bars for that range
       // Otherwise use pre-loaded fixtures
-      const bars = (params.from || params.to)
-        ? this.generateDefaultBars(params)
-        : (this.fixtures.get(params.symbol) || this.generateDefaultBars(params));
+      const bars =
+        params.from || params.to
+          ? this.generateDefaultBars(params)
+          : this.fixtures.get(params.symbol) || this.generateDefaultBars(params);
 
       // Apply limit if specified
       let result = bars;
@@ -88,7 +89,7 @@ export class FixtureProvider implements ProviderService {
       this.logger.debug('Fixture provider returning bars', {
         symbol: params.symbol,
         count: result.length,
-        latencyMs: this.stats.latencyMs
+        latencyMs: this.stats.latencyMs,
       });
 
       return result;
@@ -100,14 +101,21 @@ export class FixtureProvider implements ProviderService {
 
   getCapabilities(): ProviderCapabilities {
     return {
-      supportsTimeframes: [Timeframe.M1, Timeframe.M5, Timeframe.M10, Timeframe.H1, Timeframe.H4, Timeframe.D1],
+      supportsTimeframes: [
+        Timeframe.M1,
+        Timeframe.M5,
+        Timeframe.M10,
+        Timeframe.H1,
+        Timeframe.H4,
+        Timeframe.D1,
+      ],
       maxBarsPerRequest: 5000,
       requiresAuthentication: false,
       rateLimits: {
-        requestsPerMinute: 1000
+        requestsPerMinute: 1000,
       },
       supportsExtendedHours: false,
-      historicalDataFrom: '2020-01-01T00:00:00.000Z'
+      historicalDataFrom: '2020-01-01T00:00:00.000Z',
     };
   }
 
@@ -160,13 +168,13 @@ export class FixtureProvider implements ProviderService {
   simulateBarUpdate(symbol: string, bar: MarketBar): void {
     const handlers = this.subscriptions.get(symbol);
     if (handlers) {
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         try {
           handler(bar);
         } catch (error) {
           this.logger.error('Fixture provider handler error', {
             symbol,
-            error: error instanceof Error ? error.message : String(error)
+            error: error instanceof Error ? error.message : String(error),
           });
         }
       });
@@ -179,7 +187,7 @@ export class FixtureProvider implements ProviderService {
       symbol: 'SPY',
       timeframe: Timeframe.M5,
       from: new Date(Date.now() - 86400000).toISOString(),
-      limit: 390 // Full trading day
+      limit: 390, // Full trading day
     });
 
     this.fixtures.set('SPY', spy5min);
@@ -187,7 +195,7 @@ export class FixtureProvider implements ProviderService {
     this.fixtures.set('IWM', this.adjustPrices(spy5min, 0.4));
 
     this.logger.info('Fixture provider loaded fixtures', {
-      symbols: Array.from(this.fixtures.keys())
+      symbols: Array.from(this.fixtures.keys()),
     });
   }
 
@@ -219,12 +227,12 @@ export class FixtureProvider implements ProviderService {
 
     // Base price varies by symbol
     const basePriceMap: Record<string, number> = {
-      'SPY': 450,
-      'QQQ': 380,
-      'IWM': 200,
-      'ES': 4500,
-      'NQ': 15000,
-      'RTY': 2000
+      SPY: 450,
+      QQQ: 380,
+      IWM: 200,
+      ES: 4500,
+      NQ: 15000,
+      RTY: 2000,
     };
     let basePrice = basePriceMap[params.symbol] || 400;
 
@@ -244,7 +252,7 @@ export class FixtureProvider implements ProviderService {
         high: parseFloat(high.toFixed(2)),
         low: parseFloat(low.toFixed(2)),
         close: parseFloat(close.toFixed(2)),
-        volume: Math.floor(1000000 + Math.random() * 500000)
+        volume: Math.floor(1000000 + Math.random() * 500000),
       });
 
       basePrice = close; // Continue from close price
@@ -254,12 +262,12 @@ export class FixtureProvider implements ProviderService {
   }
 
   private adjustPrices(bars: MarketBar[], multiplier: number): MarketBar[] {
-    return bars.map(bar => ({
+    return bars.map((bar) => ({
       ...bar,
       open: bar.open * multiplier,
       high: bar.high * multiplier,
       low: bar.low * multiplier,
-      close: bar.close * multiplier
+      close: bar.close * multiplier,
     }));
   }
 
@@ -270,14 +278,14 @@ export class FixtureProvider implements ProviderService {
       [Timeframe.M10]: 10,
       [Timeframe.H1]: 60,
       [Timeframe.H4]: 240,
-      [Timeframe.D1]: 1440
+      [Timeframe.D1]: 1440,
     };
     return map[timeframe] || 5;
   }
 
   private async simulateDelay(): Promise<void> {
     if (this.simulateLatency) {
-      await new Promise(resolve => setTimeout(resolve, this.latencyMs));
+      await new Promise((resolve) => setTimeout(resolve, this.latencyMs));
     }
   }
 }

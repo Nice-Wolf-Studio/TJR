@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * Bar aggregation utilities.
  *
@@ -14,9 +14,9 @@
  * All aggregation is performed in UTC. Provider adapters must convert local
  * times to UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.aggregateBars = aggregateBars;
-const timeframe_js_1 = require("./timeframe.js");
+const timeframe_js_1 = require('./timeframe.js');
 /**
  * Aggregates bars from a source timeframe to a target timeframe.
  *
@@ -77,115 +77,118 @@ const timeframe_js_1 = require("./timeframe.js");
  * - Target timeframe is an integer multiple of source timeframe
  */
 function aggregateBars(bars, targetTimeframe, options = {}) {
-    // Handle empty input
-    if (bars.length === 0) {
-        return [];
+  // Handle empty input
+  if (bars.length === 0) {
+    return [];
+  }
+  // Special case: Single bar input - return as-is if aligned
+  if (bars.length === 1) {
+    const bar = bars[0];
+    if (bar && (0, timeframe_js_1.isAligned)(bar.timestamp, targetTimeframe)) {
+      return [bar];
     }
-    // Special case: Single bar input - return as-is if aligned
-    if (bars.length === 1) {
-        const bar = bars[0];
-        if (bar && (0, timeframe_js_1.isAligned)(bar.timestamp, targetTimeframe)) {
-            return [bar];
-        }
-        return [];
+    return [];
+  }
+  const { includePartialLast = false, validate = false, warnOnGaps = false } = options;
+  const targetMs = (0, timeframe_js_1.toMillis)(targetTimeframe);
+  // Validation: Check that bars are sorted ascending
+  if (validate) {
+    for (let i = 1; i < bars.length; i++) {
+      const curr = bars[i];
+      const prev = bars[i - 1];
+      if (!curr || !prev) continue; // Skip if undefined (shouldn't happen, but TS requires check)
+      if (curr.timestamp <= prev.timestamp) {
+        throw new Error(
+          `Bars must be sorted ascending by timestamp. ` +
+            `Found bars[${i - 1}].timestamp=${prev.timestamp}, ` +
+            `bars[${i}].timestamp=${curr.timestamp}`
+        );
+      }
     }
-    const { includePartialLast = false, validate = false, warnOnGaps = false } = options;
-    const targetMs = (0, timeframe_js_1.toMillis)(targetTimeframe);
-    // Validation: Check that bars are sorted ascending
-    if (validate) {
-        for (let i = 1; i < bars.length; i++) {
-            const curr = bars[i];
-            const prev = bars[i - 1];
-            if (!curr || !prev)
-                continue; // Skip if undefined (shouldn't happen, but TS requires check)
-            if (curr.timestamp <= prev.timestamp) {
-                throw new Error(`Bars must be sorted ascending by timestamp. ` +
-                    `Found bars[${i - 1}].timestamp=${prev.timestamp}, ` +
-                    `bars[${i}].timestamp=${curr.timestamp}`);
-            }
-        }
+  }
+  // Infer source timeframe from first two bars (if possible)
+  // This is used for gap detection and validation
+  let sourceMs;
+  if (bars.length >= 2 && warnOnGaps) {
+    const first = bars[0];
+    const second = bars[1];
+    if (first && second) {
+      sourceMs = second.timestamp - first.timestamp;
     }
-    // Infer source timeframe from first two bars (if possible)
-    // This is used for gap detection and validation
-    let sourceMs;
-    if (bars.length >= 2 && warnOnGaps) {
-        const first = bars[0];
-        const second = bars[1];
-        if (first && second) {
-            sourceMs = second.timestamp - first.timestamp;
-        }
+  }
+  // Validate that target timeframe is larger than source timeframe
+  if (sourceMs !== undefined && targetMs < sourceMs) {
+    throw new Error(
+      `Cannot disaggregate from ${sourceMs}ms to ${targetMs}ms. ` +
+        `Target timeframe must be >= source timeframe.`
+    );
+  }
+  // Group bars by aligned target boundary
+  const groups = new Map();
+  let lastExpectedTs;
+  for (const bar of bars) {
+    // Align bar timestamp to target boundary (floor)
+    const boundary = (0, timeframe_js_1.alignTimestamp)(bar.timestamp, targetTimeframe, 'floor');
+    // Gap detection: Warn if there's a gap in the bar sequence
+    if (warnOnGaps && sourceMs !== undefined && lastExpectedTs !== undefined) {
+      const gap = bar.timestamp - lastExpectedTs;
+      if (gap > sourceMs) {
+        console.warn(
+          `Gap detected: Expected bar at ${lastExpectedTs}, ` +
+            `found bar at ${bar.timestamp} (gap: ${gap}ms)`
+        );
+      }
     }
-    // Validate that target timeframe is larger than source timeframe
-    if (sourceMs !== undefined && targetMs < sourceMs) {
-        throw new Error(`Cannot disaggregate from ${sourceMs}ms to ${targetMs}ms. ` +
-            `Target timeframe must be >= source timeframe.`);
+    // Add bar to its boundary group
+    if (!groups.has(boundary)) {
+      groups.set(boundary, []);
     }
-    // Group bars by aligned target boundary
-    const groups = new Map();
-    let lastExpectedTs;
-    for (const bar of bars) {
-        // Align bar timestamp to target boundary (floor)
-        const boundary = (0, timeframe_js_1.alignTimestamp)(bar.timestamp, targetTimeframe, "floor");
-        // Gap detection: Warn if there's a gap in the bar sequence
-        if (warnOnGaps && sourceMs !== undefined && lastExpectedTs !== undefined) {
-            const gap = bar.timestamp - lastExpectedTs;
-            if (gap > sourceMs) {
-                console.warn(`Gap detected: Expected bar at ${lastExpectedTs}, ` +
-                    `found bar at ${bar.timestamp} (gap: ${gap}ms)`);
-            }
-        }
-        // Add bar to its boundary group
-        if (!groups.has(boundary)) {
-            groups.set(boundary, []);
-        }
-        groups.get(boundary).push(bar);
-        // Update expected timestamp for next bar
-        if (sourceMs !== undefined) {
-            lastExpectedTs = bar.timestamp + sourceMs;
-        }
+    groups.get(boundary).push(bar);
+    // Update expected timestamp for next bar
+    if (sourceMs !== undefined) {
+      lastExpectedTs = bar.timestamp + sourceMs;
     }
-    // Aggregate each group into a single bar
-    const aggregated = [];
-    const boundaries = Array.from(groups.keys()).sort((a, b) => a - b);
-    for (let i = 0; i < boundaries.length; i++) {
-        const boundary = boundaries[i];
-        if (boundary === undefined)
-            continue; // Skip if undefined (shouldn't happen, but TS requires check)
-        const groupBars = groups.get(boundary);
-        if (!groupBars || groupBars.length === 0)
-            continue; // Skip if no bars in group
-        // Check if this is the last group
-        const isLastGroup = i === boundaries.length - 1;
-        // Get first and last bars for aggregation
-        const firstBar = groupBars[0];
-        const lastBar = groupBars[groupBars.length - 1];
-        if (!firstBar || !lastBar)
-            continue; // Skip if undefined (shouldn't happen, but TS requires check)
-        // Determine if this group spans the full target timeframe
-        // A group is "complete" if:
-        // 1. It's not the last group (so we know the next group exists), OR
-        // 2. It's the last group AND includePartialLast=true, OR
-        // 3. It's the last group AND the last bar is in the second half of the period
-        const nextBoundary = boundary + targetMs;
-        const threshold = nextBoundary - (targetMs / 2); // Midpoint of the period
-        const isComplete = !isLastGroup || // Not the last group (so we know it's complete)
-            (isLastGroup && includePartialLast) || // Last group, but we're including partials
-            (isLastGroup && lastBar.timestamp >= threshold); // Last bar is in second half of period
-        // Skip incomplete groups (unless includePartialLast=true)
-        if (!isComplete) {
-            continue;
-        }
-        // Aggregate the group using OHLC rules
-        const aggregatedBar = {
-            timestamp: boundary,
-            open: firstBar.open, // First bar's open
-            high: Math.max(...groupBars.map((b) => b.high)), // Max of all highs
-            low: Math.min(...groupBars.map((b) => b.low)), // Min of all lows
-            close: lastBar.close, // Last bar's close
-            volume: groupBars.reduce((sum, b) => sum + b.volume, 0), // Sum of all volumes
-        };
-        aggregated.push(aggregatedBar);
+  }
+  // Aggregate each group into a single bar
+  const aggregated = [];
+  const boundaries = Array.from(groups.keys()).sort((a, b) => a - b);
+  for (let i = 0; i < boundaries.length; i++) {
+    const boundary = boundaries[i];
+    if (boundary === undefined) continue; // Skip if undefined (shouldn't happen, but TS requires check)
+    const groupBars = groups.get(boundary);
+    if (!groupBars || groupBars.length === 0) continue; // Skip if no bars in group
+    // Check if this is the last group
+    const isLastGroup = i === boundaries.length - 1;
+    // Get first and last bars for aggregation
+    const firstBar = groupBars[0];
+    const lastBar = groupBars[groupBars.length - 1];
+    if (!firstBar || !lastBar) continue; // Skip if undefined (shouldn't happen, but TS requires check)
+    // Determine if this group spans the full target timeframe
+    // A group is "complete" if:
+    // 1. It's not the last group (so we know the next group exists), OR
+    // 2. It's the last group AND includePartialLast=true, OR
+    // 3. It's the last group AND the last bar is in the second half of the period
+    const nextBoundary = boundary + targetMs;
+    const threshold = nextBoundary - targetMs / 2; // Midpoint of the period
+    const isComplete =
+      !isLastGroup || // Not the last group (so we know it's complete)
+      (isLastGroup && includePartialLast) || // Last group, but we're including partials
+      (isLastGroup && lastBar.timestamp >= threshold); // Last bar is in second half of period
+    // Skip incomplete groups (unless includePartialLast=true)
+    if (!isComplete) {
+      continue;
     }
-    return aggregated;
+    // Aggregate the group using OHLC rules
+    const aggregatedBar = {
+      timestamp: boundary,
+      open: firstBar.open, // First bar's open
+      high: Math.max(...groupBars.map((b) => b.high)), // Max of all highs
+      low: Math.min(...groupBars.map((b) => b.low)), // Min of all lows
+      close: lastBar.close, // Last bar's close
+      volume: groupBars.reduce((sum, b) => sum + b.volume, 0), // Sum of all volumes
+    };
+    aggregated.push(aggregatedBar);
+  }
+  return aggregated;
 }
 //# sourceMappingURL=aggregate.js.map

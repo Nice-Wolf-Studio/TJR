@@ -43,15 +43,7 @@ export {
 } from './normalize';
 
 // Export continuous futures resolution
-export {
-  resolveContinuous,
-  getFrontMonth,
-  clearRolloverRulesCache,
-} from './continuous';
+export { resolveContinuous, getFrontMonth, clearRolloverRulesCache } from './continuous';
 
 // Export alias functions
-export {
-  resolveAlias,
-  registerAlias,
-  getAllAliases,
-} from './aliases';
+export { resolveAlias, registerAlias, getAllAliases } from './aliases';

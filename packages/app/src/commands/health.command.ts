@@ -46,7 +46,7 @@ export class HealthCommand implements Command {
           healthy: status.healthy,
           message: status.message,
           details: status.details,
-          lastCheck: status.lastCheck
+          lastCheck: status.lastCheck,
         });
 
         if (!status.healthy) {
@@ -66,10 +66,10 @@ export class HealthCommand implements Command {
         services,
         summary: {
           total: services.length,
-          healthy: services.filter(s => s.healthy).length,
-          unhealthy: services.filter(s => !s.healthy).length
+          healthy: services.filter((s) => s.healthy).length,
+          unhealthy: services.filter((s) => !s.healthy).length,
         },
-        wiringGraph
+        wiringGraph,
       };
 
       // Format output based on options
@@ -80,8 +80,8 @@ export class HealthCommand implements Command {
         output: formattedOutput,
         duration: Date.now() - startTime,
         metadata: {
-          servicesChecked: services.length
-        }
+          servicesChecked: services.length,
+        },
       };
     } catch (error) {
       this.logger.error('Health command failed', { error });
@@ -90,7 +90,7 @@ export class HealthCommand implements Command {
         success: false,
         output: null,
         error: error instanceof Error ? error : new Error(String(error)),
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
       };
     }
   }
@@ -148,21 +148,55 @@ export class HealthCommand implements Command {
     const colWidths = { name: 20, status: 10, message: 40 };
 
     // Header
-    lines.push('┌' + '─'.repeat(colWidths.name + 2) + '┬' + '─'.repeat(colWidths.status + 2) + '┬' + '─'.repeat(colWidths.message + 2) + '┐');
-    lines.push('│ ' + 'Service'.padEnd(colWidths.name) + ' │ ' + 'Status'.padEnd(colWidths.status) + ' │ ' + 'Message'.padEnd(colWidths.message) + ' │');
-    lines.push('├' + '─'.repeat(colWidths.name + 2) + '┼' + '─'.repeat(colWidths.status + 2) + '┼' + '─'.repeat(colWidths.message + 2) + '┤');
+    lines.push(
+      '┌' +
+        '─'.repeat(colWidths.name + 2) +
+        '┬' +
+        '─'.repeat(colWidths.status + 2) +
+        '┬' +
+        '─'.repeat(colWidths.message + 2) +
+        '┐'
+    );
+    lines.push(
+      '│ ' +
+        'Service'.padEnd(colWidths.name) +
+        ' │ ' +
+        'Status'.padEnd(colWidths.status) +
+        ' │ ' +
+        'Message'.padEnd(colWidths.message) +
+        ' │'
+    );
+    lines.push(
+      '├' +
+        '─'.repeat(colWidths.name + 2) +
+        '┼' +
+        '─'.repeat(colWidths.status + 2) +
+        '┼' +
+        '─'.repeat(colWidths.message + 2) +
+        '┤'
+    );
 
     // Rows
     for (const service of output.services) {
       const name = service.name.substring(0, colWidths.name).padEnd(colWidths.name);
       const status = (service.healthy ? 'OK' : 'FAIL').padEnd(colWidths.status);
-      const message = (service.message || 'Healthy').substring(0, colWidths.message).padEnd(colWidths.message);
+      const message = (service.message || 'Healthy')
+        .substring(0, colWidths.message)
+        .padEnd(colWidths.message);
 
       lines.push('│ ' + name + ' │ ' + status + ' │ ' + message + ' │');
     }
 
     // Footer
-    lines.push('└' + '─'.repeat(colWidths.name + 2) + '┴' + '─'.repeat(colWidths.status + 2) + '┴' + '─'.repeat(colWidths.message + 2) + '┘');
+    lines.push(
+      '└' +
+        '─'.repeat(colWidths.name + 2) +
+        '┴' +
+        '─'.repeat(colWidths.status + 2) +
+        '┴' +
+        '─'.repeat(colWidths.message + 2) +
+        '┘'
+    );
 
     return lines.join('\n');
   }

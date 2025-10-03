@@ -99,9 +99,9 @@ const logger = createLogger({ level: 'info' });
 // Sensitive fields are automatically redacted
 logger.info('User authentication', {
   username: 'alice',
-  password: 'secret123',      // Redacted: [REDACTED]
-  api_key: 'sk-abc123',        // Redacted: [REDACTED]
-  email: 'alice@example.com',  // Not redacted (not in sensitive list)
+  password: 'secret123', // Redacted: [REDACTED]
+  api_key: 'sk-abc123', // Redacted: [REDACTED]
+  email: 'alice@example.com', // Not redacted (not in sensitive list)
 });
 
 // Output:
@@ -116,6 +116,7 @@ logger.info('User authentication', {
 ```
 
 Redacted field patterns (case-insensitive):
+
 - `password`, `passwd`, `pwd`
 - `secret`, `api_key`, `apiKey`, `token`
 - `authorization`, `auth`
@@ -141,6 +142,7 @@ Promise.reject(new Error('Unhandled rejection!'));
 ```
 
 **Important:** Global error handlers follow a fail-fast philosophy:
+
 - Errors are logged with full stack traces
 - Process exits with code 1 after logging
 - No attempt is made to recover (prevents corrupted state)
@@ -150,8 +152,8 @@ Promise.reject(new Error('Unhandled rejection!'));
 ```typescript
 const logger = createLogger({
   level: process.env.LOG_LEVEL || 'info',
-  json: process.env.NODE_ENV === 'production',  // JSON in prod, pretty-print in dev
-  filePath: process.env.LOG_FILE,               // Optional file output
+  json: process.env.NODE_ENV === 'production', // JSON in prod, pretty-print in dev
+  filePath: process.env.LOG_FILE, // Optional file output
 });
 ```
 
@@ -177,9 +179,9 @@ const logger = createLogger({
 ```typescript
 interface LoggerConfig {
   level: 'error' | 'warn' | 'info' | 'debug';
-  json?: boolean;        // Default: true in prod, false in dev
-  filePath?: string;     // Optional file output path
-  console?: boolean;     // Default: true
+  json?: boolean; // Default: true in prod, false in dev
+  filePath?: string; // Optional file output path
+  console?: boolean; // Default: true
 }
 ```
 
@@ -197,6 +199,7 @@ interface LoggerConfig {
 Creates a configured logger instance.
 
 **Parameters:**
+
 - `config`: Logger configuration options
 
 **Returns:** Winston logger instance
@@ -206,6 +209,7 @@ Creates a configured logger instance.
 Attaches global error handlers for uncaught exceptions and unhandled rejections.
 
 **Parameters:**
+
 - `logger`: Logger instance to use for error logging
 
 ### `logger.child(context: Record<string, unknown>): Logger`
@@ -213,6 +217,7 @@ Attaches global error handlers for uncaught exceptions and unhandled rejections.
 Creates a child logger with additional context fields.
 
 **Parameters:**
+
 - `context`: Context fields to include in all logs
 
 **Returns:** Child logger with inherited configuration
@@ -220,12 +225,14 @@ Creates a child logger with additional context fields.
 ## Best Practices
 
 1. **Create child loggers for components:**
+
    ```typescript
    const dbLogger = logger.child({ component: 'database' });
    const apiLogger = logger.child({ component: 'api' });
    ```
 
 2. **Use request IDs for tracing:**
+
    ```typescript
    const reqLogger = logger.child({ request_id: generateRequestId() });
    reqLogger.info('Request started');
@@ -233,6 +240,7 @@ Creates a child logger with additional context fields.
    ```
 
 3. **Include contextual data:**
+
    ```typescript
    logger.info('Trade executed', {
      symbol: 'AAPL',

@@ -12,6 +12,7 @@
 TJR Suite is a monorepo containing 17+ packages with complex interdependencies. As packages mature and become ready for external use (Discord bot deployment, client applications), we need a reliable, secure, and maintainable release pipeline.
 
 **Key Requirements:**
+
 1. Version management for independent packages (not lock-step versioning)
 2. Semantic versioning (SemVer) compliance
 3. Automated changelog generation
@@ -22,6 +23,7 @@ TJR Suite is a monorepo containing 17+ packages with complex interdependencies. 
 8. Integration with existing CI/CD (GitHub Actions)
 
 **Current State:**
+
 - Changesets CLI already installed (@changesets/cli@^2.27.1)
 - Basic scripts in root package.json (changeset, changeset:version, changeset:publish)
 - No formal release workflow or documentation
@@ -29,6 +31,7 @@ TJR Suite is a monorepo containing 17+ packages with complex interdependencies. 
 - No GitHub Actions workflow for releases
 
 **Pain Points:**
+
 - Manual version bumping is error-prone
 - No changelog automation
 - Risk of publishing wrong versions
@@ -62,6 +65,7 @@ Implement a **Changesets-driven release pipeline** with manual GitHub Actions wo
 ```
 
 **Key Decisions:**
+
 - `access: "restricted"`: Default to private packages (override per-package with `"publishConfig": {"access": "public"}`)
 - `commit: false`: Don't auto-commit changeset files (developers commit manually)
 - `fixed: []`: No lock-step versioning (packages version independently)
@@ -76,14 +80,17 @@ Implement a **Changesets-driven release pipeline** with manual GitHub Actions wo
 **Trigger:** `workflow_dispatch` (manual only)
 
 **Inputs:**
+
 - `dry_run` (boolean, default: true): Safety-first approach
 
 **Permissions:**
+
 - `contents: write`: Create version tags
 - `pull-requests: write`: Create release PRs
 - `id-token: write`: npm provenance support
 
 **Steps:**
+
 1. Checkout with full history (changesets needs git history)
 2. Setup Node.js with npm registry configuration
 3. Install pnpm (version pinned to 8.15.0)
@@ -96,6 +103,7 @@ Implement a **Changesets-driven release pipeline** with manual GitHub Actions wo
 10. Generate release summary
 
 **Security Measures:**
+
 - Minimal permissions (no `repo` or `workflow` scope)
 - Secrets managed via GitHub encrypted secrets
 - npm provenance enabled (`NPM_CONFIG_PROVENANCE: true`)
@@ -105,12 +113,14 @@ Implement a **Changesets-driven release pipeline** with manual GitHub Actions wo
 #### 3. Developer Workflow
 
 **Creating Changesets:**
+
 ```bash
 pnpm changeset
 # Interactive prompts for packages, version bump type, summary
 ```
 
 **Dry-Run Validation:**
+
 ```bash
 # Local
 pnpm changeset status --verbose
@@ -121,6 +131,7 @@ pnpm changeset publish --dry-run
 ```
 
 **Publishing:**
+
 ```bash
 # Option A: Local (testing)
 pnpm changeset:version
@@ -136,11 +147,13 @@ git push --follow-tags
 #### 4. Documentation
 
 **Files Created:**
+
 - `docs/ops/release-process.md`: Comprehensive step-by-step guide
 - `docs/adr/ADR-0312-release-pipeline.md`: This document
 - `docs/journal/_fragments/3/3.R1-release-pipeline.md`: Implementation journal
 
 **Coverage:**
+
 - Creating changesets
 - Dry-run validation
 - Version bumping
@@ -184,6 +197,7 @@ git push --follow-tags
    - ✅ Used by major projects (React, Remix, Emotion)
 
 **Decision Factors:**
+
 - **Safety:** Explicit changeset files provide audit trail
 - **Flexibility:** Supports both manual and automated workflows
 - **Developer Experience:** Simple CLI, clear prompts
@@ -194,12 +208,14 @@ git push --follow-tags
 ### Why Manual Trigger?
 
 **Automatic Publishing Rejected:**
+
 - Risk of publishing broken code
 - No human verification step
 - Hard to revert mistakes
 - Scary for new contributors
 
 **Manual Workflow Benefits:**
+
 - Developer reviews changes before publish
 - Can validate in staging/test environments
 - Clear checkpoint before production
@@ -207,6 +223,7 @@ git push --follow-tags
 - Better for learning/onboarding
 
 **Dry-Run Default:**
+
 - Forces conscious decision to publish
 - Reduces accidental publishes
 - Allows safe exploration of release process
@@ -215,12 +232,14 @@ git push --follow-tags
 ### Why Minimal Permissions?
 
 **Security Principles:**
+
 1. **Least Privilege:** Only grant permissions needed
 2. **Defense in Depth:** Multiple layers of protection
 3. **Audit Trail:** All actions logged in GitHub
 4. **Token Rotation:** Easy to rotate/revoke
 
 **Permissions Rationale:**
+
 - `contents: write`: Need to create tags (can't be avoided)
 - `pull-requests: write`: Create release PRs (optional flow)
 - `id-token: write`: npm provenance (security best practice)
@@ -228,6 +247,7 @@ git push --follow-tags
 - NO `workflow`: Prevents workflow tampering
 
 **Token Management:**
+
 - GitHub token: Automatic, scoped per-workflow
 - npm token: Secret, rotatable, auditable
 - No personal tokens (use automation tokens)
@@ -235,12 +255,14 @@ git push --follow-tags
 ### Why Ignore dev-scripts?
 
 **Reasoning:**
+
 - `@tjr-suite/dev-scripts` is marked private
 - Internal tooling, not for external consumption
 - Changing it doesn't affect published packages
 - Reduces noise in release process
 
 **Implications:**
+
 - Dev scripts can change without version bumps
 - No changelog for internal tools
 - Simplifies release coordination
@@ -271,21 +293,25 @@ git push --follow-tags
 ### Mitigations
 
 **Manual Overhead:**
+
 - CLI is fast and intuitive
 - Can batch multiple package changes in one changeset
 - Becomes habit after a few uses
 
 **Learning Curve:**
+
 - Comprehensive documentation in `docs/ops/release-process.md`
 - Examples in this ADR
 - Dry-run mode for safe exploration
 
 **Coordination:**
+
 - Changeset status command shows pending changes
 - PR reviews catch missing changesets
 - Can create changesets retroactively if forgotten
 
 **GitHub Actions Dependency:**
+
 - Local publishing workflow documented
 - Can migrate to other CI/CD if needed
 - Workflow is simple (easy to port)
@@ -334,11 +360,13 @@ git push --follow-tags
 ## Testing Strategy
 
 ### Unit Tests
+
 Not applicable (configuration and workflow, not code)
 
 ### Integration Tests
 
 **Local Dry-Run:**
+
 ```bash
 # Test changeset creation
 pnpm changeset
@@ -351,6 +379,7 @@ pnpm changeset publish --dry-run
 ```
 
 **GitHub Actions Dry-Run:**
+
 1. Trigger workflow with `dry_run: true`
 2. Verify build succeeds
 3. Verify tests pass
@@ -358,6 +387,7 @@ pnpm changeset publish --dry-run
 5. Confirm no actual publish occurs
 
 **End-to-End Test:**
+
 1. Create test package (private, for testing)
 2. Create changeset for test package
 3. Run version bump
@@ -369,6 +399,7 @@ pnpm changeset publish --dry-run
 ### Validation Checklist
 
 Before production release:
+
 - [ ] Dry-run shows correct packages
 - [ ] Version bumps are appropriate (major/minor/patch)
 - [ ] Changelogs are accurate
@@ -387,6 +418,7 @@ Before production release:
 **Situation:** Bumped versions locally but not published
 
 **Solution:**
+
 ```bash
 git revert <version-bump-commit>
 # OR
@@ -396,18 +428,22 @@ git reset --hard HEAD~1  # if not pushed
 ### Scenario 2: Published Bad Version
 
 **Immediate Actions:**
+
 1. Assess severity (breaking bug, security issue, etc.)
 2. Decide: unpublish or roll forward
 
 **Option A: Unpublish (within 72 hours)**
+
 ```bash
 npm unpublish @tjr/package-name@1.0.0
 ```
+
 - Use ONLY for critical issues
 - Breaks existing dependents
 - Document reasoning
 
 **Option B: Roll Forward (preferred)**
+
 ```bash
 # Fix the issue
 # Create hotfix changeset
@@ -419,21 +455,25 @@ pnpm changeset:publish
 ```
 
 **Option C: Deprecate**
+
 ```bash
 npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ```
+
 - Warns users but doesn't break existing installs
 - Best for non-critical issues
 
 ### Scenario 3: GitHub Actions Workflow Fails
 
 **Debugging:**
+
 1. Check workflow logs for specific error
 2. Verify secrets are configured
 3. Test locally: `pnpm -w -r build && pnpm -w -r test`
 4. Re-run workflow if transient failure
 
 **Common Causes:**
+
 - Missing npm token
 - Build/test failures
 - Network issues
@@ -446,17 +486,20 @@ npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ### Regular Tasks
 
 **Weekly:**
+
 - Review pending changesets
 - Check for orphaned changeset files
 - Verify npm token hasn't expired
 
 **Monthly:**
+
 - Review published packages on npm
 - Audit package download stats
 - Check for security vulnerabilities
 - Update Changesets CLI if needed
 
 **Quarterly:**
+
 - Rotate npm tokens
 - Review and update documentation
 - Gather developer feedback on process
@@ -537,21 +580,25 @@ npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ## References
 
 ### Documentation
+
 - [Release Process Guide](../ops/release-process.md)
 - [Changesets GitHub](https://github.com/changesets/changesets)
 - [Changesets Documentation](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md)
 - [SemVer Specification](https://semver.org/)
 
 ### Related ADRs
+
 - ADR-0051: Monorepo Bootstrap
 - ADR-0054: Dev Scripts
 
 ### External Resources
+
 - [npm Publishing Guide](https://docs.npmjs.com/cli/v9/commands/npm-publish)
 - [npm Provenance](https://docs.npmjs.com/generating-provenance-statements)
 - [GitHub Actions Security](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
 
 ### Issue Tracking
+
 - Issue #41: [P3][R1] Release & publish pipeline with Changesets
 - Branch: `phase-3.R1-release-pipeline`
 - Implementation Journal: `docs/journal/_fragments/3/3.R1-release-pipeline.md`
@@ -561,6 +608,7 @@ npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ## Appendix: Configuration Files
 
 ### .changeset/config.json
+
 ```json
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
@@ -576,6 +624,7 @@ npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ```
 
 ### package.json (root scripts)
+
 ```json
 {
   "scripts": {
@@ -587,6 +636,7 @@ npm deprecate @tjr/package-name@1.0.0 "Critical bug - use 1.0.1"
 ```
 
 ### Example Package Configuration
+
 ```json
 {
   "name": "@tjr/logger",

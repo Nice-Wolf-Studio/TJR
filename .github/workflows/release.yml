@@ -16,9 +16,9 @@ on:
 
 # Minimal permissions - only what's needed for releases
 permissions:
-  contents: write      # For creating version tags
+  contents: write # For creating version tags
   pull-requests: write # For creating release PRs
-  id-token: write      # For npm provenance
+  id-token: write # For npm provenance
 
 # Prevent concurrent releases
 concurrency:

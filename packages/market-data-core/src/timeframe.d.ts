@@ -9,7 +9,7 @@
  * All functions assume UTC timezone. Provider adapters are responsible for
  * converting local times to UTC before calling these functions.
  */
-import { Timeframe } from "./types.js";
+import { Timeframe } from './types.js';
 /**
  * Converts a canonical timeframe to milliseconds.
  *
@@ -99,7 +99,11 @@ export declare function normalizeTimeframe(input: string): Timeframe;
  *
  * Complexity: O(1) (arithmetic operations only)
  */
-export declare function alignTimestamp(timestamp: number, timeframe: Timeframe, direction: "floor" | "ceil"): number;
+export declare function alignTimestamp(
+  timestamp: number,
+  timeframe: Timeframe,
+  direction: 'floor' | 'ceil'
+): number;
 /**
  * Checks if a timestamp is aligned to a timeframe boundary.
  *

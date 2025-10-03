@@ -23,8 +23,7 @@ describe('Request Context', () => {
     assert.notStrictEqual(id1, id2, 'IDs should be unique');
 
     // Validate UUID v4 format
-    const uuidPattern =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     assert.ok(uuidPattern.test(id1), 'Should be valid UUID v4');
     assert.ok(uuidPattern.test(id2), 'Should be valid UUID v4');
   });
@@ -81,13 +80,10 @@ describe('Request Context', () => {
   it('should accept custom request ID', async () => {
     const customId = 'custom-request-123';
 
-    await withRequestContext(
-      async () => {
-        const id = getRequestId();
-        assert.strictEqual(id, customId, 'Should use custom request ID');
-      },
-      customId
-    );
+    await withRequestContext(async () => {
+      const id = getRequestId();
+      assert.strictEqual(id, customId, 'Should use custom request ID');
+    }, customId);
   });
 
   it('should support additional context fields', async () => {

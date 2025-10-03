@@ -88,7 +88,9 @@ function parseTimeToUTC(date: Date, timeStr: string, timezone: string): Date {
 export function isHoliday(date: Date, symbol: string): boolean {
   // Validate symbol exists in calendar
   if (!calendarData.sessions[symbol]) {
-    throw new Error(`Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`);
+    throw new Error(
+      `Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`
+    );
   }
 
   const dateStr = formatDate(date);
@@ -116,7 +118,9 @@ export function isHoliday(date: Date, symbol: string): boolean {
 export function rthWindow(date: Date, symbol: string): TimeWindow | null {
   // Check if symbol exists
   if (!calendarData.sessions[symbol]) {
-    throw new Error(`Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`);
+    throw new Error(
+      `Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`
+    );
   }
 
   const dateStr = formatDate(date);
@@ -164,7 +168,9 @@ export function rthWindow(date: Date, symbol: string): TimeWindow | null {
 export function getSessions(date: Date, symbol: string): Session[] {
   // Check if symbol exists
   if (!calendarData.sessions[symbol]) {
-    throw new Error(`Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`);
+    throw new Error(
+      `Unknown symbol: ${symbol}. Available symbols: ${Object.keys(calendarData.sessions).join(', ')}`
+    );
   }
 
   const dateStr = formatDate(date);
@@ -199,7 +205,11 @@ export function getSessions(date: Date, symbol: string): Session[] {
   const prevDay = new Date(date);
   prevDay.setDate(prevDay.getDate() - 1);
 
-  const ethPreStart = parseTimeToUTC(prevDay, symbolSessions.eth_pre.start, symbolSessions.timezone);
+  const ethPreStart = parseTimeToUTC(
+    prevDay,
+    symbolSessions.eth_pre.start,
+    symbolSessions.timezone
+  );
   const ethPreEnd = parseTimeToUTC(date, symbolSessions.eth_pre.end, symbolSessions.timezone);
 
   sessions.push({
@@ -212,7 +222,11 @@ export function getSessions(date: Date, symbol: string): Session[] {
   // Extended Trading Hours - Post-market
   // Only add if not an early close day (early close typically has no post-market)
   if (holiday?.type !== 'early_close') {
-    const ethPostStart = parseTimeToUTC(date, symbolSessions.eth_post.start, symbolSessions.timezone);
+    const ethPostStart = parseTimeToUTC(
+      date,
+      symbolSessions.eth_post.start,
+      symbolSessions.timezone
+    );
     const ethPostEnd = parseTimeToUTC(date, symbolSessions.eth_post.end, symbolSessions.timezone);
 
     sessions.push({

@@ -46,7 +46,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1  # Shallow clone for speed
+          fetch-depth: 1 # Shallow clone for speed
 
       # Step 2: Setup Node.js with caching
       - name: Setup Node.js

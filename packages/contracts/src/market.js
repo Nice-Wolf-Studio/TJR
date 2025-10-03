@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @fileoverview Market data types and provider contracts.
  *
@@ -8,5 +8,5 @@
  *
  * @module @tjr/contracts/market
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 //# sourceMappingURL=market.js.map

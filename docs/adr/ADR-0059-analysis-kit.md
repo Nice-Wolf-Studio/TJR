@@ -19,6 +19,7 @@ The TJR Suite requires deterministic, pure analytics functions for market analys
 - **Numeric stability:** Robust handling of edge cases (gaps, equal values, missing data)
 
 Without this package, we face:
+
 - Analytics logic scattered across different modules
 - Non-deterministic behavior from impure functions
 - Inconsistent market structure interpretation
@@ -33,12 +34,14 @@ Without this package, we face:
 We will implement `@tjr/analysis-kit` as a collection of pure, deterministic analytics functions with zero I/O.
 
 **Rationale:**
+
 - **Predictability:** Same inputs always produce same outputs
 - **Composability:** Functions can be chained and combined safely
 - **Testability:** Easy to verify correctness with fixtures
 - **Performance:** No I/O overhead, suitable for backtesting large datasets
 
 **Purity guarantees:**
+
 - No file system access
 - No network calls
 - No `Date.now()` or wall-clock reads
@@ -52,6 +55,7 @@ We will implement `@tjr/analysis-kit` as a collection of pure, deterministic ana
 The package is organized into four core modules:
 
 #### **Structure Analysis (`src/structure.ts`)**
+
 Identifies swing points (Higher Highs, Higher Lows, Lower Highs, Lower Lows) in price data.
 
 ```typescript
@@ -63,10 +67,11 @@ interface SwingPoint {
 }
 
 // Detect swing points using lookback window
-function detectSwings(bars: Bar[], lookback: number): SwingPoint[]
+function detectSwings(bars: Bar[], lookback: number): SwingPoint[];
 ```
 
 **Key behaviors:**
+
 - **Lookback window:** Configurable periods (e.g., 5 bars) for pivot identification
 - **Edge case handling:** First/last bars never flagged as pivots (insufficient context)
 - **Equal prices:** Multiple bars at same high/low treated as single pivot (use first occurrence)
@@ -74,6 +79,7 @@ function detectSwings(bars: Bar[], lookback: number): SwingPoint[]
 ---
 
 #### **Bias Analysis (`src/bias/daily-bias-v1.ts`)**
+
 Calculates market bias (bullish/bearish/neutral) based on price action relative to key levels.
 
 ```typescript
@@ -84,10 +90,11 @@ interface BiasResult {
 }
 
 // Calculate daily bias from bar data and session extremes
-function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes): BiasResult
+function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes): BiasResult;
 ```
 
 **Key behaviors:**
+
 - **Macro awareness:** Considers multi-day trend (higher timeframe context)
 - **Micro signals:** Recent price action within current session
 - **Threshold-based:** Confidence score based on distance from key levels
@@ -96,6 +103,7 @@ function calculateDailyBias(bars: Bar[], sessionExtremes: SessionExtremes): Bias
 ---
 
 #### **Session Extremes (`src/session/sessions.ts`)**
+
 Extracts high/low extremes for specific trading sessions (RTH only) from bar data.
 
 ```typescript
@@ -107,10 +115,11 @@ interface SessionExtremes {
 }
 
 // Extract RTH extremes from bars within a time window
-function extractSessionExtremes(bars: Bar[], rthWindow: TimeWindow): SessionExtremes
+function extractSessionExtremes(bars: Bar[], rthWindow: TimeWindow): SessionExtremes;
 ```
 
 **Key behaviors:**
+
 - **Time filtering:** Only bars within RTH window considered
 - **Missing data handling:** Returns null if insufficient data
 - **Timestamp requirements:** Bars must have valid timestamps (Unix epoch)
@@ -118,6 +127,7 @@ function extractSessionExtremes(bars: Bar[], rthWindow: TimeWindow): SessionExtr
 ---
 
 #### **Day Profile (`src/profile/day-profile-v1.ts`)**
+
 Classifies daily price action into profile types (Trend, Range, Breakout).
 
 ```typescript
@@ -130,15 +140,17 @@ interface DayProfile {
 }
 
 // Classify day profile from bar data
-function classifyDayProfile(bars: Bar[], sessionExtremes: SessionExtremes): DayProfile
+function classifyDayProfile(bars: Bar[], sessionExtremes: SessionExtremes): DayProfile;
 ```
 
 **Profile types:**
+
 - **P (Trend Day):** Strong directional move, limited retracement
 - **K (Range Day):** Balanced, mean-reverting, narrow range
 - **D (Breakout/Distribution Day):** Wide range, rotational, multi-directional
 
 **Key behaviors:**
+
 - **Range analysis:** High-low spread relative to recent average
 - **Directional bias:** Open-close relationship and intraday structure
 - **Volume awareness (optional):** If volume data present, incorporate into classification
@@ -161,11 +173,12 @@ interface Bar {
 
 interface TimeWindow {
   start: Date; // UTC
-  end: Date;   // UTC
+  end: Date; // UTC
 }
 ```
 
 **Assumptions:**
+
 1. **Timestamp ordering:** Bars are chronologically sorted (function validates)
 2. **Price consistency:** `high >= open/close` and `low <= open/close`
 3. **No missing bars:** Gaps in data handled gracefully (returns null or empty array)
@@ -175,11 +188,13 @@ interface TimeWindow {
 ### 4. **Numeric Stability Policy**
 
 **Floating-point edge cases:**
+
 - **Epsilon comparisons:** Use `Math.abs(a - b) < 1e-9` for equality checks on prices
 - **Division by zero:** Explicitly check denominators, return null or default value
 - **NaN handling:** Validate inputs; reject or sanitize NaN/Infinity values
 
 **Example:**
+
 ```typescript
 function isSamePrice(a: number, b: number): boolean {
   return Math.abs(a - b) < 1e-9;
@@ -187,6 +202,7 @@ function isSamePrice(a: number, b: number): boolean {
 ```
 
 **Rationale:**
+
 - **Robustness:** Prevents crashes from edge-case data
 - **Consistency:** Same behavior across different JS engines (Node.js, browsers)
 - **Testability:** Edge cases covered in fixtures
@@ -196,30 +212,31 @@ function isSamePrice(a: number, b: number): boolean {
 ### 5. **Fixture Policy**
 
 **Approach:**
+
 - **Golden fixtures:** JSON files with synthetic bar data + expected outputs
 - **Deterministic:** Same fixture always produces same result
 - **Coverage:** Edge cases (gaps, equal values, single bar, empty array)
 
 **Fixture structure:**
+
 ```json
 {
   "name": "uptrend-with-higher-highs",
   "input": {
     "bars": [
-      {"timestamp": 1609459200000, "open": 100, "high": 105, "low": 99, "close": 104},
-      {"timestamp": 1609545600000, "open": 104, "high": 110, "low": 103, "close": 108}
+      { "timestamp": 1609459200000, "open": 100, "high": 105, "low": 99, "close": 104 },
+      { "timestamp": 1609545600000, "open": 104, "high": 110, "low": 103, "close": 108 }
     ],
     "lookback": 5
   },
   "expected": {
-    "swings": [
-      {"index": 1, "timestamp": 1609545600000, "price": 110, "type": "HH"}
-    ]
+    "swings": [{ "index": 1, "timestamp": 1609545600000, "price": 110, "type": "HH" }]
   }
 }
 ```
 
 **Test validation:**
+
 - **Assertion:** Output matches `expected` exactly (deep equality)
 - **Property tests:** Run same input 100 times, verify identical output (repeatability)
 
@@ -239,11 +256,14 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ## Alternatives Considered
 
 ### Use External Analytics Library (e.g., `talib`, `technicalindicators`)
+
 **Pros:**
+
 - Battle-tested algorithms
 - Comprehensive indicator library
 
 **Cons:**
+
 - Heavy dependencies (native bindings for `talib`)
 - Generic indicators don't match TJR-specific methodology
 - Impure functions (some mutate input arrays)
@@ -253,10 +273,13 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ---
 
 ### Include I/O (e.g., fetch bars from database)
+
 **Pros:**
+
 - Convenience for callers
 
 **Cons:**
+
 - Breaks purity and testability
 - Adds dependencies and error handling complexity
 - Couples analytics to data layer
@@ -266,10 +289,13 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ---
 
 ### Embed ML models for bias prediction
+
 **Pros:**
+
 - Potentially more accurate bias detection
 
 **Cons:**
+
 - Non-deterministic (model updates change behavior)
 - Large bundle size (model weights)
 - Requires training data and pipeline
@@ -281,8 +307,10 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ## Risks and Mitigations
 
 ### Risk 1: Incorrect swing detection on edge cases
+
 **Impact:** False signals lead to bad trading decisions
 **Mitigation:**
+
 - Comprehensive fixture suite (50+ scenarios)
 - Property tests (repeatability, monotonicity)
 - Manual review against charting software (TradingView, ThinkerSwim)
@@ -290,8 +318,10 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ---
 
 ### Risk 2: Numeric instability with large price values
+
 **Impact:** Precision loss on very large or very small prices
 **Mitigation:**
+
 - Use epsilon-based comparisons
 - Document supported price ranges (tested: 0.01 to 1,000,000)
 - Log warnings for extreme values
@@ -299,8 +329,10 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ---
 
 ### Risk 3: Performance degradation with large datasets
+
 **Impact:** Slow backtests when analyzing thousands of bars
 **Mitigation:**
+
 - Benchmark suite: Measure performance with 10K, 100K bar datasets
 - Optimize hot paths (avoid repeated array scans)
 - Document complexity: `O(n)` for most functions
@@ -308,8 +340,10 @@ These are acceptable tradeoffs for Phase 51. Future shards can expand capabiliti
 ---
 
 ### Risk 4: Divergence from industry-standard definitions
+
 **Impact:** Confusion if TJR definitions differ from common usage
 **Mitigation:**
+
 - Inline comments explaining methodology
 - Reference diagrams in README
 - Version suffix (`-v1`) allows future changes without breaking

@@ -1,6 +1,7 @@
 # ADR-0310: Backtesting CLI v2 (Metrics & Reports)
 
 ## Status
+
 Accepted
 
 ## Context
@@ -14,6 +15,7 @@ The existing `replay-run` CLI is a stub implementation that needs to be upgraded
 5. **Support multiple analysis modules** with consistent interface
 
 Key requirements:
+
 - Hit-rate metrics to measure signal accuracy
 - Precision@K metrics for ranked predictions
 - Latency metrics for performance benchmarking
@@ -30,24 +32,28 @@ We implement **Backtesting CLI v2** with the following architecture:
 **Core Metrics Module** (`src/metrics/`):
 
 #### Hit-Rate Metrics
+
 - Measures success rate of trading signals
 - For execution signals: `successful_trades / total_trades * 100`
 - Tracks wins, losses, and breakeven trades
 - Separate hit-rates for long and short trades
 
 #### Precision@K Metrics
+
 - Measures relevance of top-K ranked items
 - For confluence zones: Are the highest-scored zones actually valid?
 - Formula: `relevant_items_in_top_k / k * 100`
 - Computed at K=[1, 3, 5, 10]
 
 #### Latency Metrics
+
 - Measures execution performance
 - Tracks: min, max, mean, median, p95, p99
 - Per-bar latency and total duration
 - Useful for performance regression testing
 
 #### Signal Counts
+
 - FVGs detected (bullish/bearish)
 - Order blocks detected (demand/supply)
 - Execution triggers generated
@@ -56,6 +62,7 @@ We implement **Backtesting CLI v2** with the following architecture:
 ### 2. Multi-Format Output
 
 #### JSON Output (Default)
+
 ```json
 {
   "success": true,
@@ -103,12 +110,14 @@ We implement **Backtesting CLI v2** with the following architecture:
 ```
 
 #### CSV Output
+
 ```csv
 symbol,date,barCount,hitRate,totalSignals,successful,precisionK1,precisionK5,latencyMean,latencyP95
 ES,2024-10-01,78,65.5,45,29,100.0,60.0,3.4,8.5
 ```
 
 #### Text Summary (Deterministic)
+
 ```
 === Backtest Summary ===
 Fixture: samples/day.json
@@ -135,18 +144,21 @@ Signals:
 **Supported Modules:**
 
 #### analysis-kit
+
 - Swing detection (HH, HL, LH, LL)
 - Daily bias calculation
 - Day profile classification
 - Session extremes extraction
 
 #### tjr-tools
+
 - Fair Value Gap (FVG) detection
 - Order Block detection
 - Confluence scoring
 - Execution trigger generation
 
 **Module Interface:**
+
 ```typescript
 interface ModuleResult {
   name: string;
@@ -159,6 +171,7 @@ interface ModuleResult {
 ### 4. Fixture Format
 
 **Extended Bar Fixture** with expected outcomes:
+
 ```json
 {
   "symbol": "ES",
@@ -168,8 +181,8 @@ interface ModuleResult {
     {
       "timestamp": "2024-10-01T09:30:00Z",
       "open": 5850.25,
-      "high": 5855.50,
-      "low": 5848.00,
+      "high": 5855.5,
+      "low": 5848.0,
       "close": 5852.75,
       "volume": 15234
     }
@@ -186,36 +199,44 @@ interface ModuleResult {
 ## Alternatives Considered
 
 ### Alternative 1: Separate CSV Command
+
 Create a separate `replay-csv` command for CSV output.
 
 **Rejected because:**
+
 - Duplicates logic and testing
 - Harder to maintain consistency
 - Users expect format flags, not separate commands
 - Increases documentation burden
 
 ### Alternative 2: Streaming Metrics
+
 Process bars in streaming fashion, emitting metrics incrementally.
 
 **Rejected because:**
+
 - More complex implementation
 - Harder to test deterministically
 - Most fixtures fit in memory
 - Can be added later if needed
 
 ### Alternative 3: Embedded Expectations in Bars
+
 Include expected results in each bar object.
 
 **Rejected because:**
+
 - Clutters fixture data
 - Makes fixtures harder to generate
 - Not all bars have expectations
 - Top-level `expected` is cleaner
 
 ### Alternative 4: Separate Metrics Package
+
 Create `@tjr/metrics` as standalone package.
 
 **Rejected because:**
+
 - Metrics are dev-tools specific
 - Adds deployment complexity
 - No external consumers planned
@@ -249,6 +270,7 @@ Create `@tjr/metrics` as standalone package.
 ## Implementation Details
 
 ### Module Structure
+
 ```
 packages/dev-scripts/
 ├── bin/
@@ -291,18 +313,22 @@ packages/dev-scripts/
 ## Risks and Mitigations
 
 ### Risk 1: Module API Changes
+
 **Risk**: analysis-kit or tjr-tools API changes break replay-run.
 **Mitigation**: Use type imports, comprehensive tests, version pinning.
 
 ### Risk 2: Non-Deterministic Results
+
 **Risk**: Floating-point arithmetic leads to inconsistent results.
 **Mitigation**: Round all displayed metrics, use integer counts where possible.
 
 ### Risk 3: Large Fixtures
+
 **Risk**: Large fixtures (1000+ bars) cause memory issues.
 **Mitigation**: Document limits, add streaming support if needed later.
 
 ### Risk 4: CSV Schema Changes
+
 **Risk**: Adding metrics breaks existing CSV parsers.
 **Mitigation**: Version CSV format, add new columns at end only.
 

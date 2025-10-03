@@ -1,10 +1,10 @@
 {
   "confluence": {
     "weights": {
-      "fvg": 0.40,
-      "orderBlock": 0.30,
-      "overlap": 0.20,
-      "recency": 0.10
+      "fvg": 0.4,
+      "orderBlock": 0.3,
+      "overlap": 0.2,
+      "recency": 0.1
     },
     "fvg": {
       "minGapSizeATR": 0.75,

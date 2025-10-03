@@ -43,7 +43,9 @@ export function detectFVGs(bars: MarketBar[], options?: FVGOptions): FVGZone[] {
     if (prev.high < next.low) {
       const gapSize = next.low - prev.high;
       if (gapSize >= minGapSize) {
-        const filled = opts.checkFilled ? isGapFilled(bars, i + 1, prev.high, next.low, 'bullish') : false;
+        const filled = opts.checkFilled
+          ? isGapFilled(bars, i + 1, prev.high, next.low, 'bullish')
+          : false;
         const strength = calculateFVGStrength(gapSize, atr, current.volume, bars);
 
         zones.push({
@@ -62,7 +64,9 @@ export function detectFVGs(bars: MarketBar[], options?: FVGOptions): FVGZone[] {
     if (prev.low > next.high) {
       const gapSize = prev.low - next.high;
       if (gapSize >= minGapSize) {
-        const filled = opts.checkFilled ? isGapFilled(bars, i + 1, next.high, prev.low, 'bearish') : false;
+        const filled = opts.checkFilled
+          ? isGapFilled(bars, i + 1, next.high, prev.low, 'bearish')
+          : false;
         const strength = calculateFVGStrength(gapSize, atr, current.volume, bars);
 
         zones.push({
@@ -113,14 +117,19 @@ function isGapFilled(
 /**
  * Calculate FVG strength score (0-1).
  */
-function calculateFVGStrength(gapSize: number, atr: number, volume: number, bars: MarketBar[]): number {
+function calculateFVGStrength(
+  gapSize: number,
+  atr: number,
+  volume: number,
+  bars: MarketBar[]
+): number {
   if (atr === 0) return 0;
 
   // Normalize gap size relative to ATR (larger gaps = stronger)
   const sizeScore = Math.min(1, gapSize / (atr * 2));
 
   // Volume score (compare to recent average)
-  const recentVolumes = bars.slice(-20).map(b => b.volume);
+  const recentVolumes = bars.slice(-20).map((b) => b.volume);
   const avgVolume = recentVolumes.reduce((sum, v) => sum + v, 0) / recentVolumes.length;
   const volumeScore = avgVolume > 0 ? Math.min(1, volume / avgVolume) : 0.5;
 

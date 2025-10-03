@@ -6,11 +6,15 @@ const http = require('node:http');
 
 function get(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      let data = '';
-      res.on('data', (c) => data += c);
-      res.on('end', () => resolve({ status: res.statusCode, body: data ? JSON.parse(data) : null }));
-    }).on('error', reject);
+    http
+      .get(url, (res) => {
+        let data = '';
+        res.on('data', (c) => (data += c));
+        res.on('end', () =>
+          resolve({ status: res.statusCode, body: data ? JSON.parse(data) : null })
+        );
+      })
+      .on('error', reject);
   });
 }
 
@@ -22,4 +26,3 @@ test('health endpoint responds', async () => {
   assert.equal(res.body.status, 'ok');
   app.server.close();
 });
-

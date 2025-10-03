@@ -17,6 +17,7 @@ The TJR Suite requires persistent storage for historical bar data (OHLC - Open, 
 3. **Backtesting systems:** Historical data for strategy validation
 
 Key requirements:
+
 - Support multiple data providers (with provider priority for merging)
 - Handle bar revisions/corrections (providers sometimes update historical data)
 - Store bars across multiple timeframes (1m, 5m, 1h, 1d, etc.)
@@ -24,6 +25,7 @@ Key requirements:
 - Support both SQLite (development/testing) and PostgreSQL (production)
 
 Without a standardized migration approach for the bars_cache table:
+
 - Schema inconsistencies between development and production
 - Manual schema updates prone to errors
 - No rollback capability
@@ -38,6 +40,7 @@ Without a standardized migration approach for the bars_cache table:
 We will create a `bars_cache` table with the following structure:
 
 **Core columns:**
+
 - `symbol` (TEXT): Asset symbol (e.g., "AAPL", "BTCUSD")
 - `provider` (TEXT): Data provider identifier (e.g., "alpaca", "polygon")
 - `timeframe` (TEXT): Bar timeframe (e.g., "1m", "5m", "1h", "1d")
@@ -49,18 +52,22 @@ We will create a `bars_cache` table with the following structure:
 - `volume` (REAL): Trading volume
 
 **Metadata columns:**
+
 - `revision` (INTEGER): Revision number for corrections (default: 0)
 - `providerPriority` (INTEGER): Priority for merge handling (lower = higher priority)
 - `insertedAt` (INTEGER): Record insertion timestamp in epoch milliseconds
 
 **Primary key:**
+
 - Composite: `(symbol, provider, timeframe, timestamp)`
 
 **Indexes:**
+
 - `idx_bars_cache_lookup`: `(symbol, timeframe, timestamp)` for range queries
 - `idx_bars_cache_provider`: `(provider, symbol)` for provider-specific queries
 
 **Rationale:**
+
 - **INTEGER timestamps:** Epoch milliseconds provide timezone-neutral storage and efficient comparisons
 - **REAL for prices:** Sufficient precision for financial data (double-precision floating point)
 - **Composite primary key:** Ensures uniqueness per (symbol, provider, timeframe, timestamp)
@@ -84,6 +91,7 @@ packages/db-simple/migrations/
 ```
 
 **Directory structure rationale:**
+
 - **Separate directories:** SQLite and PostgreSQL have different SQL syntax (AUTOINCREMENT vs SERIAL, etc.)
 - **Unified rollback:** Rollback logic is often database-agnostic (just DROP statements)
 - **Sequential numbering:** `001_`, `002_`, etc. ensures lexicographic ordering
@@ -96,11 +104,13 @@ packages/db-simple/migrations/
 **File:** `packages/db-simple/migrations/sqlite/001_create_bars_cache_sqlite.sql`
 
 Key differences from PostgreSQL:
+
 - Use `INTEGER PRIMARY KEY` (maps to ROWID)
 - Use `datetime('now')` for default timestamps
 - CREATE INDEX syntax identical to PostgreSQL
 
 **Idempotency:**
+
 - Use `CREATE TABLE IF NOT EXISTS` to allow safe re-runs
 - Use `CREATE INDEX IF NOT EXISTS` to prevent errors on re-application
 
@@ -111,12 +121,14 @@ Key differences from PostgreSQL:
 **File:** `packages/db-simple/migrations/postgres/001_create_bars_cache_postgres.sql`
 
 Key differences from SQLite:
+
 - Use `BIGINT` for 64-bit integer timestamps
 - Use `DOUBLE PRECISION` instead of `REAL` for better precision
 - Use `CURRENT_TIMESTAMP` for default timestamps (stored as epoch via extract)
 - Use `ON CONFLICT DO NOTHING` for upsert patterns (future enhancement)
 
 **Performance considerations:**
+
 - Create indexes CONCURRENTLY in production (manual operation)
 - Consider partitioning by timeframe for very large datasets (future enhancement)
 
@@ -127,6 +139,7 @@ Key differences from SQLite:
 **File:** `packages/db-simple/migrations/rollback/001_rollback_bars_cache.sql`
 
 **Contents:**
+
 ```sql
 DROP TABLE IF EXISTS bars_cache;
 DROP INDEX IF EXISTS idx_bars_cache_lookup;
@@ -134,11 +147,13 @@ DROP INDEX IF EXISTS idx_bars_cache_provider;
 ```
 
 **Rationale:**
+
 - Simple DROP statements work on both SQLite and PostgreSQL
 - Use `IF EXISTS` to prevent errors if table already dropped
 - Drop indexes explicitly for clarity (some databases auto-drop with table)
 
 **⚠️ Warning:**
+
 - Rollbacks are destructive and should only be used in development or with backups
 - Production rollbacks require careful planning and data migration
 
@@ -159,6 +174,7 @@ Add to `packages/db-simple/package.json`:
 ```
 
 **Usage:**
+
 ```bash
 # SQLite migration (development)
 pnpm --filter @tjr-suite/db-simple migrate:sqlite
@@ -171,6 +187,7 @@ pnpm --filter @tjr-suite/db-simple migrate:test
 ```
 
 **Rationale:**
+
 - Keep migrations close to the package that defines the schema
 - Use environment variables for production credentials
 - Provide test script for CI/CD validation
@@ -189,6 +206,7 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 6. **Performance:** Query performance with indexes vs without
 
 **Test databases:**
+
 - Use SQLite in-memory (`:memory:`) for fast, isolated tests
 - Optional PostgreSQL tests if `TEST_POSTGRES_URL` environment variable set
 
@@ -199,11 +217,13 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 ### Using ORM Migrations (Prisma, TypeORM)
 
 **Pros:**
+
 - Automatic migration generation from schema models
 - Type-safe database access
 - Built-in versioning and rollback
 
 **Cons:**
+
 - Requires learning ORM-specific DSL
 - Code generation adds build complexity
 - Opaque SQL (harder to review and optimize)
@@ -216,10 +236,12 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 ### Single Migration File for Both Databases
 
 **Pros:**
+
 - Simpler directory structure
 - Less duplication
 
 **Cons:**
+
 - SQLite and PostgreSQL have significant syntax differences
 - Conditional logic in SQL is fragile and hard to read
 - Error-prone to maintain
@@ -231,10 +253,12 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 ### Storing Timestamps as ISO 8601 Strings
 
 **Pros:**
+
 - Human-readable in database browser tools
 - No timezone ambiguity with 'Z' suffix
 
 **Cons:**
+
 - Slower comparisons (string vs integer)
 - Larger storage footprint (20 bytes vs 8 bytes)
 - More complex range queries
@@ -246,10 +270,12 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 ### Using DECIMAL/NUMERIC for Prices
 
 **Pros:**
+
 - Exact decimal representation (no floating point rounding)
 - Better for financial calculations requiring exact precision
 
 **Cons:**
+
 - Slower arithmetic operations
 - Overkill for cached bar data (exact precision not critical)
 - More complex aggregation queries
@@ -265,6 +291,7 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 **Impact:** Slow queries, index bloat, disk space exhaustion
 
 **Mitigation:**
+
 - Create appropriate indexes on query patterns
 - Consider partitioning by timeframe or date range (PostgreSQL)
 - Implement data retention policies (archive old bars)
@@ -277,6 +304,7 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 **Impact:** Duplicate bars, incorrect revisions, merge conflicts
 
 **Mitigation:**
+
 - Use composite primary key to prevent duplicates
 - Implement revision tracking for corrections
 - Document provider priority conventions
@@ -289,7 +317,8 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 **Impact:** Migration conflicts, breaking changes to dependent packages
 
 **Mitigation:**
-- Use sequential migration numbering (002_, 003_, etc.)
+
+- Use sequential migration numbering (002*, 003*, etc.)
 - Never modify existing migrations (create new ones instead)
 - Document breaking changes in ADRs
 - Version API contracts separately from schema
@@ -301,6 +330,7 @@ Create `packages/db-simple/tests/bars-cache-migration.test.js` covering:
 **Impact:** Partial schema updates, data loss, downtime
 
 **Mitigation:**
+
 - Always backup before migrations
 - Test migrations in staging first
 - Use transactions (automatic in db-simple)

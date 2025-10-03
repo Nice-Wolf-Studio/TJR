@@ -60,6 +60,7 @@ class AlphaVantageProvider {
 **Contract Alignment:**
 
 Alpha Vantage was strictly aligned to `@tjr/contracts` Timeframe enum, which defines:
+
 - M1 = '1' (1 minute)
 - M5 = '5' (5 minutes)
 - M10 = '10' (10 minutes)
@@ -82,6 +83,7 @@ Alpha Vantage was strictly aligned to `@tjr/contracts` Timeframe enum, which def
 **Timeframes Removed During Implementation:**
 
 Alpha Vantage natively supports 15min and 30min intervals, but these were **intentionally excluded** because the TJR contracts Timeframe enum does not include M15 or M30 values. This decision ensures:
+
 1. Strict contract compliance across all providers
 2. Consistent timeframe support across the system
 3. No "provider-specific" timeframes that could break downstream code
@@ -139,7 +141,7 @@ Alpha Vantage natively supports 15min and 30min intervals, but these were **inte
 
 ```typescript
 interface MarketBar {
-  timestamp: string;       // ISO 8601 timestamp in UTC
+  timestamp: string; // ISO 8601 timestamp in UTC
   open: number;
   high: number;
   low: number;
@@ -168,13 +170,13 @@ The `parseIntradayResponse()` and `parseDailyResponse()` functions perform:
 **Custom Error Classes:**
 
 ```typescript
-class AlphaVantageError extends Error { }
-class RateLimitError extends AlphaVantageError { }
-class ApiError extends AlphaVantageError { }
-class ParseError extends AlphaVantageError { }
-class AuthenticationError extends AlphaVantageError { }
-class SymbolNotFoundError extends AlphaVantageError { }
-class PremiumFeatureError extends AlphaVantageError { }
+class AlphaVantageError extends Error {}
+class RateLimitError extends AlphaVantageError {}
+class ApiError extends AlphaVantageError {}
+class ParseError extends AlphaVantageError {}
+class AuthenticationError extends AlphaVantageError {}
+class SymbolNotFoundError extends AlphaVantageError {}
+class PremiumFeatureError extends AlphaVantageError {}
 ```
 
 **Error Mapping:**
@@ -251,10 +253,12 @@ class AlphaVantageClient {
 **Approach:** Allow provider to support 15min and 30min timeframes even though contracts don't define them.
 
 **Pros:**
+
 - Takes full advantage of Alpha Vantage's native capabilities
 - No need to aggregate for additional timeframes
 
 **Cons:**
+
 - **Contract Violation:** Creates provider-specific timeframes not in `@tjr/contracts`
 - **Inconsistency:** Other providers wouldn't support M15/M30, breaking portability
 - **Type Safety:** Timeframe enum wouldn't include M15/M30 values
@@ -267,20 +271,24 @@ class AlphaVantageClient {
 ### Alternative 2: Use Different Aggregation Library
 
 **Alternatives:**
+
 - Custom aggregation logic in provider
 - Use `technicalindicators` npm package
 - Use `pandas-js` for aggregation
 
 **Pros (Custom Logic):**
+
 - Full control over aggregation algorithm
 - No external dependencies
 
 **Cons (Custom Logic):**
+
 - Code duplication across providers
 - More complex testing requirements
 - Higher maintenance burden
 
 **Decision:** Rejected. We use `@tjr-suite/market-data-core` for aggregation because:
+
 1. **Reusability:** All providers benefit from the same aggregation logic
 2. **Testing:** Aggregation is tested independently in market-data-core
 3. **Consistency:** Ensures identical OHLCV calculations across providers
@@ -293,16 +301,19 @@ class AlphaVantageClient {
 **Approach:** Implement HTTP client first, test against live Alpha Vantage API.
 
 **Pros:**
+
 - More realistic testing
 - Validates API assumptions immediately
 
 **Cons:**
+
 - **Non-Deterministic Tests:** Data changes over time
 - **Rate Limits:** Free tier only allows 5 req/min, 500 req/day
 - **Development Friction:** Requires API key and internet for local development
 - **CI/CD Issues:** Tests would hit rate limits in CI pipeline
 
 **Decision:** Rejected. Fixture-first approach provides:
+
 - **Reliable CI:** Tests run in milliseconds without rate limits
 - **Offline Development:** No API key needed for implementation
 - **Deterministic Behavior:** Same input always produces same output
@@ -371,8 +382,8 @@ packages/provider-alphavantage/
 
 ### Dependencies
 
-- `@tjr/contracts` (workspace:*) - Provider interface contracts, Timeframe enum
-- `@tjr-suite/market-data-core` (workspace:*) - `aggregateBars()` function
+- `@tjr/contracts` (workspace:\*) - Provider interface contracts, Timeframe enum
+- `@tjr-suite/market-data-core` (workspace:\*) - `aggregateBars()` function
 - `vitest` (dev) - Test runner
 - `typescript` (dev) - Compilation
 

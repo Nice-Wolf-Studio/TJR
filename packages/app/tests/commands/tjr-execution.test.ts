@@ -54,13 +54,10 @@ describe('TJRExecutionCommand', () => {
 
     logger = createLogger({
       level: 'error',
-      format: 'json'
+      format: 'json',
     });
 
-    configService = new FileConfigService(
-      logger.child({ service: 'config' }),
-      testConfigDir
-    );
+    configService = new FileConfigService(logger.child({ service: 'config' }), testConfigDir);
 
     // Mock provider service
     let fixtureMode = 'confirmed';
@@ -77,7 +74,9 @@ describe('TJRExecutionCommand', () => {
         }
         return [];
       }),
-      setFixtureMode: (mode: string) => { fixtureMode = mode; }
+      setFixtureMode: (mode: string) => {
+        fixtureMode = mode;
+      },
     } as any;
 
     // Mock cache service
@@ -92,7 +91,7 @@ describe('TJRExecutionCommand', () => {
       }),
       clear: vi.fn(async () => {
         cacheStore.clear();
-      })
+      }),
     } as any;
 
     executionCommand = new TJRExecutionCommand({
@@ -100,7 +99,7 @@ describe('TJRExecutionCommand', () => {
       configService,
       cacheService,
       logger: logger.child({ service: 'tjr-execution' }),
-      userId: 'test-user'
+      userId: 'test-user',
     });
   });
 
@@ -199,7 +198,7 @@ describe('TJRExecutionCommand', () => {
     it('should check 1m entry when include1m option set', async () => {
       const result = await executionCommand.execute(['BTC-USDT'], {
         format: 'json',
-        include1m: true
+        include1m: true,
       });
       const output = JSON.parse(result.output);
 
@@ -210,7 +209,7 @@ describe('TJRExecutionCommand', () => {
     it('should trigger entry on valid 1m signal', async () => {
       const result = await executionCommand.execute(['BTC-USDT'], {
         format: 'json',
-        include1m: true
+        include1m: true,
       });
       const output = JSON.parse(result.output);
 
@@ -226,7 +225,7 @@ describe('TJRExecutionCommand', () => {
 
       const result = await executionCommand.execute(['BTC-USDT'], {
         format: 'json',
-        include1m: true
+        include1m: true,
       });
       const output = JSON.parse(result.output);
 
@@ -245,7 +244,7 @@ describe('TJRExecutionCommand', () => {
 
       const result = await executionCommand.execute(['BTC-USDT'], {
         format: 'json',
-        include1m: true
+        include1m: true,
       });
 
       expect(result.success).toBe(true);
@@ -426,7 +425,7 @@ describe('TJRExecutionCommand', () => {
     it('should override risk config from options', async () => {
       const result = await executionCommand.execute(['BTC-USDT'], {
         format: 'json',
-        risk: '{"perTrade":{"maxRiskPercent":2.0}}'
+        risk: '{"perTrade":{"maxRiskPercent":2.0}}',
       });
 
       expect(result.success).toBe(true);
@@ -434,7 +433,7 @@ describe('TJRExecutionCommand', () => {
 
     it('should error on invalid risk JSON', async () => {
       const result = await executionCommand.execute(['BTC-USDT'], {
-        risk: '{invalid json}'
+        risk: '{invalid json}',
       });
 
       expect(result.success).toBe(false);
@@ -556,8 +555,14 @@ describe('TJRExecutionCommand', () => {
     });
 
     it('should be deterministic for same input', async () => {
-      const result1 = await executionCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
-      const result2 = await executionCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
+      const result1 = await executionCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
+      const result2 = await executionCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
 
       const output1 = JSON.parse(result1.output);
       const output2 = JSON.parse(result2.output);
@@ -587,7 +592,8 @@ describe('TJRExecutionCommand', () => {
     it('should display execution table when available', async () => {
       const result = await executionCommand.execute(['BTC-USDT'], { format: 'table' });
 
-      if (result.output.includes('Yes')) { // Confirmed
+      if (result.output.includes('Yes')) {
+        // Confirmed
         expect(result.output).toContain('Execution Parameter');
         expect(result.output).toContain('Value');
       }
@@ -700,8 +706,14 @@ describe('TJRExecutionCommand', () => {
 
   describe('Deterministic Results', () => {
     it('should produce same results for same input', async () => {
-      const result1 = await executionCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
-      const result2 = await executionCommand.execute(['BTC-USDT'], { format: 'json', noCache: true });
+      const result1 = await executionCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
+      const result2 = await executionCommand.execute(['BTC-USDT'], {
+        format: 'json',
+        noCache: true,
+      });
 
       const output1 = JSON.parse(result1.output);
       const output2 = JSON.parse(result2.output);

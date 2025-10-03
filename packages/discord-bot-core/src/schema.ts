@@ -17,8 +17,10 @@ export interface Manifest {
 
 export function normalizeManifest(m: Manifest): Manifest {
   const commands = [...(m.commands || [])]
-    .map(c => ({ ...c, options: c.options ? [...c.options].sort((a,b)=>a.name.localeCompare(b.name)) : undefined }))
-    .sort((a,b)=>a.name.localeCompare(b.name));
+    .map((c) => ({
+      ...c,
+      options: c.options ? [...c.options].sort((a, b) => a.name.localeCompare(b.name)) : undefined,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   return { commands };
 }
-

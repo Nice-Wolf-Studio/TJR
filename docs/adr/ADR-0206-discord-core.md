@@ -48,6 +48,7 @@ class CommandHandler {
 ### CLI Design
 
 The registrar CLI follows dev-scripts philosophy:
+
 - **Dry-run by default mindset**: Shows changes before applying
 - **Idempotent operations**: Safe to run multiple times
 - **Deterministic output**: Consistent manifest generation
@@ -69,6 +70,7 @@ discord-registrar --verbose
 ### Command Structure
 
 Commands are organized into:
+
 - `/src/schemas/`: Schema definitions
 - `/src/commands/`: Command handlers
 - `/src/handlers/`: Core processing logic

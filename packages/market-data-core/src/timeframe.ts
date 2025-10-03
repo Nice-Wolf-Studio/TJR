@@ -10,7 +10,7 @@
  * converting local times to UTC before calling these functions.
  */
 
-import { Timeframe } from "./types.js";
+import { Timeframe } from './types.js';
 
 /**
  * Mapping of canonical timeframes to their duration in milliseconds.
@@ -24,15 +24,15 @@ import { Timeframe } from "./types.js";
  * - Each timeframe is an integer multiple of all smaller timeframes
  */
 const TIMEFRAME_MS: Record<Timeframe, number> = {
-  "1m": 60_000,
-  "5m": 300_000,
-  "10m": 600_000,
-  "15m": 900_000,
-  "30m": 1_800_000,
-  "1h": 3_600_000,
-  "2h": 7_200_000,
-  "4h": 14_400_000,
-  "1D": 86_400_000,
+  '1m': 60_000,
+  '5m': 300_000,
+  '10m': 600_000,
+  '15m': 900_000,
+  '30m': 1_800_000,
+  '1h': 3_600_000,
+  '2h': 7_200_000,
+  '4h': 14_400_000,
+  '1D': 86_400_000,
 };
 
 /**
@@ -58,45 +58,45 @@ const MS_TO_TIMEFRAME = new Map<number, Timeframe>(
  */
 const TIMEFRAME_ALIASES: Record<string, number> = {
   // Minute aliases
-  "1min": 60_000,
-  "60s": 60_000,
-  "minute": 60_000,
+  '1min': 60_000,
+  '60s': 60_000,
+  minute: 60_000,
 
   // 5-minute aliases
-  "5min": 300_000,
-  "300s": 300_000,
+  '5min': 300_000,
+  '300s': 300_000,
 
   // 10-minute aliases
-  "10min": 600_000,
-  "600s": 600_000,
+  '10min': 600_000,
+  '600s': 600_000,
 
   // 15-minute aliases
-  "15min": 900_000,
-  "900s": 900_000,
+  '15min': 900_000,
+  '900s': 900_000,
 
   // 30-minute aliases
-  "30min": 1_800_000,
-  "1800s": 1_800_000,
+  '30min': 1_800_000,
+  '1800s': 1_800_000,
 
   // Hour aliases
-  "1hour": 3_600_000,
-  "hour": 3_600_000,
-  "60m": 3_600_000,
-  "3600s": 3_600_000,
+  '1hour': 3_600_000,
+  hour: 3_600_000,
+  '60m': 3_600_000,
+  '3600s': 3_600_000,
 
   // 2-hour aliases
-  "2hour": 7_200_000,
-  "120m": 7_200_000,
+  '2hour': 7_200_000,
+  '120m': 7_200_000,
 
   // 4-hour aliases
-  "4hour": 14_400_000,
-  "240m": 14_400_000,
+  '4hour': 14_400_000,
+  '240m': 14_400_000,
 
   // Daily aliases
-  "D": 86_400_000,
-  "day": 86_400_000,
-  "daily": 86_400_000,
-  "1440m": 86_400_000,
+  D: 86_400_000,
+  day: 86_400_000,
+  daily: 86_400_000,
+  '1440m': 86_400_000,
 };
 
 /**
@@ -165,9 +165,7 @@ export function normalizeTimeframe(input: string): Timeframe {
   }
 
   // Input is neither canonical nor aliased → unsupported
-  throw new Error(
-    `Unsupported timeframe: ${input}${ms !== undefined ? ` (${ms}ms)` : ""}`
-  );
+  throw new Error(`Unsupported timeframe: ${input}${ms !== undefined ? ` (${ms}ms)` : ''}`);
 }
 
 /**
@@ -214,11 +212,11 @@ export function normalizeTimeframe(input: string): Timeframe {
 export function alignTimestamp(
   timestamp: number,
   timeframe: Timeframe,
-  direction: "floor" | "ceil"
+  direction: 'floor' | 'ceil'
 ): number {
   const tfMs = toMillis(timeframe);
 
-  if (direction === "floor") {
+  if (direction === 'floor') {
     // Round down to nearest boundary
     // Example: 14:40:59 with 5m → 14:40:00
     //   timestamp = 1633024859000

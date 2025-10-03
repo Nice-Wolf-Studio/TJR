@@ -9,14 +9,8 @@
     "strictNullChecks": false,
     "strictPropertyInitialization": false
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests"
-  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"],
   "references": [
     { "path": "../market-data-core" },
     { "path": "../contracts" },

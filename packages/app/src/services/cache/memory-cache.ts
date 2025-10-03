@@ -35,7 +35,7 @@ export class MemoryCache implements CacheService {
     deletes: 0,
     evictions: 0,
     size: 0,
-    keys: 0
+    keys: 0,
   };
   private defaultTTL: number;
   private maxSize: number;
@@ -50,7 +50,7 @@ export class MemoryCache implements CacheService {
   async initialize(): Promise<void> {
     this.logger.info('Memory cache initializing', {
       defaultTTL: this.defaultTTL,
-      maxSize: this.maxSize
+      maxSize: this.maxSize,
     });
 
     // Start cleanup interval
@@ -77,8 +77,8 @@ export class MemoryCache implements CacheService {
       message: healthy ? 'Memory cache is healthy' : 'Memory cache near capacity',
       details: {
         ...this.stats,
-        utilizationPercent: (this.stats.size / this.maxSize) * 100
-      }
+        utilizationPercent: (this.stats.size / this.maxSize) * 100,
+      },
     };
   }
 
@@ -115,7 +115,7 @@ export class MemoryCache implements CacheService {
     const entry: CacheEntry<T> = {
       value,
       expires: Date.now() + (ttl ?? this.defaultTTL),
-      size
+      size,
     };
 
     // Update stats
@@ -133,7 +133,7 @@ export class MemoryCache implements CacheService {
     this.logger.debug('Cache set', {
       key,
       size,
-      ttl: ttl ?? this.defaultTTL
+      ttl: ttl ?? this.defaultTTL,
     });
   }
 

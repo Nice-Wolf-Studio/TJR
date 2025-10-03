@@ -16,6 +16,7 @@ This package provides command-line utilities for development, debugging, and ope
 All CLIs follow a consistent design philosophy:
 
 ### Dry-Run by Default
+
 Mutating operations (cache-warm, replay-run) default to dry-run mode for safety.
 
 ```bash
@@ -27,6 +28,7 @@ cache-warm --execute
 ```
 
 ### JSON Output by Default
+
 All CLIs output machine-readable JSON to stdout.
 
 ```bash
@@ -38,6 +40,7 @@ commands-diff --pretty
 ```
 
 ### Consistent Exit Codes
+
 - `0`: Success (or no differences found)
 - `1`: Partial failure or differences found
 - `2`: Fatal error or invalid usage
@@ -49,6 +52,7 @@ commands-diff --pretty
 Compare local Discord command definitions with deployed manifest.
 
 **Usage:**
+
 ```bash
 commands-diff [--help] [--pretty]
 ```
@@ -57,11 +61,13 @@ commands-diff [--help] [--pretty]
 Validates that local Discord slash command definitions match what's deployed. Helps catch configuration drift before deployment.
 
 **Exit Codes:**
+
 - `0`: Local and deployed commands match
 - `1`: Differences found
 - `2`: Fatal error (network failure, invalid config, etc.)
 
 **Example:**
+
 ```bash
 # Check for differences
 commands-diff
@@ -74,6 +80,7 @@ commands-diff || echo "Commands need deployment"
 ```
 
 **Example Output:**
+
 ```json
 {
   "success": true,
@@ -109,6 +116,7 @@ commands-diff || echo "Commands need deployment"
 Preload cache layers with commonly accessed data.
 
 **Usage:**
+
 ```bash
 cache-warm [--help] [--pretty] [--execute | --dry-run]
 ```
@@ -117,11 +125,13 @@ cache-warm [--help] [--pretty] [--execute | --dry-run]
 Warms up cache layers by preloading frequently accessed data. Reduces cold start latency and improves response times after deployments or cache evictions.
 
 **Exit Codes:**
+
 - `0`: Cache warming succeeded (or dry-run completed)
 - `1`: Partial failure (some keys failed to load)
 - `2`: Fatal error (cache unavailable, network failure, etc.)
 
 **Example:**
+
 ```bash
 # Preview what would be warmed (default)
 cache-warm
@@ -134,6 +144,7 @@ cache-warm --execute --pretty
 ```
 
 **Example Output:**
+
 ```json
 {
   "success": true,
@@ -162,6 +173,7 @@ cache-warm --execute --pretty
 Validate cache integrity and report health metrics.
 
 **Usage:**
+
 ```bash
 cache-verify [--help] [--pretty]
 ```
@@ -170,11 +182,13 @@ cache-verify [--help] [--pretty]
 Performs health checks on cache layers to detect issues like stale entries, orphaned keys, size violations, and memory pressure.
 
 **Exit Codes:**
+
 - `0`: Cache is healthy (no issues found)
 - `1`: Warnings found (non-critical issues)
 - `2`: Critical errors found (cache corruption, unavailability, etc.)
 
 **Example:**
+
 ```bash
 # Check cache health
 cache-verify
@@ -187,6 +201,7 @@ cache-verify && echo "Cache healthy" || echo "Cache issues detected"
 ```
 
 **Example Output:**
+
 ```json
 {
   "success": false,
@@ -230,6 +245,7 @@ cache-verify && echo "Cache healthy" || echo "Cache issues detected"
 Re-run historical bar data through parsers for regression testing.
 
 **Usage:**
+
 ```bash
 replay-run --fixture=path.json [--help] [--pretty] [--execute | --dry-run]
 ```
@@ -238,14 +254,17 @@ replay-run --fixture=path.json [--help] [--pretty] [--execute | --dry-run]
 Replays historical market data bars through parsing logic to validate parser correctness, enable regression testing, and benchmark performance.
 
 **Exit Codes:**
+
 - `0`: All bars processed successfully (100% pass rate)
 - `1`: Some bars failed (parser errors or mismatches)
 - `2`: Fatal error (fixture not found, invalid format, etc.)
 
 **Required Arguments:**
+
 - `--fixture=path.json`: Path to fixture file containing test bars
 
 **Fixture Format:**
+
 ```json
 [
   {
@@ -255,7 +274,7 @@ Replays historical market data bars through parsing logic to validate parser cor
     "expectedResult": {
       "symbol": "ES",
       "price": 5850.25,
-      "change": 12.50,
+      "change": 12.5,
       "volume": 15234
     }
   }
@@ -263,6 +282,7 @@ Replays historical market data bars through parsing logic to validate parser cor
 ```
 
 **Example:**
+
 ```bash
 # Preview replay (default)
 replay-run --fixture=examples/es_2024-10-01.json
@@ -278,6 +298,7 @@ replay-run --fixture=fixtures/regression.json --execute && echo "All tests passe
 ```
 
 **Example Output:**
+
 ```json
 {
   "success": false,
@@ -308,21 +329,25 @@ replay-run --fixture=fixtures/regression.json --execute && echo "All tests passe
 ## Development
 
 ### Build
+
 ```bash
 npm run build
 ```
 
 ### Test
+
 ```bash
 npm test
 ```
 
 ### Type Check
+
 ```bash
 npm run typecheck
 ```
 
 ### Clean
+
 ```bash
 npm run clean
 ```
@@ -330,12 +355,14 @@ npm run clean
 ## Implementation Status
 
 All CLIs are currently STUB implementations:
+
 - Return hardcoded/fake data
 - No actual API calls or cache operations
 - Demonstrate expected behavior and output format
 - Ready for integration with real systems
 
 Future implementation will connect to:
+
 - Discord API for commands-diff
 - Cache layer (Redis, in-memory) for cache-warm and cache-verify
 - Actual parser logic for replay-run

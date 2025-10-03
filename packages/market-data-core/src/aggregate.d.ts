@@ -13,34 +13,34 @@
  * All aggregation is performed in UTC. Provider adapters must convert local
  * times to UTC before calling these functions.
  */
-import { Bar, Timeframe } from "./types.js";
+import { Bar, Timeframe } from './types.js';
 /**
  * Options for aggregateBars function.
  */
 export interface AggregateOptions {
-    /**
-     * If true, includes the last partial bar in the output (useful for live data).
-     * If false (default), excludes the last bar if it doesn't span the full target timeframe.
-     *
-     * Example: Aggregating 1m bars [14:00, 14:01, 14:02] to 5m
-     * - includePartialLast=false: Returns [] (no complete 5m bar yet)
-     * - includePartialLast=true: Returns [partial bar from 14:00-14:02]
-     */
-    includePartialLast?: boolean;
-    /**
-     * If true, validates that input bars are sorted and have no duplicates.
-     * If false (default), skips validation for performance.
-     *
-     * Recommendation: Enable validation during development, disable in production.
-     */
-    validate?: boolean;
-    /**
-     * If true, logs warnings for detected gaps in bar sequence.
-     * If false (default), silently ignores gaps.
-     *
-     * A gap is defined as: expected_timestamp - actual_timestamp > source_timeframe_ms
-     */
-    warnOnGaps?: boolean;
+  /**
+   * If true, includes the last partial bar in the output (useful for live data).
+   * If false (default), excludes the last bar if it doesn't span the full target timeframe.
+   *
+   * Example: Aggregating 1m bars [14:00, 14:01, 14:02] to 5m
+   * - includePartialLast=false: Returns [] (no complete 5m bar yet)
+   * - includePartialLast=true: Returns [partial bar from 14:00-14:02]
+   */
+  includePartialLast?: boolean;
+  /**
+   * If true, validates that input bars are sorted and have no duplicates.
+   * If false (default), skips validation for performance.
+   *
+   * Recommendation: Enable validation during development, disable in production.
+   */
+  validate?: boolean;
+  /**
+   * If true, logs warnings for detected gaps in bar sequence.
+   * If false (default), silently ignores gaps.
+   *
+   * A gap is defined as: expected_timestamp - actual_timestamp > source_timeframe_ms
+   */
+  warnOnGaps?: boolean;
 }
 /**
  * Aggregates bars from a source timeframe to a target timeframe.
@@ -101,5 +101,9 @@ export interface AggregateOptions {
  * - No duplicate timestamps
  * - Target timeframe is an integer multiple of source timeframe
  */
-export declare function aggregateBars(bars: Bar[], targetTimeframe: Timeframe, options?: AggregateOptions): Bar[];
+export declare function aggregateBars(
+  bars: Bar[],
+  targetTimeframe: Timeframe,
+  options?: AggregateOptions
+): Bar[];
 //# sourceMappingURL=aggregate.d.ts.map

@@ -19,6 +19,7 @@ This document defines security policies and best practices for logging in the TJ
 The following data types **MUST NEVER** be logged in plain text:
 
 #### Authentication & Authorization
+
 - Passwords, password hashes, password hints
 - API keys, access tokens, refresh tokens
 - Session tokens, JWT tokens
@@ -27,6 +28,7 @@ The following data types **MUST NEVER** be logged in plain text:
 - Basic auth credentials
 
 #### Financial & Payment Data
+
 - Full credit card numbers (PAN)
 - CVV/CVC codes
 - Bank account numbers
@@ -34,12 +36,14 @@ The following data types **MUST NEVER** be logged in plain text:
 - Payment processor secrets
 
 #### Personal Identifiers
+
 - Social Security Numbers (SSN)
 - Government-issued ID numbers (passport, driver's license)
 - Full dates of birth (year is acceptable)
 - Biometric data
 
 #### Sensitive Business Data
+
 - Encryption keys and secrets
 - Database connection strings with credentials
 - Third-party service API keys
@@ -85,12 +89,14 @@ logger.info('User login', {
 The following data types **MAY** be logged with appropriate context:
 
 ### Identifiers
+
 - User IDs (numeric or opaque UUIDs)
 - Request IDs and correlation IDs
 - Session IDs (if anonymized/hashed)
 - Transaction IDs
 
 ### Operational Data
+
 - Timestamps
 - IP addresses (with consideration for GDPR)
 - User agents (browser/device info)
@@ -99,6 +105,7 @@ The following data types **MAY** be logged with appropriate context:
 - Performance metrics (latency, throughput)
 
 ### Trading-Specific Data
+
 - Trading symbols (e.g., "AAPL", "BTCUSD")
 - Timeframes (e.g., "1h", "5m")
 - Signal types (BUY, SELL)
@@ -109,11 +116,11 @@ The following data types **MAY** be logged with appropriate context:
 ```typescript
 logger.info('Trade signal generated', {
   request_id: 'req-abc-123',
-  user_id: 'user-456',          // OK: Opaque ID
-  symbol: 'AAPL',               // OK: Public symbol
-  timeframe: '1h',              // OK: Timeframe
-  signal_type: 'BUY',           // OK: Trading data
-  confidence: 0.87,             // OK: Metric
+  user_id: 'user-456', // OK: Opaque ID
+  symbol: 'AAPL', // OK: Public symbol
+  timeframe: '1h', // OK: Timeframe
+  signal_type: 'BUY', // OK: Trading data
+  confidence: 0.87, // OK: Metric
   // username: 'alice'          // AVOID: PII username
   // email: 'alice@example.com' // AVOID: PII email
 });
@@ -251,6 +258,7 @@ logger.info('External API call', {
 ### Alerting
 
 Set up alerts for:
+
 - Logs containing patterns matching sensitive data (escaped redaction)
 - Unusually large log volumes (potential DoS or data exfiltration)
 - Log access by unauthorized users

@@ -37,6 +37,7 @@ How should we organize and maintain shared contracts for maximum reusability and
 **Chosen option: Centralized @tjr/contracts package**
 
 Create `packages/contracts/` as a standalone, dependency-free package exporting:
+
 - Market data types (bars, symbols, timeframes)
 - TJR analysis DTOs (input, confluence, execution, results)
 - Structured error classes with rich context
@@ -77,6 +78,7 @@ packages/contracts/
 ### Timeframes (`src/timeframes.ts`)
 
 **Enum Definition:**
+
 ```typescript
 enum Timeframe {
   M1 = '1',
@@ -84,11 +86,12 @@ enum Timeframe {
   M10 = '10',
   H1 = '60',
   H4 = '240',
-  D1 = '1D'
+  D1 = '1D',
 }
 ```
 
 **Rationale:**
+
 - Covers common intraday (M1, M5, M10) and swing (H1, H4, D1) timeframes
 - String values match provider API conventions (minutes or 'D')
 - Limited set prevents over-engineering for unused timeframes
@@ -121,6 +124,7 @@ enum Timeframe {
    - Timezone handling
 
 **Rationale:**
+
 - Provider-agnostic abstractions
 - Clear contracts for backtesting and live data
 - Extensible without breaking changes (optional fields)
@@ -154,6 +158,7 @@ enum Timeframe {
    - `warnings: string[]`
 
 **Rationale:**
+
 - Captures full TJR methodology flow
 - Auditable (includes input snapshot)
 - Serializable for storage and replay
@@ -162,6 +167,7 @@ enum Timeframe {
 ### Error Hierarchy (`src/errors.ts`)
 
 **Base Class:**
+
 ```typescript
 class TJRError extends Error {
   code: string;
@@ -185,6 +191,7 @@ class TJRError extends Error {
    - `data: { symbol: string; provider: string; suggestion?: string }`
 
 **Rationale:**
+
 - Machine-readable error codes
 - Rich context for debugging and retry logic
 - Serializable for logging and alerting
@@ -247,6 +254,7 @@ Until 1.0.0, treat MINOR as potentially breaking. After 1.0.0, strict semver adh
 ## Cross-Package Usage Patterns
 
 ### Provider Package:
+
 ```typescript
 import { MarketBar, GetBarsParams, ProviderRateLimitError } from '@tjr/contracts';
 
@@ -258,6 +266,7 @@ class AlpacaProvider {
 ```
 
 ### Backtesting Engine:
+
 ```typescript
 import { TJRAnalysisInput, TJRResult, Timeframe } from '@tjr/contracts';
 
@@ -267,6 +276,7 @@ function backtest(results: TJRResult[]) {
 ```
 
 ### TJR Analysis:
+
 ```typescript
 import { TJRConfluence, TJRExecution, InsufficientBarsError } from '@tjr/contracts';
 

@@ -7,7 +7,13 @@
  */
 
 import type { TJRExecution, TJRAnalysisInput } from '@tjr/contracts';
-import type { ExecutionConfig, ConfirmationResult, EntryTrigger, FVGZone, OrderBlock } from '../types.js';
+import type {
+  ExecutionConfig,
+  ConfirmationResult,
+  EntryTrigger,
+  FVGZone,
+  OrderBlock,
+} from '../types.js';
 import type { PriceLevels } from './price-levels.js';
 import {
   calculatePositionSize,
@@ -48,10 +54,7 @@ export function buildExecution(
   const positionSize = adjustPositionByConfidence(basePositionSize, confidence);
 
   // Calculate expected duration
-  const expectedDuration = calculateExpectedDuration(
-    confirmation.confirmed,
-    entry.triggered
-  );
+  const expectedDuration = calculateExpectedDuration(confirmation.confirmed, entry.triggered);
 
   // Generate execution notes
   const notes = generateExecutionNotes(levels, confidence, activeFactors);
@@ -119,7 +122,7 @@ export function extractActiveFactors(
   const factors: string[] = [];
 
   // Check for active FVGs
-  const activeFVGs = fvgZones.filter(z => !z.filled);
+  const activeFVGs = fvgZones.filter((z) => !z.filled);
   if (activeFVGs.length > 0) {
     const avgStrength = activeFVGs.reduce((sum, z) => sum + z.strength, 0) / activeFVGs.length;
     if (avgStrength > 0.3) {
@@ -128,7 +131,7 @@ export function extractActiveFactors(
   }
 
   // Check for active order blocks
-  const activeBlocks = orderBlocks.filter(b => !b.mitigated);
+  const activeBlocks = orderBlocks.filter((b) => !b.mitigated);
   if (activeBlocks.length > 0) {
     const avgStrength = activeBlocks.reduce((sum, b) => sum + b.strength, 0) / activeBlocks.length;
     if (avgStrength > 0.3) {

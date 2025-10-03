@@ -26,7 +26,7 @@ const bars = await provider.getBars({
   symbol: 'ES',
   timeframe: Timeframe.M1,
   from: '2024-01-15T14:30:00.000Z',
-  to: '2024-01-15T16:00:00.000Z'
+  to: '2024-01-15T16:00:00.000Z',
 });
 
 // Fetch aggregated 10-minute bars (aggregated from 1m)
@@ -34,7 +34,7 @@ const bars10m = await provider.getBars({
   symbol: 'ES',
   timeframe: Timeframe.M10,
   from: '2024-01-15T14:30:00.000Z',
-  to: '2024-01-15T16:00:00.000Z'
+  to: '2024-01-15T16:00:00.000Z',
 });
 
 // Get provider capabilities
@@ -45,9 +45,11 @@ console.log(caps.supportedTimeframes); // ['1m', '5m', '10m', '1h', '4h', '1D']
 ## Supported Timeframes
 
 **Native** (from fixtures):
+
 - 1m, 5m, 1h, 1D
 
 **Aggregated** (via @tjr-suite/market-data-core):
+
 - 10m (from 1m)
 - 4h (from 1h)
 
@@ -67,6 +69,7 @@ console.log(caps.supportedTimeframes); // ['1m', '5m', '10m', '1h', '4h', '1D']
 Fetch historical market bars.
 
 **Parameters:**
+
 - `symbol` - Symbol to fetch (e.g., 'ES', 'SPY')
 - `timeframe` - Bar timeframe (1m, 5m, 10m, 1h, 4h, 1D)
 - `from?` - Start timestamp (ISO 8601)

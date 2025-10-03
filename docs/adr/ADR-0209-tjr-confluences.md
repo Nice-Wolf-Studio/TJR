@@ -52,6 +52,7 @@ Create a new dedicated package `@tjr/tjr-tools` that provides:
 ###Scoring Algorithm
 
 Weighted confluence score (0-100):
+
 - **FVG factor (40%)**: Average strength of unfilled gaps
 - **Order Block factor (30%)**: Average strength of unmitigated blocks
 - **Overlap factor (20%)**: Percentage of zones that overlap
@@ -60,12 +61,14 @@ Weighted confluence score (0-100):
 ### Pattern Detection
 
 **Fair Value Gap:**
+
 - 3-bar pattern: gap between bar[i-1] and bar[i+1]
 - Minimum gap size: 0.5 × ATR (configurable)
 - Strength based on: gap size (70%), volume (30%)
 - Tracks whether gap has been filled
 
 **Order Block:**
+
 - Last bearish bar before bullish move (demand) or vice versa (supply)
 - Minimum volume: 1.5× average (configurable)
 - Minimum rejection: 30% of bar range (configurable)

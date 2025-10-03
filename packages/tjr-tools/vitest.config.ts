@@ -8,16 +8,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        '*.config.ts'
-      ]
-    }
+      exclude: ['node_modules/', 'dist/', '*.config.ts'],
+    },
   },
   resolve: {
     alias: {
-      '@tjr/contracts': path.resolve(__dirname, '../contracts/dist')
-    }
-  }
+      '@tjr/contracts': path.resolve(__dirname, '../contracts/dist'),
+    },
+  },
 });

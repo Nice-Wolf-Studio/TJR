@@ -110,7 +110,9 @@ export function calculatePartialExits(
   const totalQuantity = exits.reduce((sum, exit) => sum + exit.quantity, 0);
   if (Math.abs(totalQuantity - positionSize) > 0.01) {
     // Allow small rounding differences
-    throw new Error(`Exit quantities (${totalQuantity}) do not equal position size (${positionSize})`);
+    throw new Error(
+      `Exit quantities (${totalQuantity}) do not equal position size (${positionSize})`
+    );
   }
 
   // Sort exits by price (ascending for longs, descending for shorts)

@@ -4,12 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import {
-  startTimer,
-  measureSync,
-  measureAsync,
-  TimerManager,
-} from '../src/perf-timer.js';
+import { startTimer, measureSync, measureAsync, TimerManager } from '../src/perf-timer.js';
 
 /**
  * Sleep utility for testing
@@ -47,10 +42,7 @@ describe('Performance Timers', () => {
       const elapsed2 = timer.elapsed();
 
       assert.ok(elapsed2 > elapsed1, 'Second elapsed should be greater');
-      assert.ok(
-        isWithinTolerance(elapsed1, 30, 10),
-        `First elapsed ${elapsed1}ms should be ~30ms`
-      );
+      assert.ok(isWithinTolerance(elapsed1, 30, 10), `First elapsed ${elapsed1}ms should be ~30ms`);
       assert.ok(
         isWithinTolerance(elapsed2, 50, 10),
         `Second elapsed ${elapsed2}ms should be ~50ms`
@@ -70,11 +62,7 @@ describe('Performance Timers', () => {
       // Should return same duration after stopping
       await sleep(20);
       const afterStop = timer.elapsed();
-      assert.strictEqual(
-        afterStop,
-        finalDuration,
-        'Duration should not change after stopping'
-      );
+      assert.strictEqual(afterStop, finalDuration, 'Duration should not change after stopping');
     });
 
     it('should report running state correctly', async () => {
@@ -145,15 +133,12 @@ describe('Performance Timers', () => {
     });
 
     it('should handle errors in async functions', async () => {
-      await assert.rejects(
-        async () => {
-          await measureAsync(async () => {
-            await sleep(10);
-            throw new Error('Async error');
-          });
-        },
-        /Async error/
-      );
+      await assert.rejects(async () => {
+        await measureAsync(async () => {
+          await sleep(10);
+          throw new Error('Async error');
+        });
+      }, /Async error/);
     });
 
     it('should measure longer durations accurately', async () => {
@@ -194,14 +179,8 @@ describe('Performance Timers', () => {
       const duration1 = manager.stop('task1');
       const duration2 = manager.stop('task2');
 
-      assert.ok(
-        isWithinTolerance(duration1, 40, 10),
-        `Task1 ${duration1}ms should be ~40ms`
-      );
-      assert.ok(
-        isWithinTolerance(duration2, 20, 10),
-        `Task2 ${duration2}ms should be ~20ms`
-      );
+      assert.ok(isWithinTolerance(duration1, 40, 10), `Task1 ${duration1}ms should be ~40ms`);
+      assert.ok(isWithinTolerance(duration2, 20, 10), `Task2 ${duration2}ms should be ~20ms`);
     });
 
     it('should throw error for duplicate timer names', () => {
@@ -295,10 +274,7 @@ describe('Performance Timers', () => {
       await sleep(30);
       const elapsed = manager.elapsed('task');
 
-      assert.ok(
-        isWithinTolerance(elapsed, 30, 10),
-        `Elapsed ${elapsed}ms should be ~30ms`
-      );
+      assert.ok(isWithinTolerance(elapsed, 30, 10), `Elapsed ${elapsed}ms should be ~30ms`);
     });
 
     it('should allow reusing timer name after clearing', () => {
@@ -361,10 +337,7 @@ describe('Performance Timers', () => {
 
       // All measurements should be within tolerance
       for (const duration of durations) {
-        assert.ok(
-          isWithinTolerance(duration, 50, 10),
-          `Duration ${duration}ms should be ~50ms`
-        );
+        assert.ok(isWithinTolerance(duration, 50, 10), `Duration ${duration}ms should be ~50ms`);
       }
     });
   });

@@ -15,8 +15,18 @@ const __dirname = __filename ? dirname(__filename) : '.';
  * F=Jan, G=Feb, H=Mar, J=Apr, K=May, M=Jun, N=Jul, Q=Aug, U=Sep, V=Oct, X=Nov, Z=Dec
  */
 const MONTH_TO_INDEX: Record<string, number> = {
-  F: 0, G: 1, H: 2, J: 3, K: 4, M: 5,
-  N: 6, Q: 7, U: 8, V: 9, X: 10, Z: 11,
+  F: 0,
+  G: 1,
+  H: 2,
+  J: 3,
+  K: 4,
+  M: 5,
+  N: 6,
+  Q: 7,
+  U: 8,
+  V: 9,
+  X: 10,
+  Z: 11,
 };
 
 /**
@@ -84,7 +94,12 @@ function getRolloverRule(root: FuturesRoot): RolloverRule {
  * @param occurrence - Which occurrence (1=first, 3=third)
  * @returns Date of the Nth weekday
  */
-function getNthWeekdayOfMonth(year: number, month: number, weekday: number, occurrence: number): Date {
+function getNthWeekdayOfMonth(
+  year: number,
+  month: number,
+  weekday: number,
+  occurrence: number
+): Date {
   const date = new Date(year, month, 1);
   let count = 0;
 
@@ -98,7 +113,9 @@ function getNthWeekdayOfMonth(year: number, month: number, weekday: number, occu
     date.setDate(date.getDate() + 1);
   }
 
-  throw new Error(`Could not find ${occurrence}th occurrence of weekday ${weekday} in ${year}-${month + 1}`);
+  throw new Error(
+    `Could not find ${occurrence}th occurrence of weekday ${weekday} in ${year}-${month + 1}`
+  );
 }
 
 /**
@@ -141,7 +158,6 @@ function calculateExpirationDate(
   console.warn(`Unknown expiration day: ${expirationDay}, defaulting to third-friday`);
   return getNthWeekdayOfMonth(year, monthIndex, 5, 3);
 }
-
 
 /**
  * Resolve a continuous futures symbol to a specific contract code

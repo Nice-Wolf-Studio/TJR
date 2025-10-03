@@ -24,7 +24,7 @@ import { normalizeSymbol, resolveContinuous, resolveAlias } from '@tjr/symbol-re
 // Normalize vendor-specific symbols
 const normalized = normalizeSymbol('ES=F');
 console.log(normalized.canonical); // → 'ES'
-console.log(normalized.type);      // → 'continuous-future'
+console.log(normalized.type); // → 'continuous-future'
 
 // Resolve continuous futures to specific contracts
 const contract = resolveContinuous('ES', new Date('2025-01-15'));
@@ -44,9 +44,11 @@ console.log(canonical); // → 'ES'
 Normalize a raw symbol string to canonical format.
 
 **Parameters:**
+
 - `raw` - Raw symbol string (may be vendor-specific)
 
 **Returns:** Object with:
+
 - `canonical` - Canonical symbol representation
 - `type` - Symbol type (`'stock'`, `'continuous-future'`, `'future-contract'`, or `'unknown'`)
 - `root?` - Futures root if applicable
@@ -55,10 +57,10 @@ Normalize a raw symbol string to canonical format.
 **Examples:**
 
 ```typescript
-normalizeSymbol('ES=F')     // → { canonical: 'ES', type: 'continuous-future', root: 'ES' }
-normalizeSymbol('ESH25')    // → { canonical: 'ESH25', type: 'future-contract', root: 'ES', contractMonth: 'H25' }
-normalizeSymbol('AAPL')     // → { canonical: 'AAPL', type: 'stock' }
-normalizeSymbol('ESH2025')  // → { canonical: 'ESH25', type: 'future-contract', root: 'ES', contractMonth: 'H25' }
+normalizeSymbol('ES=F'); // → { canonical: 'ES', type: 'continuous-future', root: 'ES' }
+normalizeSymbol('ESH25'); // → { canonical: 'ESH25', type: 'future-contract', root: 'ES', contractMonth: 'H25' }
+normalizeSymbol('AAPL'); // → { canonical: 'AAPL', type: 'stock' }
+normalizeSymbol('ESH2025'); // → { canonical: 'ESH25', type: 'future-contract', root: 'ES', contractMonth: 'H25' }
 ```
 
 #### `extractFuturesRoot(symbol: string): FuturesRoot | null`
@@ -66,9 +68,9 @@ normalizeSymbol('ESH2025')  // → { canonical: 'ESH25', type: 'future-contract'
 Extract futures root from a contract code or continuous symbol.
 
 ```typescript
-extractFuturesRoot('ESH25')  // → 'ES'
-extractFuturesRoot('ES')     // → 'ES'
-extractFuturesRoot('AAPL')   // → null
+extractFuturesRoot('ESH25'); // → 'ES'
+extractFuturesRoot('ES'); // → 'ES'
+extractFuturesRoot('AAPL'); // → null
 ```
 
 #### `isValidContractMonth(contractMonth: string): boolean`
@@ -76,8 +78,8 @@ extractFuturesRoot('AAPL')   // → null
 Check if a string is a valid futures month code.
 
 ```typescript
-isValidContractMonth('H25')  // → true
-isValidContractMonth('X25')  // → false
+isValidContractMonth('H25'); // → true
+isValidContractMonth('X25'); // → false
 ```
 
 ### Continuous Futures Resolution
@@ -87,6 +89,7 @@ isValidContractMonth('X25')  // → false
 Resolve a continuous futures symbol to a specific contract code based on rollover rules.
 
 **Parameters:**
+
 - `root` - Futures root symbol (e.g., `'ES'`, `'NQ'`)
 - `date` - Reference date for resolution
 
@@ -96,10 +99,10 @@ Resolve a continuous futures symbol to a specific contract code based on rollove
 
 ```typescript
 // Resolve ES front month on Jan 15, 2025
-resolveContinuous('ES', new Date('2025-01-15'))  // → 'ESH25' (March contract)
+resolveContinuous('ES', new Date('2025-01-15')); // → 'ESH25' (March contract)
 
 // After rollover date
-resolveContinuous('ES', new Date('2025-03-10'))  // → 'ESM25' (June contract)
+resolveContinuous('ES', new Date('2025-03-10')); // → 'ESM25' (June contract)
 ```
 
 #### `getFrontMonth(root: FuturesRoot, date?: Date): ContractCode`
@@ -107,8 +110,8 @@ resolveContinuous('ES', new Date('2025-03-10'))  // → 'ESM25' (June contract)
 Get the front month contract for a given date (defaults to current date).
 
 ```typescript
-getFrontMonth('ES', new Date('2025-01-15'))  // → 'ESH25'
-getFrontMonth('ES')                          // → Current front month
+getFrontMonth('ES', new Date('2025-01-15')); // → 'ESH25'
+getFrontMonth('ES'); // → Current front month
 ```
 
 ### Symbol Aliases
@@ -119,18 +122,18 @@ Resolve a vendor-specific symbol to its canonical form.
 
 **Supported Formats:**
 
-| Vendor Format | Canonical | Vendor |
-|---------------|-----------|--------|
-| `ES=F` | `ES` | Yahoo Finance |
-| `@ES` | `ES` | IQFeed |
-| `/ES` | `ES` | TradingView |
-| `ESH2025` | `ESH25` | CME (4-digit year) |
+| Vendor Format | Canonical | Vendor             |
+| ------------- | --------- | ------------------ |
+| `ES=F`        | `ES`      | Yahoo Finance      |
+| `@ES`         | `ES`      | IQFeed             |
+| `/ES`         | `ES`      | TradingView        |
+| `ESH2025`     | `ESH25`   | CME (4-digit year) |
 
 ```typescript
-resolveAlias('ES=F')   // → 'ES' (Yahoo)
-resolveAlias('@ES')    // → 'ES' (IQFeed)
-resolveAlias('/ES')    // → 'ES' (TradingView)
-resolveAlias('ES')     // → 'ES' (pass-through)
+resolveAlias('ES=F'); // → 'ES' (Yahoo)
+resolveAlias('@ES'); // → 'ES' (IQFeed)
+resolveAlias('/ES'); // → 'ES' (TradingView)
+resolveAlias('ES'); // → 'ES' (pass-through)
 ```
 
 #### `registerAlias(vendorSymbol: string, canonical: CanonicalSymbol): void`
@@ -139,7 +142,7 @@ Register a custom alias mapping.
 
 ```typescript
 registerAlias('SPX.XO', 'SPX');
-resolveAlias('SPX.XO');  // → 'SPX'
+resolveAlias('SPX.XO'); // → 'SPX'
 ```
 
 ## Rollover Rules
@@ -176,21 +179,25 @@ Rollover behavior is defined in `data/rollover-rules.json`. Each symbol can have
 ## Supported Futures Roots
 
 **Equity Indices:**
+
 - `ES` - E-mini S&P 500
 - `NQ` - E-mini NASDAQ 100
 - `YM` - E-mini Dow
 - `RTY` - E-mini Russell 2000
 
 **Commodities:**
+
 - `GC` - Gold
 - `SI` - Silver
 - `CL` - Crude Oil
 
 **Treasuries:**
+
 - `ZB` - 30-Year T-Bond
 - `ZN` - 10-Year T-Note
 
 **Volatility:**
+
 - `VX` - VIX Futures
 
 ## Limitations
@@ -202,6 +209,7 @@ The current implementation uses **fixed-days** rollover as a fallback for volume
 ### Expiration Date Calculation
 
 The system uses simplified expiration rules and does not account for:
+
 - Exchange holidays
 - Early closures
 - Special settlement dates

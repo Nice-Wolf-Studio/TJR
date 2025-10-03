@@ -109,15 +109,15 @@ Generate daily trading reports.
 
 ## CLI Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--token, -t` | Discord bot token | `$DISCORD_TOKEN` |
-| `--application-id, -a` | Discord application ID | `$DISCORD_APPLICATION_ID` |
-| `--guild-id, -g` | Guild ID for guild commands | Optional |
-| `--dry-run, -d` | Preview changes without applying | `false` |
-| `--force, -f` | Force registration even if no changes | `false` |
-| `--manifest, -m` | Manifest file path | `./command-manifest.json` |
-| `--verbose, -v` | Show detailed output | `false` |
+| Option                 | Description                           | Default                   |
+| ---------------------- | ------------------------------------- | ------------------------- |
+| `--token, -t`          | Discord bot token                     | `$DISCORD_TOKEN`          |
+| `--application-id, -a` | Discord application ID                | `$DISCORD_APPLICATION_ID` |
+| `--guild-id, -g`       | Guild ID for guild commands           | Optional                  |
+| `--dry-run, -d`        | Preview changes without applying      | `false`                   |
+| `--force, -f`          | Force registration even if no changes | `false`                   |
+| `--manifest, -m`       | Manifest file path                    | `./command-manifest.json` |
+| `--verbose, -v`        | Show detailed output                  | `false`                   |
 
 ## Development
 

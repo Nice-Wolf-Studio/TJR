@@ -5,7 +5,13 @@
  * loading, saving, and validating configuration.
  */
 
-import type { ConfluenceWeights, ExecutionConfig, FVGOptions, OrderBlockOptions, RiskConfig } from '@tjr/tjr-tools';
+import type {
+  ConfluenceWeights,
+  ExecutionConfig,
+  FVGOptions,
+  OrderBlockOptions,
+  RiskConfig,
+} from '@tjr/tjr-tools';
 import type { OutputFormat, ValidationResult } from '../../reports/types.js';
 
 /**

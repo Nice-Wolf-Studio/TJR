@@ -12,6 +12,7 @@
 The TJR suite currently provides confluence detection (FVG + Order Block) through `@tjr/tjr-tools`, but lacks risk management capabilities essential for trade execution. Professional trading requires systematic position sizing, daily loss limits, and partial exit strategies to protect capital and maximize returns.
 
 Key requirements:
+
 - Calculate position size based on account risk parameters
 - Track and enforce daily stop limits to prevent excessive losses
 - Determine partial exit levels for scaling out of positions
@@ -62,38 +63,38 @@ Where:
 
 ```typescript
 interface DailyStopState {
-  date: string;              // YYYY-MM-DD in account timezone
-  realizedLoss: number;      // Cumulative loss for the day
-  openRisk: number;          // Risk from open positions
+  date: string; // YYYY-MM-DD in account timezone
+  realizedLoss: number; // Cumulative loss for the day
+  openRisk: number; // Risk from open positions
   remainingCapacity: number; // Available risk budget
-  isLimitReached: boolean;  // Trading allowed flag
+  isLimitReached: boolean; // Trading allowed flag
 }
 
 // Deterministic calculation based on timestamp
 dailyStopState = calculateDailyStop(
-  trades,          // Historical trades with timestamps
-  currentTime,     // Analysis timestamp
-  dailyLimit,      // Max daily loss
-  accountTimezone  // For day boundary calculation
-)
+  trades, // Historical trades with timestamps
+  currentTime, // Analysis timestamp
+  dailyLimit, // Max daily loss
+  accountTimezone // For day boundary calculation
+);
 ```
 
 #### 3. Partial Exit Strategy
 
 ```typescript
 interface PartialExitLevel {
-  price: number;           // Exit price
-  quantity: number;        // Shares/contracts to exit
-  rMultiple: number;       // Risk multiple (1R, 2R, etc.)
-  reason: string;          // Exit rationale
+  price: number; // Exit price
+  quantity: number; // Shares/contracts to exit
+  rMultiple: number; // Risk multiple (1R, 2R, etc.)
+  reason: string; // Exit rationale
 }
 
 // R-multiple based exits (default)
 exits = [
-  { rMultiple: 1.0, percentage: 33 },  // Take 1/3 at 1R
-  { rMultiple: 2.0, percentage: 33 },  // Take 1/3 at 2R
-  { rMultiple: 3.0, percentage: 34 }   // Take final 1/3 at 3R
-]
+  { rMultiple: 1.0, percentage: 33 }, // Take 1/3 at 1R
+  { rMultiple: 2.0, percentage: 33 }, // Take 1/3 at 2R
+  { rMultiple: 3.0, percentage: 34 }, // Take final 1/3 at 3R
+];
 
 // Alternative: Fibonacci-based or custom levels
 ```
@@ -103,42 +104,42 @@ exits = [
 ```typescript
 interface RiskConfig {
   account: {
-    balance: number;              // Current account balance
+    balance: number; // Current account balance
     currency: 'USD' | 'EUR' | 'GBP';
-    timezone: string;             // IANA timezone for daily stops
+    timezone: string; // IANA timezone for daily stops
   };
 
   perTrade: {
-    maxRiskPercent: number;       // Max risk per trade (default: 1%)
-    maxRiskAmount?: number;       // Absolute max risk in currency
-    kellyFraction?: number;       // Kelly safety factor (default: 0.25)
-    useKelly: boolean;            // Enable Kelly sizing (default: false)
+    maxRiskPercent: number; // Max risk per trade (default: 1%)
+    maxRiskAmount?: number; // Absolute max risk in currency
+    kellyFraction?: number; // Kelly safety factor (default: 0.25)
+    useKelly: boolean; // Enable Kelly sizing (default: false)
   };
 
   dailyLimits: {
-    maxLossPercent: number;       // Max daily loss % (default: 3%)
-    maxLossAmount?: number;       // Absolute max daily loss
-    maxConsecutiveLosses?: number;// Stop after N losses (optional)
-    includeFees: boolean;         // Include fees in loss calc
+    maxLossPercent: number; // Max daily loss % (default: 3%)
+    maxLossAmount?: number; // Absolute max daily loss
+    maxConsecutiveLosses?: number; // Stop after N losses (optional)
+    includeFees: boolean; // Include fees in loss calc
   };
 
   partialExits: {
     strategy: 'r-multiple' | 'percentage' | 'fibonacci' | 'custom';
     levels: Array<{
-      trigger: number;            // Price or R-multiple
-      exitPercent: number;        // Position % to exit
+      trigger: number; // Price or R-multiple
+      exitPercent: number; // Position % to exit
     }>;
     trailStop?: {
-      activate: number;           // Activation level (R-multiple)
-      distance: number;           // Trail distance (ATR or %)
+      activate: number; // Activation level (R-multiple)
+      distance: number; // Trail distance (ATR or %)
     };
   };
 
   constraints: {
-    minPositionSize: number;      // Minimum viable position
-    maxPositionPercent: number;   // Max % of account in one position
-    roundLots: boolean;           // Round to lot sizes
-    lotSize?: number;             // Standard lot size
+    minPositionSize: number; // Minimum viable position
+    maxPositionPercent: number; // Max % of account in one position
+    roundLots: boolean; // Round to lot sizes
+    lotSize?: number; // Standard lot size
   };
 }
 ```
@@ -156,27 +157,27 @@ export interface TJRToolsResult {
   // New risk management fields
   riskManagement?: {
     positionSize: {
-      shares: number;             // Calculated position size
-      dollarRisk: number;         // Dollar amount at risk
-      percentRisk: number;        // Percentage of account
-      method: 'fixed' | 'kelly';  // Sizing method used
+      shares: number; // Calculated position size
+      dollarRisk: number; // Dollar amount at risk
+      percentRisk: number; // Percentage of account
+      method: 'fixed' | 'kelly'; // Sizing method used
     };
 
     dailyStop: {
-      currentLoss: number;        // Today's loss so far
-      remainingCapacity: number;  // Available risk budget
-      isLimitReached: boolean;    // Trading allowed
-      resetTime: string;          // Next reset (ISO 8601)
+      currentLoss: number; // Today's loss so far
+      remainingCapacity: number; // Available risk budget
+      isLimitReached: boolean; // Trading allowed
+      resetTime: string; // Next reset (ISO 8601)
     };
 
     partialExits: Array<{
-      price: number;              // Exit price level
-      quantity: number;           // Shares to exit
-      rMultiple: number;          // Risk multiple
-      cumulative: number;         // Cumulative exit %
+      price: number; // Exit price level
+      quantity: number; // Shares to exit
+      rMultiple: number; // Risk multiple
+      cumulative: number; // Cumulative exit %
     }>;
 
-    warnings: string[];           // Risk-specific warnings
+    warnings: string[]; // Risk-specific warnings
   };
 }
 
@@ -184,7 +185,7 @@ export interface TJRToolsResult {
 export function analyze(
   input: TJRAnalysisInput,
   options?: AnalyzeOptions & { risk?: RiskConfig }
-): TJRToolsResult
+): TJRToolsResult;
 ```
 
 ---
@@ -220,18 +221,21 @@ export function analyze(
 ## Implementation Notes
 
 ### Phase 1: Core Risk Functions
+
 1. Implement position sizing with fixed percentage method
 2. Add daily stop tracking with basic limits
 3. Create R-multiple partial exit calculator
 4. Unit tests for each pure function
 
 ### Phase 2: Advanced Features
+
 1. Kelly Criterion position sizing
 2. Fibonacci and custom exit strategies
 3. Trailing stop activation
 4. Integration tests with analyze()
 
 ### Phase 3: Optimization
+
 1. Performance profiling and optimization
 2. Caching layer for repeated calculations
 3. Batch processing for multiple symbols
@@ -265,16 +269,19 @@ export function analyze(
 ### Chosen Approach vs Alternatives
 
 **Position Sizing:**
+
 - ✅ Kelly Criterion: Mathematically optimal for long-term growth
 - ❌ Fixed Fractional: Simpler but suboptimal
 - ❌ Martingale: Dangerous, increases risk after losses
 
 **Daily Stops:**
+
 - ✅ Timestamp-based: Deterministic and testable
 - ❌ Wall-clock based: Non-deterministic, hard to test
 - ❌ Trade-count based: Ignores time dimension
 
 **Partial Exits:**
+
 - ✅ R-multiple: Intuitive risk-based framework
 - ❌ Fixed prices: Not adaptive to volatility
 - ❌ Time-based: Ignores price action

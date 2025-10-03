@@ -209,11 +209,15 @@ function validateDiscordEnv(env: 'DEV' | 'STAGE' | 'PROD'): ValidationResult {
 
   // If one is set, both token and app ID should be set
   if (token && !appId) {
-    result.warnings.push(`DISCORD_${env}_TOKEN is set but DISCORD_${env}_APPLICATION_ID is missing`);
+    result.warnings.push(
+      `DISCORD_${env}_TOKEN is set but DISCORD_${env}_APPLICATION_ID is missing`
+    );
   }
 
   if (!token && appId) {
-    result.warnings.push(`DISCORD_${env}_APPLICATION_ID is set but DISCORD_${env}_TOKEN is missing`);
+    result.warnings.push(
+      `DISCORD_${env}_APPLICATION_ID is set but DISCORD_${env}_TOKEN is missing`
+    );
   }
 
   // Validate token format (Base64 with dots)
@@ -226,7 +230,9 @@ function validateDiscordEnv(env: 'DEV' | 'STAGE' | 'PROD'): ValidationResult {
 
     // Check length (typical range)
     if (token.length < 59 || token.length > 72) {
-      result.warnings.push(`DISCORD_${env}_TOKEN length (${token.length}) is unusual (typically 59-72)`);
+      result.warnings.push(
+        `DISCORD_${env}_TOKEN length (${token.length}) is unusual (typically 59-72)`
+      );
     }
   }
 
@@ -254,7 +260,9 @@ function validateDiscordEnv(env: 'DEV' | 'STAGE' | 'PROD'): ValidationResult {
 
   // Production should not have guild IDs (uses global registration)
   if (env === 'PROD' && guildIds) {
-    result.warnings.push('DISCORD_PROD_GUILD_IDS is set but production should use global registration');
+    result.warnings.push(
+      'DISCORD_PROD_GUILD_IDS is set but production should use global registration'
+    );
   }
 
   return result;
@@ -350,15 +358,21 @@ function validate(): boolean {
 
   // Summary
   console.log(`\n${colors.blue}=== Validation Summary ===${colors.reset}`);
-  console.log(`Total errors: ${totalErrors > 0 ? colors.red : colors.green}${totalErrors}${colors.reset}`);
-  console.log(`Total warnings: ${totalWarnings > 0 ? colors.yellow : colors.green}${totalWarnings}${colors.reset}`);
+  console.log(
+    `Total errors: ${totalErrors > 0 ? colors.red : colors.green}${totalErrors}${colors.reset}`
+  );
+  console.log(
+    `Total warnings: ${totalWarnings > 0 ? colors.yellow : colors.green}${totalWarnings}${colors.reset}`
+  );
 
   if (allValid && totalErrors === 0) {
     console.log(`\n${colors.green}✓ All validations passed!${colors.reset}`);
     return true;
   } else {
     console.log(`\n${colors.red}✗ Validation failed!${colors.reset}`);
-    console.log(`\nSee ${colors.blue}docs/security/secrets.md${colors.reset} for guidance on fixing these issues.`);
+    console.log(
+      `\nSee ${colors.blue}docs/security/secrets.md${colors.reset} for guidance on fixing these issues.`
+    );
     return false;
   }
 }

@@ -22,51 +22,51 @@ describe('DailyFormatter', () => {
           confidence: 75,
           reason: 'Higher highs and higher lows pattern',
           keyLevels: {
-            resistance: 430.50,
-            support: 425.00
-          }
+            resistance: 430.5,
+            support: 425.0,
+          },
         },
         profile: {
           type: 'TREND_UP',
           characteristics: [
             'Strong opening drive',
             'Sustained buying pressure',
-            'Late day continuation'
+            'Late day continuation',
           ],
-          volatility: 1.25
+          volatility: 1.25,
         },
         sessions: [
           {
             name: 'Morning',
-            high: 428.50,
-            low: 426.20,
-            range: 2.30,
-            barCount: 24
+            high: 428.5,
+            low: 426.2,
+            range: 2.3,
+            barCount: 24,
           },
           {
             name: 'Afternoon',
-            high: 430.80,
-            low: 428.00,
-            range: 2.80,
-            barCount: 24
-          }
-        ]
+            high: 430.8,
+            low: 428.0,
+            range: 2.8,
+            barCount: 24,
+          },
+        ],
       },
       statistics: {
         barsAnalyzed: 78,
         timeframe: '5m',
         range: {
-          high: 430.80,
-          low: 426.20,
-          close: 430.45
-        }
+          high: 430.8,
+          low: 426.2,
+          close: 430.45,
+        },
       },
       timestamp: '2025-01-30T20:00:00.000Z',
       metadata: {
         provider: 'composite',
         cacheHit: false,
-        latencyMs: 123
-      }
+        latencyMs: 123,
+      },
     };
   });
 
@@ -93,22 +93,22 @@ describe('DailyFormatter', () => {
         date: '2025-01-30',
         analysis: {
           bias: {
-            direction: 'NEUTRAL'
+            direction: 'NEUTRAL',
           },
           profile: {
-            type: 'K'
-          }
+            type: 'K',
+          },
         },
         statistics: {
           barsAnalyzed: 50,
           timeframe: '5m',
           range: {
-            high: 400.00,
-            low: 395.00,
-            close: 398.50
-          }
+            high: 400.0,
+            low: 395.0,
+            close: 398.5,
+          },
         },
-        timestamp: '2025-01-30T20:00:00.000Z'
+        timestamp: '2025-01-30T20:00:00.000Z',
       };
 
       const output = formatter.format(minimalReport, 'text');
@@ -204,8 +204,8 @@ describe('DailyFormatter', () => {
         ...sampleReport,
         analysis: {
           ...sampleReport.analysis,
-          sessions: undefined
-        }
+          sessions: undefined,
+        },
       };
 
       const output = formatter.format(reportNoSessions, 'table');
@@ -269,22 +269,22 @@ describe('DailyFormatter', () => {
         date: '2025-01-30',
         analysis: {
           bias: {
-            direction: 'BEARISH'
+            direction: 'BEARISH',
           },
           profile: {
-            type: 'TREND_DOWN'
-          }
+            type: 'TREND_DOWN',
+          },
         },
         statistics: {
           barsAnalyzed: 60,
           timeframe: '5m',
           range: {
-            high: 200.00,
-            low: 195.00,
-            close: 196.00
-          }
+            high: 200.0,
+            low: 195.0,
+            close: 196.0,
+          },
         },
-        timestamp: '2025-01-30T20:00:00.000Z'
+        timestamp: '2025-01-30T20:00:00.000Z',
       };
 
       const output = formatter.format(minimalReport, 'markdown');
@@ -332,8 +332,8 @@ describe('DailyFormatter', () => {
         ...sampleReport,
         analysis: {
           ...sampleReport.analysis,
-          sessions: []
-        }
+          sessions: [],
+        },
       };
 
       expect(() => formatter.format(reportEmptySessions, 'text')).not.toThrow();
@@ -348,9 +348,9 @@ describe('DailyFormatter', () => {
         analysis: {
           ...sampleReport.analysis,
           bias: {
-            direction: 'NEUTRAL'
-          }
-        }
+            direction: 'NEUTRAL',
+          },
+        },
       };
 
       const output = formatter.format(reportNoConfidence, 'text');
@@ -364,9 +364,9 @@ describe('DailyFormatter', () => {
         analysis: {
           ...sampleReport.analysis,
           profile: {
-            type: 'K'
-          }
-        }
+            type: 'K',
+          },
+        },
       };
 
       const output = formatter.format(reportNoCharacteristics, 'markdown');
@@ -377,7 +377,7 @@ describe('DailyFormatter', () => {
     it('should handle undefined metadata', () => {
       const reportNoMetadata = {
         ...sampleReport,
-        metadata: undefined
+        metadata: undefined,
       };
 
       const textOutput = formatter.format(reportNoMetadata, 'text');

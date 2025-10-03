@@ -11,6 +11,7 @@
 ## Context
 
 The TJR Suite requires a minimal database abstraction layer that:
+
 - Supports both SQLite (local/testing) and PostgreSQL (production)
 - Provides connection pooling and error handling
 - Includes a simple migration runner for schema evolution
@@ -18,6 +19,7 @@ The TJR Suite requires a minimal database abstraction layer that:
 - Allows logger injection rather than hardcoded logging
 
 Without a unified database layer, we face:
+
 - Duplicate connection logic across services
 - Inconsistent error handling and retry strategies
 - No standardized migration approach
@@ -32,6 +34,7 @@ Without a unified database layer, we face:
 We will use **better-sqlite3** for SQLite and **pg** for PostgreSQL.
 
 **Rationale:**
+
 - **better-sqlite3:**
   - Synchronous API ideal for testing and CLI tools
   - Excellent performance via native bindings
@@ -46,6 +49,7 @@ We will use **better-sqlite3** for SQLite and **pg** for PostgreSQL.
   - Battle-tested in production environments
 
 **Alternatives considered:**
+
 - **node-sqlite3:** Async-only API adds complexity for simple use cases
 - **Knex.js/TypeORM:** Too heavyweight for our minimal needs; we want thin wrappers, not ORMs
 
@@ -56,6 +60,7 @@ We will use **better-sqlite3** for SQLite and **pg** for PostgreSQL.
 Support standard URIs for both databases:
 
 **SQLite:**
+
 ```
 sqlite:path/to/database.db
 sqlite::memory:
@@ -63,12 +68,14 @@ file:path/to/db.sqlite?mode=ro
 ```
 
 **PostgreSQL:**
+
 ```
 postgresql://user:password@host:port/database
 postgres://user:password@host:port/database?sslmode=require
 ```
 
 **Parsing Strategy:**
+
 - Use URL constructor for postgres URIs
 - Strip `sqlite:` prefix for file paths
 - Special case `:memory:` for in-memory SQLite databases
@@ -81,18 +88,20 @@ Provide a unified `connect()` function returning a minimal interface:
 
 ```typescript
 interface DbConnection {
-  exec(sql: string, params?: unknown[]): Promise<void>
-  query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]>
-  close(): Promise<void>
+  exec(sql: string, params?: unknown[]): Promise<void>;
+  query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]>;
+  close(): Promise<void>;
 }
 ```
 
 **Implementation details:**
+
 - SQLite: Wrap better-sqlite3 synchronous methods with Promise wrappers for consistency
 - PostgreSQL: Use `pg.Pool` with automatic reconnection
 - Both drivers normalized to async interface (even though SQLite is sync internally)
 
 **No ORM features:**
+
 - No query builders
 - No schema introspection
 - No model mapping
@@ -105,12 +114,14 @@ interface DbConnection {
 Implement exponential backoff for transient errors:
 
 **Retry policy:**
+
 - Max retries: 3
 - Initial delay: 100ms
 - Backoff multiplier: 2x (100ms → 200ms → 400ms)
 - Jitter: ±25% randomization to prevent thundering herd
 
 **Retryable errors:**
+
 - PostgreSQL:
   - `ECONNREFUSED`: Connection refused
   - `ETIMEDOUT`: Connection timeout
@@ -121,12 +132,14 @@ Implement exponential backoff for transient errors:
   - `SQLITE_LOCKED`: Table locked
 
 **Non-retryable errors:**
+
 - Syntax errors (`42601` in pg)
 - Authentication failures (`28P01` in pg)
 - Constraint violations
 - File not found (SQLite)
 
 **Rationale:**
+
 - Transient network/lock issues should self-heal
 - Permanent errors should fail fast
 - Jitter prevents connection storms during outages
@@ -138,12 +151,14 @@ Implement exponential backoff for transient errors:
 Implement a simple file-based migration system:
 
 **Migration format:**
+
 - SQL files in `migrations/` directory
 - Naming convention: `NNN_description.sql` (e.g., `001_create_users.sql`)
 - Applied in lexicographic order
 - Track applied migrations in `_migrations` table
 
 **Metadata table:**
+
 ```sql
 CREATE TABLE _migrations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -153,6 +168,7 @@ CREATE TABLE _migrations (
 ```
 
 **Runner behavior:**
+
 - Scan migration directory
 - Compare with `_migrations` table
 - Apply missing migrations in order
@@ -160,11 +176,13 @@ CREATE TABLE _migrations (
 - Log each applied migration (via injected logger if provided)
 
 **No down migrations:**
+
 - Keep it simple: forward-only
 - Rollbacks handled manually or via separate scripts
 - Database backups recommended before migrations
 
 **Rationale:**
+
 - File-based migrations are human-readable and git-friendly
 - Sequential numbering prevents conflicts
 - Transaction-per-migration ensures atomicity
@@ -178,22 +196,25 @@ Accept optional logger conforming to minimal interface:
 
 ```typescript
 interface Logger {
-  info(message: string, meta?: Record<string, unknown>): void
-  error(message: string, meta?: Record<string, unknown>): void
+  info(message: string, meta?: Record<string, unknown>): void;
+  error(message: string, meta?: Record<string, unknown>): void;
 }
 ```
 
 **Usage:**
+
 ```typescript
-connect(dbUrl, { logger: myLogger })
-runMigrations(migrationsDir, db, { logger: myLogger })
+connect(dbUrl, { logger: myLogger });
+runMigrations(migrationsDir, db, { logger: myLogger });
 ```
 
 **Fallback behavior:**
+
 - If no logger provided, use silent no-op logger
 - Allows users to plug in Winston, Pino, console, etc.
 
 **Rationale:**
+
 - Avoids tight coupling to specific logging library
 - Enables testing without log noise
 - Production systems can inject structured loggers
@@ -205,11 +226,13 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 ### Using Knex.js
 
 **Pros:**
+
 - Query builder API
 - Built-in migration system
 - Mature and well-documented
 
 **Cons:**
+
 - Heavy dependency (50+ transitive deps)
 - Opinionated API not needed for raw SQL
 - Harder to understand for simple use cases
@@ -221,11 +244,13 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 ### Using Prisma
 
 **Pros:**
+
 - Type-safe query API
 - Automatic migration generation from schema
 - Excellent TypeScript support
 
 **Cons:**
+
 - Requires code generation step
 - Heavy runtime + CLI tooling
 - Opinionated ORM approach
@@ -237,9 +262,11 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 ### Manual retry logic in calling code
 
 **Pros:**
+
 - More control per use case
 
 **Cons:**
+
 - Duplicate retry logic across services
 - Easy to forget or implement incorrectly
 
@@ -253,6 +280,7 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 
 **Impact:** `SQLITE_BUSY` errors under heavy write load
 **Mitigation:**
+
 - Document SQLite limitations (not suitable for high-concurrency production)
 - Recommend PostgreSQL for production workloads
 - Implement retry logic with exponential backoff for `SQLITE_BUSY`
@@ -263,6 +291,7 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 
 **Impact:** Connections refused when pool is full
 **Mitigation:**
+
 - Default pool size: 10 connections
 - Allow configuration via connection string query param (`?max=20`)
 - Implement connection timeout (5s default)
@@ -274,6 +303,7 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 
 **Impact:** Two developers create `005_*.sql` simultaneously
 **Mitigation:**
+
 - Use timestamp prefixes instead of sequential numbers (future improvement)
 - Document migration naming conventions in README
 - Code review should catch duplicate numbers before merge
@@ -284,6 +314,7 @@ runMigrations(migrationsDir, db, { logger: myLogger })
 
 **Impact:** Database passwords exposed in logs or source code
 **Mitigation:**
+
 - Document use of environment variables in README
 - Provide `.env.example` template
 - Never log full connection strings (mask passwords)

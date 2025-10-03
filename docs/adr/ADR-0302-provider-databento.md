@@ -11,12 +11,14 @@
 ## Context
 
 The TJR Suite requires a market data provider implementation for Databento that can:
+
 - Fetch historical bar data for multiple asset classes
 - Handle large window requests (500+ days) without timeouts
 - Integrate with market-data-core for aggregation
 - Work in CI environments without network calls (fixture-based)
 
 Without a Databento provider, the suite cannot:
+
 - Access Databento's extensive historical data
 - Backtest strategies over multi-year periods
 - Test chunking logic for large window requests
@@ -28,11 +30,13 @@ Without a Databento provider, the suite cannot:
 ### 1. **Provider Architecture**
 
 Create `@tjr/provider-databento` package with:
+
 - `getBars(options)` - Fetch bars with chunking support
 - `capabilities()` - Return provider metadata
 - `aggregateToTimeframe(bars, timeframe)` - Aggregate bars via market-data-core
 
 **Package structure:**
+
 ```
 packages/provider-databento/
 ├── src/
@@ -49,6 +53,7 @@ packages/provider-databento/
 Implement intelligent chunking to handle requests > maxDaysPerChunk:
 
 **Algorithm:**
+
 ```typescript
 function calculateChunks(from: number, to: number, maxDaysPerChunk: number) {
   const totalMs = to - from;
@@ -69,6 +74,7 @@ function calculateChunks(from: number, to: number, maxDaysPerChunk: number) {
 ```
 
 **Rationale:**
+
 - **Avoids timeouts:** Large requests split into manageable chunks
 - **Contiguous:** Chunks cover entire range without gaps
 - **Configurable:** `maxDaysPerChunk` tunable per use case
@@ -79,11 +85,13 @@ function calculateChunks(from: number, to: number, maxDaysPerChunk: number) {
 For Phase 3.B3d, use synthetic fixture data instead of real API calls:
 
 **Rationale:**
+
 - **CI-safe:** No network calls, deterministic tests
 - **Fast iteration:** No API rate limits or costs during development
 - **Deterministic:** Same inputs produce predictable outputs
 
 **Future migration:**
+
 - Phase 4: Replace `fetchChunk()` with real Databento API calls
 - Keep chunking logic unchanged
 - Add API key management and error handling
@@ -99,6 +107,7 @@ export function aggregateToTimeframe(bars: Bar[], targetTimeframe: Timeframe): B
 ```
 
 **Rationale:**
+
 - **DRY:** Reuse existing aggregation logic
 - **Tested:** market-data-core has comprehensive tests
 - **Consistent:** All providers use same aggregation
@@ -106,6 +115,7 @@ export function aggregateToTimeframe(bars: Bar[], targetTimeframe: Timeframe): B
 ### 5. **Error Handling**
 
 Strict error mapping for invalid inputs:
+
 - Invalid time range (from >= to): Throw immediately
 - Unknown timeframe: TypeScript catches at compile time
 - API errors (future): Map to standard error codes
@@ -143,6 +153,7 @@ Strict error mapping for invalid inputs:
 **Description:** Fetch entire window in one request.
 
 **Rejected because:**
+
 - Databento API likely has size limits
 - Large requests prone to timeouts
 - Wastes bandwidth if only subset needed
@@ -152,6 +163,7 @@ Strict error mapping for invalid inputs:
 **Description:** Make caller responsible for chunking logic.
 
 **Rejected because:**
+
 - Duplicates logic across consumers
 - Error-prone (easy to miss edge cases)
 - Less convenient API
@@ -161,6 +173,7 @@ Strict error mapping for invalid inputs:
 **Description:** Implement Databento API integration immediately.
 
 **Rejected for Phase 3 because:**
+
 - Requires API keys and credentials
 - Network calls slow down CI
 - Non-deterministic (API changes affect tests)
@@ -199,6 +212,7 @@ Strict error mapping for invalid inputs:
 **Accepted** - Databento provider with large-window chunking approved for Phase 3.B3d.
 
 This establishes the foundation for multi-provider support. Future phases will:
+
 - Replace fixtures with real Databento API calls
 - Add caching layer for performance
 - Implement rate limiting and retry logic

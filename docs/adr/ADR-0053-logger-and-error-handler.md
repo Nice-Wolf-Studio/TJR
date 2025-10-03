@@ -11,6 +11,7 @@
 ## Context
 
 The TJR Suite requires a unified logging and error handling solution that:
+
 - Provides structured, machine-readable logs for observability and debugging
 - Supports multiple output transports (console, file, remote services)
 - Captures contextual information (symbol, timeframe, request_id, etc.)
@@ -19,6 +20,7 @@ The TJR Suite requires a unified logging and error handling solution that:
 - Enables typed child loggers for component-specific context
 
 Without a standardized logging solution, we face:
+
 - Inconsistent log formats across packages (plain text, JSON, custom formats)
 - Missing contextual data for debugging distributed operations
 - Unhandled errors causing silent failures or incomplete stack traces
@@ -34,6 +36,7 @@ Without a standardized logging solution, we face:
 We will use **Winston** as our logging library.
 
 **Rationale:**
+
 - **Mature and battle-tested:** Widely adopted in Node.js ecosystem
 - **Transport ecosystem:** Built-in support for console, file, HTTP, stream transports
 - **Format flexibility:** JSON, pretty-print, custom formatters
@@ -41,6 +44,7 @@ We will use **Winston** as our logging library.
 - **TypeScript support:** Strong community typings available
 
 **Alternative considered:** Pino
+
 - Pros: Faster raw performance, smaller footprint, excellent benchmarks
 - Cons: Less flexible format customization, fewer transport options out-of-box
 - Decision: Winston's flexibility and ecosystem maturity better fit our observability needs
@@ -55,16 +59,17 @@ Standard log entries will include:
 interface LogEntry {
   level: 'error' | 'warn' | 'info' | 'debug';
   message: string;
-  timestamp: string;          // ISO 8601 format
-  symbol?: string;            // Trading symbol (e.g., "AAPL", "BTCUSD")
-  timeframe?: string;         // Chart timeframe (e.g., "1h", "1d")
-  request_id?: string;        // Request correlation ID
-  component?: string;         // Logger name/component (from child logger)
-  [key: string]: unknown;     // Additional context fields
+  timestamp: string; // ISO 8601 format
+  symbol?: string; // Trading symbol (e.g., "AAPL", "BTCUSD")
+  timeframe?: string; // Chart timeframe (e.g., "1h", "1d")
+  request_id?: string; // Request correlation ID
+  component?: string; // Logger name/component (from child logger)
+  [key: string]: unknown; // Additional context fields
 }
 ```
 
 **Rationale:**
+
 - **symbol/timeframe:** Critical for debugging trading operations and backtests
 - **request_id:** Enables tracing operations across services/modules
 - **component:** Identifies source of log for easier filtering
@@ -77,15 +82,16 @@ interface LogEntry {
 ```typescript
 interface LoggerConfig {
   level: 'error' | 'warn' | 'info' | 'debug';
-  json?: boolean;             // JSON output (default: true in prod, false in dev)
-  filePath?: string;          // Optional file transport path
-  console?: boolean;          // Console output (default: true)
+  json?: boolean; // JSON output (default: true in prod, false in dev)
+  filePath?: string; // Optional file transport path
+  console?: boolean; // Console output (default: true)
 }
 
 function createLogger(config: LoggerConfig): Logger;
 ```
 
 **Features:**
+
 - **Environment-aware defaults:** JSON in production, pretty-print in development
 - **Multiple transports:** Console + optional file output
 - **Level filtering:** Configurable log level per environment
@@ -100,12 +106,14 @@ function attachGlobalHandlers(logger: Logger): void;
 ```
 
 **Behavior:**
+
 - Captures `uncaughtException` events and logs with full stack trace
 - Captures `unhandledRejection` events and logs promise details
 - Logs error details, then allows process to exit gracefully (exit code 1)
 - Does NOT prevent process termination (fail-fast philosophy)
 
 **Rationale:**
+
 - **Observability:** Ensures no error goes unlogged
 - **Fail-fast:** Prevents running in corrupted state after unhandled error
 - **Graceful shutdown:** Allows logger to flush before exit
@@ -119,6 +127,7 @@ function attachGlobalHandlers(logger: Logger): void;
 Sensitive data will be redacted from logs automatically.
 
 **Redacted fields (case-insensitive match):**
+
 - `password`, `passwd`, `pwd`
 - `secret`, `api_key`, `apiKey`, `token`
 - `authorization`, `auth`
@@ -128,6 +137,7 @@ Sensitive data will be redacted from logs automatically.
 **Redaction format:** `"password": "[REDACTED]"`
 
 **Rationale:**
+
 - **Security:** Prevents credential leaks in logs
 - **Compliance:** Supports GDPR/CCPA requirements for PII handling
 - **Safety by default:** Automatic redaction reduces human error
@@ -197,11 +207,14 @@ logger.warn('Login failed', {
 ## Alternatives Considered
 
 ### Console.log with Manual Formatting
+
 **Pros:**
+
 - Zero dependencies
 - Simple for basic use cases
 
 **Cons:**
+
 - No structured logging (difficult to parse/aggregate)
 - No transport flexibility (console only)
 - No automatic PII redaction
@@ -212,11 +225,14 @@ logger.warn('Login failed', {
 ---
 
 ### Bunyan
+
 **Pros:**
+
 - Fast, JSON-only logging
 - CLI tool for pretty-printing (`bunyan` command)
 
 **Cons:**
+
 - Abandoned (last release 2019)
 - No active maintenance or security updates
 - Smaller ecosystem than Winston
@@ -228,8 +244,10 @@ logger.warn('Login failed', {
 ## Risks and Mitigations
 
 ### Risk 1: Performance impact of logging in hot paths
+
 **Impact:** Excessive logging degrades application performance
 **Mitigation:**
+
 - Use appropriate log levels (avoid `debug` in production)
 - Winston's async logging minimizes blocking
 - Benchmark critical paths to ensure <1ms logging overhead
@@ -237,8 +255,10 @@ logger.warn('Login failed', {
 ---
 
 ### Risk 2: Log volume growth
+
 **Impact:** Large log files consume disk space, increase costs
 **Mitigation:**
+
 - Configure log rotation (e.g., `winston-daily-rotate-file`)
 - Use level filtering to reduce noise (e.g., `info` in prod, `debug` in dev)
 - Implement retention policies (e.g., 30-day rotation)
@@ -246,8 +266,10 @@ logger.warn('Login failed', {
 ---
 
 ### Risk 3: Incomplete PII redaction
+
 **Impact:** Sensitive data leaked despite redaction policy
 **Mitigation:**
+
 - Comprehensive test suite for redaction logic
 - Security review of redaction patterns
 - Document redaction policy in `security/logging-policy.md`
@@ -256,8 +278,10 @@ logger.warn('Login failed', {
 ---
 
 ### Risk 4: Unhandled errors causing data loss
+
 **Impact:** Global error handler exits before flushing logs
 **Mitigation:**
+
 - Winston transports flush synchronously on exit by default
 - Add explicit flush timeout before exit (e.g., 3 seconds)
 - Test error handler with file transport to ensure flush

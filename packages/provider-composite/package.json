@@ -4,7 +4,9 @@
   "description": "Deterministic provider composite with cache and fixture support",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --build",
     "test": "node --test tests/*.test.js",
@@ -20,4 +22,3 @@
     "@types/node": "^18.19.0"
   }
 }
-

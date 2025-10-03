@@ -28,4 +28,3 @@ test('analyze returns TJRResult shape', () => {
   assert.equal(res.input.symbol, 'ES');
   assert.ok(typeof res.confluence.score === 'number');
 });
-

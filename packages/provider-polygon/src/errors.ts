@@ -5,7 +5,7 @@
  * scenarios when interacting with the Polygon.io API.
  */
 
-import { TJRError, ProviderRateLimitError as BaseRateLimitError } from "@tjr/contracts";
+import { TJRError, ProviderRateLimitError as BaseRateLimitError } from '@tjr/contracts';
 
 /**
  * Thrown when Polygon.io API returns a 429 (Too Many Requests) response.
@@ -39,11 +39,11 @@ export class RateLimitError extends BaseRateLimitError {
     requestUrl?: string;
     [key: string]: unknown;
   }) {
-    super("Polygon.io rate limit exceeded", {
-      provider: "polygon",
+    super('Polygon.io rate limit exceeded', {
+      provider: 'polygon',
       ...data,
     });
-    this.name = "RateLimitError";
+    this.name = 'RateLimitError';
   }
 }
 
@@ -94,8 +94,8 @@ export class ApiError extends TJRError {
       [key: string]: unknown;
     }
   ) {
-    super("POLYGON_API_ERROR", message, data);
-    this.name = "ApiError";
+    super('POLYGON_API_ERROR', message, data);
+    this.name = 'ApiError';
     this.statusCode = data.statusCode;
     this.statusText = data.statusText;
   }
@@ -137,8 +137,8 @@ export class ParseError extends TJRError {
       [key: string]: unknown;
     }
   ) {
-    super("POLYGON_PARSE_ERROR", message, data);
-    this.name = "ParseError";
+    super('POLYGON_PARSE_ERROR', message, data);
+    this.name = 'ParseError';
   }
 }
 

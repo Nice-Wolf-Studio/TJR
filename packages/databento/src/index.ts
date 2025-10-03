@@ -29,7 +29,11 @@ function toAuthHeader(key: string): string {
   return `Basic ${Buffer.from(`${key}:`).toString('base64')}`;
 }
 
-async function httpGetCsv(endpoint: string, params: Record<string, string | number | undefined>, timeoutMs = 15000): Promise<string> {
+async function httpGetCsv(
+  endpoint: string,
+  params: Record<string, string | number | undefined>,
+  timeoutMs = 15000
+): Promise<string> {
   const key = requireKey();
   const url = new URL(endpoint, DATABENTO_BASE);
   Object.entries(params).forEach(([k, v]) => {
@@ -38,8 +42,8 @@ async function httpGetCsv(endpoint: string, params: Record<string, string | numb
   const res = await fetch(url.toString(), {
     method: 'GET',
     headers: {
-      'Authorization': toAuthHeader(key),
-      'Accept': 'text/csv',
+      Authorization: toAuthHeader(key),
+      Accept: 'text/csv',
       'User-Agent': 'tjr-suite/0.0.1',
     },
     signal: AbortSignal.timeout(timeoutMs),
@@ -49,10 +53,14 @@ async function httpGetCsv(endpoint: string, params: Record<string, string | numb
 }
 
 function parseCsv(csv: string): string[][] {
-  const lines = csv.split('\n').map(l => l.trim()).filter(Boolean);
+  const lines = csv
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
   if (lines.length === 0) return [];
   const rows: string[][] = [];
-  for (let i = 1; i < lines.length; i++) { // skip header
+  for (let i = 1; i < lines.length; i++) {
+    // skip header
     const line = lines[i];
     if (!line) continue;
     rows.push(line.split(','));
@@ -95,11 +103,20 @@ export async function getQuote(symbol: FuturesSymbol): Promise<{ price: number; 
   return { price: (bidPx + askPx) / 2, timestamp: new Date(ts) };
 }
 
-export async function getRecentBars(symbol: FuturesSymbol, timeframe: '1m' | '1h' | '4h', count: number): Promise<BarData[]> {
+export async function getRecentBars(
+  symbol: FuturesSymbol,
+  timeframe: '1m' | '1h' | '4h',
+  count: number
+): Promise<BarData[]> {
   const dbSymbol = SYMBOL_MAP[symbol];
   // Pull enough history by days heuristic
   const end = new Date();
-  const daysBack = timeframe === '1h' ? Math.max(count, 7) : timeframe === '4h' ? Math.max(count * 2, 14) : Math.max(count * 2, 30);
+  const daysBack =
+    timeframe === '1h'
+      ? Math.max(count, 7)
+      : timeframe === '4h'
+        ? Math.max(count * 2, 14)
+        : Math.max(count * 2, 30);
   const start = new Date(end.getTime() - daysBack * 24 * 3600 * 1000);
   const schema = timeframe === '1m' ? 'ohlcv-1m' : 'ohlcv-1h';
   const csv = await httpGetCsv('/v0/timeseries.get_range', {
@@ -140,8 +157,8 @@ export function resampleToH4(hourly: BarData[]): BarData[] {
       symbol: first.symbol,
       timestamp: first.timestamp,
       open: first.open,
-      high: Math.max(...chunk.map(b => b.high)),
-      low: Math.min(...chunk.map(b => b.low)),
+      high: Math.max(...chunk.map((b) => b.high)),
+      low: Math.min(...chunk.map((b) => b.low)),
       close: last.close,
       volume: chunk.reduce((s, b) => s + (b.volume || 0), 0),
     });

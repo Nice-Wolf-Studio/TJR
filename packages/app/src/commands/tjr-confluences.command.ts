@@ -133,15 +133,14 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
     let weights = userConfig.confluence.weights;
     if (options['weights']) {
       try {
-        weights = typeof options['weights'] === 'string'
-          ? JSON.parse(options['weights'] as string)
-          : options['weights'];
+        weights =
+          typeof options['weights'] === 'string'
+            ? JSON.parse(options['weights'] as string)
+            : options['weights'];
       } catch (error) {
-        throw new TJRCommandError(
-          TJRErrorCode.INVALID_ARGS,
-          'Invalid weights JSON format',
-          { weights: options['weights'] }
-        );
+        throw new TJRCommandError(TJRErrorCode.INVALID_ARGS, 'Invalid weights JSON format', {
+          weights: options['weights'],
+        });
       }
     }
 
@@ -206,7 +205,7 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
       timeframe,
       timestamp: new Date().toISOString(),
       confluenceScore: result.confluence.score,
-      factors: result.confluence.factors.map(f => ({
+      factors: result.confluence.factors.map((f) => ({
         ...f,
         description: f.description || '',
       })),
@@ -224,7 +223,10 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
   /**
    * Calculate overlaps between FVG zones and Order Blocks
    */
-  private calculateOverlaps(fvgZones: any[], orderBlocks: any[]): Array<{
+  private calculateOverlaps(
+    fvgZones: any[],
+    orderBlocks: any[]
+  ): Array<{
     fvgIndex: number;
     orderBlockIndex: number;
     overlapHigh: number;
@@ -240,8 +242,8 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
     }> = [];
 
     // Only check unfilled FVGs and unmitigated OBs
-    const unfilledFVGs = fvgZones.filter(z => !z.filled);
-    const unmitigatedOBs = orderBlocks.filter(b => !b.mitigated);
+    const unfilledFVGs = fvgZones.filter((z) => !z.filled);
+    const unmitigatedOBs = orderBlocks.filter((b) => !b.mitigated);
 
     for (let i = 0; i < unfilledFVGs.length; i++) {
       const fvg = unfilledFVGs[i];
@@ -277,15 +279,15 @@ export class TJRConfluencesCommand extends BaseTJRCommand {
     // Map common formats
     const timeframeMap: Record<string, Timeframe> = {
       '1M': Timeframe.M1,
-      'M1': Timeframe.M1,
+      M1: Timeframe.M1,
       '5M': Timeframe.M5,
-      'M5': Timeframe.M5,
+      M5: Timeframe.M5,
       '1H': Timeframe.H1,
-      'H1': Timeframe.H1,
+      H1: Timeframe.H1,
       '4H': Timeframe.H4,
-      'H4': Timeframe.H4,
+      H4: Timeframe.H4,
       '1D': Timeframe.D1,
-      'D1': Timeframe.D1,
+      D1: Timeframe.D1,
     };
 
     const timeframe = timeframeMap[upper];

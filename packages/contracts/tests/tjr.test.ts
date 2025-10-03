@@ -18,18 +18,18 @@ describe('TJR Types', () => {
         high: 101,
         low: 99,
         close: 100.5,
-        volume: 1000
-      }
+        volume: 1000,
+      },
     ],
-    analysisTimestamp: '2025-01-15T15:00:00.000Z'
+    analysisTimestamp: '2025-01-15T15:00:00.000Z',
   };
 
   const sampleConfluence: TJRConfluence = {
     score: 85,
     factors: [
       { name: 'Support/Resistance', weight: 0.3, value: 0.9 },
-      { name: 'Trend', weight: 0.7, value: 0.8 }
-    ]
+      { name: 'Trend', weight: 0.7, value: 0.8 },
+    ],
   };
 
   const sampleExecution: TJRExecution = {
@@ -39,7 +39,7 @@ describe('TJR Types', () => {
     positionSize: 100,
     direction: 'long',
     riskRewardRatio: 2.0,
-    confidence: 'high'
+    confidence: 'high',
   };
 
   describe('hasExecution', () => {
@@ -48,7 +48,7 @@ describe('TJR Types', () => {
         input: sampleInput,
         confluence: sampleConfluence,
         execution: sampleExecution,
-        warnings: []
+        warnings: [],
       };
 
       expect(hasExecution(result)).toBe(true);
@@ -58,7 +58,7 @@ describe('TJR Types', () => {
       const result: TJRResult = {
         input: sampleInput,
         confluence: sampleConfluence,
-        warnings: ['Confluence too low']
+        warnings: ['Confluence too low'],
       };
 
       expect(hasExecution(result)).toBe(false);
@@ -69,7 +69,7 @@ describe('TJR Types', () => {
         input: sampleInput,
         confluence: sampleConfluence,
         execution: sampleExecution,
-        warnings: []
+        warnings: [],
       };
 
       if (hasExecution(result)) {
@@ -135,8 +135,8 @@ describe('TJR Types', () => {
         warnings: ['Test warning'],
         metadata: {
           analysisVersion: '1.0.0',
-          computeTimeMs: 45
-        }
+          computeTimeMs: 45,
+        },
       };
 
       const json = JSON.stringify(result);
@@ -153,7 +153,7 @@ describe('TJR Types', () => {
       const result: TJRResult = {
         input: sampleInput,
         confluence: { score: 30, factors: [] },
-        warnings: ['Score too low']
+        warnings: ['Score too low'],
       };
 
       const json = JSON.stringify(result);

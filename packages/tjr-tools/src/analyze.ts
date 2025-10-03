@@ -54,7 +54,8 @@ export function analyze(input: TJRAnalysisInput, options?: AnalyzeOptions): TJRT
 
   // Run detectors
   const fvgZones = opts.enableFVG !== false ? detectFVGs(input.bars, opts.fvg) : [];
-  const orderBlocks = opts.enableOrderBlock !== false ? detectOrderBlocks(input.bars, opts.orderBlock) : [];
+  const orderBlocks =
+    opts.enableOrderBlock !== false ? detectOrderBlocks(input.bars, opts.orderBlock) : [];
 
   // Calculate confluence score
   const score = calculateConfluence(fvgZones, orderBlocks, weights, input.bars.length);
@@ -180,10 +181,11 @@ function buildConfluenceFactors(
   const factors = [];
 
   // FVG factor
-  const unfilledFVGs = fvgZones.filter(z => !z.filled);
-  const fvgValue = unfilledFVGs.length > 0
-    ? unfilledFVGs.reduce((sum, z) => sum + z.strength, 0) / unfilledFVGs.length
-    : 0;
+  const unfilledFVGs = fvgZones.filter((z) => !z.filled);
+  const fvgValue =
+    unfilledFVGs.length > 0
+      ? unfilledFVGs.reduce((sum, z) => sum + z.strength, 0) / unfilledFVGs.length
+      : 0;
 
   factors.push({
     name: 'Fair Value Gaps',
@@ -193,10 +195,11 @@ function buildConfluenceFactors(
   });
 
   // Order Block factor
-  const unmitigatedBlocks = orderBlocks.filter(b => !b.mitigated);
-  const obValue = unmitigatedBlocks.length > 0
-    ? unmitigatedBlocks.reduce((sum, b) => sum + b.strength, 0) / unmitigatedBlocks.length
-    : 0;
+  const unmitigatedBlocks = orderBlocks.filter((b) => !b.mitigated);
+  const obValue =
+    unmitigatedBlocks.length > 0
+      ? unmitigatedBlocks.reduce((sum, b) => sum + b.strength, 0) / unmitigatedBlocks.length
+      : 0;
 
   factors.push({
     name: 'Order Blocks',
@@ -227,8 +230,8 @@ function buildConfluenceFactors(
   });
 
   // Recency factor
-  const mostRecentFVG = fvgZones.length > 0 ? Math.max(...fvgZones.map(z => z.startIndex)) : -1;
-  const mostRecentOB = orderBlocks.length > 0 ? Math.max(...orderBlocks.map(b => b.index)) : -1;
+  const mostRecentFVG = fvgZones.length > 0 ? Math.max(...fvgZones.map((z) => z.startIndex)) : -1;
+  const mostRecentOB = orderBlocks.length > 0 ? Math.max(...orderBlocks.map((b) => b.index)) : -1;
   const mostRecentIndex = Math.max(mostRecentFVG, mostRecentOB);
   const barsAgo = mostRecentIndex >= 0 ? barsCount - mostRecentIndex : barsCount;
   const recencyValue = barsCount > 0 ? Math.max(0, 1 - barsAgo / barsCount) : 0;

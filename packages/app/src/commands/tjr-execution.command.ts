@@ -141,9 +141,10 @@ export class TJRExecutionCommand extends BaseTJRCommand {
     let riskConfig = userConfig.risk;
     if (options['risk']) {
       try {
-        const riskOverride = typeof options['risk'] === 'string'
-          ? JSON.parse(options['risk'] as string)
-          : options['risk'];
+        const riskOverride =
+          typeof options['risk'] === 'string'
+            ? JSON.parse(options['risk'] as string)
+            : options['risk'];
         riskConfig = { ...riskConfig, ...riskOverride };
       } catch (error) {
         throw new TJRCommandError(
@@ -172,14 +173,16 @@ export class TJRExecutionCommand extends BaseTJRCommand {
           enableOrderBlock: true,
           execution: userConfig.execution,
           bars1m,
-          risk: riskConfig ? {
-            symbol,
-            entryPrice: 0, // Will be filled by analysis
-            stopLoss: 0,   // Will be filled by analysis
-            direction: 'long', // Will be filled by analysis
-            currentTimestamp: new Date().toISOString(),
-            config: riskConfig,
-          } : undefined,
+          risk: riskConfig
+            ? {
+                symbol,
+                entryPrice: 0, // Will be filled by analysis
+                stopLoss: 0, // Will be filled by analysis
+                direction: 'long', // Will be filled by analysis
+                currentTimestamp: new Date().toISOString(),
+                config: riskConfig,
+              }
+            : undefined,
         }
       );
     } catch (error) {
@@ -251,10 +254,14 @@ export class TJRExecutionCommand extends BaseTJRCommand {
         stopLoss: result.execution.stopLoss,
         takeProfit: result.execution.takeProfit,
         positionSize: result.execution.positionSize,
-        riskAmount: Math.abs(result.execution.entryPrice - result.execution.stopLoss) * result.execution.positionSize,
-        rewardAmount: Math.abs(result.execution.takeProfit - result.execution.entryPrice) * result.execution.positionSize,
+        riskAmount:
+          Math.abs(result.execution.entryPrice - result.execution.stopLoss) *
+          result.execution.positionSize,
+        rewardAmount:
+          Math.abs(result.execution.takeProfit - result.execution.entryPrice) *
+          result.execution.positionSize,
         riskRewardRatio: result.execution.riskRewardRatio,
-        confluenceFactors: result.confluence.factors.map(f => f.name),
+        confluenceFactors: result.confluence.factors.map((f) => f.name),
       };
     }
 
@@ -266,7 +273,9 @@ export class TJRExecutionCommand extends BaseTJRCommand {
         maxRiskPerTrade: result.riskManagement.positionSize.percentRisk,
         maxRiskAmount: result.riskManagement.positionSize.dollarRisk,
         positionSize: result.riskManagement.positionSize.shares,
-        dailyLossLimit: result.riskManagement.dailyStop.currentLoss + result.riskManagement.dailyStop.remainingCapacity,
+        dailyLossLimit:
+          result.riskManagement.dailyStop.currentLoss +
+          result.riskManagement.dailyStop.remainingCapacity,
         dailyLossUsed: result.riskManagement.dailyStop.currentLoss,
         canTakeNewTrade: result.riskManagement.recommendation.canTrade,
         partialExits: result.riskManagement.partialExits.map((exit) => ({

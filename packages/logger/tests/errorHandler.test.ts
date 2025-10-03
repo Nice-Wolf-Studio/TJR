@@ -46,7 +46,7 @@ describe('attachGlobalHandlers', () => {
     // Second attachment should warn
     attachGlobalHandlers(logger);
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const logContent = fs.readFileSync(testLogFile, 'utf-8');
     assert.ok(
@@ -69,7 +69,7 @@ describe('attachGlobalHandlers', () => {
     });
 
     // Give Winston time to flush
-    await new Promise(resolve => setTimeout(resolve, 250));
+    await new Promise((resolve) => setTimeout(resolve, 250));
 
     // Verify log file was created and written to
     const logExists = fs.existsSync(testLogFile);

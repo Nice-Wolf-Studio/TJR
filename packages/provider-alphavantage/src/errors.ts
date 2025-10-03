@@ -16,7 +16,10 @@ import type { AlphaVantageErrorResponse } from './types.js';
  * All Alpha Vantage-specific errors extend this class.
  */
 export class AlphaVantageError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'AlphaVantageError';
     Object.setPrototypeOf(this, AlphaVantageError.prototype);
@@ -165,12 +168,18 @@ export function mapAlphaVantageError(
     const errorMsg = errorResponse['Error Message'];
 
     // Invalid API key
-    if (errorMsg.toLowerCase().includes('invalid api') || errorMsg.toLowerCase().includes('api key')) {
+    if (
+      errorMsg.toLowerCase().includes('invalid api') ||
+      errorMsg.toLowerCase().includes('api key')
+    ) {
       return new AuthenticationError(errorMsg);
     }
 
     // Symbol not found
-    if (errorMsg.toLowerCase().includes('invalid symbol') || errorMsg.toLowerCase().includes('not found')) {
+    if (
+      errorMsg.toLowerCase().includes('invalid symbol') ||
+      errorMsg.toLowerCase().includes('not found')
+    ) {
       // Try to extract symbol from error message
       const symbolMatch = errorMsg.match(/symbol[:\s]+([A-Z0-9]+)/i);
       const symbol = symbolMatch?.[1] ?? 'unknown';

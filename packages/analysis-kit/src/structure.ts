@@ -29,7 +29,7 @@ function validateBarsOrdering(bars: Bar[]): void {
     if (curr.timestamp <= prev.timestamp) {
       throw new Error(
         `Bars must be in chronological order: bar[${i}].timestamp (${curr.timestamp}) ` +
-        `<= bar[${i - 1}].timestamp (${prev.timestamp})`
+          `<= bar[${i - 1}].timestamp (${prev.timestamp})`
       );
     }
   }

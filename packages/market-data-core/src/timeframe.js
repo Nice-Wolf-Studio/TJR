@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * Timeframe manipulation utilities.
  *
@@ -10,7 +10,7 @@
  * All functions assume UTC timezone. Provider adapters are responsible for
  * converting local times to UTC before calling these functions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.toMillis = toMillis;
 exports.normalizeTimeframe = normalizeTimeframe;
 exports.alignTimestamp = alignTimestamp;
@@ -27,15 +27,15 @@ exports.isAligned = isAligned;
  * - Each timeframe is an integer multiple of all smaller timeframes
  */
 const TIMEFRAME_MS = {
-    "1m": 60_000,
-    "5m": 300_000,
-    "10m": 600_000,
-    "15m": 900_000,
-    "30m": 1_800_000,
-    "1h": 3_600_000,
-    "2h": 7_200_000,
-    "4h": 14_400_000,
-    "1D": 86_400_000,
+  '1m': 60_000,
+  '5m': 300_000,
+  '10m': 600_000,
+  '15m': 900_000,
+  '30m': 1_800_000,
+  '1h': 3_600_000,
+  '2h': 7_200_000,
+  '4h': 14_400_000,
+  '1D': 86_400_000,
 };
 /**
  * Reverse mapping: milliseconds → canonical timeframe.
@@ -56,38 +56,38 @@ const MS_TO_TIMEFRAME = new Map(Object.entries(TIMEFRAME_MS).map(([tf, ms]) => [
  * - "D" → 86_400_000ms → "1D"
  */
 const TIMEFRAME_ALIASES = {
-    // Minute aliases
-    "1min": 60_000,
-    "60s": 60_000,
-    "minute": 60_000,
-    // 5-minute aliases
-    "5min": 300_000,
-    "300s": 300_000,
-    // 10-minute aliases
-    "10min": 600_000,
-    "600s": 600_000,
-    // 15-minute aliases
-    "15min": 900_000,
-    "900s": 900_000,
-    // 30-minute aliases
-    "30min": 1_800_000,
-    "1800s": 1_800_000,
-    // Hour aliases
-    "1hour": 3_600_000,
-    "hour": 3_600_000,
-    "60m": 3_600_000,
-    "3600s": 3_600_000,
-    // 2-hour aliases
-    "2hour": 7_200_000,
-    "120m": 7_200_000,
-    // 4-hour aliases
-    "4hour": 14_400_000,
-    "240m": 14_400_000,
-    // Daily aliases
-    "D": 86_400_000,
-    "day": 86_400_000,
-    "daily": 86_400_000,
-    "1440m": 86_400_000,
+  // Minute aliases
+  '1min': 60_000,
+  '60s': 60_000,
+  minute: 60_000,
+  // 5-minute aliases
+  '5min': 300_000,
+  '300s': 300_000,
+  // 10-minute aliases
+  '10min': 600_000,
+  '600s': 600_000,
+  // 15-minute aliases
+  '15min': 900_000,
+  '900s': 900_000,
+  // 30-minute aliases
+  '30min': 1_800_000,
+  '1800s': 1_800_000,
+  // Hour aliases
+  '1hour': 3_600_000,
+  hour: 3_600_000,
+  '60m': 3_600_000,
+  '3600s': 3_600_000,
+  // 2-hour aliases
+  '2hour': 7_200_000,
+  '120m': 7_200_000,
+  // 4-hour aliases
+  '4hour': 14_400_000,
+  '240m': 14_400_000,
+  // Daily aliases
+  D: 86_400_000,
+  day: 86_400_000,
+  daily: 86_400_000,
+  '1440m': 86_400_000,
 };
 /**
  * Converts a canonical timeframe to milliseconds.
@@ -109,7 +109,7 @@ const TIMEFRAME_ALIASES = {
  * Complexity: O(1) (direct map lookup)
  */
 function toMillis(timeframe) {
-    return TIMEFRAME_MS[timeframe];
+  return TIMEFRAME_MS[timeframe];
 }
 /**
  * Normalizes a timeframe string to canonical form.
@@ -139,20 +139,20 @@ function toMillis(timeframe) {
  * Complexity: O(1) (map lookups)
  */
 function normalizeTimeframe(input) {
-    // Fast path: input is already canonical
-    if (input in TIMEFRAME_MS) {
-        return input;
+  // Fast path: input is already canonical
+  if (input in TIMEFRAME_MS) {
+    return input;
+  }
+  // Check if input is a known alias
+  const ms = TIMEFRAME_ALIASES[input];
+  if (ms !== undefined) {
+    const canonical = MS_TO_TIMEFRAME.get(ms);
+    if (canonical) {
+      return canonical;
     }
-    // Check if input is a known alias
-    const ms = TIMEFRAME_ALIASES[input];
-    if (ms !== undefined) {
-        const canonical = MS_TO_TIMEFRAME.get(ms);
-        if (canonical) {
-            return canonical;
-        }
-    }
-    // Input is neither canonical nor aliased → unsupported
-    throw new Error(`Unsupported timeframe: ${input}${ms !== undefined ? ` (${ms}ms)` : ""}`);
+  }
+  // Input is neither canonical nor aliased → unsupported
+  throw new Error(`Unsupported timeframe: ${input}${ms !== undefined ? ` (${ms}ms)` : ''}`);
 }
 /**
  * Aligns a timestamp to the nearest timeframe boundary.
@@ -196,25 +196,24 @@ function normalizeTimeframe(input) {
  * Complexity: O(1) (arithmetic operations only)
  */
 function alignTimestamp(timestamp, timeframe, direction) {
-    const tfMs = toMillis(timeframe);
-    if (direction === "floor") {
-        // Round down to nearest boundary
-        // Example: 14:40:59 with 5m → 14:40:00
-        //   timestamp = 1633024859000
-        //   tfMs = 300000 (5m)
-        //   Math.floor(1633024859000 / 300000) = 5443416
-        //   5443416 * 300000 = 1633024800000 (14:40:00)
-        return Math.floor(timestamp / tfMs) * tfMs;
-    }
-    else {
-        // Round up to nearest boundary
-        // Example: 14:40:59 with 5m → 14:45:00
-        //   timestamp = 1633024859000
-        //   tfMs = 300000 (5m)
-        //   Math.ceil(1633024859000 / 300000) = 5443417
-        //   5443417 * 300000 = 1633025100000 (14:45:00)
-        return Math.ceil(timestamp / tfMs) * tfMs;
-    }
+  const tfMs = toMillis(timeframe);
+  if (direction === 'floor') {
+    // Round down to nearest boundary
+    // Example: 14:40:59 with 5m → 14:40:00
+    //   timestamp = 1633024859000
+    //   tfMs = 300000 (5m)
+    //   Math.floor(1633024859000 / 300000) = 5443416
+    //   5443416 * 300000 = 1633024800000 (14:40:00)
+    return Math.floor(timestamp / tfMs) * tfMs;
+  } else {
+    // Round up to nearest boundary
+    // Example: 14:40:59 with 5m → 14:45:00
+    //   timestamp = 1633024859000
+    //   tfMs = 300000 (5m)
+    //   Math.ceil(1633024859000 / 300000) = 5443417
+    //   5443417 * 300000 = 1633025100000 (14:45:00)
+    return Math.ceil(timestamp / tfMs) * tfMs;
+  }
 }
 /**
  * Checks if a timestamp is aligned to a timeframe boundary.
@@ -236,7 +235,7 @@ function alignTimestamp(timestamp, timeframe, direction) {
  * Complexity: O(1)
  */
 function isAligned(timestamp, timeframe) {
-    const tfMs = toMillis(timeframe);
-    return timestamp % tfMs === 0;
+  const tfMs = toMillis(timeframe);
+  return timestamp % tfMs === 0;
 }
 //# sourceMappingURL=timeframe.js.map

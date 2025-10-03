@@ -20,12 +20,7 @@ export {
 } from './request-context.js';
 
 // Performance timing utilities
-export {
-  startTimer,
-  measureSync,
-  measureAsync,
-  TimerManager,
-} from './perf-timer.js';
+export { startTimer, measureSync, measureAsync, TimerManager } from './perf-timer.js';
 
 // Standardized log fields and validation
 export {
@@ -50,13 +45,7 @@ export {
 } from './middleware.js';
 
 // Type exports
-export type {
-  Logger,
-  LoggerConfig,
-  LogLevel,
-  LogEntry,
-  ChildLoggerContext,
-} from './types.js';
+export type { Logger, LoggerConfig, LogLevel, LogEntry, ChildLoggerContext } from './types.js';
 
 export type { RequestContext } from './request-context.js';
 export type { PerfTimer } from './perf-timer.js';

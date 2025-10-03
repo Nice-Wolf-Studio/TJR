@@ -11,12 +11,14 @@
 ## Context
 
 The market-data-core package needs a deterministic, reproducible mechanism for selecting data providers based on:
+
 - Provider capabilities (supported timeframes, asset classes, historical depth)
 - Data freshness requirements (real-time vs. delayed vs. end-of-day)
 - Priority/cost tradeoffs (prefer cheaper providers when equivalent)
 - Override mechanisms (force specific provider for testing or compliance)
 
 Without a formal selection policy, we face:
+
 - **Non-deterministic behavior:** Different provider selection across runs
 - **Debugging difficulty:** Unclear why a particular provider was chosen
 - **Cost inefficiency:** Using expensive providers when cheaper alternatives suffice
@@ -29,6 +31,7 @@ Without a formal selection policy, we face:
 ### 1. **Capabilities-Based Selection**
 
 Provider capabilities are defined in a static `capabilities.json` file containing:
+
 - `providerId`: Unique identifier (e.g., "yahoo", "polygon", "binance")
 - `timeframes`: Supported timeframes (subset of canonical timeframes)
 - `assetClasses`: Supported asset classes (e.g., "stocks", "crypto", "forex")
@@ -37,6 +40,7 @@ Provider capabilities are defined in a static `capabilities.json` file containin
 - `freshnessSeconds`: Typical data staleness (0 = real-time, 900 = 15min delay)
 
 **Rationale:**
+
 - **Declarative:** Capabilities are configuration, not code
 - **Centralized:** Single source of truth for provider metadata
 - **Versionable:** Changes tracked in git, auditable
@@ -54,17 +58,19 @@ The `selectProvider()` function implements a 4-step selection process:
 4. **Priority selection:** Select the capable provider with lowest priority value
 
 **Algorithm guarantees:**
+
 - **Deterministic:** Same inputs → same output (no randomness, no system state)
 - **Explainable:** Returns selection reason as human-readable string
 - **Auditable:** Logs excluded providers with exclusion reasons
 
 **Example:**
+
 ```typescript
 const result = selectProvider(providers, {
-  timeframe: "5m",
-  assetClass: "stocks",
+  timeframe: '5m',
+  assetClass: 'stocks',
   lookbackDays: 30,
-  maxStalenessSec: 60
+  maxStalenessSec: 60,
 });
 
 // result.providerId = "polygon"
@@ -76,6 +82,7 @@ const result = selectProvider(providers, {
 ### 3. **Freshness TTL Enforcement**
 
 Callers can specify `maxStalenessSec` to enforce data freshness requirements:
+
 - **Real-time use cases:** `maxStalenessSec: 5` (exclude delayed providers)
 - **Backtesting:** `maxStalenessSec: undefined` (freshness irrelevant)
 - **Intraday analysis:** `maxStalenessSec: 900` (15-minute delay acceptable)
@@ -83,6 +90,7 @@ Callers can specify `maxStalenessSec` to enforce data freshness requirements:
 Providers with `freshnessSeconds > maxStalenessSec` are excluded from selection.
 
 **Rationale:**
+
 - **Use-case driven:** Different workflows have different freshness needs
 - **Cost optimization:** Avoid expensive real-time providers for batch jobs
 - **Compliance:** Enforce freshness SLAs for production systems
@@ -92,6 +100,7 @@ Providers with `freshnessSeconds > maxStalenessSec` are excluded from selection.
 ### 4. **Priority Override Mechanism**
 
 Callers can specify `preferProviderId` to force a specific provider (if capable):
+
 - **Testing:** Force deterministic provider in tests
 - **Cost control:** Prefer free provider when experimenting
 - **Compliance:** Force specific provider for regulatory reasons
@@ -99,6 +108,7 @@ Callers can specify `preferProviderId` to force a specific provider (if capable)
 If the preferred provider is not capable, the algorithm falls back to priority selection and logs why the preference was ignored.
 
 **Rationale:**
+
 - **Flexibility:** Supports edge cases without complicating core algorithm
 - **Safety:** Preference only applied if provider is actually capable
 - **Transparency:** Logs when preference is ignored and why
@@ -108,16 +118,19 @@ If the preferred provider is not capable, the algorithm falls back to priority s
 ### 5. **Comprehensive Logging**
 
 The selection result includes:
+
 - `providerId`: Selected provider (or `null` if none capable)
 - `reason`: Human-readable selection rationale
 - `excluded`: Array of excluded providers with exclusion reasons
 
 This enables:
+
 - **Debugging:** Understand why a particular provider was/wasn't chosen
 - **Auditing:** Compliance teams can trace provider selection decisions
 - **Monitoring:** Alert on unexpected provider selections
 
 **Example log output:**
+
 ```
 Selected polygon: supports 5m timeframe, stocks asset class, 30d lookback, freshness 0s <= 60s max, priority 5
 
@@ -159,6 +172,7 @@ Excluded providers:
 **Description:** Query providers at runtime to discover capabilities.
 
 **Rejected because:**
+
 - Adds network I/O and latency to selection
 - Makes selection non-deterministic (capabilities may change between calls)
 - Complicates testing (requires mocking provider APIs)
@@ -170,6 +184,7 @@ Excluded providers:
 **Description:** Assign weights to multiple factors (cost, latency, coverage) and compute score.
 
 **Rejected for Phase 2 because:**
+
 - Over-engineered for current needs (simple priority suffices)
 - Harder to explain and debug (numeric scores less transparent than rules)
 - Can be added later if priority model proves insufficient
@@ -181,6 +196,7 @@ Excluded providers:
 **Description:** Store capabilities in database or remote config service.
 
 **Rejected for Phase 2 because:**
+
 - Adds operational complexity (database dependency)
 - Makes offline development harder
 - Can be migrated to later without API changes
@@ -218,6 +234,7 @@ Excluded providers:
 **Accepted** - The composite provider selection policy is approved for Phase 2.B4.
 
 This ADR establishes the foundation for multi-provider market data fetching. Future phases will add:
+
 - Provider adapter implementations (Yahoo, Polygon, Binance, etc.)
 - Caching layer with TTL-based invalidation
 - Fallback/retry logic for provider failures

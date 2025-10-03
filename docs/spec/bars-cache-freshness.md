@@ -23,18 +23,18 @@ Each timeframe has a Time-To-Live (TTL) that defines how long cached data remain
 
 **Default TTL Policies:**
 
-| Timeframe | TTL | Rationale |
-|-----------|-----|-----------|
-| 1m | 5 minutes | High-frequency bars update quickly |
-| 5m | 15 minutes | Medium-frequency bars |
-| 10m | 20 minutes | Medium-frequency bars |
-| 15m | 30 minutes | Medium-frequency bars |
-| 30m | 1 hour | Low-frequency bars |
-| 1h | 2 hours | Hourly bars rarely corrected |
-| 2h | 4 hours | Multi-hour bars |
-| 4h | 6 hours | Multi-hour bars |
-| 1D | 24 hours | Daily bars finalize after market close |
-| Unknown | 10 minutes | Conservative default |
+| Timeframe | TTL        | Rationale                              |
+| --------- | ---------- | -------------------------------------- |
+| 1m        | 5 minutes  | High-frequency bars update quickly     |
+| 5m        | 15 minutes | Medium-frequency bars                  |
+| 10m       | 20 minutes | Medium-frequency bars                  |
+| 15m       | 30 minutes | Medium-frequency bars                  |
+| 30m       | 1 hour     | Low-frequency bars                     |
+| 1h        | 2 hours    | Hourly bars rarely corrected           |
+| 2h        | 4 hours    | Multi-hour bars                        |
+| 4h        | 6 hours    | Multi-hour bars                        |
+| 1D        | 24 hours   | Daily bars finalize after market close |
+| Unknown   | 10 minutes | Conservative default                   |
 
 ### 1.2 Staleness Detection
 
@@ -49,7 +49,7 @@ function isStale(bar: CachedBar, timeframe: Timeframe): boolean {
 
   // Otherwise, check TTL
   const ttl = getTTL(timeframe);
-  return (now - bar.fetchedAt) > ttl;
+  return now - bar.fetchedAt > ttl;
 }
 ```
 
@@ -120,20 +120,20 @@ async upsertBars(
 
 Rules are evaluated in order. First match wins.
 
-| Condition | Winner | Correction Type |
-|-----------|--------|-----------------|
-| No existing bar | New bar | `initial` |
-| Same provider, new.revision > existing.revision | New bar | `revision` |
-| Same provider, new.revision ≤ existing.revision | Existing bar | (no event) |
-| Different provider, new priority > existing priority | New bar | `provider_override` |
-| Different provider, new priority ≤ existing priority | Existing bar | (no event) |
+| Condition                                            | Winner       | Correction Type     |
+| ---------------------------------------------------- | ------------ | ------------------- |
+| No existing bar                                      | New bar      | `initial`           |
+| Same provider, new.revision > existing.revision      | New bar      | `revision`          |
+| Same provider, new.revision ≤ existing.revision      | Existing bar | (no event)          |
+| Different provider, new priority > existing priority | New bar      | `provider_override` |
+| Different provider, new priority ≤ existing priority | Existing bar | (no event)          |
 
 **Provider Priority:**
 
 Priority is determined by position in `providerPriority` array:
 
 ```typescript
-providerPriority = ['polygon', 'yahoo', 'alpaca']
+providerPriority = ['polygon', 'yahoo', 'alpaca'];
 ```
 
 - **polygon:** priority = 0 (highest)
@@ -196,13 +196,13 @@ function hasBarChanged(oldBar: CachedBar, newBar: CachedBar): boolean {
 
 ```typescript
 interface CorrectionEvent {
-  symbol: string;           // e.g., 'ES', 'AAPL'
-  timeframe: Timeframe;     // e.g., '1m', '5m'
-  timestamp: number;        // Bar timestamp (Unix ms)
+  symbol: string; // e.g., 'ES', 'AAPL'
+  timeframe: Timeframe; // e.g., '1m', '5m'
+  timestamp: number; // Bar timestamp (Unix ms)
   oldBar: CachedBar | null; // Previous bar (null for initial)
-  newBar: CachedBar;        // New bar
+  newBar: CachedBar; // New bar
   correctionType: 'revision' | 'provider_override' | 'initial';
-  detectedAt: number;       // When correction was detected (Unix ms)
+  detectedAt: number; // When correction was detected (Unix ms)
 }
 ```
 
@@ -252,6 +252,7 @@ for (const listener of listeners) {
 ```
 
 **Rationale:**
+
 - One bad listener shouldn't break others
 - Upsert operation should always succeed
 - Listeners are responsible for their own error handling
@@ -325,20 +326,17 @@ cache-verify --symbol <SYMBOL> --timeframe <TF> --window <N> [--pretty]
       "polygon": 198
     }
   },
-  "warnings": [
-    "18 stale bars need refreshing",
-    "1 corrections detected"
-  ]
+  "warnings": ["18 stale bars need refreshing", "1 corrections detected"]
 }
 ```
 
 ### 4.3 Exit Codes
 
-| Code | Meaning | Example |
-|------|---------|---------|
-| 0 | Success, no issues | All bars fresh, no corrections |
-| 1 | Warnings | Stale bars detected, corrections found |
-| 2 | Errors | Cache unavailable, missing data |
+| Code | Meaning            | Example                                |
+| ---- | ------------------ | -------------------------------------- |
+| 0    | Success, no issues | All bars fresh, no corrections         |
+| 1    | Warnings           | Stale bars detected, corrections found |
+| 2    | Errors             | Cache unavailable, missing data        |
 
 ### 4.4 Environment Variables
 
@@ -351,6 +349,7 @@ cache-verify --symbol <SYMBOL> --timeframe <TF> --window <N> [--pretty]
 **Guarantee:** Same data arriving in any order produces same final state.
 
 **Proof:**
+
 - Merge rules are deterministic (no randomness, no timestamps)
 - Provider priority is fixed configuration
 - Revision numbers are monotonic per provider
@@ -375,6 +374,7 @@ await service.upsertBars('AAPL', '5m', [yahooBar]);
 **Guarantee:** Revisions from same provider never decrease.
 
 **Enforcement:**
+
 - `selectWinningBar()` only accepts `new.revision > existing.revision`
 - Lower revisions are silently ignored
 - No error is thrown (idempotent upserts)
@@ -384,10 +384,12 @@ await service.upsertBars('AAPL', '5m', [yahooBar]);
 **Guarantee:** Exactly one correction event per actual bar change.
 
 **Enforcement:**
+
 - Events only emitted when `newBar` wins
 - Events only emitted when data changed (`hasBarChanged()`)
 
 Events are emitted for:
+
 - Initial inserts (`correctionType: 'initial'`)
 - Revision updates (`correctionType: 'revision'`)
 - Provider overrides (`correctionType: 'provider_override'`)
@@ -397,6 +399,7 @@ Events are emitted for:
 **Guarantee:** Existing code using `storeBars()` continues to work.
 
 **Mechanism:**
+
 - `storeBars()` method remains functional (marked `@deprecated`)
 - No events are emitted by `storeBars()`
 - Tests using `storeBars()` continue to pass
@@ -426,14 +429,17 @@ Each `upsertBars()` call:
 ### 6.2 Scalability
 
 **Memory cache:**
+
 - LRU eviction prevents unbounded growth
 - Default: 10,000 bars (~1-2 MB)
 
 **Database cache:**
+
 - SQLite handles millions of bars efficiently
 - Proper indexing critical for performance
 
 **Event bus:**
+
 - In-process synchronous events
 - Not suitable for distributed systems
 - Consider external message queue for scale
@@ -452,12 +458,14 @@ Each `upsertBars()` call:
 **Scenario:** Two threads upsert same bar simultaneously.
 
 **Behavior:**
+
 - SQLite UPSERT is atomic
 - Last writer wins at database level
 - Memory cache may be stale briefly
 - No data corruption
 
 **Mitigation:**
+
 - Use connection pooling with proper locking
 - Consider advisory locks for critical sections
 
@@ -466,6 +474,7 @@ Each `upsertBars()` call:
 **Scenario:** Bars arrive out of order (e.g., revision 2 before revision 1).
 
 **Behavior:**
+
 - Merge rules handle any arrival order
 - Final state is deterministic
 - May emit multiple correction events
@@ -476,13 +485,13 @@ Each `upsertBars()` call:
 ```typescript
 // Revision 2 arrives first
 await service.upsertBars('AAPL', '5m', [
-  { timestamp: T, revision: 2, close: 100.8, provider: 'polygon' }
+  { timestamp: T, revision: 2, close: 100.8, provider: 'polygon' },
 ]);
 // State: revision 2, close 100.8
 
 // Revision 1 arrives late (ignored)
 await service.upsertBars('AAPL', '5m', [
-  { timestamp: T, revision: 1, close: 100.5, provider: 'polygon' }
+  { timestamp: T, revision: 1, close: 100.5, provider: 'polygon' },
 ]);
 // State: revision 2, close 100.8 (unchanged)
 ```
@@ -492,12 +501,14 @@ await service.upsertBars('AAPL', '5m', [
 **Scenario:** Provider priority configuration changes between restarts.
 
 **Behavior:**
+
 - Cached data from old priority remains
 - New upserts use new priority
 - Gradual convergence to new priority order
 - No immediate re-processing of cache
 
 **Mitigation:**
+
 - Keep provider priority stable
 - If changing, consider cache invalidation
 - Document priority changes in config
@@ -507,12 +518,14 @@ await service.upsertBars('AAPL', '5m', [
 **Scenario:** Provider issues correction for 1 million bars.
 
 **Behavior:**
+
 - `upsertBars()` processes sequentially
 - One event per changed bar
 - All listeners invoked for each event
 - May take significant time
 
 **Mitigation:**
+
 - Batch upserts in transactions
 - Rate-limit event emission
 - Consider async processing

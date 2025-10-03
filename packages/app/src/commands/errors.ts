@@ -108,10 +108,12 @@ export class TJRCommandError extends Error {
       code: this.code,
       message: this.message,
       context: this.context,
-      cause: this.cause ? {
-        name: this.cause.name,
-        message: this.cause.message,
-      } : undefined,
+      cause: this.cause
+        ? {
+            name: this.cause.name,
+            message: this.cause.message,
+          }
+        : undefined,
     };
   }
 }

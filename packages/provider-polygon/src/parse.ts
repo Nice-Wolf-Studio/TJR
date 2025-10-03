@@ -5,9 +5,9 @@
  * the canonical Bar format used by @tjr-suite/market-data-core.
  */
 
-import type { Bar } from "@tjr-suite/market-data-core";
-import type { PolygonAggregatesResponse, PolygonAggregate } from "./types.js";
-import { ParseError } from "./errors.js";
+import type { Bar } from '@tjr-suite/market-data-core';
+import type { PolygonAggregatesResponse, PolygonAggregate } from './types.js';
+import { ParseError } from './errors.js';
 
 /**
  * Parses Polygon.io aggregates API response into Bar array.
@@ -45,11 +45,11 @@ import { ParseError } from "./errors.js";
  */
 export function parseAggregatesResponse(response: PolygonAggregatesResponse): Bar[] {
   // Validate response status
-  if (response.status !== "OK") {
+  if (response.status !== 'OK') {
     throw new ParseError(`Polygon API returned error status: ${response.status}`, {
       responseBody: JSON.stringify(response),
-      field: "status",
-      expectedType: "OK",
+      field: 'status',
+      expectedType: 'OK',
       actualType: response.status,
       error: response.error,
     });
@@ -57,10 +57,10 @@ export function parseAggregatesResponse(response: PolygonAggregatesResponse): Ba
 
   // Validate results array exists
   if (!response.results) {
-    throw new ParseError("Missing required field: results", {
+    throw new ParseError('Missing required field: results', {
       responseBody: JSON.stringify(response),
-      field: "results",
-      expectedType: "array",
+      field: 'results',
+      expectedType: 'array',
       actualType: typeof response.results,
     });
   }
@@ -69,8 +69,8 @@ export function parseAggregatesResponse(response: PolygonAggregatesResponse): Ba
   if (!Array.isArray(response.results)) {
     throw new ParseError("Field 'results' must be an array", {
       responseBody: JSON.stringify(response),
-      field: "results",
-      expectedType: "array",
+      field: 'results',
+      expectedType: 'array',
       actualType: typeof response.results,
     });
   }
@@ -132,87 +132,87 @@ export function parseAggregatesResponse(response: PolygonAggregatesResponse): Ba
  */
 export function parseAggregate(aggregate: PolygonAggregate): Bar {
   // Validate required fields are present
-  const requiredFields: Array<keyof PolygonAggregate> = ["t", "o", "h", "l", "c", "v"];
+  const requiredFields: Array<keyof PolygonAggregate> = ['t', 'o', 'h', 'l', 'c', 'v'];
   for (const field of requiredFields) {
     if (aggregate[field] === undefined || aggregate[field] === null) {
       throw new ParseError(`Missing required field: ${field}`, {
         aggregate: JSON.stringify(aggregate),
         field,
-        expectedType: "number",
+        expectedType: 'number',
         actualType: typeof aggregate[field],
       });
     }
   }
 
   // Validate field types
-  if (typeof aggregate.t !== "number") {
+  if (typeof aggregate.t !== 'number') {
     throw new ParseError("Field 't' (timestamp) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "t",
-      expectedType: "number",
+      field: 't',
+      expectedType: 'number',
       actualType: typeof aggregate.t,
     });
   }
 
-  if (typeof aggregate.o !== "number") {
+  if (typeof aggregate.o !== 'number') {
     throw new ParseError("Field 'o' (open) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "o",
-      expectedType: "number",
+      field: 'o',
+      expectedType: 'number',
       actualType: typeof aggregate.o,
     });
   }
 
-  if (typeof aggregate.h !== "number") {
+  if (typeof aggregate.h !== 'number') {
     throw new ParseError("Field 'h' (high) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "h",
-      expectedType: "number",
+      field: 'h',
+      expectedType: 'number',
       actualType: typeof aggregate.h,
     });
   }
 
-  if (typeof aggregate.l !== "number") {
+  if (typeof aggregate.l !== 'number') {
     throw new ParseError("Field 'l' (low) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "l",
-      expectedType: "number",
+      field: 'l',
+      expectedType: 'number',
       actualType: typeof aggregate.l,
     });
   }
 
-  if (typeof aggregate.c !== "number") {
+  if (typeof aggregate.c !== 'number') {
     throw new ParseError("Field 'c' (close) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "c",
-      expectedType: "number",
+      field: 'c',
+      expectedType: 'number',
       actualType: typeof aggregate.c,
     });
   }
 
-  if (typeof aggregate.v !== "number") {
+  if (typeof aggregate.v !== 'number') {
     throw new ParseError("Field 'v' (volume) must be a number", {
       aggregate: JSON.stringify(aggregate),
-      field: "v",
-      expectedType: "number",
+      field: 'v',
+      expectedType: 'number',
       actualType: typeof aggregate.v,
     });
   }
 
   // Validate OHLC invariants
   if (aggregate.h < aggregate.l) {
-    throw new ParseError("High price must be >= low price", {
+    throw new ParseError('High price must be >= low price', {
       aggregate: JSON.stringify(aggregate),
-      field: "h,l",
+      field: 'h,l',
       high: aggregate.h,
       low: aggregate.l,
     });
   }
 
   if (aggregate.h < aggregate.o || aggregate.h < aggregate.c) {
-    throw new ParseError("High price must be >= open and close", {
+    throw new ParseError('High price must be >= open and close', {
       aggregate: JSON.stringify(aggregate),
-      field: "h,o,c",
+      field: 'h,o,c',
       high: aggregate.h,
       open: aggregate.o,
       close: aggregate.c,
@@ -220,9 +220,9 @@ export function parseAggregate(aggregate: PolygonAggregate): Bar {
   }
 
   if (aggregate.l > aggregate.o || aggregate.l > aggregate.c) {
-    throw new ParseError("Low price must be <= open and close", {
+    throw new ParseError('Low price must be <= open and close', {
       aggregate: JSON.stringify(aggregate),
-      field: "l,o,c",
+      field: 'l,o,c',
       low: aggregate.l,
       open: aggregate.o,
       close: aggregate.c,
@@ -231,9 +231,9 @@ export function parseAggregate(aggregate: PolygonAggregate): Bar {
 
   // Validate volume is non-negative
   if (aggregate.v < 0) {
-    throw new ParseError("Volume must be non-negative", {
+    throw new ParseError('Volume must be non-negative', {
       aggregate: JSON.stringify(aggregate),
-      field: "v",
+      field: 'v',
       volume: aggregate.v,
     });
   }

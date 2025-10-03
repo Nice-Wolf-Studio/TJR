@@ -32,18 +32,18 @@ import type { Timeframe } from './timeframes.js';
  * ```
  */
 export interface MarketBar {
-    /** ISO 8601 timestamp of bar open (UTC) */
-    timestamp: string;
-    /** Opening price for the period */
-    open: number;
-    /** Highest price during the period */
-    high: number;
-    /** Lowest price during the period */
-    low: number;
-    /** Closing price for the period */
-    close: number;
-    /** Trading volume during the period */
-    volume: number;
+  /** ISO 8601 timestamp of bar open (UTC) */
+  timestamp: string;
+  /** Opening price for the period */
+  open: number;
+  /** Highest price during the period */
+  high: number;
+  /** Lowest price during the period */
+  low: number;
+  /** Closing price for the period */
+  close: number;
+  /** Trading volume during the period */
+  volume: number;
 }
 /**
  * Parameters for requesting historical market bars from a provider.
@@ -65,25 +65,25 @@ export interface MarketBar {
  * ```
  */
 export interface GetBarsParams {
-    /**
-     * Symbol identifier (e.g., 'SPY', 'AAPL').
-     * Format may vary by provider; normalization is caller's responsibility.
-     */
-    symbol: string;
-    /** Timeframe for the bars */
-    timeframe: Timeframe;
-    /** Start of time range (ISO 8601, inclusive) */
-    from: string;
-    /**
-     * End of time range (ISO 8601, inclusive).
-     * If omitted, fetches until present or provider limit.
-     */
-    to?: string;
-    /**
-     * Maximum number of bars to return.
-     * Actual count may be less if insufficient data available.
-     */
-    limit?: number;
+  /**
+   * Symbol identifier (e.g., 'SPY', 'AAPL').
+   * Format may vary by provider; normalization is caller's responsibility.
+   */
+  symbol: string;
+  /** Timeframe for the bars */
+  timeframe: Timeframe;
+  /** Start of time range (ISO 8601, inclusive) */
+  from: string;
+  /**
+   * End of time range (ISO 8601, inclusive).
+   * If omitted, fetches until present or provider limit.
+   */
+  to?: string;
+  /**
+   * Maximum number of bars to return.
+   * Actual count may be less if insufficient data available.
+   */
+  limit?: number;
 }
 /**
  * Describes a provider's supported features and limitations.
@@ -101,23 +101,23 @@ export interface GetBarsParams {
  * ```
  */
 export interface ProviderCapabilities {
-    /** Array of supported timeframes */
-    supportsTimeframes: Timeframe[];
-    /** Maximum bars returnable in a single request */
-    maxBarsPerRequest: number;
-    /** Whether API keys/auth are required */
-    requiresAuthentication: boolean;
-    /** Rate limiting constraints */
-    rateLimits: {
-        /** Maximum requests per minute */
-        requestsPerMinute: number;
-        /** Optional: requests per day */
-        requestsPerDay?: number;
-    };
-    /** Optional: Supports extended hours trading data */
-    supportsExtendedHours?: boolean;
-    /** Optional: Minimum historical data availability (ISO 8601 date) */
-    historicalDataFrom?: string;
+  /** Array of supported timeframes */
+  supportsTimeframes: Timeframe[];
+  /** Maximum bars returnable in a single request */
+  maxBarsPerRequest: number;
+  /** Whether API keys/auth are required */
+  requiresAuthentication: boolean;
+  /** Rate limiting constraints */
+  rateLimits: {
+    /** Maximum requests per minute */
+    requestsPerMinute: number;
+    /** Optional: requests per day */
+    requestsPerDay?: number;
+  };
+  /** Optional: Supports extended hours trading data */
+  supportsExtendedHours?: boolean;
+  /** Optional: Minimum historical data availability (ISO 8601 date) */
+  historicalDataFrom?: string;
 }
 /**
  * Trading session boundaries and metadata.
@@ -141,21 +141,21 @@ export interface ProviderCapabilities {
  * ```
  */
 export interface Session {
-    /** Date of the session (YYYY-MM-DD) */
-    date: string;
-    /** IANA timezone identifier (e.g., 'America/New_York') */
-    timezone: string;
-    /** Pre-market open time (HH:mm:ss) */
-    preMarketOpen: string;
-    /** Regular trading session open time (HH:mm:ss) */
-    regularOpen: string;
-    /** Regular trading session close time (HH:mm:ss) */
-    regularClose: string;
-    /** Post-market close time (HH:mm:ss) */
-    postMarketClose: string;
-    /** True if market is closed for holiday */
-    isHoliday: boolean;
-    /** Optional: Holiday name if applicable */
-    holidayName?: string;
+  /** Date of the session (YYYY-MM-DD) */
+  date: string;
+  /** IANA timezone identifier (e.g., 'America/New_York') */
+  timezone: string;
+  /** Pre-market open time (HH:mm:ss) */
+  preMarketOpen: string;
+  /** Regular trading session open time (HH:mm:ss) */
+  regularOpen: string;
+  /** Regular trading session close time (HH:mm:ss) */
+  regularClose: string;
+  /** Post-market close time (HH:mm:ss) */
+  postMarketClose: string;
+  /** True if market is closed for holiday */
+  isHoliday: boolean;
+  /** Optional: Holiday name if applicable */
+  holidayName?: string;
 }
 //# sourceMappingURL=market.d.ts.map

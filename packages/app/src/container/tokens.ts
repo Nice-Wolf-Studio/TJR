@@ -38,7 +38,7 @@ export const TOKENS = {
 /**
  * Type-safe token type
  */
-export type ServiceToken = typeof TOKENS[keyof typeof TOKENS];
+export type ServiceToken = (typeof TOKENS)[keyof typeof TOKENS];
 
 /**
  * Get token name for debugging

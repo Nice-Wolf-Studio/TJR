@@ -10,8 +10,8 @@ import type { CanonicalSymbol } from './types';
  * Key: vendor prefix pattern, Value: removal flag
  */
 const VENDOR_PREFIXES: Record<string, boolean> = {
-  '@': true,   // IQFeed: @ES → ES
-  '/': true,   // TradingView: /ES → ES
+  '@': true, // IQFeed: @ES → ES
+  '/': true, // TradingView: /ES → ES
 };
 
 /**
@@ -19,7 +19,7 @@ const VENDOR_PREFIXES: Record<string, boolean> = {
  * Key: vendor suffix pattern, Value: removal flag
  */
 const VENDOR_SUFFIXES: Record<string, boolean> = {
-  '=F': true,  // Yahoo Finance: ES=F → ES
+  '=F': true, // Yahoo Finance: ES=F → ES
 };
 
 /**

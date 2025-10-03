@@ -68,8 +68,8 @@ function calculateDiff(current: CommandManifest, previous: CommandManifest | nul
     return result;
   }
 
-  const currentMap = new Map(current.commands.map(cmd => [cmd.name, cmd]));
-  const previousMap = new Map(previous.commands.map(cmd => [cmd.name, cmd]));
+  const currentMap = new Map(current.commands.map((cmd) => [cmd.name, cmd]));
+  const previousMap = new Map(previous.commands.map((cmd) => [cmd.name, cmd]));
 
   // Check for new and updated commands
   for (const [name, cmd] of currentMap) {
@@ -82,9 +82,11 @@ function calculateDiff(current: CommandManifest, previous: CommandManifest | nul
       if (currentJson !== prevJson) {
         const changes: string[] = [];
         if (cmd.description !== prevCmd.description) changes.push('description');
-        if (JSON.stringify(cmd.options) !== JSON.stringify(prevCmd.options)) changes.push('options');
+        if (JSON.stringify(cmd.options) !== JSON.stringify(prevCmd.options))
+          changes.push('options');
         if (cmd.dmPermission !== prevCmd.dmPermission) changes.push('dmPermission');
-        if (cmd.defaultMemberPermissions !== prevCmd.defaultMemberPermissions) changes.push('permissions');
+        if (cmd.defaultMemberPermissions !== prevCmd.defaultMemberPermissions)
+          changes.push('permissions');
 
         result.toUpdate.push({ name, changes });
       } else {
@@ -111,7 +113,7 @@ function displayDiff(diff: DiffResult): void {
 
   if (diff.toAdd.length > 0) {
     console.log(chalk.green.bold('➕ Commands to Add:'));
-    diff.toAdd.forEach(cmd => {
+    diff.toAdd.forEach((cmd) => {
       console.log(chalk.green(`   - ${cmd.name}: ${cmd.description}`));
     });
     console.log();
@@ -127,7 +129,7 @@ function displayDiff(diff: DiffResult): void {
 
   if (diff.toRemove.length > 0) {
     console.log(chalk.red.bold('➖ Commands to Remove:'));
-    diff.toRemove.forEach(name => {
+    diff.toRemove.forEach((name) => {
       console.log(chalk.red(`   - ${name}`));
     });
     console.log();
@@ -135,7 +137,7 @@ function displayDiff(diff: DiffResult): void {
 
   if (diff.unchanged.length > 0 && options.verbose) {
     console.log(chalk.gray.bold('✅ Unchanged Commands:'));
-    diff.unchanged.forEach(name => {
+    diff.unchanged.forEach((name) => {
       console.log(chalk.gray(`   - ${name}`));
     });
     console.log();
@@ -159,7 +161,7 @@ async function registerCommands(): Promise<void> {
   const validationErrors = validateProfileEnv(profile);
   if (validationErrors.length > 0) {
     console.error(chalk.red('❌ Environment validation failed:\n'));
-    validationErrors.forEach(error => {
+    validationErrors.forEach((error) => {
       console.error(chalk.red(`   - ${error}`));
     });
     console.error(chalk.yellow('\nPlease ensure all required environment variables are set.'));
@@ -185,21 +187,29 @@ async function registerCommands(): Promise<void> {
   const guildIds = options.guildId ? [options.guildId] : profile.guildIds;
 
   if (!token) {
-    console.error(chalk.red(`❌ Discord bot token is required (--token or ${envPrefix}_TOKEN env)`));
+    console.error(
+      chalk.red(`❌ Discord bot token is required (--token or ${envPrefix}_TOKEN env)`)
+    );
     process.exit(1);
   }
 
   if (!applicationId) {
-    console.error(chalk.red(`❌ Discord application ID is required (--application-id or ${envPrefix}_APPLICATION_ID env)`));
+    console.error(
+      chalk.red(
+        `❌ Discord application ID is required (--application-id or ${envPrefix}_APPLICATION_ID env)`
+      )
+    );
     process.exit(1);
   }
 
   // Initialize handler and register only enabled commands for this environment
   const handler = new CommandHandler({} as any);
-  const enabledCommands = commands.filter(cmd => profile.enabledCommands.includes(cmd.schema.name));
+  const enabledCommands = commands.filter((cmd) =>
+    profile.enabledCommands.includes(cmd.schema.name)
+  );
 
   // Apply environment-specific overrides
-  enabledCommands.forEach(cmd => {
+  enabledCommands.forEach((cmd) => {
     const overrides = profile.commandOverrides?.[cmd.schema.name];
     if (overrides) {
       const modifiedCmd = {
@@ -207,11 +217,13 @@ async function registerCommands(): Promise<void> {
         schema: {
           ...cmd.schema,
           description: overrides.description || cmd.schema.description,
-          dmPermission: overrides.dmPermission !== undefined ? overrides.dmPermission : cmd.schema.dmPermission,
-          defaultMemberPermissions: overrides.defaultMemberPermissions !== undefined
-            ? overrides.defaultMemberPermissions
-            : cmd.schema.defaultMemberPermissions,
-        }
+          dmPermission:
+            overrides.dmPermission !== undefined ? overrides.dmPermission : cmd.schema.dmPermission,
+          defaultMemberPermissions:
+            overrides.defaultMemberPermissions !== undefined
+              ? overrides.defaultMemberPermissions
+              : cmd.schema.defaultMemberPermissions,
+        },
       };
       handler.registerCommand(modifiedCmd);
     } else {
@@ -268,21 +280,31 @@ async function registerCommands(): Promise<void> {
     if (profile.global) {
       // Global deployment
       const route = Routes.applicationCommands(applicationId);
-      const registeredCommands = await rest.put(route, { body: commandsJson }) as any[];
+      const registeredCommands = (await rest.put(route, { body: commandsJson })) as any[];
       const duration = Date.now() - startTime;
 
-      console.log(chalk.green(`✅ Successfully registered ${registeredCommands.length} commands globally in ${duration}ms\n`));
+      console.log(
+        chalk.green(
+          `✅ Successfully registered ${registeredCommands.length} commands globally in ${duration}ms\n`
+        )
+      );
     } else if (guildIds && guildIds.length > 0) {
       // Guild-specific deployment
       let totalRegistered = 0;
       for (const guildId of guildIds) {
         const route = Routes.applicationGuildCommands(applicationId, guildId);
-        const registeredCommands = await rest.put(route, { body: commandsJson }) as any[];
+        const registeredCommands = (await rest.put(route, { body: commandsJson })) as any[];
         totalRegistered += registeredCommands.length;
-        console.log(chalk.green(`✅ Registered ${registeredCommands.length} commands to guild ${guildId}`));
+        console.log(
+          chalk.green(`✅ Registered ${registeredCommands.length} commands to guild ${guildId}`)
+        );
       }
       const duration = Date.now() - startTime;
-      console.log(chalk.green(`\n✅ Successfully registered ${totalRegistered} total commands across ${guildIds.length} guild(s) in ${duration}ms\n`));
+      console.log(
+        chalk.green(
+          `\n✅ Successfully registered ${totalRegistered} total commands across ${guildIds.length} guild(s) in ${duration}ms\n`
+        )
+      );
     } else {
       console.error(chalk.red('❌ No guild IDs specified for guild-specific deployment'));
       process.exit(1);
@@ -314,7 +336,7 @@ async function registerCommands(): Promise<void> {
 }
 
 // Run the registrar
-registerCommands().catch(error => {
+registerCommands().catch((error) => {
   console.error(chalk.red(`❌ Unexpected error: ${error}`));
   process.exit(1);
 });

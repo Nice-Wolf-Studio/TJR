@@ -44,12 +44,10 @@ export function checkConfirmation(
 
   // Check required factors if specified
   if (confirmation5m.requiredFactors && confirmation5m.requiredFactors.length > 0) {
-    const presentFactors = confluence.factors
-      .filter(f => f.value > 0)
-      .map(f => f.name);
+    const presentFactors = confluence.factors.filter((f) => f.value > 0).map((f) => f.name);
 
     const missingFactors = confirmation5m.requiredFactors.filter(
-      required => !presentFactors.includes(required)
+      (required) => !presentFactors.includes(required)
     );
 
     if (missingFactors.length > 0) {
@@ -73,8 +71,8 @@ export function checkConfirmation(
     if (hasActiveZone) {
       // Found confirmation
       const factorSummary = confluence.factors
-        .filter(f => f.value > 0)
-        .map(f => `${f.name}(${(f.value * 100).toFixed(0)}%)`)
+        .filter((f) => f.value > 0)
+        .map((f) => `${f.name}(${(f.value * 100).toFixed(0)}%)`)
         .join(', ');
 
       return {
@@ -109,7 +107,7 @@ function checkBarInZones(
   orderBlocks: OrderBlock[]
 ): boolean {
   // Check FVG zones
-  const activeFVGs = fvgZones.filter(z => !z.filled && z.startIndex <= barIndex);
+  const activeFVGs = fvgZones.filter((z) => !z.filled && z.startIndex <= barIndex);
   for (const zone of activeFVGs) {
     // Check if bar price range overlaps with zone
     if (bar.low <= zone.high && bar.high >= zone.low) {
@@ -118,7 +116,7 @@ function checkBarInZones(
   }
 
   // Check order blocks
-  const activeBlocks = orderBlocks.filter(b => !b.mitigated && b.index <= barIndex);
+  const activeBlocks = orderBlocks.filter((b) => !b.mitigated && b.index <= barIndex);
   for (const block of activeBlocks) {
     // Check if bar price range overlaps with block
     if (bar.low <= block.high && bar.high >= block.low) {
@@ -151,14 +149,14 @@ export function determineDirection(
   let bearishSignals = 0;
 
   // Check FVG direction bias
-  const relevantFVGs = fvgZones.filter(z => !z.filled && z.startIndex <= confirmationIndex);
+  const relevantFVGs = fvgZones.filter((z) => !z.filled && z.startIndex <= confirmationIndex);
   for (const zone of relevantFVGs) {
     if (zone.type === 'bullish') bullishSignals++;
     if (zone.type === 'bearish') bearishSignals++;
   }
 
   // Check order block direction bias
-  const relevantBlocks = orderBlocks.filter(b => !b.mitigated && b.index <= confirmationIndex);
+  const relevantBlocks = orderBlocks.filter((b) => !b.mitigated && b.index <= confirmationIndex);
   for (const block of relevantBlocks) {
     if (block.type === 'demand') bullishSignals++;
     if (block.type === 'supply') bearishSignals++;
@@ -182,16 +180,17 @@ export function determineDirection(
   }
 
   // If tied, use most recent zone direction
-  const mostRecentZone = [...relevantFVGs, ...relevantBlocks]
-    .sort((a, b) => {
-      const aIndex = 'startIndex' in a ? a.startIndex : a.index;
-      const bIndex = 'startIndex' in b ? b.startIndex : b.index;
-      return bIndex - aIndex;
-    })[0];
+  const mostRecentZone = [...relevantFVGs, ...relevantBlocks].sort((a, b) => {
+    const aIndex = 'startIndex' in a ? a.startIndex : a.index;
+    const bIndex = 'startIndex' in b ? b.startIndex : b.index;
+    return bIndex - aIndex;
+  })[0];
 
   if (mostRecentZone) {
     if ('type' in mostRecentZone) {
-      return mostRecentZone.type === 'bullish' || mostRecentZone.type === 'demand' ? 'long' : 'short';
+      return mostRecentZone.type === 'bullish' || mostRecentZone.type === 'demand'
+        ? 'long'
+        : 'short';
     }
   }
 

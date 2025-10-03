@@ -86,13 +86,13 @@ This design offloads complex aggregation logic to a dedicated package (`market-d
 
 ```typescript
 interface YahooRawBar {
-  symbol: string;          // 'ES', 'SPY', etc.
-  date: string;            // ISO 8601 timestamp: '2024-01-15T14:30:00.000Z'
-  open: number;            // Opening price
-  high: number;            // Highest price
-  low: number;             // Lowest price
-  close: number;           // Closing price
-  volume: number;          // Trading volume
+  symbol: string; // 'ES', 'SPY', etc.
+  date: string; // ISO 8601 timestamp: '2024-01-15T14:30:00.000Z'
+  open: number; // Opening price
+  high: number; // Highest price
+  low: number; // Lowest price
+  close: number; // Closing price
+  volume: number; // Trading volume
 }
 ```
 
@@ -100,7 +100,7 @@ interface YahooRawBar {
 
 ```typescript
 interface MarketBar {
-  timestamp: string;       // ISO 8601 timestamp
+  timestamp: string; // ISO 8601 timestamp
   open: number;
   high: number;
   low: number;
@@ -271,7 +271,7 @@ The current fixture-based implementation is production-ready for **replay testin
 
 - **Fixture Staleness:** Automate fixture generation (future: `pnpm generate-fixtures` script that fetches fresh data)
 - **Limited Coverage:** Add fixtures for diverse symbols (equities: SPY, QQQ; crypto: BTC-USD) as test cases expand
-- **Yahoo Dependency Risk:** Architecture supports multiple providers; Yahoo is *a* provider, not *the* provider
+- **Yahoo Dependency Risk:** Architecture supports multiple providers; Yahoo is _a_ provider, not _the_ provider
 
 ---
 
@@ -305,8 +305,8 @@ packages/provider-yahoo/
 
 ### Dependencies
 
-- `@tjr/contracts` (workspace:*) - Provider interface contracts, Timeframe enum
-- `@tjr-suite/market-data-core` (workspace:*) - `aggregateBars()` function
+- `@tjr/contracts` (workspace:\*) - Provider interface contracts, Timeframe enum
+- `@tjr-suite/market-data-core` (workspace:\*) - `aggregateBars()` function
 - `vitest` (dev) - Test runner
 - `typescript` (dev) - Compilation
 

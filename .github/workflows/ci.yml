@@ -80,7 +80,7 @@ jobs:
           node dist/bin/cache-warm.js --help
           node dist/bin/cache-verify.js --help
           node dist/bin/replay-run.js --help
-        continue-on-error: false  # Fail CI if smoke tests fail
+        continue-on-error: false # Fail CI if smoke tests fail
 
   # Job 2: Security audit (runs in parallel with ci job)
   security:

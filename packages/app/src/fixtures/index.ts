@@ -9,7 +9,7 @@ import type { MarketBar } from '@tjr/contracts';
  */
 function seededRandom(seed: number): () => number {
   let state = seed;
-  return function() {
+  return function () {
     state = (state * 1664525 + 1013904223) % 4294967296;
     return state / 4294967296;
   };
@@ -58,7 +58,7 @@ export function generateFixtureBars(config: {
       close: parseFloat(close.toFixed(2)),
       volume: vol,
       trades: Math.floor(vol / 100),
-      vwap: parseFloat(((open + high + low + close) / 4).toFixed(2))
+      vwap: parseFloat(((open + high + low + close) / 4).toFixed(2)),
     } as any);
 
     basePrice = close; // Continue from close price
@@ -70,20 +70,17 @@ export function generateFixtureBars(config: {
 /**
  * Generate session-aware fixture bars
  */
-export function generateSessionBars(config: {
-  symbol: string;
-  date: Date;
-}): MarketBar[] {
+export function generateSessionBars(config: { symbol: string; date: Date }): MarketBar[] {
   const bars: MarketBar[] = [];
   const { symbol, date } = config;
 
   // Define session characteristics
   const sessions = [
-    { start: '09:30', end: '10:30', trend: 'up', volatility: 'high' },    // Open
+    { start: '09:30', end: '10:30', trend: 'up', volatility: 'high' }, // Open
     { start: '10:30', end: '11:30', trend: 'consolidate', volatility: 'medium' }, // Mid-morning
-    { start: '11:30', end: '13:00', trend: 'down', volatility: 'low' },   // Lunch
-    { start: '13:00', end: '15:00', trend: 'up', volatility: 'medium' },  // Afternoon
-    { start: '15:00', end: '16:00', trend: 'consolidate', volatility: 'high' }  // Close
+    { start: '11:30', end: '13:00', trend: 'down', volatility: 'low' }, // Lunch
+    { start: '13:00', end: '15:00', trend: 'up', volatility: 'medium' }, // Afternoon
+    { start: '15:00', end: '16:00', trend: 'consolidate', volatility: 'high' }, // Close
   ];
 
   let basePrice = symbol === 'SPY' ? 450 : symbol === 'QQQ' ? 380 : 200;
@@ -112,8 +109,7 @@ export function generateSessionBars(config: {
       }
 
       const volatilityMultiplier =
-        session.volatility === 'high' ? 0.003 :
-        session.volatility === 'medium' ? 0.002 : 0.001;
+        session.volatility === 'high' ? 0.003 : session.volatility === 'medium' ? 0.002 : 0.001;
 
       const noise = (Math.random() - 0.5) * basePrice * volatilityMultiplier;
 
@@ -133,7 +129,7 @@ export function generateSessionBars(config: {
         close: parseFloat(close.toFixed(2)),
         volume: vol,
         trades: Math.floor(vol / 100),
-        vwap: parseFloat(((open + high + low + close) / 4).toFixed(2))
+        vwap: parseFloat(((open + high + low + close) / 4).toFixed(2)),
       } as any);
 
       basePrice = close;
@@ -164,7 +160,8 @@ export function generateTrendDay(config: {
   let basePrice = symbol === 'SPY' ? 450 : 380;
   const trendStrength = direction === 'up' ? 0.0002 : -0.0002; // 0.02% per bar
 
-  for (let i = 0; i < 78; i++) { // Full trading day
+  for (let i = 0; i < 78; i++) {
+    // Full trading day
     const time = new Date(startTime.getTime() + i * 5 * 60000);
 
     // Strong trend with small pullbacks
@@ -188,7 +185,7 @@ export function generateTrendDay(config: {
       close: parseFloat(close.toFixed(2)),
       volume: vol,
       trades: Math.floor(vol / 100),
-      vwap: parseFloat(((open + high + low + close) / 4).toFixed(2))
+      vwap: parseFloat(((open + high + low + close) / 4).toFixed(2)),
     } as any);
 
     basePrice = close;

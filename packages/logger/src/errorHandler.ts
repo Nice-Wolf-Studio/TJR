@@ -95,16 +95,17 @@ export function attachGlobalHandlers(logger: Logger): void {
    */
   const unhandledRejectionHandler = (reason: unknown, promise: Promise<unknown>) => {
     // Handle both Error objects and primitive rejection reasons
-    const errorInfo = reason instanceof Error
-      ? {
-          name: reason.name,
-          message: reason.message,
-          stack: reason.stack,
-        }
-      : {
-          message: String(reason),
-          value: reason,
-        };
+    const errorInfo =
+      reason instanceof Error
+        ? {
+            name: reason.name,
+            message: reason.message,
+            stack: reason.stack,
+          }
+        : {
+            message: String(reason),
+            value: reason,
+          };
 
     logger.error('Unhandled promise rejection detected - process will exit', {
       error: errorInfo,

@@ -11,7 +11,10 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TJRSetupCommand } from '../../src/commands/tjr-setup.command.js';
-import { FileConfigService, DEFAULT_USER_CONFIG } from '../../src/services/config/config.service.js';
+import {
+  FileConfigService,
+  DEFAULT_USER_CONFIG,
+} from '../../src/services/config/config.service.js';
 import { createLogger } from '@tjr/logger';
 import type { UserConfig } from '../../src/services/config/types.js';
 import { TJRErrorCode } from '../../src/commands/errors.js';
@@ -32,19 +35,16 @@ describe('TJRSetupCommand', () => {
 
     logger = createLogger({
       level: 'error', // Quiet during tests
-      format: 'json'
+      format: 'json',
     });
 
-    configService = new FileConfigService(
-      logger.child({ service: 'config' }),
-      testConfigDir
-    );
+    configService = new FileConfigService(logger.child({ service: 'config' }), testConfigDir);
 
     setupCommand = new TJRSetupCommand({
       providerService: {} as any, // Not used in setup command
       configService,
       logger: logger.child({ service: 'tjr-setup' }),
-      userId: 'test-user'
+      userId: 'test-user',
     });
   });
 
@@ -109,7 +109,10 @@ describe('TJRSetupCommand', () => {
     });
 
     it('should parse numeric values correctly', async () => {
-      const result = await setupCommand.execute(['set', 'execution.confirmation5m.minConfluenceScore', '75'], {});
+      const result = await setupCommand.execute(
+        ['set', 'execution.confirmation5m.minConfluenceScore', '75'],
+        {}
+      );
       expect(result.success).toBe(true);
 
       // Verify value was set correctly
@@ -126,11 +129,10 @@ describe('TJRSetupCommand', () => {
     });
 
     it('should parse JSON objects correctly', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'confluence.weights',
-        '{"fvg":0.4,"orderBlock":0.3,"overlap":0.2,"recency":0.1}'
-      ], {});
+      const result = await setupCommand.execute(
+        ['set', 'confluence.weights', '{"fvg":0.4,"orderBlock":0.3,"overlap":0.2,"recency":0.1}'],
+        {}
+      );
       expect(result.success).toBe(true);
 
       const config = await configService.load('test-user');
@@ -139,11 +141,10 @@ describe('TJRSetupCommand', () => {
     });
 
     it('should handle nested key paths', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'execution.confirmation5m.minConfluenceScore',
-        '80'
-      ], {});
+      const result = await setupCommand.execute(
+        ['set', 'execution.confirmation5m.minConfluenceScore', '80'],
+        {}
+      );
       expect(result.success).toBe(true);
 
       const config = await configService.load('test-user');
@@ -213,7 +214,7 @@ describe('TJRSetupCommand', () => {
         fvg: 0.5,
         orderBlock: 0.5,
         overlap: 0.5,
-        recency: 0.5
+        recency: 0.5,
       });
 
       const result = await setupCommand.execute(['validate'], {});
@@ -279,7 +280,7 @@ describe('TJRSetupCommand', () => {
         providerService: {} as any,
         configService,
         logger: logger.child({ service: 'tjr-setup' }),
-        userId: 'test-user'
+        userId: 'test-user',
       });
 
       const result = await newCommand.execute(['show'], { format: 'json' });
@@ -288,33 +289,34 @@ describe('TJRSetupCommand', () => {
     });
 
     it('should validate configuration after set', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'execution.confirmation5m.minConfluenceScore',
-        '85'
-      ], {});
+      const result = await setupCommand.execute(
+        ['set', 'execution.confirmation5m.minConfluenceScore', '85'],
+        {}
+      );
 
       expect(result.metadata?.validation).toBeDefined();
     });
 
     it('should warn on invalid configuration after set', async () => {
       // Set weights that don't sum to 1.0
-      const result = await setupCommand.execute([
-        'set',
-        'confluence.weights',
-        '{"fvg":0.5,"orderBlock":0.5,"overlap":0.5,"recency":0.5}'
-      ], {});
+      const result = await setupCommand.execute(
+        ['set', 'confluence.weights', '{"fvg":0.5,"orderBlock":0.5,"overlap":0.5,"recency":0.5}'],
+        {}
+      );
 
       expect(result.success).toBe(true); // Command succeeds
       expect(result.metadata?.validation.valid).toBe(false); // But validation fails
     });
 
     it('should handle deep nested paths', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'risk.partialExits.levels',
-        '[{"trigger":1.5,"exitPercent":50},{"trigger":3.0,"exitPercent":50}]'
-      ], {});
+      const result = await setupCommand.execute(
+        [
+          'set',
+          'risk.partialExits.levels',
+          '[{"trigger":1.5,"exitPercent":50},{"trigger":3.0,"exitPercent":50}]',
+        ],
+        {}
+      );
 
       expect(result.success).toBe(true);
 
@@ -438,7 +440,7 @@ describe('TJRSetupCommand', () => {
         providerService: {} as any,
         configService,
         logger: logger.child({ service: 'tjr-setup' }),
-        userId: 'nonexistent-user'
+        userId: 'nonexistent-user',
       });
 
       const result = await freshCommand.execute(['show'], {});
@@ -447,22 +449,17 @@ describe('TJRSetupCommand', () => {
     });
 
     it('should handle invalid key paths in set', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'nonexistent.key.path',
-        'value'
-      ], {});
+      const result = await setupCommand.execute(['set', 'nonexistent.key.path', 'value'], {});
 
       expect(result.success).toBe(true); // Command doesn't fail
       // Key is created
     });
 
     it('should handle invalid JSON in set', async () => {
-      const result = await setupCommand.execute([
-        'set',
-        'confluence.weights',
-        '{invalid json}'
-      ], {});
+      const result = await setupCommand.execute(
+        ['set', 'confluence.weights', '{invalid json}'],
+        {}
+      );
 
       expect(result.success).toBe(true);
       // Should treat as string value
@@ -480,7 +477,7 @@ describe('TJRSetupCommand', () => {
         fvg: 0.25,
         orderBlock: 0.25,
         overlap: 0.25,
-        recency: 0.25
+        recency: 0.25,
       });
 
       const result = await setupCommand.execute(['validate'], {});
@@ -492,7 +489,7 @@ describe('TJRSetupCommand', () => {
         fvg: 0.5,
         orderBlock: 0.5,
         overlap: 0.5,
-        recency: 0.5
+        recency: 0.5,
       });
 
       const result = await setupCommand.execute(['validate'], {});
@@ -530,11 +527,7 @@ describe('TJRSetupCommand', () => {
   describe('Integration Tests', () => {
     it('should support full workflow: set, validate, show', async () => {
       // Step 1: Set a value
-      const setResult = await setupCommand.execute([
-        'set',
-        'cache.enabled',
-        'false'
-      ], {});
+      const setResult = await setupCommand.execute(['set', 'cache.enabled', 'false'], {});
       expect(setResult.success).toBe(true);
 
       // Step 2: Validate

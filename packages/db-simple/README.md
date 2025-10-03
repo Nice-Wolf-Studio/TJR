@@ -22,44 +22,44 @@ pnpm add @tjr-suite/db-simple
 ### Connect to a database
 
 ```typescript
-import { connect } from '@tjr-suite/db-simple'
+import { connect } from '@tjr-suite/db-simple';
 
 // SQLite in-memory (great for testing)
-const db = await connect('sqlite::memory:')
+const db = await connect('sqlite::memory:');
 
 // SQLite file
-const db = await connect('sqlite:data/app.db')
+const db = await connect('sqlite:data/app.db');
 
 // PostgreSQL
-const db = await connect('postgresql://user:pass@localhost:5432/mydb')
+const db = await connect('postgresql://user:pass@localhost:5432/mydb');
 ```
 
 ### Execute queries
 
 ```typescript
 // DDL/DML without results
-await db.exec('CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)')
-await db.exec('INSERT INTO users (name) VALUES (?)', ['Alice'])
+await db.exec('CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)');
+await db.exec('INSERT INTO users (name) VALUES (?)', ['Alice']);
 
 // SELECT queries with results
-const users = await db.query('SELECT * FROM users')
-console.log(users) // [{ id: 1, name: 'Alice' }]
+const users = await db.query('SELECT * FROM users');
+console.log(users); // [{ id: 1, name: 'Alice' }]
 
 // Close connection when done
-await db.close()
+await db.close();
 ```
 
 ### Run migrations
 
 ```typescript
-import { connect, runMigrations } from '@tjr-suite/db-simple'
+import { connect, runMigrations } from '@tjr-suite/db-simple';
 
-const db = await connect('sqlite:data/app.db')
+const db = await connect('sqlite:data/app.db');
 
 // Apply all pending migrations from directory
-await runMigrations('./migrations', db)
+await runMigrations('./migrations', db);
 
-await db.close()
+await db.close();
 ```
 
 **Migration file format:**
@@ -89,15 +89,15 @@ CREATE INDEX idx_users_email ON users(email);
 ### Logger injection
 
 ```typescript
-import { connect, runMigrations } from '@tjr-suite/db-simple'
+import { connect, runMigrations } from '@tjr-suite/db-simple';
 
 const logger = {
   info: (msg, meta) => console.log(`[INFO] ${msg}`, meta),
   error: (msg, meta) => console.error(`[ERROR] ${msg}`, meta),
-}
+};
 
-const db = await connect('sqlite:data/app.db', { logger })
-await runMigrations('./migrations', db, { logger })
+const db = await connect('sqlite:data/app.db', { logger });
+await runMigrations('./migrations', db, { logger });
 ```
 
 ## API Reference
@@ -107,6 +107,7 @@ await runMigrations('./migrations', db, { logger })
 Connect to a database and return a `DbConnection` instance.
 
 **Parameters:**
+
 - `databaseUrl` (string): Connection string
   - SQLite: `sqlite:path/to/db.db` or `sqlite::memory:`
   - PostgreSQL: `postgresql://user:pass@host:port/database`
@@ -127,21 +128,24 @@ Connect to a database and return a `DbConnection` instance.
 Unified database interface.
 
 **Properties:**
+
 - `dbType`: Database type (`'sqlite'` or `'postgres'`)
 
 **Methods:**
+
 - `exec(sql, params?)`: Execute SQL without returning results (DDL, INSERT, UPDATE, DELETE)
 - `query<T>(sql, params?)`: Execute SQL and return results (SELECT)
 - `transaction<T>(fn)`: Execute a function within a transaction. Automatically commits on success, rolls back on error
 - `close()`: Close the database connection
 
 **Example transaction usage:**
+
 ```typescript
 await db.transaction(async (txDb) => {
-  await txDb.exec('INSERT INTO accounts (balance) VALUES ($1)', [100])
-  await txDb.exec('INSERT INTO transactions (amount) VALUES ($1)', [100])
+  await txDb.exec('INSERT INTO accounts (balance) VALUES ($1)', [100]);
+  await txDb.exec('INSERT INTO transactions (amount) VALUES ($1)', [100]);
   // Automatically commits if both succeed, rolls back if either fails
-})
+});
 ```
 
 ---
@@ -151,6 +155,7 @@ await db.transaction(async (txDb) => {
 Run all pending migrations from a directory.
 
 **Parameters:**
+
 - `migrationsDir` (string): Path to directory containing `*.sql` migration files
 - `db` (DbConnection): Database connection instance
 - `options` (optional):
@@ -159,6 +164,7 @@ Run all pending migrations from a directory.
 **Returns:** `Promise<void>`
 
 **Behavior:**
+
 - Scans directory for `*.sql` files
 - Sorts files lexicographically (use `001_`, `002_`, etc. prefixes)
 - Applies migrations that are not yet recorded in `_migrations` table
@@ -174,6 +180,7 @@ Run all pending migrations from a directory.
 This package includes production-ready migrations for the `bars_cache` table, which stores historical OHLC (Open, High, Low, Close) bar data from multiple market data providers.
 
 **Migration files:**
+
 ```
 migrations/
 ├── sqlite/
@@ -185,6 +192,7 @@ migrations/
 ```
 
 **Schema overview:**
+
 - **Core fields:** symbol, provider, timeframe, timestamp (epoch milliseconds)
 - **OHLC data:** open, high, low, close, volume (all REAL/DOUBLE PRECISION)
 - **Metadata:** revision (for corrections), providerPriority (for merge handling), insertedAt
@@ -220,9 +228,9 @@ psql $DATABASE_URL -f migrations/rollback/001_rollback_bars_cache.sql
 **Usage example:**
 
 ```typescript
-import { connect } from '@tjr-suite/db-simple'
+import { connect } from '@tjr-suite/db-simple';
 
-const db = await connect('sqlite:data/app.db')
+const db = await connect('sqlite:data/app.db');
 
 // Insert a bar
 await db.exec(
@@ -230,7 +238,7 @@ await db.exec(
    (symbol, provider, timeframe, timestamp, open, high, low, close, volume)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ['AAPL', 'alpaca', '5m', Date.now(), 150.0, 151.0, 149.5, 150.5, 1000000.0]
-)
+);
 
 // Query bars by symbol and timeframe
 const bars = await db.query(
@@ -239,13 +247,14 @@ const bars = await db.query(
    ORDER BY timestamp DESC
    LIMIT 100`,
   ['AAPL', '5m']
-)
+);
 
-console.log(bars)
-await db.close()
+console.log(bars);
+await db.close();
 ```
 
 **See also:**
+
 - [ADR-0205: Database migrations for bars_cache](../../docs/adr/ADR-0205-db-migrations-bars-cache.md)
 
 ## Caveats and Limitations
@@ -270,37 +279,43 @@ await db.close()
 ### Security
 
 #### Credential Management
+
 - **Never hardcode credentials:** Use environment variables (see `.env.example` in repo root)
 - **Connection strings are logged (masked):** Passwords are masked in logs, but be cautious with custom loggers
 - **Protect connection strings:** Ensure `.env` files are in `.gitignore` and never committed to version control
 
 #### SQL Injection Protection
+
 - **Always use parameterized queries:** This package uses parameterized queries to prevent SQL injection
 - **SQLite uses `?` placeholders:** `db.exec('SELECT * FROM users WHERE id = ?', [userId])`
 - **PostgreSQL uses `$1, $2, ...` placeholders:** `db.exec('SELECT * FROM users WHERE id = $1', [userId])`
-- **Never concatenate user input into SQL:** ❌ `db.exec(\`SELECT * FROM users WHERE name = '\${name}'\`)` (VULNERABLE!)
+- **Never concatenate user input into SQL:** ❌ `db.exec(\`SELECT \* FROM users WHERE name = '\${name}'\`)` (VULNERABLE!)
 - **Migration files are raw SQL:** Be extremely careful with dynamic migration generation. Migrations should be static files, not user-generated content
 
 #### Database-Specific Security Considerations
 
 **SQLite:**
+
 - **File permissions:** Ensure database files have appropriate Unix permissions (e.g., `chmod 600 data.db`)
 - **Single-user environments:** SQLite is best for single-process applications. No built-in user/role management
 - **In-memory databases:** Data is lost on process exit. Not suitable for persistent data
 
 **PostgreSQL:**
+
 - **Use roles and permissions:** Create application-specific roles with minimal privileges
 - **Enable SSL/TLS:** Use `?sslmode=require` in connection string for encrypted connections
 - **Connection pooling limits:** Set appropriate `max` connection limits to prevent resource exhaustion
 - **Network security:** Use firewalls to restrict PostgreSQL port (5432) access. Never expose to public internet without VPN/bastion
 
 #### Migration Security
+
 - **Review migrations before deployment:** Migrations run with full database privileges. Audit all SQL before applying
 - **Use transactions:** All migrations in this package run in transactions. Failures automatically rollback
 - **Avoid destructive migrations in production:** Be cautious with `DROP TABLE`, `DELETE FROM`, etc. Test in staging first
 - **Migration file integrity:** Store migrations in version control. Use code review for all migration changes
 
 #### General Best Practices
+
 - **Principle of least privilege:** Grant only the minimum permissions needed for the application
 - **Audit logging:** Use a logger to track all database operations for security incident investigation
 - **Dependency updates:** Keep `better-sqlite3` and `pg` updated for security patches
@@ -324,6 +339,7 @@ pnpm test:all
 ```
 
 **Testing details:**
+
 - SQLite tests use in-memory databases for fast, isolated execution
 - PostgreSQL tests require a running PostgreSQL instance (set `TEST_POSTGRES_URL`)
 - PostgreSQL tests include transaction rollback, constraint violations, and database-specific schema validation

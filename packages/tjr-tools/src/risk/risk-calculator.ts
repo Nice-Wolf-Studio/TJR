@@ -114,7 +114,10 @@ export interface RiskManagementResult {
  * console.log(`Can trade: ${result.recommendation.canTrade}`);
  * ```
  */
-export function calculateRisk(input: RiskCalculationInput, config: RiskConfig): RiskManagementResult {
+export function calculateRisk(
+  input: RiskCalculationInput,
+  config: RiskConfig
+): RiskManagementResult {
   const warnings: string[] = [];
 
   // Validate input
@@ -131,7 +134,12 @@ export function calculateRisk(input: RiskCalculationInput, config: RiskConfig): 
   // Calculate daily stop state
   const tradeHistory = input.tradeHistory || [];
   const openRisk = input.openPositionRisk || 0;
-  const dailyStopResult = calculateDailyStop(tradeHistory, input.currentTimestamp, config, openRisk);
+  const dailyStopResult = calculateDailyStop(
+    tradeHistory,
+    input.currentTimestamp,
+    config,
+    openRisk
+  );
   warnings.push(...dailyStopResult.warnings);
 
   // Calculate partial exits
@@ -146,7 +154,9 @@ export function calculateRisk(input: RiskCalculationInput, config: RiskConfig): 
         config
       );
     } catch (error) {
-      warnings.push(`Partial exits calculation failed: ${error instanceof Error ? error.message : String(error)}`);
+      warnings.push(
+        `Partial exits calculation failed: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -279,7 +289,9 @@ function generateRecommendation(
   // Check if position size is viable
   if (positionSize.shares < config.constraints.minPositionSize) {
     canTrade = false;
-    reasons.push(`Position size (${positionSize.shares}) below minimum (${config.constraints.minPositionSize})`);
+    reasons.push(
+      `Position size (${positionSize.shares}) below minimum (${config.constraints.minPositionSize})`
+    );
   }
 
   if (positionSize.shares === 0) {
@@ -325,7 +337,8 @@ function generateRecommendation(
 
   // Check daily capacity usage
   const capacityUsed =
-    ((config.account.balance * (config.dailyLimits.maxLossPercent / 100) - dailyStop.remainingCapacity) /
+    ((config.account.balance * (config.dailyLimits.maxLossPercent / 100) -
+      dailyStop.remainingCapacity) /
       (config.account.balance * (config.dailyLimits.maxLossPercent / 100))) *
     100;
 
@@ -343,7 +356,9 @@ function generateRecommendation(
 
   // Add positive confirmation if trade can proceed
   if (canTrade) {
-    reasons.push(`Trade approved: ${positionSize.shares} shares at $${positionSize.dollarRisk.toFixed(2)} risk`);
+    reasons.push(
+      `Trade approved: ${positionSize.shares} shares at $${positionSize.dollarRisk.toFixed(2)} risk`
+    );
   }
 
   return {

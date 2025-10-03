@@ -10,7 +10,7 @@ import {
   getTimeframeLabel,
   compareTimeframes,
   parseTimeframe,
-  getAllTimeframes
+  getAllTimeframes,
 } from '../src/timeframes.js';
 
 describe('Timeframe', () => {
@@ -99,7 +99,7 @@ describe('Timeframe', () => {
         Timeframe.M10,
         Timeframe.H1,
         Timeframe.H4,
-        Timeframe.D1
+        Timeframe.D1,
       ]);
     });
 

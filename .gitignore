@@ -119,3 +119,6 @@ junit.xml
 *.pid
 *.seed
 *.pid.lock
+# Working documentation files
+DISCORD-BOT-*.md
+TEST-RESULTS.md

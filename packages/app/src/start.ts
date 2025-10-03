@@ -5,6 +5,9 @@
  * Wires all services together and starts the application
  */
 
+// Load environment variables from .env file
+import 'dotenv/config';
+
 import {
   createLogger,
   attachGlobalHandlers,
@@ -15,10 +18,12 @@ import {
 import { Container, TOKENS, type IContainer } from './container/index.js';
 import { loadConfig, getConfigSummary, type Config } from './config/index.js';
 import { DiscordStub } from './services/discord/discord.stub.js';
+import { DiscordBot } from './services/discord/discord-bot.js';
 import { FixtureProvider } from './services/providers/fixture-provider.js';
 import { MemoryCache } from './services/cache/memory-cache.js';
 import { HealthCommand } from './commands/health.command.js';
 import { DailyCommand } from './commands/daily.command.js';
+import { HttpServer } from './server/http-server.js';
 import type { Command } from './commands/types.js';
 import type { ProviderService } from './services/providers/types.js';
 import type { DiscordService } from './services/discord/types.js';
@@ -116,10 +121,23 @@ async function start(): Promise<void> {
       console.log('');
     }
 
+    // Start HTTP server if enabled
+    let httpServer: HttpServer | undefined;
+    if (config.server.enabled) {
+      logger.info('Starting HTTP API server...');
+      httpServer = new HttpServer({
+        port: config.server.port,
+        host: config.server.host,
+        logger: logger.child({ service: 'http-server' }),
+        container,
+      });
+      await httpServer.start();
+    }
+
     // Start appropriate interface
     if (config.discord.enabled) {
       logger.info('Starting Discord bot interface...');
-      await startDiscordBot(container, config, logger);
+      await startDiscordBot(container, config, logger, httpServer);
     } else {
       logger.info('Starting CLI interface...');
       await startCLI(container, config, logger);
@@ -174,13 +192,23 @@ async function registerServices(
     });
   });
 
-  // Discord service (stub for now)
+  // Discord service (use real bot if token provided, otherwise use stub)
   container.register(TOKENS.DiscordService, () => {
-    return new DiscordStub({
-      logger: logger.child({ service: 'discord' }),
-      enabled: config.discord.enabled,
-      simulateLatency: !config.app.dryRun,
-    });
+    if (config.discord.enabled && config.discord.token && config.discord.clientId) {
+      return new DiscordBot({
+        logger: logger.child({ service: 'discord' }),
+        token: config.discord.token,
+        clientId: config.discord.clientId,
+        guildId: config.discord.guildId,
+        enabled: config.discord.enabled,
+      });
+    } else {
+      return new DiscordStub({
+        logger: logger.child({ service: 'discord' }),
+        enabled: config.discord.enabled,
+        simulateLatency: !config.app.dryRun,
+      });
+    }
   });
 
   // Commands
@@ -210,7 +238,8 @@ async function registerServices(
 async function startDiscordBot(
   container: IContainer,
   _config: Config,
-  logger: Logger
+  logger: Logger,
+  httpServer?: HttpServer
 ): Promise<void> {
   const discord = container.resolve(TOKENS.DiscordService) as DiscordService;
   const healthCommand = container.resolve<Command>(TOKENS.HealthCommand);
@@ -227,6 +256,9 @@ async function startDiscordBot(
   // Keep process alive
   process.on('SIGINT', async () => {
     logger.info('Shutting down...');
+    if (httpServer) {
+      await httpServer.stop();
+    }
     await container.shutdownAll();
     process.exit(0);
   });

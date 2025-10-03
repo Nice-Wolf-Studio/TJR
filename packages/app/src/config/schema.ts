@@ -23,6 +23,12 @@ export const configSchema = z.object({
     filePath: z.string().optional(),
   }),
 
+  server: z.object({
+    enabled: z.boolean().default(true),
+    host: z.string().default('localhost'),
+    port: z.number().default(3000),
+  }),
+
   discord: z.object({
     enabled: z.boolean().default(false),
     token: z.string().optional(),
@@ -109,6 +115,9 @@ export const envMapping: Record<string, string> = {
   VERBOSE: 'app.verbose',
   LOG_LEVEL: 'logging.level',
   LOG_FORMAT: 'logging.format',
+  SERVER_ENABLED: 'server.enabled',
+  SERVER_HOST: 'server.host',
+  SERVER_PORT: 'server.port',
   DISCORD_ENABLED: 'discord.enabled',
   DISCORD_TOKEN: 'discord.token',
   DISCORD_CLIENT_ID: 'discord.clientId',

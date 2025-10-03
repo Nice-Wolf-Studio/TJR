@@ -9,7 +9,17 @@ import type { Logger } from '@tjr/logger';
  * Load configuration from environment and defaults
  */
 export function loadConfig(logger?: Logger): Config {
-  const rawConfig: any = {};
+  const rawConfig: any = {
+    app: {},
+    logging: {},
+    server: {},
+    discord: {},
+    provider: {},
+    cache: {},
+    database: { migrations: {} },
+    calendar: {},
+    analysis: {},
+  };
 
   // Load from environment variables
   for (const [envKey, configPath] of Object.entries(envMapping)) {
@@ -70,11 +80,11 @@ function parseEnvValue(value: string): any {
   if (value === 'true') return true;
   if (value === 'false') return false;
 
-  // Number
+  // Number (but not if it looks like an ID - very large numbers are likely IDs)
   const num = Number(value);
-  if (!isNaN(num) && value !== '') return num;
+  if (!isNaN(num) && value !== '' && value.length < 15) return num;
 
-  // String
+  // String (including large numeric IDs)
   return value;
 }
 

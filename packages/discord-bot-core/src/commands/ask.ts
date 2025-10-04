@@ -51,8 +51,9 @@ async function sendPromptToAPI(prompt: string, userId: string, channelId: string
  * Ask command handler
  */
 export async function askHandler(interaction: ChatInputCommandInteraction): Promise<void> {
-  // Defer reply since processing might take a while
-  await interaction.deferReply();
+  // Send immediate response to prevent timeout (Discord invalidates interaction after 3 seconds)
+  // We'll edit this message with the actual results once processing completes
+  await interaction.reply({ content: '🔄 Calculating...' });
 
   const prompt = interaction.options.getString('prompt', true);
   const userId = interaction.user.id;

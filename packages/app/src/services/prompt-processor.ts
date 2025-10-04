@@ -79,12 +79,43 @@ export class PromptProcessor {
 
   /**
    * Extract symbol from prompt (defaults to ES)
+   * Supports any valid futures symbol (ES, NQ, CL, GC, ZB, etc.)
    */
-  private extractSymbol(prompt: string): 'ES' | 'NQ' {
-    if (prompt.includes('nq') || prompt.includes('nasdaq')) {
-      return 'NQ';
+  private extractSymbol(prompt: string): string {
+    // Common symbol mappings
+    const symbolMappings: Record<string, string> = {
+      'nasdaq': 'NQ',
+      'nasdaq 100': 'NQ',
+      'e-mini nasdaq': 'NQ',
+      's&p': 'ES',
+      's&p 500': 'ES',
+      'e-mini s&p': 'ES',
+      'crude': 'CL',
+      'crude oil': 'CL',
+      'oil': 'CL',
+      'gold': 'GC',
+      'bonds': 'ZB',
+      'treasuries': 'ZB',
+      '10-year': 'ZN',
+      'euro': '6E',
+      'eurodollar': '6E',
+    };
+
+    // Try to find symbol mappings first
+    for (const [key, symbol] of Object.entries(symbolMappings)) {
+      if (prompt.includes(key)) {
+        return symbol;
+      }
     }
-    return 'ES'; // Default to ES
+
+    // Look for uppercase 2-3 letter symbols (ES, NQ, CL, GC, etc.)
+    const symbolMatch = prompt.match(/\b([A-Z]{2,3})\b/);
+    if (symbolMatch) {
+      return symbolMatch[1];
+    }
+
+    // Default to ES if no symbol found
+    return 'ES';
   }
 
   /**

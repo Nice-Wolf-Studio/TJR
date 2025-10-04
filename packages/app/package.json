@@ -30,7 +30,9 @@
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
     "@discordjs/rest": "^2.2.0",
+    "@modelcontextprotocol/sdk": "^1.2.0",
     "@tjr-suite/db-simple": "workspace:*",
     "@tjr/analysis-kit": "workspace:*",
     "@tjr/bars-cache": "workspace:*",

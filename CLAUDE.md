@@ -89,6 +89,7 @@ pnpm clean
 ```bash
 # Build a specific package (from root)
 pnpm --filter @tjr/contracts build
+pnpm --filter @tjr-suite/discord-mcp build
 
 # Run dev-scripts CLI tools (after build)
 cd packages/dev-scripts
@@ -96,6 +97,13 @@ node dist/bin/commands-diff.js --help
 node dist/bin/cache-warm.js --help
 node dist/bin/cache-verify.js --help
 node dist/bin/replay-run.js --fixture=path.json
+
+# Run Discord MCP server (after build)
+cd packages/discord-mcp
+DISCORD_TOKEN=your_token pnpm start
+
+# Test MCP server with inspector
+npx @modelcontextprotocol/inspector node packages/discord-mcp/dist/index.js
 ```
 
 ### Versioning and Releases
@@ -115,7 +123,9 @@ pnpm changeset:publish
 
 ### Monorepo Structure
 
-The repository follows a strict separation of concerns:
+The repository follows a strict separation of concerns across multiple layers:
+
+#### Core Infrastructure
 
 1. **`packages/contracts/`** - Canonical type definitions and DTOs
    - Zero runtime dependencies
@@ -123,21 +133,79 @@ The repository follows a strict separation of concerns:
    - Contains market data types, TJR analysis DTOs, and error hierarchy
    - Uses ES2022 modules (`"type": "module"`)
 
-2. **`packages/analysis-kit/`** - Pure analytics functions
+2. **`packages/logger/`** - Structured logging with PII redaction
+   - Provides consistent logging interface across packages
+   - Built-in PII redaction for sensitive data
+
+3. **`packages/db-simple/`** - SQLite/PostgreSQL connectors and migrations
+   - Database abstraction layer
+   - Migration support for schema evolution
+
+#### Market Data Layer
+
+4. **`packages/market-data-core/`** - Timeframe math, bar aggregation, clipping
+   - Core market data utilities and transformations
+
+5. **`packages/symbol-registry/`** - Symbol normalization and continuous contracts
+   - Handles symbol mapping across different providers
+
+6. **`packages/sessions-calendar/`** - Trading calendar with session hours
+   - Asian/London/NY session detection and timing
+
+7. **`packages/bars-cache/`** - Multi-tier caching for historical bars
+   - Caching layer to reduce provider API calls
+   - SQLite/PostgreSQL-backed persistence
+
+#### Data Providers
+
+8. **`packages/provider-yahoo/`** - Yahoo Finance provider
+9. **`packages/provider-polygon/`** - Polygon.io provider with retry logic
+10. **`packages/provider-databento/`** - Databento provider with large-window chunking
+11. **`packages/provider-alphavantage/`** - Alpha Vantage provider
+12. **`packages/provider-composite/`** - Composite provider for fallback chains
+
+#### Analysis & Tools
+
+13. **`packages/analysis-kit/`** - Pure analytics functions
    - All functions are deterministic and side-effect free (no I/O, no Date.now())
    - Provides market structure analysis, bias calculation, session extremes, day profiles
    - Consumes types from `@tjr/contracts`
    - Designed for testability with golden fixtures
 
-3. **`packages/dev-scripts/`** - Development CLI tools
+14. **`packages/tjr-tools/`** - TJR-specific confluences
+   - Fair Value Gaps (FVG), order blocks, and other TJR concepts
+
+15. **`packages/dev-scripts/`** - Development CLI tools
    - Private package (not published)
    - Contains operational tooling: commands-diff, cache-warm, cache-verify, replay-run
    - Philosophy: dry-run by default, JSON output for automation
    - Shared utilities in `src/cli-utils.ts`
 
-4. **`packages/smoke/`** - Smoke test package
+#### Application Layer
+
+16. **`packages/discord-bot-core/`** - Discord bot command handlers
+   - Core Discord bot functionality
+   - Command processing and event handling
+
+17. **`packages/discord-mcp/`** - Discord MCP server
+   - Model Context Protocol server for Discord integration
+   - Enables LLMs to interact with Discord via `send-message` and `read-messages` tools
+   - Uses discord.js with required Gateway Intents (Guilds, GuildMessages, MessageContent)
+   - See `.mcp.json` for server configuration
+
+18. **`packages/app/`** - Main application with dependency injection
+   - Unified entry point
+   - Dependency injection container
+
+#### Testing & Infrastructure
+
+19. **`packages/smoke/`** - Smoke test package
    - Validates build toolchain and project references
    - Minimal package to verify monorepo setup
+
+20. **`packages/live-tests/`** - Live integration tests
+   - Tests against real provider APIs
+   - Validates end-to-end functionality
 
 ### TypeScript Configuration
 
@@ -153,14 +221,46 @@ The repository follows a strict separation of concerns:
 
 ### Package Dependencies
 
+The dependency graph follows a layered architecture:
+
 ```
-contracts (zero dependencies)
-  ↑
-  ├── analysis-kit (depends on contracts)
-  └── dev-scripts (standalone, no internal deps)
+Layer 1: Core Infrastructure
+├── contracts (zero dependencies)
+├── logger
+└── db-simple
+
+Layer 2: Market Data Foundation
+├── market-data-core → contracts
+├── symbol-registry → contracts
+└── sessions-calendar → contracts
+
+Layer 3: Providers
+├── provider-yahoo → contracts, market-data-core
+├── provider-polygon → contracts, market-data-core
+├── provider-databento → contracts, market-data-core
+├── provider-alphavantage → contracts, market-data-core
+└── provider-composite → contracts, all providers
+
+Layer 4: Caching & Analysis
+├── bars-cache → contracts, market-data-core, db-simple
+├── analysis-kit → contracts
+└── tjr-tools → contracts, analysis-kit
+
+Layer 5: Application
+├── discord-bot-core → contracts, logger
+├── discord-mcp (standalone MCP server)
+└── app → all packages via DI container
+
+Testing & Tools
+├── dev-scripts (standalone, no internal deps)
+├── smoke (minimal deps)
+└── live-tests → providers, bars-cache
 ```
 
-**Important Constraint:** `@tjr/contracts` must never depend on other workspace packages.
+**Important Constraints:**
+- `@tjr/contracts` must never depend on other workspace packages
+- Pure analysis packages (`analysis-kit`, `tjr-tools`) must not have I/O dependencies
+- MCP servers (`discord-mcp`) run as standalone processes with their own entry points
 
 ### Testing Strategy
 
@@ -195,6 +295,24 @@ All CLI tools in `dev-scripts/` follow:
 3. **Consistent exit codes**: 0 = success, 1 = partial failure/diffs, 2 = fatal error
 4. **Extensive inline comments**: Code is self-documenting
 
+### MCP Integration
+
+The repository includes Model Context Protocol (MCP) servers to enable LLM integrations:
+
+**Discord MCP Server** (`packages/discord-mcp/`):
+- Exposes `send-message` and `read-messages` tools for Discord interaction
+- Uses stdio transport for communication with Claude
+- Requires Discord bot token with MESSAGE CONTENT INTENT enabled
+- Configuration in `.mcp.json` at repository root
+- Auto-detects single-server setups (no server parameter needed)
+- Channel resolution by name or Discord ID
+
+**MCP Server Configuration**:
+- Project-level: `.mcp.json` in repository root
+- User-level: `~/.claude/claude_desktop_config.json`
+- Servers run as standalone Node.js processes
+- Environment variables passed via MCP config
+
 ## CI/CD
 
 **GitHub Actions Workflow** (`.github/workflows/ci.yml`):
@@ -213,9 +331,12 @@ All CLI tools in `dev-scripts/` follow:
   - ADR-0052: Contracts package and error taxonomy
   - ADR-0054: Dev-scripts CLI design philosophy
   - ADR-0059: Analysis kit pure functions and fixture testing
+  - ADR-0315: Discord bot implementation and MCP integration
 
 - **Governance** (`docs/governance/`): Team policies and branch protections
 - **Journal** (`docs/journal/`): Implementation journals tracking development
+  - Active fragments in `_fragments/<phase>/` for ongoing work
+  - Consolidated phase journals in root after closeout
 
 ## Key Design Decisions
 
@@ -270,10 +391,12 @@ pnpm --filter @tjr/contracts test
 
 - Always use `pnpm`, never `npm` or `yarn`
 - Build before testing (tests may depend on compiled output)
-- Contracts package uses ES modules; others use CommonJS
+- Contracts package uses ES modules; others use CommonJS (except `discord-mcp` which uses ES modules)
 - Analysis kit functions must be pure (no I/O, deterministic)
 - Dev-scripts CLIs default to dry-run mode
 - Pre-commit: Ensure CI passes (build, test, lint, format)
+- MCP servers must be built before use and require environment variables (see `.mcp.json`)
+- Discord MCP server requires MESSAGE CONTENT INTENT enabled in Discord Developer Portal
 
 ## Wolf Agents Workflow Integration
 

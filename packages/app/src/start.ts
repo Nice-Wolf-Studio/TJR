@@ -131,6 +131,7 @@ async function start(): Promise<void> {
         logger: logger.child({ service: 'http-server' }),
         container,
         databaseUrl: config.database.url,
+        anthropicApiKey: process.env['ANTHROPIC_API_KEY'],
       });
       await httpServer.start();
     }
@@ -445,6 +446,7 @@ Environment Variables:
   DATABASE_URL       Database connection URL
   DISCORD_ENABLED    Enable Discord bot interface
   DISCORD_TOKEN      Discord bot token
+  ANTHROPIC_API_KEY  Anthropic API key for Claude integration
 
 Examples:
   tjr health                    Check system health

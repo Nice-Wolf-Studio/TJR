@@ -6,7 +6,8 @@
 import express, { type Express, type Request, type Response } from 'express';
 import type { Logger } from '@tjr/logger';
 import type { IContainer } from '../container/types.js';
-import { PromptProcessor } from '../services/prompt-processor.js';
+import { ClaudePromptProcessor } from '../services/claude-prompt-processor.js';
+import { McpClientService } from '../services/mcp-client.service.js';
 import { connect } from '@tjr-suite/db-simple';
 import { MarketDataCacheWrapper } from '../services/market-data-cache-integration.js';
 
@@ -16,6 +17,8 @@ export interface HttpServerConfig {
   logger: Logger;
   container: IContainer;
   databaseUrl?: string;
+  anthropicApiKey?: string;
+  mcpConfigPath?: string;
 }
 
 export interface AskRequest {
@@ -36,15 +39,13 @@ export interface AskResponse {
 export class HttpServer {
   private app: Express;
   private logger: Logger;
-  private promptProcessor: PromptProcessor;
+  private promptProcessor?: ClaudePromptProcessor;
+  private mcpClient?: McpClientService;
   private server?: ReturnType<Express['listen']>;
 
   constructor(private config: HttpServerConfig) {
     this.logger = config.logger;
-    // Note: promptProcessor will be initialized in start() after database setup
-    this.promptProcessor = new PromptProcessor({
-      logger: config.logger.child({ service: 'prompt-processor' }),
-    });
+    // Note: promptProcessor and mcpClient will be initialized in start()
     this.app = express();
     this.setupMiddleware();
     this.setupRoutes();
@@ -96,8 +97,15 @@ export class HttpServer {
           channelId,
         });
 
-        // TODO: Process the prompt using PromptProcessor service
-        const response = await this.processPrompt(prompt, { userId, channelId });
+        if (!this.promptProcessor) {
+          res.status(503).json({
+            success: false,
+            error: 'Prompt processor not initialized. Please check ANTHROPIC_API_KEY configuration.',
+          } satisfies AskResponse);
+          return;
+        }
+
+        const response = await this.promptProcessor.process(prompt, { userId, channelId });
 
         res.json({
           success: true,
@@ -120,21 +128,33 @@ export class HttpServer {
   }
 
   /**
-   * Process a prompt using the PromptProcessor service
-   */
-  private async processPrompt(
-    prompt: string,
-    context: { userId?: string; channelId?: string }
-  ): Promise<string> {
-    return await this.promptProcessor.process(prompt, context);
-  }
-
-  /**
    * Start the HTTP server
    */
   async start(): Promise<void> {
     try {
-      // Initialize database and cache if database URL is provided
+      // Initialize MCP client service
+      if (this.config.anthropicApiKey) {
+        this.logger.info('Initializing MCP client service');
+
+        this.mcpClient = new McpClientService(
+          this.logger.child({ service: 'mcp-client' })
+        );
+
+        await this.mcpClient.initialize(this.config.mcpConfigPath);
+
+        // Initialize Claude prompt processor with MCP tools
+        this.promptProcessor = new ClaudePromptProcessor({
+          logger: this.logger.child({ service: 'claude-prompt-processor' }),
+          mcpClientService: this.mcpClient,
+          anthropicApiKey: this.config.anthropicApiKey,
+        });
+
+        this.logger.info('Claude prompt processor initialized with MCP tools');
+      } else {
+        this.logger.warn('No ANTHROPIC_API_KEY provided, /ask endpoint will not work');
+      }
+
+      // Initialize database and cache if database URL is provided (for future use)
       if (this.config.databaseUrl) {
         this.logger.info('Initializing database and cache', {
           databaseUrl: this.config.databaseUrl.replace(/:[^:@]+@/, ':***@'), // Redact password
@@ -151,19 +171,13 @@ export class HttpServer {
 
         await marketDataCache.initialize();
 
-        // Re-initialize prompt processor with cache
-        this.promptProcessor = new PromptProcessor({
-          logger: this.config.logger.child({ service: 'prompt-processor' }),
-          marketDataCache,
-        });
-
         this.logger.info('Market data cache initialized successfully');
       } else {
         this.logger.info('No database URL provided, running without cache');
       }
     } catch (error) {
-      this.logger.error('Failed to initialize database/cache', { error });
-      this.logger.info('Continuing without cache...');
+      this.logger.error('Failed to initialize services', { error });
+      this.logger.info('Continuing with available services...');
     }
 
     return new Promise((resolve, reject) => {
@@ -191,6 +205,11 @@ export class HttpServer {
    * Stop the HTTP server
    */
   async stop(): Promise<void> {
+    // Close MCP clients first
+    if (this.mcpClient) {
+      await this.mcpClient.close();
+    }
+
     return new Promise((resolve, reject) => {
       if (!this.server) {
         resolve();

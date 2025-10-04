@@ -130,6 +130,7 @@ async function start(): Promise<void> {
         host: config.server.host,
         logger: logger.child({ service: 'http-server' }),
         container,
+        databaseUrl: config.database.url,
       });
       await httpServer.start();
     }

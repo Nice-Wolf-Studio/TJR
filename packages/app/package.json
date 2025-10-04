@@ -33,6 +33,7 @@
     "@discordjs/rest": "^2.2.0",
     "@tjr-suite/db-simple": "workspace:*",
     "@tjr/analysis-kit": "workspace:*",
+    "@tjr/bars-cache": "workspace:*",
     "@tjr/contracts": "workspace:*",
     "@tjr/databento": "workspace:*",
     "@tjr/discord-bot-core": "workspace:*",

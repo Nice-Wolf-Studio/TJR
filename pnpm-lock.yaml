@@ -63,6 +63,9 @@ importers:
       '@tjr/analysis-kit':
         specifier: workspace:*
         version: link:../analysis-kit
+      '@tjr/bars-cache':
+        specifier: workspace:*
+        version: link:../bars-cache
       '@tjr/contracts':
         specifier: workspace:*
         version: link:../contracts

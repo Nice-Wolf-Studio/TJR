@@ -7,12 +7,15 @@ import express, { type Express, type Request, type Response } from 'express';
 import type { Logger } from '@tjr/logger';
 import type { IContainer } from '../container/types.js';
 import { PromptProcessor } from '../services/prompt-processor.js';
+import { connect } from '@tjr-suite/db-simple';
+import { MarketDataCacheWrapper } from '../services/market-data-cache-integration.js';
 
 export interface HttpServerConfig {
   port: number;
   host: string;
   logger: Logger;
   container: IContainer;
+  databaseUrl?: string;
 }
 
 export interface AskRequest {
@@ -38,6 +41,7 @@ export class HttpServer {
 
   constructor(private config: HttpServerConfig) {
     this.logger = config.logger;
+    // Note: promptProcessor will be initialized in start() after database setup
     this.promptProcessor = new PromptProcessor({
       logger: config.logger.child({ service: 'prompt-processor' }),
     });
@@ -129,6 +133,39 @@ export class HttpServer {
    * Start the HTTP server
    */
   async start(): Promise<void> {
+    try {
+      // Initialize database and cache if database URL is provided
+      if (this.config.databaseUrl) {
+        this.logger.info('Initializing database and cache', {
+          databaseUrl: this.config.databaseUrl.replace(/:[^:@]+@/, ':***@'), // Redact password
+        });
+
+        const db = await connect(this.config.databaseUrl);
+        const marketDataCache = new MarketDataCacheWrapper({
+          db,
+          logger: this.logger.child({ service: 'market-data-cache' }),
+          memoryCacheSizeBars: 10000,
+          memoryCacheSizeQuotes: 1000,
+          providerPriority: ['databento'],
+        });
+
+        await marketDataCache.initialize();
+
+        // Re-initialize prompt processor with cache
+        this.promptProcessor = new PromptProcessor({
+          logger: this.config.logger.child({ service: 'prompt-processor' }),
+          marketDataCache,
+        });
+
+        this.logger.info('Market data cache initialized successfully');
+      } else {
+        this.logger.info('No database URL provided, running without cache');
+      }
+    } catch (error) {
+      this.logger.error('Failed to initialize database/cache', { error });
+      this.logger.info('Continuing without cache...');
+    }
+
     return new Promise((resolve, reject) => {
       try {
         this.server = this.app.listen(this.config.port, this.config.host, () => {

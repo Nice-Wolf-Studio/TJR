@@ -8,9 +8,11 @@ import { calculateDailyBias } from '@tjr/analysis-kit';
 import { extractSessionExtremes } from '@tjr/analysis-kit';
 import type { Bar, SessionExtremes } from '@tjr/analysis-kit';
 import { getQuote, getRecentBars } from '@tjr/databento';
+import type { MarketDataCacheWrapper } from './market-data-cache-integration.js';
 
 export interface PromptProcessorConfig {
   logger: Logger;
+  marketDataCache?: MarketDataCacheWrapper;
 }
 
 export interface PromptContext {
@@ -23,9 +25,11 @@ export interface PromptContext {
  */
 export class PromptProcessor {
   private logger: Logger;
+  private marketDataCache?: MarketDataCacheWrapper;
 
   constructor(config: PromptProcessorConfig) {
     this.logger = config.logger;
+    this.marketDataCache = config.marketDataCache;
   }
 
   /**
@@ -81,24 +85,15 @@ export class PromptProcessor {
    * Extract symbol from prompt (defaults to ES)
    * Supports any valid futures symbol (ES, NQ, CL, GC, ZB, etc.)
    */
-  private extractSymbol(prompt: string): string {
-    // Common symbol mappings
-    const symbolMappings: Record<string, string> = {
+  private extractSymbol(prompt: string): 'ES' | 'NQ' {
+    // Common symbol mappings (only ES and NQ supported currently)
+    const symbolMappings: Record<string, 'ES' | 'NQ'> = {
       'nasdaq': 'NQ',
       'nasdaq 100': 'NQ',
       'e-mini nasdaq': 'NQ',
       's&p': 'ES',
       's&p 500': 'ES',
       'e-mini s&p': 'ES',
-      'crude': 'CL',
-      'crude oil': 'CL',
-      'oil': 'CL',
-      'gold': 'GC',
-      'bonds': 'ZB',
-      'treasuries': 'ZB',
-      '10-year': 'ZN',
-      'euro': '6E',
-      'eurodollar': '6E',
     };
 
     // Try to find symbol mappings first
@@ -111,7 +106,11 @@ export class PromptProcessor {
     // Look for uppercase 2-3 letter symbols (ES, NQ, CL, GC, etc.)
     const symbolMatch = prompt.match(/\b([A-Z]{2,3})\b/);
     if (symbolMatch) {
-      return symbolMatch[1];
+      const symbol = symbolMatch[1];
+      // Only return ES or NQ (supported by Databento)
+      if (symbol === 'ES' || symbol === 'NQ') {
+        return symbol;
+      }
     }
 
     // Default to ES if no symbol found
@@ -130,19 +129,22 @@ export class PromptProcessor {
 
       this.logger.info('Fetching data for bias calculation', { symbol });
 
-      // Fetch 24 hours of 1h bars from Databento
-      const bars = await getRecentBars(symbol, '1h', 24);
+      // Fetch 24 hours of 1h bars (using cache if available)
+      const bars = this.marketDataCache
+        ? await this.marketDataCache.getRecentBars(symbol, '1h', 24)
+        : await getRecentBars(symbol, '1h', 24);
 
       if (bars.length === 0) {
         this.logger.warn('No bars returned from Databento', { symbol });
         return `Sorry, no data available for ${symbol} at this time.`;
       }
 
+      const lastBarInArray = bars[bars.length - 1];
       this.logger.info('Bars fetched from Databento', {
         symbol,
         barCount: bars.length,
         firstBar: bars[0]?.timestamp ? new Date(bars[0].timestamp).toISOString() : 'none',
-        lastBar: bars[bars.length - 1]?.timestamp ? new Date(bars[bars.length - 1].timestamp).toISOString() : 'none',
+        lastBar: lastBarInArray?.timestamp ? new Date(lastBarInArray.timestamp).toISOString() : 'none',
       });
 
       // Convert Databento bars to analysis-kit format
@@ -158,7 +160,13 @@ export class PromptProcessor {
       // RTH hours: 13:30-20:00 UTC (9:30 AM - 4:00 PM ET)
 
       // Get the date of the last bar to find which trading day to use
-      const lastBarDate = new Date(analysisBars[analysisBars.length - 1].timestamp);
+      const lastBar = analysisBars[analysisBars.length - 1];
+      if (!lastBar) {
+        this.logger.warn('No bars available for analysis', { symbol });
+        return `Sorry, no data available for ${symbol} at this time.`;
+      }
+
+      const lastBarDate = new Date(lastBar.timestamp);
       const lastBarDayUTC = new Date(Date.UTC(
         lastBarDate.getUTCFullYear(),
         lastBarDate.getUTCMonth(),
@@ -191,9 +199,13 @@ export class PromptProcessor {
       }
 
       if (!rthWindow) {
+        const firstBar = analysisBars[0];
+        const lastBarForRange = analysisBars[analysisBars.length - 1];
         this.logger.warn('No RTH session found in available bars', {
           symbol,
-          barDateRange: `${new Date(analysisBars[0].timestamp).toISOString()} to ${new Date(analysisBars[analysisBars.length - 1].timestamp).toISOString()}`,
+          barDateRange: firstBar && lastBarForRange
+            ? `${new Date(firstBar.timestamp).toISOString()} to ${new Date(lastBarForRange.timestamp).toISOString()}`
+            : 'unknown',
         });
         return `Unable to calculate ${symbol} bias - no RTH session data in available bars.`;
       }
@@ -230,8 +242,10 @@ export class PromptProcessor {
 
       this.logger.info('Fetching quote', { symbol });
 
-      // Fetch live quote from Databento
-      const quote = await getQuote(symbol);
+      // Fetch live quote (using cache if available)
+      const quote = this.marketDataCache
+        ? await this.marketDataCache.getQuote(symbol)
+        : await getQuote(symbol);
 
       this.logger.info('Quote fetched', { symbol, price: quote.price, timestamp: quote.timestamp });
 

@@ -129,6 +129,14 @@ export interface LevelBand {
   bottom: number;
 
   /**
+   * Average price of all levels in the band
+   *
+   * Calculated as the mean of all constituent level prices using
+   * fixed-precision arithmetic for determinism.
+   */
+  avgPrice: number;
+
+  /**
    * Level IDs that were merged into this band
    *
    * Used to track which levels contribute to the confluence boost.
@@ -399,4 +407,10 @@ export interface ScoringContext {
    * Priority configuration
    */
   config: PriorityConfig;
+
+  /**
+   * Current timestamp for recency calculations (deterministic)
+   * If not provided, Date.now() will be used (non-deterministic)
+   */
+  currentTime?: Date;
 }

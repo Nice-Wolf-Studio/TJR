@@ -90,6 +90,12 @@ export function getExchangeTimezone(symbol: string): string {
 
   // Pattern matching for common formats
 
+  // Crypto symbols (check before forex - often contain "USD", "USDT", or start with BTC/ETH)
+  if (upperSymbol.startsWith('BTC') || upperSymbol.startsWith('ETH') ||
+      upperSymbol.endsWith('USDT') || upperSymbol.endsWith('BUSD')) {
+    return 'UTC'; // Crypto markets are global, use UTC
+  }
+
   // Futures symbols with month/year codes (e.g., "ESZ23", "NQH24")
   if (upperSymbol.match(/^[A-Z]{1,3}[FGHJKMNQUVXZ]\d{2}$/)) {
     const baseSymbol = upperSymbol.substring(0, upperSymbol.length - 3);
@@ -122,11 +128,6 @@ export function getExchangeTimezone(symbol: string): string {
     }
   }
 
-  // Crypto symbols (often end with "USD", "BTC", etc.)
-  if (upperSymbol.endsWith('USD') || upperSymbol.endsWith('USDT')) {
-    return 'UTC'; // Crypto markets are global, use UTC
-  }
-
   // Default to New York timezone for US markets
   return 'America/New_York';
 }
@@ -157,52 +158,11 @@ function parseTimeString(timeStr: string): { hours: number; minutes: number } | 
 }
 
 /**
- * Gets the timezone offset in milliseconds for a given date and timezone.
- * Positive values indicate the timezone is ahead of UTC.
- */
-function getTimezoneOffset(date: Date, timezone: string): number {
-  try {
-    // Create a formatter for the target timezone
-    const utcFormatter = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'UTC',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-
-    const localFormatter = new Intl.DateTimeFormat('en-CA', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-
-    // Format the date in both UTC and the target timezone
-    const utcString = utcFormatter.format(date);
-    const localString = localFormatter.format(date);
-
-    // Parse both strings and calculate the difference
-    const utcTime = new Date(utcString.replace(/(\d{4})-(\d{2})-(\d{2}), (\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6Z')).getTime();
-    const localTime = new Date(localString.replace(/(\d{4})-(\d{2})-(\d{2}), (\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6Z')).getTime();
-
-    return localTime - utcTime;
-  } catch (error) {
-    console.warn(`Failed to get timezone offset for ${timezone}, using UTC:`, error);
-    return 0;
-  }
-}
-
-/**
  * Creates a timezone-aware Date object for a specific date and time in the given timezone.
  * This function properly handles DST transitions using the browser's Intl API.
+ *
+ * The goal is to convert a "local time in a specific timezone" to a UTC Date object.
+ * For example: "2024-01-15 18:00 America/Chicago" -> Date representing that moment in UTC
  */
 function createTimezoneAwareDate(dateLocal: string, timeLocal: string, timezone: string): Date {
   // Parse the time components
@@ -211,18 +171,45 @@ function createTimezoneAwareDate(dateLocal: string, timeLocal: string, timezone:
     throw new Error(`Invalid time format: ${timeLocal}`);
   }
 
-  // Create a date object for the given date in the timezone
-  // We'll use a two-step process to handle timezone conversion properly
+  // Strategy: Create a date string that represents the desired time,
+  // then use Intl.DateTimeFormat to figure out what UTC time corresponds to it
 
-  // Get the timezone offset for this date in the target timezone
-  const tempDate = new Date(`${dateLocal}T12:00:00`); // Use noon to avoid DST edge cases
-  const tzOffset = getTimezoneOffset(tempDate, timezone);
+  // Create a temporary date in UTC with the date/time components
+  const year = parseInt(dateLocal.substring(0, 4), 10);
+  const month = parseInt(dateLocal.substring(5, 7), 10) - 1; // JS months are 0-indexed
+  const day = parseInt(dateLocal.substring(8, 10), 10);
 
-  // Create the final date by adjusting for the timezone offset
-  const localTime = new Date(`${dateLocal}T${timeLocal}:00`);
-  const targetTime = new Date(localTime.getTime() - tzOffset);
+  // Use Date.UTC to create a timestamp with these components in UTC
+  // This is our "guess" - we'll adjust it based on the timezone
+  const utcGuess = Date.UTC(year, month, day, timeObj.hours, timeObj.minutes, 0, 0);
+  const guessDate = new Date(utcGuess);
 
-  return targetTime;
+  // Now find out what time this UTC guess appears as in the target timezone
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+
+  const parts = formatter.formatToParts(guessDate);
+  const formattedYear = parseInt(parts.find(p => p.type === 'year')!.value, 10);
+  const formattedMonth = parseInt(parts.find(p => p.type === 'month')!.value, 10) - 1;
+  const formattedDay = parseInt(parts.find(p => p.type === 'day')!.value, 10);
+  const formattedHour = parseInt(parts.find(p => p.type === 'hour')!.value, 10);
+  const formattedMinute = parseInt(parts.find(p => p.type === 'minute')!.value, 10);
+
+  // Calculate the difference between what we wanted and what we got
+  const wantedLocal = Date.UTC(year, month, day, timeObj.hours, timeObj.minutes, 0, 0);
+  const gotLocal = Date.UTC(formattedYear, formattedMonth, formattedDay, formattedHour, formattedMinute, 0, 0);
+  const offset = gotLocal - wantedLocal;
+
+  // Adjust our guess by the offset to get the correct UTC time
+  return new Date(utcGuess - offset);
 }
 
 /**

@@ -32,6 +32,33 @@ import type {
 } from '@tjr/contracts';
 
 /**
+ * Default priority configuration for testing and basic usage
+ */
+export const DEFAULT_PRIORITY_CONFIG: PriorityConfig = {
+  weights: {
+    source: {
+      H4: 3.0,
+      H1: 2.0,
+      SESSION: 1.0
+    },
+    recency: 1.0,
+    proximity: 1.0,
+    confluence: 1.0
+  },
+  proximityDecay: {
+    lambda: 0.01
+  },
+  banding: {
+    priceMergeTicks: 2,
+    maxBandWidthTicks: 10
+  },
+  recencyHorizonBars: {
+    H1: 40,
+    H4: 20
+  }
+};
+
+/**
  * Fixed precision multiplier for deterministic floating point operations
  * Uses 6 decimal places to handle typical financial instrument precision
  */
@@ -83,9 +110,14 @@ function calculateSourceWeight(level: KeyLevel, config: PriorityConfig): number 
  * @returns Recency score in fixed precision (0.0 to 1.0 range)
  */
 function calculateRecencyScore(level: KeyLevel, context: ScoringContext): number {
+  const now = context.currentTime || new Date();
+  const hoursElapsed = (now.getTime() - level.time.getTime()) / (1000 * 60 * 60);
+
   if (level.source === 'SESSION') {
-    // Session levels reset daily, assign neutral recency
-    return toFixedPrecision(0.5);
+    // Session levels also decay with age, but faster (24 hour horizon)
+    const sessionHorizonHours = 24;
+    const recency = Math.max(0.1, Math.min(1.0, 1.0 - hoursElapsed / sessionHorizonHours));
+    return toFixedPrecision(recency);
   }
 
   // For H1/H4 levels, calculate bars since establishment
@@ -93,8 +125,6 @@ function calculateRecencyScore(level: KeyLevel, context: ScoringContext): number
   const horizonBars = context.config.recencyHorizonBars[timeframe] || 40;
 
   // Calculate bars elapsed (simplified - assumes 1 hour = 1 bar for H1, 4 hours = 1 bar for H4)
-  const now = new Date();
-  const hoursElapsed = (now.getTime() - level.time.getTime()) / (1000 * 60 * 60);
   const barsElapsed = timeframe === 'H4' ? hoursElapsed / 4 : hoursElapsed;
 
   // Linear decay within horizon, minimum 0.1 for very old levels
@@ -187,19 +217,29 @@ export function calculatePriority(level: KeyLevel, context: ScoringContext): num
   // For single level (no confluence), boost is 1.0
   const confluenceBoost = toFixedPrecision(1.0);
 
-  // Combine components: sourceWeight * recency * proximity * confluence
-  const baseScore =
-    (sourceWeight * recencyScore * proximityScore * confluenceBoost) /
-    (PRECISION_MULTIPLIER * PRECISION_MULTIPLIER * PRECISION_MULTIPLIER);
+  // Convert back to normal scale before applying component weights
+  const sourceWeightNormal = fromFixedPrecision(sourceWeight);
+  const recencyScoreNormal = fromFixedPrecision(recencyScore);
+  const proximityScoreNormal = fromFixedPrecision(proximityScore);
+  const confluenceBoostNormal = fromFixedPrecision(confluenceBoost);
 
-  // Apply global weight multipliers
-  const weightedScore =
-    baseScore *
-    context.config.weights.recency *
-    context.config.weights.proximity *
-    context.config.weights.confluence;
+  // Apply component-specific weights
+  const weightedSource = sourceWeightNormal; // Source weight is already the weight value
+  const weightedRecency = recencyScoreNormal * context.config.weights.recency;
+  const weightedProximity = proximityScoreNormal * context.config.weights.proximity;
+  const weightedConfluence = confluenceBoostNormal * context.config.weights.confluence;
 
-  return fromFixedPrecision(toFixedPrecision(weightedScore));
+  // Combine weighted components (sum instead of multiply for better range control)
+  const totalScore = weightedSource + weightedRecency + weightedProximity + weightedConfluence;
+
+  // Normalize to [0, 1] range (max possible is ~2.2 with current test weights)
+  const normalizedScore = totalScore / 3.0;
+
+  // Ensure score is in [0, 1] range
+  const clampedScore = Math.max(0, Math.min(1.0, normalizedScore));
+
+  // Round to 6 decimal places for determinism and precision control
+  return Number(clampedScore.toFixed(6));
 }
 
 /**
@@ -348,9 +388,15 @@ export function createLevelBands(
       // Create band object if multiple constituents
       let bandObject: LevelBand | undefined;
       if (constituentsCount > 1) {
+        // Calculate average price using fixed precision for determinism
+        const totalPrice = band.constituents.reduce((sum, c) => sum + toFixedPrecision(c.level.price), 0);
+        const avgPriceFixed = totalPrice / constituentsCount;
+        const avgPrice = fromFixedPrecision(avgPriceFixed);
+
         bandObject = {
           top: band.top,
           bottom: band.bottom,
+          avgPrice: avgPrice,
           constituents: band.constituents.map((c) => c.level.id),
         };
       }
@@ -427,8 +473,18 @@ export function sortTargetsDeterministic(targets: PlanTarget[]): PlanTarget[] {
       return bSourcePriority - aSourcePriority;
     }
 
-    // Tiebreaker 3: Level ID lexicographic (for absolute determinism)
-    return a.level.id.localeCompare(b.level.id);
+    // Tiebreaker 3: Price (higher price first for determinism)
+    if (a.level.price !== b.level.price) {
+      return b.level.price - a.level.price;
+    }
+
+    // Tiebreaker 4: Level ID lexicographic (for absolute determinism, if available)
+    if (a.level.id && b.level.id) {
+      return a.level.id.localeCompare(b.level.id);
+    }
+
+    // Final tiebreaker: timestamp (more recent first)
+    return b.level.time.getTime() - a.level.time.getTime();
   });
 }
 

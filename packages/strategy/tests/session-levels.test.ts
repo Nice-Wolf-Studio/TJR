@@ -178,8 +178,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should update session high when bar high is greater', () => {
+      // Use timestamps in ASIA session: 7PM-8PM Chicago Jan 15
       engine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 4500,
         h: 4510,
         l: 4495,
@@ -187,7 +188,7 @@ describe('SessionLevelsEngine', () => {
       });
 
       engine.onBar({
-        t: new Date('2024-01-15T21:00:00Z'),
+        t: new Date('2024-01-16T02:00:00Z'),
         o: 4505,
         h: 4520,
         l: 4500,
@@ -201,8 +202,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should update session low when bar low is smaller', () => {
+      // Use timestamps in ASIA session: 7PM-8PM Chicago Jan 15
       engine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 4500,
         h: 4510,
         l: 4495,
@@ -210,7 +212,7 @@ describe('SessionLevelsEngine', () => {
       });
 
       engine.onBar({
-        t: new Date('2024-01-15T21:00:00Z'),
+        t: new Date('2024-01-16T02:00:00Z'),
         o: 4505,
         h: 4520,
         l: 4490,
@@ -224,7 +226,8 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should track timestamp when high/low is reached', () => {
-      const timestamp = new Date('2024-01-15T20:00:00Z');
+      // Use timestamp in ASIA session: 7PM Chicago Jan 15
+      const timestamp = new Date('2024-01-16T01:00:00Z');
 
       engine.onBar({
         t: timestamp,
@@ -281,7 +284,8 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should ignore bars outside session boundaries', () => {
-      // Bar at 01:00 UTC (19:00 Chicago) - should be in ASIA session
+      // Bar at 01:00 UTC is 7PM Chicago on Jan 14 - outside Jan 15 sessions
+      // This should be ignored and ASIA session should remain NaN
       engine.onBar({
         t: new Date('2024-01-15T01:00:00Z'),
         o: 4500,
@@ -293,40 +297,43 @@ describe('SessionLevelsEngine', () => {
       const snapshot = engine.getSnapshot();
       const asiaLevels = snapshot.levels.find(l => l.session === 'ASIA');
 
-      // ASIA session should have data
-      expect(Number.isNaN(asiaLevels!.high)).toBe(false);
+      // ASIA session should still be NaN (no data for Jan 15)
+      expect(Number.isNaN(asiaLevels!.high)).toBe(true);
     });
 
     it('should process bars in different sessions independently', () => {
-      // ASIA session bar
+      // NY session bar: 10AM Chicago Jan 15 = 16:00 UTC Jan 15
+      // (NY session is 9:30AM-4PM Chicago on Jan 15)
       engine.onBar({
-        t: new Date('2024-01-15T01:00:00Z'),
-        o: 4500,
-        h: 4510,
-        l: 4495,
-        c: 4505
-      });
-
-      // LONDON session bar
-      engine.onBar({
-        t: new Date('2024-01-15T10:00:00Z'),
+        t: new Date('2024-01-15T16:00:00Z'),
         o: 4520,
         h: 4530,
         l: 4515,
         c: 4525
       });
 
+      // ASIA session bar: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
+      // (Chronologically after NY session)
+      engine.onBar({
+        t: new Date('2024-01-16T01:00:00Z'),
+        o: 4500,
+        h: 4510,
+        l: 4495,
+        c: 4505
+      });
+
       const snapshot = engine.getSnapshot();
       const asiaLevels = snapshot.levels.find(l => l.session === 'ASIA');
-      const londonLevels = snapshot.levels.find(l => l.session === 'LONDON');
+      const nyLevels = snapshot.levels.find(l => l.session === 'NY');
 
+      expect(nyLevels?.high).toBe(4530);
       expect(asiaLevels?.high).toBe(4510);
-      expect(londonLevels?.high).toBe(4530);
     });
 
     it('should keep earliest timestamp for equal highs', () => {
-      const earlyTime = new Date('2024-01-15T20:00:00Z');
-      const lateTime = new Date('2024-01-15T21:00:00Z');
+      // ASIA session: 7PM and 8PM Chicago Jan 15
+      const earlyTime = new Date('2024-01-16T01:00:00Z');
+      const lateTime = new Date('2024-01-16T02:00:00Z');
 
       engine.onBar({
         t: earlyTime,
@@ -351,8 +358,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should keep earliest timestamp for equal lows', () => {
-      const earlyTime = new Date('2024-01-15T20:00:00Z');
-      const lateTime = new Date('2024-01-15T21:00:00Z');
+      // ASIA session: 7PM and 8PM Chicago Jan 15
+      const earlyTime = new Date('2024-01-16T01:00:00Z');
+      const lateTime = new Date('2024-01-16T02:00:00Z');
 
       engine.onBar({
         t: earlyTime,
@@ -486,8 +494,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should handle bar with high === low (single price bar)', () => {
+      // Use timestamp in ASIA session: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
       engine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 4500,
         h: 4500,
         l: 4500,
@@ -502,8 +511,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should handle very large price values', () => {
+      // Use timestamp in ASIA session: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
       engine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 999999,
         h: 1000000,
         l: 999998,
@@ -518,8 +528,9 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should handle very small price values', () => {
+      // Use timestamp in ASIA session: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
       engine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 0.0001,
         h: 0.0002,
         l: 0.00005,
@@ -534,9 +545,13 @@ describe('SessionLevelsEngine', () => {
     });
 
     it('should handle rapid bar updates (1000 bars)', () => {
-      const startTime = new Date('2024-01-15T20:00:00Z');
+      // Start in ASIA session: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
+      // ASIA session runs 00:00-09:00 UTC Jan 16 (6PM Jan 15 - 3AM Jan 16 Chicago)
+      // Starting at 01:00 UTC, we can add up to 08:59, which is 8 hours = 480 minutes
+      // Test with 480 bars (1 per minute) to stay within ASIA session
+      const startTime = new Date('2024-01-16T01:00:00Z');
 
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 480; i++) {
         const timestamp = new Date(startTime.getTime() + i * 60000); // 1 minute apart
         engine.onBar({
           t: timestamp,
@@ -550,8 +565,8 @@ describe('SessionLevelsEngine', () => {
       const snapshot = engine.getSnapshot();
       const asiaLevels = snapshot.levels.find(l => l.session === 'ASIA');
 
-      expect(asiaLevels?.high).toBe(5499.5);
-      expect(asiaLevels?.low).toBe(4499.5);
+      expect(asiaLevels?.high).toBe(4979.5); // 4500 + 479 + 0.5
+      expect(asiaLevels?.low).toBe(4499.5);  // 4500 + 0 - 0.5
     });
   });
 
@@ -572,8 +587,9 @@ describe('SessionLevelsEngine', () => {
       esEngine.startDate('2024-01-15');
       nqEngine.startDate('2024-01-15');
 
+      // Use timestamp in ASIA session: 7PM Chicago Jan 15 = 01:00 UTC Jan 16
       esEngine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 4500,
         h: 4510,
         l: 4495,
@@ -581,7 +597,7 @@ describe('SessionLevelsEngine', () => {
       });
 
       nqEngine.onBar({
-        t: new Date('2024-01-15T20:00:00Z'),
+        t: new Date('2024-01-16T01:00:00Z'),
         o: 16000,
         h: 16050,
         l: 15950,

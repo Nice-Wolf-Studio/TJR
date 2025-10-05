@@ -50,7 +50,8 @@ describe('Priority Scoring', () => {
       symbol: 'ES',
       currentRef: 4500,
       tickSize: 0.25,
-      config
+      config,
+      currentTime: new Date('2024-01-15T12:00:00Z')
     };
   });
 
@@ -60,7 +61,7 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const priority = calculatePriority(level, context);
@@ -74,14 +75,14 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const swingLevel: KeyLevel = {
         source: 'H1',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const sessionPriority = calculatePriority(sessionLevel, context);
@@ -95,22 +96,21 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const oldLevel: KeyLevel = {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-10T10:00:00Z')
+        time: new Date('2024-01-10T10:00:00Z')
       };
 
       // Context timestamp is 2024-01-15T12:00:00Z
       const updatedContext: ScoringContext = {
         ...context,
         currentRef: 4500,
-        maxAge: 86400000,
-        currentTimestamp: new Date('2024-01-15T12:00:00Z')
+                currentTime: new Date('2024-01-15T12:00:00Z')
       };
 
       const recentPriority = calculatePriority(recentLevel, updatedContext);
@@ -124,14 +124,14 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4505, // 5 points away
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const farLevel: KeyLevel = {
         source: 'SESSION',
         kind: 'resistance',
         price: 4550, // 50 points away
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const closePriority = calculatePriority(closeLevel, context);
@@ -145,7 +145,7 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const priority = calculatePriority(level, context);
@@ -160,7 +160,7 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4500, // Same as currentRef
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const priority = calculatePriority(atPriceLevel, context);
@@ -174,14 +174,13 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-01T10:00:00Z') // Very old
+        time: new Date('2024-01-01T10:00:00Z') // Very old
       };
 
       const updatedContext: ScoringContext = {
         ...context,
-        currentTimestamp: new Date('2024-01-15T12:00:00Z'),
-        maxAge: 86400000
-      };
+        currentTime: new Date('2024-01-15T12:00:00Z'),
+              };
 
       const priority = calculatePriority(veryOldLevel, updatedContext);
 
@@ -198,17 +197,17 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4522, // Within 10 points of first level
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
 
       expect(bands.length).toBeGreaterThan(0);
     });
@@ -219,27 +218,28 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4521,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         },
         {
           source: 'SESSION',
           kind: 'support',
           price: 4522,
-          timestamp: new Date('2024-01-15T11:00:00Z')
+          time: new Date('2024-01-15T11:00:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
 
       // Should create one band with all three levels
-      const mainBand = bands.find(b => b.levelCount >= 2);
-      expect(mainBand).toBeDefined();
+      // Check if any level has a band with multiple constituents
+      const levelWithBand = bands.find(b => b.band && b.band.constituents.length >= 2);
+      expect(levelWithBand).toBeDefined();
     });
 
     it('should respect minLevels threshold', () => {
@@ -248,17 +248,17 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         }
         // Only one level - should not create a confluent band
       ];
 
       const strictConfig = {
-        maxDistance: 10,
+        currentRef: 10,
         minLevels: 2
       };
 
-      const bands = createLevelBands(levels, strictConfig);
+      const bands = createLevelBands(levels, context);
 
       // Should not create band for single level
       const confluenceBand = bands.find(b => b.levelCount >= 2);
@@ -271,29 +271,29 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'SESSION',
           kind: 'resistance',
           price: 4521,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4600, // Far from others
-          timestamp: new Date('2024-01-15T11:00:00Z')
+          time: new Date('2024-01-15T11:00:00Z')
         },
         {
           source: 'H1',
           kind: 'support',
           price: 4601,
-          timestamp: new Date('2024-01-15T11:30:00Z')
+          time: new Date('2024-01-15T11:30:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
 
       // Should create at least 2 bands
       expect(bands.length).toBeGreaterThanOrEqual(2);
@@ -305,22 +305,22 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4522,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
-      const band = bands[0];
+      const bands = createLevelBands(levels, context);
+      const levelBandPair = bands[0];
 
-      if (band) {
+      if (levelBandPair && levelBandPair.band) {
         // Average should be (4520 + 4522) / 2 = 4521
-        expect(band.avgPrice).toBeCloseTo(4521, 6);
+        expect(levelBandPair.band.avgPrice).toBeCloseTo(4521, 6);
       }
     });
   });
@@ -333,7 +333,7 @@ describe('Priority Scoring', () => {
             source: 'H4',
             kind: 'resistance',
             price: 4520,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.5,
           status: 'pending'
@@ -343,7 +343,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'resistance',
             price: 4530,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.9,
           status: 'pending'
@@ -353,7 +353,7 @@ describe('Priority Scoring', () => {
             source: 'H1',
             kind: 'resistance',
             price: 4510,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.7,
           status: 'pending'
@@ -375,7 +375,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'resistance',
             price: 4530,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.8,
           status: 'pending'
@@ -385,7 +385,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'support',
             price: 4520,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.8,
           status: 'pending'
@@ -405,7 +405,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'resistance',
             price: 4520,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.75,
           status: 'pending'
@@ -415,7 +415,7 @@ describe('Priority Scoring', () => {
             source: 'H1',
             kind: 'resistance',
             price: 4530,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.75,
           status: 'pending'
@@ -425,7 +425,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'support',
             price: 4525,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.75,
           status: 'pending'
@@ -451,7 +451,7 @@ describe('Priority Scoring', () => {
             source: 'SESSION',
             kind: 'resistance',
             price: 4520,
-            timestamp: new Date('2024-01-15T10:00:00Z')
+            time: new Date('2024-01-15T10:00:00Z')
           },
           priority: 0.8,
           status: 'pending'
@@ -471,18 +471,24 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520.123456,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const level2: KeyLevel = {
         source: 'H1',
         kind: 'resistance',
         price: 4520.123457, // 0.000001 difference
-        timestamp: new Date('2024-01-15T10:30:00Z')
+        time: new Date('2024-01-15T10:30:00Z')
       };
 
       const levels = [level1, level2];
-      const bands = createLevelBands(levels, { maxDistance: 0.001, minLevels: 2 });
+      const epsilonContext: ScoringContext = {
+        symbol: 'ES',
+        currentRef: 4520,
+        tickSize: 0.001,
+        config
+      };
+      const bands = createLevelBands(levels, epsilonContext);
 
       // Should group them together
       expect(bands.length).toBeGreaterThan(0);
@@ -494,17 +500,17 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
 
       expect(bands).toBeDefined();
       expect(bands.length).toBeGreaterThan(0);
@@ -515,13 +521,13 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 999999,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const largeContext: ScoringContext = {
         ...context,
         currentRef: 999900,
-        maxDistance: 1000
+        currentRef: 1000
       };
 
       const priority = calculatePriority(level, largeContext);
@@ -535,13 +541,13 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 0.0002,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const smallContext: ScoringContext = {
         ...context,
         currentRef: 0.0001,
-        maxDistance: 0.001
+        currentRef: 0.001
       };
 
       const priority = calculatePriority(level, smallContext);
@@ -558,11 +564,11 @@ describe('Priority Scoring', () => {
           source: i % 2 === 0 ? 'SESSION' : 'H1',
           kind: 'resistance',
           price: 4500 + i,
-          timestamp: new Date(`2024-01-15T${10 + Math.floor(i / 60)}:${i % 60}:00Z`)
+          time: new Date(`2024-01-15T${10 + Math.floor(i / 60)}:${i % 60}:00Z`)
         });
       }
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
 
       // Should complete without errors
       expect(bands).toBeDefined();
@@ -576,26 +582,25 @@ describe('Priority Scoring', () => {
           source: 'SESSION',
           kind: 'resistance',
           price: 4520,
-          timestamp: new Date('2024-01-15T10:00:00Z')
+          time: new Date('2024-01-15T10:00:00Z')
         },
         {
           source: 'H1',
           kind: 'resistance',
           price: 4521,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         },
         {
           source: 'SESSION',
           kind: 'support',
           price: 4522,
-          timestamp: new Date('2024-01-15T11:00:00Z')
+          time: new Date('2024-01-15T11:00:00Z')
         }
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
       const contextWithBands: ScoringContext = {
-        ...context,
-        confluenceBands: bands
+        ...context
       };
 
       // Calculate priority for level in confluence band
@@ -610,14 +615,14 @@ describe('Priority Scoring', () => {
         source: 'SESSION',
         kind: 'resistance',
         price: 4520,
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const lowConfluenceLevel: KeyLevel = {
         source: 'H1',
         kind: 'resistance',
         price: 4600, // Far from others
-        timestamp: new Date('2024-01-15T10:00:00Z')
+        time: new Date('2024-01-15T10:00:00Z')
       };
 
       const levels = [
@@ -626,21 +631,20 @@ describe('Priority Scoring', () => {
           source: 'H1',
           kind: 'resistance',
           price: 4521,
-          timestamp: new Date('2024-01-15T10:30:00Z')
+          time: new Date('2024-01-15T10:30:00Z')
         },
         {
           source: 'SESSION',
           kind: 'support',
           price: 4522,
-          timestamp: new Date('2024-01-15T11:00:00Z')
+          time: new Date('2024-01-15T11:00:00Z')
         },
         lowConfluenceLevel
       ];
 
-      const bands = createLevelBands(levels, config.confluenceBand);
+      const bands = createLevelBands(levels, context);
       const contextWithBands: ScoringContext = {
-        ...context,
-        confluenceBands: bands
+        ...context
       };
 
       const highPriority = calculatePriority(highConfluenceLevel, contextWithBands);

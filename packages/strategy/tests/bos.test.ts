@@ -424,7 +424,12 @@ describe('BosReversalEngine', () => {
         strength: 3
       };
 
-      engine.openWindow(pivot);
+      const window = engine.openWindow(pivot);
+      expect(window).toBeDefined();
+
+      // Verify window is active
+      let state = engine.getState();
+      expect(state.activeWindows.length).toBe(1);
 
       const bosBar: BarData = {
         timestamp: new Date('2024-01-15T10:05:00Z').getTime(),
@@ -433,13 +438,15 @@ describe('BosReversalEngine', () => {
         index: 5
       };
 
-      engine.onBar(bosBar);
+      const signals = engine.onBar(bosBar);
 
-      const state = engine.getState();
+      // Should generate a signal
+      expect(signals.length).toBeGreaterThan(0);
 
-      // Window should be closed after BOS
-      const closedWindow = state.activeWindows.find(w => w.status === 'closed');
-      expect(closedWindow).toBeDefined();
+      state = engine.getState();
+
+      // Window should be removed from activeWindows after BOS
+      expect(state.activeWindows.length).toBe(0);
     });
 
     it('should track multiple active windows simultaneously', () => {
@@ -568,7 +575,7 @@ describe('BosReversalEngine', () => {
     it('should handle rapid bar updates (1000 bars)', () => {
       for (let i = 0; i < 1000; i++) {
         const bar: BarData = {
-          timestamp: new Date(Date.UTC(2024, 0, 15, 10, 0, i).getTime()),
+          timestamp: new Date(Date.UTC(2024, 0, 15, 10, 0, i)),
           high: 4500 + (i % 10),
           low: 4490 + (i % 10),
           index: i
@@ -624,7 +631,7 @@ describe('BosReversalEngine', () => {
     it('should track total bars processed', () => {
       for (let i = 0; i < 50; i++) {
         const bar: BarData = {
-          timestamp: new Date(Date.UTC(2024, 0, 15, 10, 0, i).getTime()),
+          timestamp: new Date(Date.UTC(2024, 0, 15, 10, 0, i)),
           high: 4510,
           low: 4495,
           index: i
@@ -712,7 +719,7 @@ describe('BosReversalEngine', () => {
       // Process more bars
       for (let i = 6; i < 10; i++) {
         const bar: BarData = {
-          timestamp: new Date(`2024-01-15T10:${String(i).getTime().padStart(2, '0')}:00Z`),
+          timestamp: new Date(`2024-01-15T10:${String(i).padStart(2, '0')}:00Z`),
           high: 4490 + i,
           low: 4480 + i,
           index: i

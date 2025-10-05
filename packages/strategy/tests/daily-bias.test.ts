@@ -98,18 +98,23 @@ describe('DailyBiasPlanner', () => {
       weights: {
         source: {
           'SESSION': 1.0,
-          'SESSION': 1.0,
-          'H1': 0.8,
-          'H1': 0.8,
-          'H4': 0.6
+          'H1': 2.0,
+          'H4': 3.0
         },
-        recency: 0.3,
-        proximity: 0.4,
-        confluence: 0.3
+        recency: 1.0,
+        proximity: 1.0,
+        confluence: 1.0
       },
-      confluenceBand: {
-        maxDistance: 10,
-        minLevels: 2
+      proximityDecay: {
+        lambda: 0.01
+      },
+      banding: {
+        priceMergeTicks: 2,
+        maxBandWidthTicks: 10
+      },
+      recencyHorizonBars: {
+        H1: 40,
+        H4: 20
       }
     };
   });
@@ -177,7 +182,7 @@ describe('DailyBiasPlanner', () => {
 
       expect(plan).toBeDefined();
       expect(plan.symbol).toBe('ES');
-      expect(plan.date).toBe('2024-01-15');
+      expect(plan.dateLocal).toBe('2024-01-15');
       expect(plan.upTargets).toBeDefined();
       expect(plan.downTargets).toBeDefined();
     });
@@ -187,7 +192,7 @@ describe('DailyBiasPlanner', () => {
 
       // Should have targets from session levels
       const allTargets = [...plan.upTargets, ...plan.downTargets];
-      const sessionTarget = allTargets.find(t => t.level.source.startsWith('session'));
+      const sessionTarget = allTargets.find(t => t.level.source === 'SESSION');
 
       expect(sessionTarget).toBeDefined();
     });
@@ -197,7 +202,7 @@ describe('DailyBiasPlanner', () => {
 
       // Should have targets from HTF swings
       const allTargets = [...plan.upTargets, ...plan.downTargets];
-      const swingTarget = allTargets.find(t => t.level.source.startsWith('swing'));
+      const swingTarget = allTargets.find(t => t.level.source === 'H1' || t.level.source === 'H4');
 
       expect(swingTarget).toBeDefined();
     });
@@ -254,10 +259,8 @@ describe('DailyBiasPlanner', () => {
         htfSwings,
         currentRef: 4520,
         config,
-        limits: {
-          maxUpTargets: 2,
-          maxDownTargets: 10
-        }
+        maxUpTargets: 2,
+        maxDownTargets: 10
       });
 
       const plan = limitedPlanner.build();
@@ -273,10 +276,8 @@ describe('DailyBiasPlanner', () => {
         htfSwings,
         currentRef: 4520,
         config,
-        limits: {
-          maxUpTargets: 10,
-          maxDownTargets: 2
-        }
+        maxUpTargets: 10,
+        maxDownTargets: 2
       });
 
       const plan = limitedPlanner.build();
@@ -290,7 +291,7 @@ describe('DailyBiasPlanner', () => {
       const allTargets = [...plan.upTargets, ...plan.downTargets];
 
       allTargets.forEach(target => {
-        expect(target.status).toBe('pending');
+        expect(target.status).toBe('PENDING');
       });
     });
   });
@@ -348,7 +349,7 @@ describe('DailyBiasPlanner', () => {
         const updatedPlan = planner.getPlan();
         const updatedTarget = updatedPlan.upTargets[0];
 
-        expect(updatedTarget?.status).toBe('hit');
+        expect(updatedTarget?.status).toBe('HIT');
       }
     });
 
@@ -363,7 +364,7 @@ describe('DailyBiasPlanner', () => {
         const updatedPlan = planner.getPlan();
 
         const hitTargets = updatedPlan.upTargets.filter(
-          t => t.level.price === targetPrice && t.status === 'hit'
+          t => t.level.price === targetPrice && t.status === 'HIT'
         );
 
         expect(hitTargets.length).toBeGreaterThan(0);
@@ -373,12 +374,7 @@ describe('DailyBiasPlanner', () => {
     it('should support all status types', () => {
       const plan = planner.getPlan();
 
-      const statuses: Array<'pending' | 'hit' | 'missed' | 'cancelled'> = [
-        'pending',
-        'hit',
-        'missed',
-        'cancelled'
-      ];
+      const statuses = ['pending', 'hit', 'invalidated', 'consumed'];
 
       statuses.forEach((status, index) => {
         if (plan.upTargets[index]) {
@@ -389,7 +385,7 @@ describe('DailyBiasPlanner', () => {
       const updatedPlan = planner.getPlan();
 
       // Check that statuses were updated
-      expect(updatedPlan.upTargets.some(t => t.status !== 'pending')).toBe(true);
+      expect(updatedPlan.upTargets.some(t => t.status !== 'PENDING')).toBe(true);
     });
   });
 

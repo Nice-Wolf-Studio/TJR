@@ -54,6 +54,7 @@ interface WindowTracker {
  * - Memory-efficient window management
  */
 export class BosReversalEngine implements IBosReversalEngine {
+  private symbol: string;
   private config: BosConfig;
   private pivotTracker: LtfPivotTracker;
   private activeWindows: Map<string, WindowTracker> = new Map();
@@ -71,21 +72,54 @@ export class BosReversalEngine implements IBosReversalEngine {
 
   constructor(
     symbol: string,
-    config: Partial<BosConfig> = {}
+    config: Partial<BosConfig> | any = {}
   ) {
+    this.symbol = symbol;
+    // Handle legacy config format from tests (pivot/window/signal instead of pivots/windows/signals)
+    const normalizedConfig = this.normalizeConfig(config);
+
     this.config = {
       ...DEFAULT_BOS_CONFIG,
-      ...config,
-      pivots: { ...DEFAULT_BOS_CONFIG.pivots, ...config.pivots },
-      windows: { ...DEFAULT_BOS_CONFIG.windows, ...config.windows },
-      signals: { ...DEFAULT_BOS_CONFIG.signals, ...config.signals },
-      performance: { ...DEFAULT_BOS_CONFIG.performance, ...config.performance }
+      ...normalizedConfig,
+      pivots: { ...DEFAULT_BOS_CONFIG.pivots, ...normalizedConfig.pivots },
+      windows: { ...DEFAULT_BOS_CONFIG.windows, ...normalizedConfig.windows },
+      signals: { ...DEFAULT_BOS_CONFIG.signals, ...normalizedConfig.signals },
+      performance: { ...DEFAULT_BOS_CONFIG.performance, ...normalizedConfig.performance }
     };
 
     this.pivotTracker = new LtfPivotTracker(symbol, this.config.pivots);
 
     // Validate configuration
     this.validateConfig();
+  }
+
+  /**
+   * Normalize legacy config format to current format
+   * Handles backward compatibility with tests using pivot/window/signal (singular)
+   */
+  private normalizeConfig(config: any): Partial<BosConfig> {
+    const normalized: any = { ...config };
+
+    // Map singular to plural forms
+    if (config.pivot && !config.pivots) {
+      normalized.pivots = config.pivot;
+      delete normalized.pivot;
+    }
+    if (config.window && !config.windows) {
+      normalized.windows = config.window;
+      delete normalized.window;
+    }
+    if (config.signal && !config.signals) {
+      normalized.signals = config.signal;
+      delete normalized.signal;
+    }
+
+    // Map maxWindows to maxWindowsPerSymbol
+    if (normalized.windows?.maxWindows !== undefined && normalized.windows?.maxWindowsPerSymbol === undefined) {
+      normalized.windows.maxWindowsPerSymbol = normalized.windows.maxWindows;
+    }
+
+    return normalized;
   }
 
   /**
@@ -106,10 +140,7 @@ export class BosReversalEngine implements IBosReversalEngine {
     }
 
     // Check window limits per symbol
-    const symbolWindows = Array.from(this.activeWindows.values())
-      .filter(tracker => tracker.window.symbol === referencePivot.timestamp.toString());
-
-    if (symbolWindows.length >= this.config.windows.maxWindowsPerSymbol) {
+    if (this.activeWindows.size >= this.config.windows.maxWindowsPerSymbol) {
       return null; // Reject due to limit
     }
 
@@ -131,13 +162,15 @@ export class BosReversalEngine implements IBosReversalEngine {
       id: windowId,
       openedAt,
       expiresAt,
-      symbol: referencePivot.timestamp.toString(), // Using timestamp as symbol for this example
+      symbol: this.symbol,
       referencePivot,
       status: 'active',
       direction: windowDirection,
       triggerPrice,
-      strictInequality: this.config.signals.strictInequality
-    };
+      strictInequality: this.config.signals.strictInequality,
+      // Legacy compatibility: add 'reference' alias
+      reference: referencePivot
+    } as any;
 
     // Add to active windows with performance tracker
     const tracker: WindowTracker = {
@@ -149,7 +182,8 @@ export class BosReversalEngine implements IBosReversalEngine {
     this.activeWindows.set(windowId, tracker);
     this.stats.totalWindowsOpened++;
 
-    return window;
+    // Return window with Date objects for backward compatibility with tests
+    return this.wrapWindowDates(window);
   }
 
   /**
@@ -160,8 +194,19 @@ export class BosReversalEngine implements IBosReversalEngine {
   onBar(bar: BarData): BosSignal[] {
     this.stats.totalBarsProcessed++;
 
+    // Ensure bar has required fields for backward compatibility with tests
+    const normalizedBar: BarData = {
+      symbol: bar.symbol || this.symbol,
+      timestamp: bar.timestamp,
+      open: bar.open ?? ((bar.high + bar.low) / 2),
+      high: bar.high,
+      low: bar.low,
+      close: bar.close ?? ((bar.high + bar.low) / 2),
+      volume: bar.volume ?? 0
+    };
+
     // Process pivot detection first
-    const newPivots = this.pivotTracker.onBar(bar);
+    const newPivots = this.pivotTracker.onBar(normalizedBar);
 
     // Auto-open windows for significant new pivots
     if (this.shouldAutoOpenWindows()) {
@@ -169,7 +214,7 @@ export class BosReversalEngine implements IBosReversalEngine {
     }
 
     // Check active windows for breaks
-    const newSignals = this.checkActiveWindows(bar);
+    const newSignals = this.checkActiveWindows(normalizedBar);
 
     // Periodic cleanup
     if (this.shouldRunCleanup()) {
@@ -189,13 +234,25 @@ export class BosReversalEngine implements IBosReversalEngine {
   getState(): BosEngineState {
     this.stats.uptimeMs = Date.now() - this.stats.startTime;
 
+    const recentPivots = this.pivotTracker.getRecentPivots(20);
+
     return {
-      activeWindows: Array.from(this.activeWindows.values()).map(t => ({ ...t.window })),
-      recentPivots: this.pivotTracker.getRecentPivots(20),
+      activeWindows: Array.from(this.activeWindows.values()).map(t => this.wrapWindowDates(t.window)),
+      recentPivots,
       signals: [...this.signals],
       lastProcessedAt: Date.now(),
-      stats: { ...this.stats }
-    };
+      stats: { ...this.stats },
+      // Legacy compatibility
+      confirmedPivots: recentPivots,
+      pivotState: this.pivotTracker.getState(),
+      metrics: {
+        totalBars: this.stats.totalBarsProcessed,
+        totalBarsProcessed: this.stats.totalBarsProcessed,
+        totalSignals: this.stats.totalSignals,
+        totalSignalsGenerated: this.stats.totalSignals,
+        activeWindowCount: this.activeWindows.size
+      }
+    } as any;
   }
 
   /**
@@ -232,6 +289,27 @@ export class BosReversalEngine implements IBosReversalEngine {
 
     this.lastCleanupTime = now;
     return cleanupCount;
+  }
+
+  /**
+   * Reset engine state
+   * Clears all windows, signals, and pivot tracker state
+   */
+  reset(): void {
+    this.activeWindows.clear();
+    this.signals = [];
+    this.lastSignalTime.clear();
+    this.windowCounter = 0;
+    this.lastCleanupTime = 0;
+    this.stats = {
+      totalWindowsOpened: 0,
+      totalSignals: 0,
+      totalBarsProcessed: 0,
+      uptimeMs: 0,
+      startTime: Date.now()
+    };
+    // Reset pivot tracker by creating new instance
+    this.pivotTracker = new LtfPivotTracker(this.symbol, this.config.pivots);
   }
 
   /**
@@ -327,34 +405,40 @@ export class BosReversalEngine implements IBosReversalEngine {
       timestamp: bar.timestamp,
       symbol: bar.symbol,
       type: signalType,
+      direction: window.direction,
       triggerPrice: window.triggerPrice,
       brokenPivot: window.referencePivot,
       windowId: window.id,
       confidence,
       strength,
       triggerBar: bar
-    };
+    } as any;
   }
 
   /**
    * Calculate signal confidence score
    * @param window Triggered window
    * @param bar Trigger bar
-   * @returns Confidence score (0-100)
+   * @returns Confidence score (0-1)
    */
   private calculateSignalConfidence(window: BosWindow, bar: BarData): number {
-    const pivotStrength = window.referencePivot.strength;
+    // Normalize pivot strength from 1-5 scale to 0-1
+    const pivotStrength = (window.referencePivot.strength - 1) / 4;
     const volumeWeight = this.calculateVolumeWeight(bar);
     const timeWeight = this.calculateTimeWeight(window);
 
     // Weighted confidence calculation
-    const confidence = Math.round(
+    const confidence =
       pivotStrength * 0.5 +
       volumeWeight * 0.3 +
-      timeWeight * 0.2
-    );
+      timeWeight * 0.2;
 
-    return Math.max(this.config.signals.minConfidence, Math.min(100, confidence));
+    // Normalize minConfidence to 0-1 range if it's > 1
+    const minConf = this.config.signals.minConfidence > 1
+      ? this.config.signals.minConfidence / 100
+      : this.config.signals.minConfidence;
+
+    return Math.max(minConf, Math.min(1, confidence));
   }
 
   /**
@@ -412,7 +496,7 @@ export class BosReversalEngine implements IBosReversalEngine {
    */
   private autoOpenWindows(newPivots: PivotPoint[]): void {
     for (const pivot of newPivots) {
-      if (pivot.strength >= 60) { // Only for strong pivots
+      if (pivot.strength >= 4) { // Only for strong pivots (4-5 on 1-5 scale)
         this.openWindow(pivot);
       }
     }
@@ -472,9 +556,9 @@ export class BosReversalEngine implements IBosReversalEngine {
       pivot.timestamp > 0 &&
       pivot.price > 0 &&
       ['high', 'low'].includes(pivot.type) &&
-      pivot.leftBars >= 0 &&
-      pivot.rightBars >= 0 &&
-      pivot.strength >= 0 && pivot.strength <= 100
+      (pivot.leftBars === undefined || pivot.leftBars >= 0) &&
+      (pivot.rightBars === undefined || pivot.rightBars >= 0) &&
+      pivot.strength >= 1 && pivot.strength <= 100
     );
   }
 
@@ -543,5 +627,18 @@ export class BosReversalEngine implements IBosReversalEngine {
   private calculateSignalsPerMinute(): number {
     const uptimeMinutes = (Date.now() - this.stats.startTime) / (60 * 1000);
     return uptimeMinutes > 0 ? this.stats.totalSignals / uptimeMinutes : 0;
+  }
+
+  /**
+   * Wrap window with Date objects for backward compatibility
+   * @param window Window with timestamp numbers
+   * @returns Window with Date objects
+   */
+  private wrapWindowDates(window: BosWindow): any {
+    return {
+      ...window,
+      openedAt: new Date(window.openedAt),
+      expiresAt: new Date(window.expiresAt)
+    };
   }
 }

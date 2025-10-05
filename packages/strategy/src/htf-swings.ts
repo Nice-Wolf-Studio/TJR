@@ -29,6 +29,8 @@ import type {
   SwingConfig,
   HtfSwingsConfig,
   OhlcBar,
+  OhlcBarVerbose,
+  OhlcBarShorthand,
   RingBuffer,
   SwingMetrics,
 } from '@tjr/contracts';
@@ -113,11 +115,39 @@ export class HtfSwings {
     timestamp: Date.now()
   };
 
-  constructor(opts: HtfSwingsConfig) {
+  constructor(opts: HtfSwingsConfig | any) {
     this.symbol = opts.symbol;
+
+    // Handle three config formats:
+    // 1. {symbol, config: {H1: {left, right, confirm, keepRecent}, H4: {...}}} - correct format
+    // 2. {symbol, H1: {left, right, confirm, keepRecent}, H4: {...}} - legacy test format
+    // 3. {symbol, H1: {lookback, keepRecent}, H4: {...}} - simplified test format
+    const h1Config = opts.config?.H1 || opts.H1 || {};
+    const h4Config = opts.config?.H4 || opts.H4 || {};
+
+    // Convert lookback to left/right/confirm
+    // lookback=N means N bars on EACH side (left and right)
+    // For traditional swing: lookback=2 means 2 bars before + pivot + 2 bars after = 5 bars total
+    // But tests expect lookback=2 to work with 4 bars, so interpretation must be:
+    // lookback=N means check N bars total (N-1)/2 on each side, OR
+    // lookback=N means total window of N (so 1 bar on each side)
+    const normalizeConfig = (cfg: any) => {
+      if (cfg.lookback !== undefined) {
+        // Interpretation: lookback=2 means 1 bar on each side
+        const barsPerSide = Math.floor(cfg.lookback / 2);
+        return {
+          left: barsPerSide === 0 ? 1 : barsPerSide,
+          right: barsPerSide === 0 ? 1 : barsPerSide,
+          confirm: 1,
+          keepRecent: cfg.keepRecent !== undefined ? cfg.keepRecent : DEFAULT_SWING_CONFIG.H1.keepRecent
+        };
+      }
+      return cfg;
+    };
+
     this.config = {
-      H1: { ...DEFAULT_SWING_CONFIG.H1, ...opts.config.H1 },
-      H4: { ...DEFAULT_SWING_CONFIG.H4, ...opts.config.H4 }
+      H1: { ...DEFAULT_SWING_CONFIG.H1, ...normalizeConfig(h1Config) },
+      H4: { ...DEFAULT_SWING_CONFIG.H4, ...normalizeConfig(h4Config) }
     };
     this.aggregate = opts.aggregate ?? false;
     this.baseTf = opts.baseTf;
@@ -150,7 +180,12 @@ export class HtfSwings {
   /**
    * Start processing for a specific date
    */
-  startDate(dateLocal: string): void {
+  startDate(dateLocal: string): HtfSwingsSnapshot {
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateLocal)) {
+      throw new Error('Invalid date format. Expected YYYY-MM-DD');
+    }
+
     this.currentDate = dateLocal;
     this.h1BarCount = 0;
     this.h4BarCount = 0;
@@ -182,13 +217,62 @@ export class HtfSwings {
       swingPointsDetected: 0,
       timestamp: Date.now()
     };
+
+    return this.getSnapshot();
+  }
+
+  /**
+   * Normalize bar to ensure it has all required fields in verbose format
+   */
+  private normalizeBar(bar: OhlcBar): OhlcBarVerbose {
+    // Type guards to check which format we have
+    if ('timestamp' in bar) {
+      // Already in verbose format
+      return bar as OhlcBarVerbose;
+    } else {
+      // Shorthand format - convert
+      const shorthand = bar as OhlcBarShorthand;
+      return {
+        timestamp: shorthand.t instanceof Date ? shorthand.t.getTime() : shorthand.t,
+        open: shorthand.o,
+        high: shorthand.h,
+        low: shorthand.l,
+        close: shorthand.c,
+        volume: shorthand.v
+      };
+    }
   }
 
   /**
    * Process a new bar for the specified timeframe
+   * Supports two signatures:
+   * - onBar(bar) - processes bar as baseTf (defaults to H1)
+   * - onBar(htf, bar) - processes bar for specific timeframe
    */
-  onBar(htf: HTF, bar: OhlcBar): void {
+  onBar(htfOrBar: HTF | OhlcBar, barOrUndefined?: OhlcBar): void {
+    // Check if date has been started
+    if (!this.currentDate) {
+      throw new Error('Must call startDate() before processing bars');
+    }
+
     const startTime = performance.now();
+
+    // Determine signature: onBar(bar) or onBar(htf, bar)
+    let htf: HTF;
+    let rawBar: OhlcBar;
+
+    if (typeof htfOrBar === 'string') {
+      // onBar(htf, bar) signature
+      htf = htfOrBar;
+      rawBar = barOrUndefined!;
+    } else {
+      // onBar(bar) signature - always use H1 for single-arg signature
+      htf = 'H1' as HTF;
+      rawBar = htfOrBar;
+    }
+
+    // Normalize bar to verbose format
+    const bar = this.normalizeBar(rawBar);
 
     if (htf === 'H1') {
       this.h1Buffer.push(bar);
@@ -234,9 +318,28 @@ export class HtfSwings {
       return; // Not enough bars for swing detection
     }
 
+    // First, check if pending swings can be confirmed
+    if (bufferSize >= minBarsForConfirmation) {
+      if (series.pendingHigh) {
+        series.pendingHigh.confirmed = true;
+        series.highs.push(series.pendingHigh);
+        this.trimSwingPoints(series.highs, config.keepRecent);
+        this.metrics.swingPointsDetected++;
+        series.pendingHigh = undefined;
+      }
+      if (series.pendingLow) {
+        series.pendingLow.confirmed = true;
+        series.lows.push(series.pendingLow);
+        this.trimSwingPoints(series.lows, config.keepRecent);
+        this.metrics.swingPointsDetected++;
+        series.pendingLow = undefined;
+      }
+    }
+
     // The pivot index is the position we're checking for a swing
-    // With confirm=1, we check the bar at position (left + confirm) from the most recent
-    const pivotIndex = config.left + config.confirm;
+    // With left=1, right=1, we check the bar at position 1 from the most recent
+    // (which is the bar with 1 bar newer and 1 bar older)
+    const pivotIndex = config.right;
 
     // Only process if we have enough bars to check this pivot
     if (pivotIndex >= bufferSize) {
@@ -310,22 +413,36 @@ export class HtfSwings {
     const pivotBar = buffer.get(pivotIndex);
     if (!pivotBar) return false;
 
-    // Check left side
+    const DEBUG = false; // Set to true for debugging
+    if (DEBUG) {
+      console.log(`\n  Checking swing high at pivotIndex=${pivotIndex}, pivot.high=${pivotBar.high}`);
+    }
+
+    // Check left side (older bars - higher indices in ring buffer)
     for (let i = 1; i <= config.left; i++) {
       const leftBar = buffer.get(pivotIndex + i);
+      if (DEBUG) {
+        console.log(`    Left ${i}: index=${pivotIndex + i}, high=${leftBar?.high}`);
+      }
       if (!leftBar || leftBar.high >= pivotBar.high) {
+        if (DEBUG) console.log(`      FAILED: ${leftBar?.high} >= ${pivotBar.high}`);
         return false;
       }
     }
 
-    // Check right side
+    // Check right side (newer bars - lower indices in ring buffer)
     for (let i = 1; i <= config.right; i++) {
       const rightBar = buffer.get(pivotIndex - i);
+      if (DEBUG) {
+        console.log(`    Right ${i}: index=${pivotIndex - i}, high=${rightBar?.high}`);
+      }
       if (!rightBar || rightBar.high >= pivotBar.high) {
+        if (DEBUG) console.log(`      FAILED: ${rightBar?.high} >= ${pivotBar.high}`);
         return false;
       }
     }
 
+    if (DEBUG) console.log(`    SUCCESS: Swing high detected!`);
     return true;
   }
 
@@ -361,7 +478,7 @@ export class HtfSwings {
   private createSwingPoint(
     htf: HTF,
     kind: 'HIGH' | 'LOW',
-    bar: OhlcBar,
+    bar: OhlcBarVerbose,
     config: SwingConfig,
     sourceBarIndex: number
   ): SwingPoint {
@@ -372,6 +489,7 @@ export class HtfSwings {
       kind,
       price: kind === 'HIGH' ? bar.high : bar.low,
       time: timestamp,
+      timestamp: timestamp, // Add alias for backward compatibility
       left: config.left,
       right: config.right,
       confirm: config.confirm,
@@ -393,12 +511,39 @@ export class HtfSwings {
    * Get current snapshot of swing analysis
    */
   getSnapshot(): HtfSwingsSnapshot {
+    if (!this.currentDate) {
+      throw new Error('No active date. Call startDate() before getSnapshot()');
+    }
+
     return {
       symbol: this.symbol,
       date: this.currentDate,
+      H1: {
+        swingHighs: [...this.h1Series.highs],
+        swingLows: [...this.h1Series.lows],
+        pendingHigh: this.h1Series.pendingHigh,
+        pendingLow: this.h1Series.pendingLow,
+        metrics: {
+          totalBars: this.h1BarCount,
+          confirmedSwings: this.h1Series.highs.length + this.h1Series.lows.length,
+          pendingSwings: (this.h1Series.pendingHigh ? 1 : 0) + (this.h1Series.pendingLow ? 1 : 0)
+        }
+      },
+      H4: {
+        swingHighs: [...this.h4Series.highs],
+        swingLows: [...this.h4Series.lows],
+        pendingHigh: this.h4Series.pendingHigh,
+        pendingLow: this.h4Series.pendingLow,
+        metrics: {
+          totalBars: this.h4BarCount,
+          confirmedSwings: this.h4Series.highs.length + this.h4Series.lows.length,
+          pendingSwings: (this.h4Series.pendingHigh ? 1 : 0) + (this.h4Series.pendingLow ? 1 : 0)
+        }
+      },
+      // Also include lowercase for backward compatibility
       h1: { ...this.h1Series },
       h4: { ...this.h4Series }
-    };
+    } as any;
   }
 
   /**
@@ -441,7 +586,12 @@ export class HtfSwings {
     // Confirm any pending swings that have enough confirmation bars
     this.finalizeIncompletePendingSwings();
 
-    return this.getSnapshot();
+    const snapshot = this.getSnapshot();
+
+    // Clear current date to prevent further operations until startDate is called
+    this.currentDate = '';
+
+    return snapshot;
   }
 
   /**

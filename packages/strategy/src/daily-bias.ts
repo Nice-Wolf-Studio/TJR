@@ -38,6 +38,7 @@ import {
   createLevelBands,
   sortTargetsDeterministic,
   validatePriorityConfig,
+  DEFAULT_PRIORITY_CONFIG,
 } from './priority.js';
 
 /**
@@ -47,13 +48,26 @@ export interface DailyBiasOptions {
   /** Trading symbol identifier (e.g., "ES", "NQ") */
   symbol: string;
   /** Trading date in YYYY-MM-DD format in exchange timezone */
-  dateLocal: string;
+  dateLocal?: string;
+  /** Legacy: trading date (maps to dateLocal) */
+  date?: string;
   /** Symbol tick size for price calculations */
-  tickSize: number;
+  tickSize?: number;
   /** Priority configuration from planner.json */
-  cfg: PriorityConfig;
+  cfg?: PriorityConfig;
+  /** Legacy: priority config (maps to cfg) */
+  config?: PriorityConfig;
   /** Reference price for target ranking (e.g., previous close) */
-  referencePrice: number;
+  referencePrice?: number;
+  /** Legacy: reference price (maps to referencePrice) */
+  currentRef?: number;
+  /** Session levels data */
+  sessionLevels?: any[];
+  /** HTF swings data */
+  htfSwings?: any;
+  /** Max targets per direction */
+  maxUpTargets?: number;
+  maxDownTargets?: number;
 }
 
 /**
@@ -88,33 +102,87 @@ export class DailyBiasPlanner {
    * ```
    */
   constructor(opts: DailyBiasOptions) {
-    // Validate configuration
-    validatePriorityConfig(opts.cfg);
-
     if (!opts.symbol || opts.symbol.trim().length === 0) {
       throw new Error('Symbol is required and cannot be empty');
     }
 
-    if (!opts.dateLocal || !/^\d{4}-\d{2}-\d{2}$/.test(opts.dateLocal)) {
+    // Normalize legacy options
+    const normalizedOpts = this.normalizeOptions(opts);
+
+    if (!normalizedOpts.dateLocal || !/^\d{4}-\d{2}-\d{2}$/.test(normalizedOpts.dateLocal)) {
       throw new Error('dateLocal must be in YYYY-MM-DD format');
     }
 
-    if (typeof opts.tickSize !== 'number' || opts.tickSize <= 0) {
+    // Use default config if not provided
+    if (!normalizedOpts.cfg) {
+      normalizedOpts.cfg = DEFAULT_PRIORITY_CONFIG;
+    } else {
+      validatePriorityConfig(normalizedOpts.cfg);
+    }
+
+    if (typeof normalizedOpts.tickSize !== 'number' || normalizedOpts.tickSize <= 0) {
       throw new Error('tickSize must be a positive number');
     }
 
-    if (typeof opts.referencePrice !== 'number' || !isFinite(opts.referencePrice)) {
+    if (typeof normalizedOpts.referencePrice !== 'number' || !isFinite(normalizedOpts.referencePrice)) {
       throw new Error('referencePrice must be a finite number');
     }
 
-    this.options = { ...opts };
+    this.options = { ...normalizedOpts } as DailyBiasOptions & { dateLocal: string; cfg: PriorityConfig; tickSize: number; referencePrice: number };
 
     // Create scoring context
     this.context = {
+      symbol: normalizedOpts.symbol,
+      currentRef: normalizedOpts.referencePrice,
+      tickSize: normalizedOpts.tickSize,
+      config: normalizedOpts.cfg,
+    };
+
+    // Initialize session levels and HTF swings from options
+    if (normalizedOpts.sessionLevels && normalizedOpts.sessionLevels.length > 0) {
+      this.setSessionLevels(normalizedOpts.sessionLevels);
+    }
+    if (normalizedOpts.htfSwings) {
+      const h1Swings = normalizedOpts.htfSwings.H1 || [];
+      const h4Swings = normalizedOpts.htfSwings.H4 || [];
+      const allSwings = [...convertSwingPoints(h1Swings, 'H1', normalizedOpts.symbol), ...convertSwingPoints(h4Swings, 'H4', normalizedOpts.symbol)];
+      if (allSwings.length > 0) {
+        this.setHtfSwings(allSwings);
+      }
+    }
+  }
+
+  /**
+   * Normalize legacy options to current format
+   * @private
+   */
+  private normalizeOptions(opts: DailyBiasOptions): Required<DailyBiasOptions> & { dateLocal: string; cfg: PriorityConfig; tickSize: number; referencePrice: number } {
+    const dateLocal = opts.dateLocal || opts.date;
+    const cfg = opts.cfg || opts.config || DEFAULT_PRIORITY_CONFIG;
+    const referencePrice = opts.referencePrice !== undefined ? opts.referencePrice : opts.currentRef;
+    const tickSize = opts.tickSize !== undefined ? opts.tickSize : 0.25;
+
+    if (!dateLocal) {
+      throw new Error('date or dateLocal is required');
+    }
+    if (referencePrice === undefined) {
+      throw new Error('currentRef or referencePrice is required');
+    }
+
+    return {
+      ...opts,
       symbol: opts.symbol,
-      currentRef: opts.referencePrice,
-      tickSize: opts.tickSize,
-      config: opts.cfg,
+      dateLocal,
+      date: dateLocal,
+      cfg,
+      config: cfg,
+      referencePrice,
+      currentRef: referencePrice,
+      tickSize,
+      sessionLevels: opts.sessionLevels || [],
+      htfSwings: opts.htfSwings || { H1: [], H4: [] },
+      maxUpTargets: opts.maxUpTargets ?? 5,
+      maxDownTargets: opts.maxDownTargets ?? 5,
     };
   }
 
@@ -203,7 +271,7 @@ export class DailyBiasPlanner {
    */
   build(): Plan {
     // Phase 1: Collect all candidates
-    const candidates = collectCandidates(this.sessionLevels, this.htfSwings, this.options.cfg);
+    const candidates = collectCandidates(this.sessionLevels, this.htfSwings, this.options.cfg!);
 
     if (candidates.length === 0) {
       throw new Error('No candidates available for plan generation');
@@ -221,15 +289,16 @@ export class DailyBiasPlanner {
     const sortedDownTargets = sortTargetsDeterministic(downTargets);
 
     // Phase 6: Apply per-side limits
-    const maxTargetsPerSide = this.options.cfg.limits?.maxTargetsPerSide || 8;
-    const limitedUpTargets = sortedUpTargets.slice(0, maxTargetsPerSide);
-    const limitedDownTargets = sortedDownTargets.slice(0, maxTargetsPerSide);
+    const maxUpTargets = this.options.maxUpTargets ?? this.options.cfg!.limits?.maxTargetsPerSide ?? 8;
+    const maxDownTargets = this.options.maxDownTargets ?? this.options.cfg!.limits?.maxTargetsPerSide ?? 8;
+    const limitedUpTargets = sortedUpTargets.slice(0, maxUpTargets);
+    const limitedDownTargets = sortedDownTargets.slice(0, maxDownTargets);
 
     // Create immutable plan
     this.plan = {
-      id: `${this.options.symbol}:${this.options.dateLocal}`,
+      id: `${this.options.symbol}:${this.options.dateLocal!}`,
       symbol: this.options.symbol,
-      dateLocal: this.options.dateLocal,
+      dateLocal: this.options.dateLocal!,
       currentRef: this.context.currentRef,
       createdAt: new Date(),
       upTargets: limitedUpTargets,
@@ -238,17 +307,90 @@ export class DailyBiasPlanner {
         'Daily Bias Planner v1.8 - Deterministic target ranking',
         'Priority: H4 > H1 > SESSION with recency and proximity factors',
         'Confluence banding merges levels within 4 ticks',
-        `Maximum ${maxTargetsPerSide} targets per side`,
+        `Maximum ${maxUpTargets} up targets, ${maxDownTargets} down targets`,
         'Targets sorted by priority desc, distance asc, source priority desc',
       ],
       meta: {
-        tz: this.options.cfg.timezoneBySymbol?.[this.options.symbol] || 'UTC',
-        tickSize: this.options.tickSize,
+        tz: this.options.cfg!.timezoneBySymbol?.[this.options.symbol] || 'UTC',
+        tickSize: this.options.tickSize!,
         sourceBars: `Session: ${this.sessionLevels.length}, HTF: ${this.htfSwings.length}`,
       },
     };
 
+    return this.plan!;
+  }
+
+  /**
+   * Returns the current plan
+   *
+   * @returns The built plan
+   * @throws {Error} If plan has not been built yet
+   *
+   * @example
+   * ```typescript
+   * const planner = new DailyBiasPlanner(options);
+   * planner.build();
+   * const plan = planner.getPlan();
+   * ```
+   */
+  getPlan(): Plan {
+    if (!this.plan) {
+      throw new Error('Plan not yet built. Call build() first.');
+    }
     return this.plan;
+  }
+
+  /**
+   * Updates the status of targets matching a specific price
+   *
+   * Updates the first target found with the matching price.
+   * Case-insensitive status matching for backward compatibility.
+   *
+   * @param price - Price level to match
+   * @param status - New status to assign
+   *
+   * @example
+   * ```typescript
+   * // Mark a level as hit when price reaches it
+   * planner.updateTargetStatus(4750.25, 'hit');
+   * ```
+   */
+  updateTargetStatus(price: number, status: string): void {
+    if (!this.plan) {
+      console.warn(`Cannot update target status: no plan exists. Call build() first.`);
+      return;
+    }
+
+    // Normalize status to uppercase for comparison
+    const normalizedStatus = status.toUpperCase() as PlanTargetStatus;
+
+    let found = false;
+
+    // Update in upTargets (first match only)
+    if (!found) {
+      for (const target of this.plan.upTargets) {
+        if (target.level.price === price) {
+          target.status = normalizedStatus;
+          found = true;
+          break;
+        }
+      }
+    }
+
+    // Update in downTargets (first match only)
+    if (!found) {
+      for (const target of this.plan.downTargets) {
+        if (target.level.price === price) {
+          target.status = normalizedStatus;
+          found = true;
+          break;
+        }
+      }
+    }
+
+    if (!found) {
+      console.warn(`No target found with price ${price}`);
+    }
   }
 
   /**
@@ -476,5 +618,54 @@ function validateInputs(_sessionLevels: KeyLevel[], htfSwings: KeyLevel[]): void
   // Future: Could add more validation for session levels
 }
 
+/**
+ * Converts simplified swing point data to KeyLevel format
+ *
+ * Handles both the legacy test format and the formal SwingPoint interface.
+ * Generates stable IDs based on symbol, source, kind, and timestamp.
+ *
+ * @param swings - Array of swing points in simplified format
+ * @param source - Source timeframe ('H1' or 'H4')
+ * @param symbol - Trading symbol identifier
+ * @returns Array of KeyLevel objects
+ */
+function convertSwingPoints(swings: any[], source: 'H1' | 'H4', symbol: string): KeyLevel[] {
+  const keyLevels: KeyLevel[] = [];
+
+  for (const swing of swings) {
+    // Support both 'type' (legacy test format) and 'kind' (formal SwingPoint)
+    const swingType = swing.type || swing.kind;
+    const swingTime = swing.timestamp || swing.time;
+
+    if (!swingType || !swingTime) {
+      console.warn(`Skipping invalid swing point:`, swing);
+      continue;
+    }
+
+    const kind: LevelKind = swingType === 'high' || swingType === 'HIGH'
+      ? `${source}_HIGH` as LevelKind
+      : `${source}_LOW` as LevelKind;
+
+    const time = swingTime instanceof Date ? swingTime : new Date(swingTime);
+    const id = `${symbol}:${kind}:${time.getTime()}`;
+
+    keyLevels.push({
+      id,
+      symbol,
+      kind,
+      source,
+      price: swing.price,
+      time,
+      meta: {
+        barIndex: swing.barIndex || swing.sourceBarIndex,
+        strength: swing.strength || swing.left,
+        confirmed: swing.confirmed !== undefined ? swing.confirmed : true,
+      },
+    });
+  }
+
+  return keyLevels;
+}
+
 // Export for testing and external use
-export { convertSessionLevels, collectCandidates, splitByDirection, createPlanTargets, validateInputs };
+export { convertSessionLevels, convertSwingPoints, collectCandidates, splitByDirection, createPlanTargets, validateInputs };

@@ -18,10 +18,9 @@ export type HTF = "H1" | "H4";
 export type BaseTF = "M1" | "M5" | "M15" | "M30";
 
 /**
- * OHLC bar interface for swing detection
- * Using timestamp in milliseconds (unix epoch) for performance
+ * OHLC bar interface for swing detection - verbose format
  */
-export interface OhlcBar {
+export interface OhlcBarVerbose {
   /** Timestamp in unix milliseconds */
   timestamp: number;
   /** Opening price */
@@ -32,9 +31,32 @@ export interface OhlcBar {
   low: number;
   /** Closing price */
   close: number;
-  /** Optional volume */
+  /** Volume */
   volume?: number;
 }
+
+/**
+ * OHLC bar interface for swing detection - shorthand format
+ */
+export interface OhlcBarShorthand {
+  /** Timestamp in unix milliseconds or Date */
+  t: number | Date;
+  /** Opening price */
+  o: number;
+  /** High price */
+  h: number;
+  /** Low price */
+  l: number;
+  /** Closing price */
+  c: number;
+  /** Volume */
+  v?: number;
+}
+
+/**
+ * OHLC bar - supports both verbose and shorthand formats
+ */
+export type OhlcBar = OhlcBarVerbose | OhlcBarShorthand;
 
 /**
  * Represents a detected swing point (high or low)
@@ -48,8 +70,10 @@ export interface SwingPoint {
   kind: "HIGH" | "LOW";
   /** Price level of the swing */
   price: number;
-  /** Timestamp when swing occurred */
+  /** Timestamp when swing occurred (verbose) */
   time: Date;
+  /** Timestamp when swing occurred (alias for backward compatibility) */
+  timestamp?: Date;
   /** Number of bars to the left that must be lower (for HIGH) or higher (for LOW) */
   left: number;
   /** Number of bars to the right that must be lower (for HIGH) or higher (for LOW) */

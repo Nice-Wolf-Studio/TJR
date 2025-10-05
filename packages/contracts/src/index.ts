@@ -52,6 +52,8 @@ export type {
   HTF,
   BaseTF,
   OhlcBar,
+  OhlcBarVerbose,
+  OhlcBarShorthand,
   SwingPoint,
   SwingConfig,
   SwingSeries,
@@ -97,3 +99,11 @@ export type {
   PriorityConfig,
   ScoringContext,
 } from './bias.js';
+
+// Equilibrium analysis types
+export type {
+  SwingRange,
+  EquilibriumConfig,
+  EquilibriumZone,
+  EquilibriumLevel,
+} from './equilibrium.js';

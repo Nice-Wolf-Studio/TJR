@@ -1,0 +1,330 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/BMyeYQIj_vU
+
+00:00:00.160 This stupidly simple strategy made me $156,000 last month. It's clean, it's repeatable,
+00:00:06.000 and it's highly profitable. And in this video, I'm going to be breaking down how you guys can do it, too, and break it
+00:00:11.280 down step by step, and then do a couple back testing trades with you guys to prove to you guys that it works. So, with that being said, let's jump right
+00:00:17.840 into it. So, as you guys can see, this is just a P&L little screenshot from one
+00:00:24.080 of the days using this strategy, but I have the P&L screenshot of last month
+00:00:29.279 that I can go ahead and show you guys right here. As you can see, $156,94350
+00:00:37.120 from last month. And this month currently, because we are now in the month of September, I can pull up my
+00:00:44.879 trade locker for you guys. I am up account balance, but I am up a total of
+00:00:50.800 56,000. What is that? $375 on this month trading this strategy. So again, I show you guys
+00:00:58.079 all of my trades live recorded for you guys. Every single market open. I press record and I go through my trades and I
+00:01:04.479 tell you guys exactly how much I made, exactly how much I lost, keeping it fully transparent with you guys. And then on top of that, I post my daily, my
+00:01:11.040 weekly, and my monthly P&L to my Instagram stories that you guys can go back and fact check with the live trade
+00:01:18.080 recap videos going over, you know, again, how much I made for that day. And then you can fact check it with the
+00:01:23.759 Instagram story that same day. So again, I'm using the strategy that I'm going to be teaching you guys in this video today
+00:01:30.080 to get all of these profits that I just showed you guys. So, just like the majority of you guys right now, I used
+00:01:35.759 to be an unprofitable trader, jumping from strategy to strategy, trying to learn different confluences, thinking
+00:01:42.000 that this new YouTube video that I was going to watch, like this 5 minute gold strategy with EMAs crossing is with a
+00:01:49.280 80% win rate is going to make me a profitable trader when that is just not the case at all. more often than not,
+00:01:56.079 you guys are actually overeducating yourselves when it comes to learning about trading and studying certain
+00:02:01.840 strategies and studying certain confluences. So, what I want to do for you guys today is help you guys eliminate all of the noise, find a
+00:02:08.399 strategy that genuinely works because I've proven to you guys that it works. And hopefully you guys can understand
+00:02:13.680 this well enough to the point where you guys can just fully tune out all of the noise from day trading YouTube because
+00:02:19.920 just like me in this picture, you know, I was jumping from strategy to strategy, confluence to confluence, and I had no
+00:02:26.080 freaking clue um what was actually beneficial. And it ended up being a little bit of like analysis paralysis
+00:02:31.920 where I would end up combining different strategies and then I wasn't following one perfectly and then the other one I
+00:02:37.280 was taking bits and pieces from it and then in turn I just ended up being a complete unprofitable trader versus now
+00:02:42.720 I stick to one strict strategy. I follow my plan. I follow my risk management and I have good psychology when I'm trading.
+00:02:48.720 And in turn that has created the TJR that you guys know and love that's actually good at trading, not an
+00:02:54.800 unprofitable trader that you guys are stuck at right now. So hopefully this video can help you guys get to that
+00:03:00.560 point where you guys can find one strategy, stick to it, use proper risk management, have good psychology while
+00:03:06.080 practicing the strategy and then in turn will lead you guys to profitability. So before we get into actual strategy, we
+00:03:13.840 need to understand what we're actually genuinely trying to do when we are trading. And a lot of people they like
+00:03:19.920 [ __ ] up. They think trading is about making money. They think any job is about making money when in reality if
+00:03:26.319 you guys want to be like a true real entrepreneur or a true real trader you will understand your actual objective
+00:03:31.920 with what you are doing in order to make more money. So when I talk about trading
+00:03:36.959 I always say what are we trying to do as traders? Are we trying to make money? No, we're not trying to make money.
+00:03:42.159 We're trying to accurately predict where price wants to go with a high probability on a day-to-day basis.
+00:03:47.680 That's like my motto every single day. What am I doing when I come into the charts? I'm trying to make a accurate,
+00:03:54.239 highly probable decision of where price wants to go on a day-to-day basis. So, it's not about making money, but the
+00:04:00.959 skill set of being able to accurately predict where price wants to go with a high probability. That is what gives you
+00:04:06.239 the awesome side effect and the awesome reward, which is money. I like to compare it to somebody that plays
+00:04:11.360 basketball at a really high level. How do basketball players make the most amount of money possible? They get really [ __ ] good at putting the ball
+00:04:17.519 on the basket. They get really [ __ ] good at dribbling, shooting, passing, and have a high basketball IQ. In turn,
+00:04:23.280 that makes them money. Unfortunately for us with trading, it's like super directly correlated, like when I place
+00:04:29.280 this trade, did I make money? Did I lose money? But we need to emotionally detach ourselves from the making money aspect
+00:04:35.600 from trading in order for us to actually get good at it. And instead we need to focus on how can I accurately predict
+00:04:41.120 where price wants to go on a daily basis and then take trades based on that headsp space instead of how can I make
+00:04:47.120 money today because if I come into the market thinking how can I make money today I'm going to be taking wrong
+00:04:52.639 action and in turn I'm not going to get the end result that I want. Okay? So
+00:04:57.840 keep that in mind when we are going into the charts and when we're talking about strategy. This strategy isn't to make
+00:05:03.120 money. I know that sounds counterintuitive, but the strategy is to help us predict where price is going to
+00:05:09.120 go with a high probability. So, now that we know what we are trying to actively do when trading, this is when we can
+00:05:16.000 actually teach you guys the strategy of how to accurately predict where price wants to go with high probability on a day-to-day basis. Okay, you guys are
+00:05:22.080 going to hear me say that over and over and over again in this video, but it is super true because if we have that headsp space, we are going to make much
+00:05:28.560 smarter decisions in the market and then also probable decisions in the market. Okay, so my strategy is again like I was
+00:05:34.160 telling you guys, it's super freaking simple. You find your daily bias, then you look for key levels and that honestly establishes our daily bias. So
+00:05:40.639 we we establish our key levels and then in turn off of those key levels, we're able to establish our daily bias off of
+00:05:46.639 that. Then from there, we're going to be looking for lower time frame reversals and then from there look for lower time frame continuation confluences. Then we
+00:05:54.080 are looking for execution and then obviously exiting in turn predicting where the market wants to go. So, with
+00:06:00.560 that being said, let's go ahead and jump into the charts, and I'll actually break down this step by step of how we can
+00:06:05.680 find daily bias, what our key levels are, how we can identify low time frame reversals, how we can identify low time
+00:06:11.600 frame continuations, how to enter, and then where to exit. So, that being said, let's jump on the charts. Before we get
+00:06:18.479 on to the charts, I want to actually put this in Word format so you guys can just go ahead and screenshot this to help you
+00:06:24.639 guys use this to your advantage. So, we're going to go ahead and start this off by understanding our daily bias. But
+00:06:31.600 again, like I was saying, in order to understand our daily bias, we need to be able to identify our key levels first. So, identifying key levels. What are our
+00:06:38.639 key levels or what are key levels that I always look for? I'm looking for 1 hour and
+00:06:44.880 4hour highs in the market or highs and lows. On top of that, I'm looking at session
+00:06:51.120 highs and lows. And low key, like that's kind of all that I look for. We can add
+00:06:56.560 data highs and lows, but that's very rare. That's when we have news data. So,
+00:07:03.199 once we've identified these 1 hour and 4hour highs and lows, session highs and lows and data highs and lows, first of
+00:07:10.240 all, why are we even looking for these things in the first place? Highs and lows, as most of you guys know, if you
+00:07:15.440 guys have seen the majority of my videos, you guys will know that highs and lows are draws on liquidity within
+00:07:21.280 the market. So when we push above highs, we have the potential for price to reverse to be able to fill sell orders
+00:07:26.639 above highs because retail money is looking to place longs there. And if retail money is placing longs there, it
+00:07:32.800 gives institutional money the opportunity to be able to place a massive amount of short orders because
+00:07:38.240 retail is going long. Because of that, they're able to fill their sell orders to be able to reverse price in the
+00:07:43.680 opposite direction. Same thing underneath lows. When price pushes underneath a low, retail, what are they
+00:07:49.440 doing? They're pressing sell. And in turn, what does that give institutional money the opportunity to do? It gives
+00:07:54.800 them the opportunity to fill their massive buy orders to in turn reverse price to send it in the opposite
+00:08:00.560 direction. Now, why is this important for us? Because institutional money comes into the market every single day
+00:08:06.479 at market open. So, when market opens at 9:30 a.m. Eastern time, every single day, I'm looking for some form of
+00:08:13.039 manipulation. Whether that's happening during market open or whether that's happened during a previous session and
+00:08:19.440 we're looking for a lower time frame manipulation off of one of these levels to continue the trend that it's already
+00:08:25.680 made off of the reversal. We are looking for these key levels to establish our daily bias. So in turn once we mark out
+00:08:33.120 all of these key levels on the chart then from there we can wait.
+00:08:40.320 We wait for a key level to get hit. Once these key levels get hit, that's when we can immediately scale down to the lower
+00:08:46.000 time frames because again, we're thinking, okay, key level gets hit, what are we anticipating? We're anticipating
+00:08:52.160 that that key level is getting hit and there's going to be some form of manipulation off of it. So, we hit a key
+00:08:57.279 level, we're waiting and we're anticipating some sort of manipulation. So again, we're waiting for the key
+00:09:03.519 level to get hit, to get interacted with, and then from there, scale down to the low time frame. And that's typically
+00:09:09.920 going to be the five minute time frame for me. And then from there, I'm looking for a change in direction on the fiveminut time frame, okay? Or some sort
+00:09:16.560 of confluence that's telling me that there's going to be a reversal. Okay? So I'm looking for a fivem minute. I call
+00:09:23.200 these confirmation confluences. And that comes in the form of breakup structure inverse for value gap or a 79% extension
+00:09:31.839 closure on the Fibonacci extension. And don't worry, I'll go over all of these when we're going over examples to show
+00:09:38.000 you guys different examples of different use cases of all of these. Okay, next
+00:09:43.440 one. Following a fivem minute confirmation confluence. What are we looking for? We're looking for a 5minute
+00:09:48.800 continuation confluence because it's one thing for the key level to get interacted with and then for us to see,
+00:09:54.160 okay, the trend has changed. Sometimes price can fake us out a little bit. And
+00:09:59.600 also, if we're just executing purely off of this confirmation confluence, we can get bad entries. So, we're waiting for a
+00:10:06.000 retrace to come back up and then continue the trend down or up in
+00:10:11.920 whatever direction that we're trying to see price go. And then in turn that's when we're going to scale down to the
+00:10:17.839 lower time frame like the one minute time frame to find our executions. So once we see the confirmation it's like
+00:10:23.440 okay cool we swept out liquidity by interacting with the key level. We are seeing right now that the current trend
+00:10:29.279 is changing on the lower time frames. Now from there we need to confirm that the trend is actually going to continue
+00:10:35.440 in the direction. So how do we confirm that? by looking for a fivem minute continuation
+00:10:41.920 confluence and that comes in the form of order blocks, breaker blocks, equilibrium, and fair value gaps. Okay?
+00:10:49.519 And I'll show you guys examples of all of these on the charts. And then once we actually get into that con continuation
+00:10:56.160 confluence. So again key level gets hit scale down to the fivem minute time
+00:11:01.200 frame. We wait for a fivem minute confirmation confluence whether it's a breakup structure inverse for value gap or 79% extension closure. Then from
+00:11:08.959 there we're immediately looking to identify fiveminute continuation confluences. We're looking for order
+00:11:14.079 blocks to get hit, breaker blocks to get hit, equilibrium to get hit or fair value gaps to get hit. And once these
+00:11:19.839 get interacted with, so once the continuation confluence gets
+00:11:25.920 hit, we scale to the one minute time frame. I'm going to go ahead and add SMT divergence here as well. SMT divergence
+00:11:33.200 is a great confluence to use. So we're waiting for continuation confluence to scale down into the one minute time
+00:11:39.760 frame. So once we hit this continuation confluence, cool, we can scale down to the one minute time frame. And then from there all that we're looking because
+00:11:46.959 let's say key level a 1 hour high for example and then this is on the 5m minute we're in an uptrend. We come up
+00:11:54.079 we hit this. Okay. So we wait for the key level to get hit. Awesome. We scale down to the 5minut time frame. Awesome.
+00:12:00.560 From there this is our 5minute uptrend that we're in because we're pushing above this high. We're looking for a
+00:12:05.600 confirmation confluence to break structure to break out of this uptrend. So boom, we get a break of structure
+00:12:11.120 from there. We're looking for a continuation confluence to get filled. So let's say we have a fair value gap right here. This leg up on the 5m minute
+00:12:18.720 is typically going to change the direction of the one minute trend. So on the one minute time frame it might look
+00:12:24.800 like a mini uptrend going up into this continuation confluence. So from there
+00:12:31.120 we're going to scale down into the one minute time frame and we're probably going to see a mini uptrend or downtrend
+00:12:36.480 depending on the direction that we want price to go in. Okay. And from there
+00:12:41.920 going to look for a change in direction out of the continuation confluence on the 1 minute time frame. Okay, so on the
+00:12:48.800 1 minute we're in an uptrend. On the 5m minute we're in a downtrend coming off of this liquidity sweep. From there
+00:12:54.160 we're looking to scale down to the one minute time frame and we're looking for a breakup structure or inverse or value
+00:12:59.360 gap or SMT or 79% extension closure to be able to enter. Okay, so we scale down
+00:13:06.800 into the one minute. Whoa. scale down into the one minute and we're looking for a continuation confluence oops
+00:13:14.639 confirmation confluence and that is done by breaker structure inverse for value
+00:13:20.240 gap SMT divergence or a 79% extension closure and then once we get that boom
+00:13:26.720 the deed is done we enter and then when it comes to exiting we target previous
+00:13:32.800 key levels marked in the opposite direction.
+00:13:38.480 So just like how these key levels help us identify where price wants to reverse off of in order to enter into trades, we
+00:13:46.000 are using the key levels that we had marked in the opposite direction. So in this instance that I had drawn out right
+00:13:52.079 here, we pushed above an hourly high. We get a 5minute break of structure. We get a 5minute fair value gap that gets
+00:13:57.519 filled the one minute time frame. We scale down into it. We break the one minute uptrend that we're in out of this
+00:14:04.000 fair value gap. We enter. And then from there, what are we going to be looking for? We're going to be looking for 1
+00:14:09.279 hour lows. We're going to be looking for 4hour lows. We're going to be looking for session lows. We're going to be
+00:14:15.440 potentially looking for data lows all the way down here. And we're going to be using those as targets to be able to
+00:14:20.639 exit our trades. So, now that we have all of that mapped out, let's go ahead and show you guys a real time example.
+00:14:27.519 So, price action from this week hasn't been the best, but there's still examples from this, and I've still been
+00:14:34.160 profitable for this week. So, let's go ahead and show this to you guys. So this was my trade from from today. I would
+00:14:40.000 rather show you guys yesterday's price action because it's a little bit cleaner. So this is New York market
+00:14:45.440 open. Cool. What are we going to do? We're going to be identifying our key levels prior to New York market open.
+00:14:51.279 Okay. So prior to New York market open. Matter of fact, we can even just go ahead and do this. Okay. Where are our
+00:14:57.279 key levels? So we're looking for 1 hour highs. Well, cool. There's a 1 hour high right here. There is a 1 hour high right
+00:15:03.360 up here. We're looking for 1 hour lows. So yeah, right here. Let's see. Asia
+00:15:08.720 session low right here. Believe this is London session high up here. Okay, cool. So we have 1 hour high right here, 1
+00:15:15.600 hour high right here, a 1 hour low right here, a 1 hour low right here, and then
+00:15:21.199 if we were to scale down, scale up to the 4 hour time frame, we would get very similar results. There's another high
+00:15:26.399 right here that's equal with this one, but we'll just leave it at that. So let's go ahead and let's just let's play
+00:15:32.560 this into market open. So, this ends up actually getting taken out. So, we'll go ahead and readjust this to right here.
+00:15:38.320 So, market's about to open. We have a low right here. We have a low right here. We have a high right here. We have
+00:15:43.920 a high right here. Another high right here. Cool. So, all that we're doing, we're waiting for one of these key
+00:15:49.680 levels to get interacted with, right? Because we're looking for some sort of manipulation. Once that manipulation
+00:15:54.800 happens, what can we do? We can scale down. We're already on the 5minute time frame. And then we can start looking for
+00:16:00.000 our confirmation confluences. Then from there, look for continuation confluences and then from there scale down into the
+00:16:06.399 one minute time frame. Okay, so let's go ahead and play it. Boom. So market
+00:16:11.839 opens. What do we do? We interact with a key level off a rip. Awesome. So key
+00:16:17.600 level has been hit. Now what are we looking for? We're looking for a fivem minute confirmation confluence that hey
+00:16:24.240 this key level has been hit and we're looking to reverse off of this. So there's a couple things that we can be looking for. We can either look for a
+00:16:29.759 break of structure underneath this low. There's no fair value yet for us to inverse. Or we can look for an SMT
+00:16:36.160 divergence, which unfortunately during these bar replays, it's kind of impossible to show SMT divergences
+00:16:43.360 because I would have to switch over to the S&P 500 to be able to show that. But it's okay. We'll leave that out. Or
+00:16:50.320 we're looking for the 79% extension closure. So when we pull this open, this is the 79% extension right here. If we
+00:16:57.839 get a candlestick closure underneath this, then we can go ahead and say that that has happened. We don't get any of
+00:17:03.920 that. Let me go over to the S&P 500. Oh, cool. The S&P 500, we actually are still
+00:17:09.439 in bar replay. This is beautiful. So, this is why I wanted the S&P divergence because there was one. So, from these
+00:17:15.599 highs down to these highs, we can see that NASDAQ swept these highs, but the S&P 500 did not. Okay, so on NASDAQ, we
+00:17:24.240 swept out these highs. We made a higher high with this wick again interacted with a key level and then on the S&P 500
+00:17:30.559 we didn't making an SMT divergence. So awesome we have our confirmation
+00:17:36.080 confluence. So we interacted with a key level then we get a confirmation confluence with the 5minut SMT
+00:17:43.679 divergence. From there all that we're looking for is going to be our five minute continuation confluence and then
+00:17:50.559 we can look to enter. Okay. So in this case, there's really no 5-minute
+00:17:56.720 continuation confluences that are on the chart yet. Really, the only one that we could hope for would be an equilibrium
+00:18:02.480 play like an up candle out of this so that we can take it from this high down to the low that gets formed and then
+00:18:08.720 look to scale down from there. So let's see if a candlestick can get printed out of this. So let's go ahead. Beautiful.
+00:18:14.559 So look, we get a fiveminute retrace. Awesome. So from there because we don't have a fair value gap, we don't have an
+00:18:20.960 order block, we don't have a breaker block, but we do have equilibrium. So again, key level gets interacted with.
+00:18:28.000 On top of that, we get a 5minute SMT divergence because this high made a higher high than this one. Okay, then
+00:18:34.559 what can we do? We can mark out our equilibrium. Price pushes above equilibrium. Awesome. We can now scale
+00:18:40.240 down into the one minute time frame. So, like I was mentioning before, when we get these five minute retraces on up
+00:18:46.720 into these continuation confluences, we typically break one minute structure to the upside. So, we haven't quite done
+00:18:52.480 that yet, but we are pushing a little bit high in this one minute structure. And we're about to push above this high.
+00:18:59.039 So, let's see if we do end up getting that so that we can look to take sell entries down to what our previous key
+00:19:05.760 levels that we had marked out during the day. So, let's go ahead and press play. Just speed run through here. Okay, so we
+00:19:12.000 push above this high. Awesome. Then we get a little down candle right here. And something else that we can look for
+00:19:18.720 again happened once again that is difficult to show on bar replay, but our
+00:19:24.559 confirmation confluences can be SMT divergences. So we actually get a one minute SMT divergence from this high up
+00:19:32.160 to this high just like how we did from this high up to this high and this high down to this high on the S&P 500. So the
+00:19:40.000 S&P 500 made a lower high while NASDAQ came up and made a higher high. Okay. So
+00:19:46.000 technically we could go ahead and we can enter into our short position here. We can put our stop loss above the
+00:19:53.440 liquidity sweep all the way up here or above these highs right here. I think that's pretty protected. And then what can we do? We can go ahead and we can
+00:19:59.760 target the previous key levels that we had marked out. So we have boom pre-market lows right here. And then we
+00:20:05.360 have I believe these are Asian session lows right down here. So, let's go ahead and this is our entry. Let's see what
+00:20:12.880 happens. So, let's say we didn't see the SMT divergence. We ended up getting a
+00:20:19.120 one minute break of structure right here as well. So, if you didn't, for whatever reason, see the SMT divergence. Awesome.
+00:20:25.840 We get a one minute break of structure. Would have given us a similar entry. Let's keep playing it and see how this
+00:20:31.520 Oh, what do you know? We hit all of our take profits and we make money. How do I know that this was going to happen? because I took this exact same [ __ ]
+00:20:37.440 trade using the exact same [ __ ] strategy that I told you guys. So, this
+00:20:42.480 was a little back test showing you guys how this strategy works. Now, I can literally go on my phone and bring up
+00:20:48.720 like I mean all of my trades from this month if I wanted to to be able to show
+00:20:54.640 you guys how this strategy works. Or you guys can literally just look at my YouTube videos and like the videos that
+00:21:01.440 are titled live trade recap making this much money or losing this much money. I
+00:21:06.799 am using this strategy on a daily basis going over exactly how you guys can take
+00:21:12.080 these same exact trades as me using the exact same strategy that I just showed you guys. This literally happened
+00:21:17.440 yesterday and I was able to take a profitable trade. Let me go ahead and get rid of all this. I was able to take
+00:21:23.200 a profitable trade on the same exact strategy today as well as you guys saw
+00:21:30.080 on the S&P 500 chart. I can go over this one super quickly. Okay, to show you
+00:21:36.400 guys how this works. So again, coming into the day. All right, what are we
+00:21:42.080 looking for? We're looking for our key levels to get hit. Okay, so what are our key levels? 1 hour and 4 hour highs and
+00:21:49.039 lows. session highs and lows like London session high, London session low, Asia session high, Asia session low. We also
+00:21:55.679 use data highs and data lows. And in fact, that's what I use for today's
+00:22:01.600 trade. So, we can see on the S&P 500, you're like, hey, none of those key levels got interacted with upon market
+00:22:08.000 open. You're right. None of those key levels got interacted with on NASDAQ. However, with the S&P 500, what do we
+00:22:15.039 see on market open? We end up coming down and what do we do? We take out
+00:22:21.200 this. This was a news data low. So this is a key level. Let me put this into the fiveminute time so you guys can see this
+00:22:26.880 a little better little bit better. So we had PPI news data. This is the news candle. So this is a data low. This is a
+00:22:33.039 data high that. So key level high, key level. This is London session low right
+00:22:38.480 here. I can't remember what this was, but nonetheless key level. Market opens.
+00:22:43.520 What do we do? We come down and we sweep out this key level. Awesome. My eyes are open. I'm on the fiveminute time frame.
+00:22:49.200 And what am I looking for? I'm looking for a five minute change in direction, a confirmation confluence that hey, the
+00:22:55.600 trend is looking to change here. Okay, cool. We keep that in mind. And while this is happening, I'm constantly
+00:23:01.600 alternating between NASDAQ and the S&P 500. We look at the S&P 500 and the S&P 500 doesn't come anywhere close to this
+00:23:08.159 data low. NASDAQ does though. So, we sweep this out and no matter what, if one of the indexes takes out a sweep
+00:23:14.320 draw on liquidity, we're looking for entries in either direction. Why? Because we could potentially have an SMT
+00:23:20.400 divergence, which is one of our strongest confirmation confluences of a trend change. And that's exactly what we
+00:23:25.679 had today. So, again, from this data low down to these five-minute lows right here, what do we see? The the S&P 500
+00:23:34.320 makes a higher low than NASDAQ. NASDAQ interacts with the key level and then what do we get? a fivem minute
+00:23:40.640 confirmation confluence that hey this trend is going to change. Beautiful. So
+00:23:45.679 from there what can we do? We can instantly scale into the five-minute time frame. We already see that we see
+00:23:51.120 boom we make a higher low right here. Awesome. This is the same literally the
+00:23:56.400 same dead ass same exact [ __ ] setup that happened yesterday that I'm showing you guys today. Key level gets
+00:24:02.640 interacted with on NASDAQ. We get a fivem minute SMT divergence off of that key level. Awesome. From there, we don't
+00:24:09.600 necessarily have a fair value gap. We don't have an order block. We don't have a breaker block. But what we can do is
+00:24:14.799 we can take equilibrium from this low up to this high. What do we see? This 5minute candle retraces into
+00:24:21.360 equilibrium. From there, what can we do? We can scale down into the one minute time frame. This down candle right here
+00:24:28.720 is what caused that 5m minute retrace. And oh, would you look at that? the one minute time frame, we get a break of
+00:24:35.120 structure to the downside right here to change the direction of the one minute time frame. So in turn, what can we wait
+00:24:42.480 for a change in direction on the one minute time frame to the upside to show that hey, the 5m minute has retraced
+00:24:48.960 into our continuation trend confluence that price wants to move higher and wait
+00:24:54.559 for a one minute confirmation confluence that's going to send price higher. So what do we do? We sit here and we wait
+00:25:02.000 for one of the confluences, whether it's a one minute SMT divergence, a one minute break of structure, a one minute
+00:25:08.400 inverse for value gap. You can see that I had this for value gap marked out just in case it wanted to inverse it. But
+00:25:13.440 what do we get first? We get a one minute breakup structure. Awesome. We can enter right here. And then take
+00:25:18.559 profit one is at these highs right here. Take profit two is at these data highs right here. I was able to take partial
+00:25:23.919 profits here and then the rest of my position got stopped out at break even. same [ __ ] strategy every single [ __ ] day and you guys are able to
+00:25:30.400 make money. I'm not going to sit here and [ __ ] you guys and say, "Hey guys, you guys are going to be 100% profitable with this." No, that's not
+00:25:36.559 the case. I'm not going to sit here and tell you guys that, hey, you guys are just going to instantly apply this and you guys are going to make a whole bunch
+00:25:42.480 of money. No, I'm not going to do that to you guys. But what I am going to tell you guys is if you guys use this strategy and cons consistently practice
+00:25:49.279 it over and over and over again and know that this will give you a high probability within the markets then you
+00:25:56.720 guys will be able to turn into profitable traders by practicing this over and over. Okay, that's something
+00:26:01.840 that I really want to emphasize in this video. It's one thing for you guys to sit here and watch this video and then
+00:26:07.279 go and risk live money the very next day thinking I got it. No, bro. That's exactly what I did back in my day when I
+00:26:14.240 was unprofitable in trying to figure out how to how to day trade. I would watch a
+00:26:19.360 new strategy video just like you guys are doing right now. And then I would go and apply that new strategy video and in
+00:26:25.760 my head I'm thinking this strategy is going to make me a [ __ ] millionaire. And then I would trade it and then I
+00:26:30.799 would lose money and I would be like this guy [ __ ] sucks. He's a liar. The strategy sucks. No, dude. You just
+00:26:37.200 learned a brand new skill set. And just like any other skill in the entire world, you're going to have to practice
+00:26:43.520 it. And you guys aren't going to be super good at this at first, but you guys are just going to have to repeat, repeat, repeat, and repeat because
+00:26:50.400 that's how skills are grown. Okay? So, I don't want you guys to get discouraged when you guys first try practicing this
+00:26:56.240 strategy. But what you guys can do is you guys can trade on a demo account. Okay? You guys can paper trade and you
+00:27:01.840 guys can trade on an account without real money. So you're not risking money and you guys can build that skill set. Build your confidence using the strategy
+00:27:08.400 because you guys know that it works. You guys see me trading this strategy every single [ __ ] day. Go and back [ __ ]
+00:27:14.080 fact check every single live trade recap video that I have on YouTube going over how much money I [ __ ] made when I
+00:27:20.159 enter when I exit and fact check it with my Instagram stories every single [ __ ] day. I'm making money from this [ __ ] Okay. So you guys can go ahead and
+00:27:26.960 do that and know that hey, this is going to give me probability within the market and all that I have to do is grow this
+00:27:32.240 skill set. Awesome. That's all that you guys need to do. And from there, it's just practice and repetitions. It's just
+00:27:38.240 like going to the gym. The first day in the gym, it's going to suck. And you guys aren't even going to be able to curl five pounds. But then the next day
+00:27:43.840 when you guys go again, you're going to get a little bit better and a little bit better every single day. And as long as you guys keep showing up, you guys are
+00:27:49.840 going to get really [ __ ] good at this to the point where you guys are super profitable and you guys are going to be able to predict where price wants to go
+00:27:55.760 on a daily basis with high probability. And that's our goal with trading. Something else that I highly recommend every single one of you guys do is
+00:28:02.320 journal your trades or else you guys will have no clue where you guys are going wrong. So, for example, let's say
+00:28:07.520 like we're looking at this and or whatever. Let's say you guys just take a losing trade. It's one thing to take a
+00:28:13.440 loss and be like, "Darn it, I'll get them next time." And then not write down
+00:28:19.360 or journal any sort of like mistake that you made because then in turn, how the [ __ ] are you going to grow? How are you
+00:28:25.600 going to become a better trader if you guys aren't identifying the mistakes that you're making? And on top of that,
+00:28:31.120 if you guys aren't writing it down or putting it into one of these trade journal softwares that are out here
+00:28:36.399 online, then you guys are doing yourselves a disservice. And honestly, you guys probably won't make it in
+00:28:42.000 trading because you won't be able to identify the mistakes that you're making. So when you guys go to trade and
+00:28:47.360 you guys go to place trades, I want you guys to be writing down, okay, this was my thought process going into the day
+00:28:53.679 before I knew the result of my trade. This is why I took the trade and then do a post-trade recap of your thoughts, how
+00:29:01.120 you guys are feeling emotionally, where you guys could have gone better, where you guys [ __ ] up, did you make an
+00:29:06.159 emotional decision, did you guys enter a little bit early, did you follow your plan strategically? And then from there,
+00:29:11.760 you guys are going to be able to go back and look at your journal and be like, "Okay, cool. Every single time that I
+00:29:18.000 lose a trade, I'm entering too early and I'm not following my strategy." Boom. Beautiful. Now, we can find the solution
+00:29:25.200 to that mistake. Versus if you guys are just coming into the market and you guys are losing trades and you're like, "Darn
+00:29:30.799 it, I'll get them tomorrow." But how the [ __ ] are you going to get them tomorrow if you don't know the mistake that you made? You're going to keep repeating the
+00:29:37.120 same mistakes over and over and over again. Okay? Something that I like to tell my students is making mistakes is
+00:29:43.120 really good, but when you make the same mistakes over and over and over again, then you [ __ ] suck. Okay? So, the
+00:29:49.600 goal is to make mistakes, but to never make them again. If we make a mistake once, then that's a lesson. If we make
+00:29:55.039 the same mistake a second time, then we're a [ __ ] Okay? So, we want to make mistakes, learn from them, grow
+00:30:00.799 from them, and then never make them again. And that's how we're going to progress. And if you guys are someone that whatever watched this video and you
+00:30:07.520 you guys are just like, "Holy [ __ ] I kind of want to get a speedrun through all of this." If you guys didn't understand some of the confluences, if
+00:30:13.520 you guys want a deeper dive on my strategy or to be coached by me personally where I literally do one of
+00:30:19.360 these video calls with you guys directly and break down how the market's moving, help you guys with your psychology, help
+00:30:25.520 you guys with your risk management, help you guys with your individual trades where I do trade reviews with you guys.
+00:30:31.200 You guys can go ahead, click the link in the description to be one of my students to join my blueprint to help you guys
+00:30:38.240 literally just like fasttrack towards profitability because I know these YouTube videos, they're super
+00:30:43.440 beneficial. And that's honestly my goal with YouTube is to just be massively beneficial to all the unprofitable
+00:30:49.520 traders out there. But if some of you guys are more experienced and you guys are still struggling and you guys can't
+00:30:55.120 seem to figure out what is going wrong with your trading, or if you guys are brand new to trading and you guys are
+00:31:00.399 just getting into this and you're like, "Whatever. I want to skip over all this BS that's on YouTube. I don't want to have to sip through a whole bunch of
+00:31:06.640 YouTube videos to be able to find every single thing that I'm supposed to be doing correctly. Then you guys can go ahead and join my blueprint and I'll be
+00:31:12.559 able to help you guys literally just have that straight and narrow path towards profitability and help you guys
+00:31:17.600 figure out your personal mistakes that you guys are making in trading. That's one thing that I really take pride in is
+00:31:23.600 back when I was unprofitable. I was watching these YouTube videos over and over and over again. And just like how
+00:31:28.799 how I was telling you, I was journaling my trades and I was making these mistakes and I was making them over and over and over again and I didn't have a
+00:31:36.000 mentor that could sit me down and be like, "Bro, this is the mistake that you're making and this is how you can solve it." In instead, I had to solve it
+00:31:43.440 myself. And sometimes it would take a couple weeks or even months to be able to solve that mistake. But instead, you
+00:31:49.600 guys, someone like me who's literally been through the same [ __ ] that you guys are going through right now. And I have
+00:31:54.880 all the past knowledge from my unprofitable self and I can just be like, "Bro, I was doing that [ __ ] for
+00:32:00.080 like 3 months straight. Let me put you on game. This is how you do it." And then boom, problem solved and you guys never make that mistake again because we
+00:32:06.559 can get down to the root of it. That's something that I can't necessarily do in YouTube videos, but I can do on coaching
+00:32:11.679 calls where you guys can bring up your personal questions, your personal mistakes, your personal trades that I
+00:32:17.279 can go over and I can be like, "Bro, what the [ __ ] were you thinking during this whatever this trade that you were taking?" and you're just like boom, oh
+00:32:24.159 my gosh, eyes open. And that could be something that can eventually turn you profitable because I'm able to smooth
+00:32:29.760 over all of those mistakes that you guys are making that you don't necessarily even think that you're making. You may
+00:32:35.200 you may think that you're doing everything correctly, but then when you come onto a coaching call and you present the trade to me and you're like,
+00:32:40.399 "Look, I did everything right." And I'm just like, "Holy [ __ ] you did everything wrong." And then you wonder why you're unprofitable. I'm able to
+00:32:46.480 solve those problems and I'm able to address them and give you guys like instant solutions to them because I've
+00:32:51.519 been in your exact position. So, if that sounds good to you guys, if you guys want to be my student and get coaching
+00:32:56.559 by me, click the link down in the description to join the blueprint. Other than that, I hope you guys enjoyed this
+00:33:01.600 video. Always a good time getting on here, spitting game, you guys. I love and appreciate you guys. I'll catch you
+00:33:06.880 guys in the next one.

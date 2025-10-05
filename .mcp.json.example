@@ -18,6 +18,17 @@
         "DATABENTO_API_KEY": "your-databento-api-key-here"
       },
       "description": "Databento market data provider"
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase",
+        "--access-token",
+        "your-supabase-access-token-here"
+      ],
+      "description": "Supabase database and project management"
     }
   }
 }

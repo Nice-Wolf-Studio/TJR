@@ -18,6 +18,22 @@ export const askSchema: CommandSchema = {
       minLength: 1,
       maxLength: 500,
     },
+    {
+      type: 3, // STRING
+      name: 'model',
+      description: 'AI model to use (claude or openai)',
+      required: false,
+      choices: [
+        {
+          name: 'Claude (default)',
+          value: 'claude',
+        },
+        {
+          name: 'OpenAI',
+          value: 'openai',
+        },
+      ],
+    },
   ],
 };
 

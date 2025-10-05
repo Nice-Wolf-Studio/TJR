@@ -1,0 +1,430 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/z1STKCnivbM
+
+00:00:00.000 No text
+00:00:00.640 what's going on guys today I'm going to
+00:00:02.120 teach you guys about Candlestick Anatomy
+00:00:04.120 so we're again another chart workor
+00:00:06.560 video and this is going to be more so
+00:00:08.080 for beginners so if you guys already
+00:00:10.080 know about open closed Candlestick Wicks
+00:00:13.280 and what uh the Wicks represent what the
+00:00:15.759 clothes represent then you guys can
+00:00:17.760 probably skip this video but if you guys
+00:00:19.199 are new to day trading this video is
+00:00:20.600 going to be perfect with you so without
+00:00:22.680 further Ado let's jump into the charts
+00:00:24.320 I'm going to draw some of these things
+00:00:25.439 out and we can get started so first
+00:00:27.840 things first what we want to understand
+00:00:28.000 No text
+00:00:30.039 about candlesticks is the anatomy of a
+00:00:32.079 Candlestick so that is going to be
+00:00:34.399 indicated with opens and close as we
+00:00:36.399 know first of all I want to show you
+00:00:38.079 guys on the chart there's several
+00:00:39.200 different ways that we can set up a
+00:00:42.120 Candlestick chart or just a trading
+00:00:44.399 chart in general so when I go over here
+00:00:46.840 we can see that there's a bunch of
+00:00:48.440 different uh things here we have line
+00:00:50.719 line with markers step line area
+00:00:53.320 whatever all of this stuff hiashi Reno
+00:00:56.879 line break all of this stuff we or most
+00:01:00.800 Traders typically just use Candlestick
+00:01:02.800 charts or just candles which are
+00:01:04.400 Japanese candlesticks why because it
+00:01:06.439 gives us the most information needed in
+00:01:09.759 order to understand what price action is
+00:01:12.920 doing every single time on every single
+00:01:15.320 time frame so with that being said once
+00:01:17.360 we understand what chart that we want to
+00:01:18.960 be on we can go into understanding
+00:01:20.000 No text
+00:01:21.079 candlesticks so let's go down here and
+00:01:23.360 we can see that this is what my chart
+00:01:25.640 look like looks like I use black to
+00:01:27.600 represent going down um and blue to to
+00:01:30.040 represent going up not racially
+00:01:32.479 motivated but you guys get the point
+00:01:34.600 okay most of the time when you guys open
+00:01:36.320 up a regular chart it's going to be red
+00:01:39.000 and green me personally I just like blue
+00:01:42.200 and black just looks a little bit
+00:01:43.880 cleaner so with that being said let's
+00:01:46.240 get into the anatomy of candlesticks so
+00:01:48.240 we'll start off with a bullish
+00:01:50.159 Candlestick so let's just draw one out
+00:01:53.600 here and we'll do this so first and
+00:01:58.600 foremost this filled in this shaded area
+00:02:02.920 right here is called the body of a of a
+00:02:06.640 Candlestick and let's say that
+00:02:10.479 this for your guys's sake is going to be
+00:02:13.840 green
+00:02:19.000 oops this is a bullish
+00:02:21.720 Candlestick okay so the body of a
+00:02:24.599 bullish Candlestick or a up Candlestick
+00:02:27.400 is going to be green so let's analyze
+00:02:30.800 there's four points of analysis on all
+00:02:33.959 candles within a chart okay and it's
+00:02:36.480 going to be the price open the price
+00:02:39.480 close the price High and the price low
+00:02:42.800 so on a up candle this line right here
+00:02:46.760 where the body starts where the filled
+00:02:48.560 in portion starts is going to be the
+00:02:51.319 open okay so open this is where price
+00:02:55.360 opened okay so meaning the past
+00:02:57.319 Candlestick closed and then next
+00:02:59.360 candlestick opened at this price okay
+00:03:03.080 then we have the close so right here is
+00:03:06.680 where the candle closed so we're going
+00:03:08.879 to get into the time frames of these
+00:03:11.560 things but we'll get into that a little
+00:03:13.440 bit later first I want you guys to
+00:03:14.959 understand the anatomy so we have
+00:03:17.760 jeez we have the open and we have the
+00:03:20.200 close so boom price opened here and then
+00:03:23.440 price ended up closing here and then we
+00:03:25.920 have the high of the wick so these
+00:03:28.519 little I call them cubic hairs sometimes
+00:03:30.920 but you guys can call them whatever you
+00:03:32.200 want Candlestick Wicks is the
+00:03:34.200 appropriate term um but this is the high
+00:03:38.959 of the candle why because we can see or
+00:03:41.319 I'll explain this a little bit more so
+00:03:44.319 right now actually so this is where the
+00:03:46.239 candle opened right so let's say boom
+00:03:49.480 this Candlestick opens at some point in
+00:03:51.840 time while this candle was forming price
+00:03:54.560 got up to this point which is why it
+00:03:57.319 left a little snail trail of this Wick
+00:03:59.879 right is to indicate where price went
+00:04:02.959 and the highest point that price went
+00:04:05.000 during this candle's formation and then
+00:04:06.920 on top of that right here is the low of
+00:04:10.439 the Candlestick okay and this indicates
+00:04:13.959 that hey price opened and then at some
+00:04:16.560 point in time during this candle's
+00:04:18.478 formation price got down to this price
+00:04:21.600 point and formed this low okay but all
+00:04:24.240 in all after we pushed up to make this
+00:04:27.120 high and after we pushed down to make
+00:04:29.280 this low we closed right here and now
+00:04:31.960 we'll get into these little numbers up
+00:04:35.360 here and this really indicates the time
+00:04:37.360 frame so every single time frame what
+00:04:39.800 does it represent it represents the time
+00:04:42.479 that it takes for a candle to close on
+00:04:45.800 each Candlestick chart so right now
+00:04:47.479 we're on the 15m or 15 minute chart so
+00:04:50.840 that means when this Candlestick opens
+00:04:54.199 it has 15 minutes worth of price action
+00:04:57.479 to do whatever it wants until it closes
+00:05:00.120 so this candle right here represents 15
+00:05:03.039 minutes worth of price action so we can
+00:05:05.120 see that once the past candle closed
+00:05:07.759 let's draw one out really quick boom
+00:05:09.919 boom boom boom typically the close and
+00:05:12.280 the open of previous candles will be
+00:05:14.160 even right so again let's assume that
+00:05:16.080 this is another bullish Candlestick we
+00:05:17.400 can see that boom this candle closed and
+00:05:20.600 then again because it this candle closes
+00:05:23.080 and this candle opens at the same time
+00:05:25.039 they're typically going to be the same
+00:05:26.479 price so we close right here the next
+00:05:28.319 candle opens right here and then it has
+00:05:30.639 15 minutes for price to either go up so
+00:05:34.520 at one point in time during that 15
+00:05:36.199 minutes price came up to this high point
+00:05:38.800 of price and then also at some point in
+00:05:40.759 time during those 15 minutes price came
+00:05:42.960 down to this price but after that 15
+00:05:46.199 minutes happened we opened here and then
+00:05:48.800 once that 15-minute Mark hits boom it
+00:05:52.160 closed at this price cool and
+00:05:56.120 now let's remove this let's say that
+00:05:58.800 we're on the daily time frame and I
+00:06:00.400 don't want to switch it because we have
+00:06:01.440 this beautiful little painting right
+00:06:02.759 here let's say that we're on the daily
+00:06:04.160 time frame uh what amount of time will
+00:06:06.639 this Candlestick represent a day's worth
+00:06:09.520 of price action so we can see where the
+00:06:11.160 day opened we can see the low of the day
+00:06:13.759 we can see the high of the day and we
+00:06:15.319 can also see where the the day closed
+00:06:19.520 okay now moving forward let's show a
+00:06:21.960 bearish candlesticks or a Candlestick
+00:06:24.160 that goes down so let's draw this out
+00:06:27.639 boom they all look pretty Sim similar
+00:06:31.199 this okay and we'll make it red just
+00:06:34.479 because you guys will likely be on these
+00:06:37.080 standard settings boom boom boom boom so
+00:06:42.759 a bearish Candlestick or a down
+00:06:46.479 candle we know that price opened and
+00:06:49.599 then moved down right because it's red
+00:06:52.680 so it's the same thing for the
+00:06:55.400 Candlestick Wix so what's this it's the
+00:06:58.000 high
+00:07:01.199 because at some point in time during
+00:07:02.680 these 15 minutes worth of price action
+00:07:04.759 represented in this candle price Le left
+00:07:06.960 a little snail Trail or showed history
+00:07:09.400 that hey price moved up to this price
+00:07:12.319 point at some point in time did it close
+00:07:14.000 here no but it ended up coming up here
+00:07:16.400 during that 15 minutes on top of that we
+00:07:18.840 have the low right down here again price
+00:07:22.360 opened moved down to this price point at
+00:07:24.840 some point in time did it close here no
+00:07:27.080 but it did move down to this price now
+00:07:29.199 the only only thing that's different are
+00:07:31.319 the close and the open so this line
+00:07:35.039 right here is now the open why because
+00:07:37.840 the Candlestick went down right so if we
+00:07:40.080 just think about it
+00:07:41.919 logically if price went down it opened
+00:07:45.960 at a higher point and it closed at a
+00:07:48.319 lower point so
+00:07:50.240 boom this is the close Okay so again
+00:07:55.039 this Candlestick opened okay look these
+00:07:57.560 are pretty even so let's say we had this
+00:07:59.080 candle boom it closed right here this is
+00:08:01.440 the next one it opened right here at
+00:08:03.479 some point in time during those 15
+00:08:04.919 minutes price got up to $
+00:08:09.280 5,798 75 but it decided to go down at
+00:08:13.879 some point in time during those 15
+00:08:15.199 minutes price got down to
+00:08:19.400 $572 and then it closed after those 15
+00:08:22.960 minutes right here okay so now that we
+00:08:25.759 understand the anatomy of candlesticks
+00:08:27.159 let's go into the actual chart and show
+00:08:30.840 these okay happening live and then after
+00:08:32.000 No text
+00:08:34.000 that I'll do go a little bit deeper and
+00:08:36.958 kind of talk about how Candlestick Wicks
+00:08:38.719 can tell us a lot about um the overall
+00:08:42.360 momentum and where price wants to go
+00:08:44.600 just by analyzing these candlesticks
+00:08:46.200 okay so right here we see boom up candle
+00:08:49.600 down candle so again this is on the
+00:08:51.320 15-minute chart so where is the open of
+00:08:54.480 this up
+00:08:55.560 candle boom right here where was the
+00:08:59.440 lowest point Within These 15 minutes
+00:09:01.480 worth of price action that price got
+00:09:03.000 down to boom right here where was the
+00:09:05.800 highest point of those 15 minutes worth
+00:09:08.079 of price action that it got to boom
+00:09:10.399 right here and where did price close at
+00:09:12.959 boom right here okay moving forward we
+00:09:17.680 have a down candle so we can see boom
+00:09:19.720 this candle closed right here the next
+00:09:21.560 candle opened at a similar price so boom
+00:09:24.480 this is the open this is the
+00:09:27.519 high this is the low
+00:09:30.200 and this is the close of 15 minutes
+00:09:32.399 worth of price action okay now let's go
+00:09:36.079 on to the daily chart boom so now each
+00:09:39.959 Candlestick represents a days worth of
+00:09:43.680 price action okay so we can see boom
+00:09:46.920 let's zoom in here we can see that this
+00:09:48.760 has the tiniest little Wick right here
+00:09:51.600 okay so what is this
+00:09:55.519 Boom the high of the day
+00:10:00.680 what is
+00:10:02.720 this Boom the open how do we know it's
+00:10:06.360 the open because price closed down where
+00:10:09.800 was the low of the day boom right
+00:10:13.920 here and where did price close boom
+00:10:18.519 right
+00:10:19.680 here okay and this shows a days worth of
+00:10:23.000 price action so we can see that price
+00:10:24.440 opened right here at some point in time
+00:10:26.240 during the day it got up to this price
+00:10:27.920 at 578 $8 or 5 yeah
+00:10:31.880 $578 and then price moved all the way
+00:10:34.600 down at some point in time during the
+00:10:35.959 day it got all the way down to
+00:10:40.560 $563 and then it ended up closing at the
+00:10:43.639 price of $
+00:10:45.800 5,639 25 cool now something that's
+00:10:50.519 really cool about Candlestick
+00:10:52.920 charts is these give us the most amount
+00:10:56.959 of price data possible right so we can
+00:10:59.360 see okay this is what it did on the day
+00:11:02.000 and then we go if we go into the 4our
+00:11:03.600 chart we can still see all of that day's
+00:11:07.000 worth of price action except in four
+00:11:09.240 minute kandles and then on top of that
+00:11:11.160 we can scale down and see how every
+00:11:13.519 hour's worth of price action was printed
+00:11:16.240 and on top of that we can scale down and
+00:11:18.560 we can see how every 5 minutes worth of
+00:11:23.079 price action was formed to create that
+00:11:25.720 one
+00:11:26.760 big boom day
+00:11:29.920 down candle okay same thing on the one
+00:11:31.680 minute we can see every single minut
+00:11:35.160 worth of price action for that day that
+00:11:38.639 gives us a super detailed super mapped
+00:11:41.240 out view of what price was doing during
+00:11:44.320 every single minute every single second
+00:11:46.480 of that day is worth of price action
+00:11:48.240 okay and that's why we use Japanese
+00:11:49.600 candlesticks okay and again relatively
+00:11:52.200 beginner video because but understanding
+00:11:55.000 No text
+00:11:55.800 this is very essential to even going
+00:11:57.959 anywhere else within Trading okay we
+00:11:59.560 need to understand anatomy of
+00:12:00.720 candlesticks now last thing that I want
+00:12:02.360 to leave you guys with is just talking
+00:12:04.279 about um some sort some candles I
+00:12:07.560 wouldn't even call them Candlestick
+00:12:08.720 patterns but I would call them uh like
+00:12:11.360 identifying candlesticks okay so let's
+00:12:14.639 uh let's just go into the chart and we
+00:12:16.480 can identify
+00:12:18.120 some so in my eyes like I really like to
+00:12:22.120 classify just like two different types
+00:12:23.959 of candles there's like full candles and
+00:12:25.680 there's dogee candles again that's a
+00:12:27.760 Japanese word don't ask me why it's
+00:12:30.320 called that but a dogee candle is
+00:12:32.760 essentially a candle with an extremely
+00:12:35.480 small body and pretty large Wicks or
+00:12:39.079 large Wicks compared to the body of the
+00:12:40.680 candle so this daily candle is a perfect
+00:12:42.839 representation of a dogee and that
+00:12:44.680 pretty much represents indecision within
+00:12:46.600 the market right because boom price
+00:12:48.399 moved up a lot price moved down a lot
+00:12:51.000 but all in all we closed and opened at
+00:12:53.480 very similar prices which means who was
+00:12:56.000 in control for that day of day worth of
+00:12:58.560 price action
+00:12:59.680 honestly it was a pretty even match
+00:13:01.279 between the Bulls and the Bears meaning
+00:13:03.920 hey we pushed up a lot we pushed down a
+00:13:06.000 lot but at the end of the day we closed
+00:13:07.959 pretty Break Even meaning it was a
+00:13:10.320 pretty 50/50 type of day okay so dois
+00:13:13.440 within the market and we can identify
+00:13:15.040 these on every single time frame right
+00:13:17.240 this is another example boom we moved up
+00:13:18.959 a lot we moved down but at the end of
+00:13:20.600 the day we Clos relatively small okay
+00:13:23.360 and then this Candlestick is a full
+00:13:25.000 Candlestick I don't necessarily want to
+00:13:26.920 get into like engulfing candlestick or
+00:13:29.399 anything like that because I honestly
+00:13:31.000 think it gets a little bit too confusing
+00:13:33.040 for people and there's there's honestly
+00:13:35.880 no reason to be covering things like
+00:13:37.839 that because it does just get too
+00:13:39.160 confusing and people give them way more
+00:13:42.079 value than they should be given but
+00:13:43.560 something that you guys should
+00:13:44.680 understand is dogee candles 6
+00:13:46.160 representing indecision within the
+00:13:47.600 market this is another really great
+00:13:49.160 example where the body is pretty much
+00:13:51.240 nonexistent we can see that this was a
+00:13:53.120 pretty 50/50 dead we move up a little
+00:13:55.120 bit we move down a lot and then we end
+00:13:56.880 up closing at pretty much the exact same
+00:13:59.160 price that we opened at okay we can see
+00:14:02.399 more of these again we can see boom
+00:14:05.880 indecision candle boom indecision candle
+00:14:08.040 boom indecision candle that pretty much
+00:14:10.199 just
+00:14:11.199 represents during that time frame so
+00:14:13.639 again this is 15 minutes within this 15
+00:14:15.800 minutes worth of price action there was
+00:14:18.480 no necess there was no necessar
+00:14:20.480 necessary like overall bias and overall
+00:14:23.920 um big determination within the market
+00:14:26.040 of where the market wanted to go for
+00:14:27.360 that point in time and again don't put
+00:14:29.440 too don't put too much value on dogee C
+00:14:32.199 candlesticks it's just something to
+00:14:34.440 understand and to realize that hey these
+00:14:36.680 just represent indecision within the
+00:14:38.279 market um and then on top of that
+00:14:40.560 something else that can be relatively
+00:14:43.079 useful is long Wicks okay so if we have
+00:14:47.240 a Candlestick that for example just
+00:14:49.079 looks something like this let's say this
+00:14:50.399 is a g down Candlestick we see a big
+00:14:53.560 long high all the way up here a long
+00:14:57.240 Wick to the upside what does this tell
+00:15:00.600 me about the market especially if this
+00:15:02.120 closes bearish we can see that price hey
+00:15:05.839 at one point in time price got all the
+00:15:07.800 way up here but it wasn't sustainable it
+00:15:11.399 wasn't sustained so price was able to
+00:15:14.240 get all the way up here but what did
+00:15:15.839 price end up doing it ended up closing
+00:15:18.120 all the way down here so what does that
+00:15:19.839 mean it means bears are probably in
+00:15:21.399 charge of the market so when we see
+00:15:23.279 super high Wicks okay whether it's to
+00:15:25.720 the upside or to the downside okay if we
+00:15:27.720 see a high Wick to the upside we can
+00:15:29.839 kind of get some sort of indication from
+00:15:32.519 these candles by saying hey look price
+00:15:34.959 moved up all the way up to these Highs
+00:15:37.519 but there wasn't strong it wasn't uh the
+00:15:40.800 buys the buy orders weren't strong
+00:15:43.079 enough to have price close all the way
+00:15:44.800 up here and in turn price ended up boom
+00:15:47.160 going all the way back down so what does
+00:15:49.880 that mean it means there's not as many
+00:15:51.959 bulls within the market pro market is
+00:15:54.480 probably bearish again depending on what
+00:15:56.240 time frame you're on and then same thing
+00:15:58.199 to the downside let's go ahead and
+00:16:00.120 switch this color to
+00:16:02.079 Green okay if we have a bullish
+00:16:04.480 Candlestick and we have boom a really
+00:16:07.079 long Wick to the downside boom same
+00:16:09.920 thing okay price was able to push all
+00:16:12.160 the way down here but what happened
+00:16:13.639 price ended up closing bullish ended up
+00:16:15.440 closing all the way up here so what does
+00:16:18.759 that tell me about the market it means
+00:16:20.519 hey yeah the Bears stepped in for a
+00:16:23.839 quick little second but was it
+00:16:25.480 sustainable no the Bulls ended up
+00:16:27.519 overplaying them over overpowering them
+00:16:29.959 and boom we end up closing bullish and
+00:16:31.720 there was a perfect example of that on
+00:16:34.920 one of the candlesticks right here so
+00:16:36.120 boom even though this was a bullish
+00:16:37.720 candle we can see right and then again
+00:16:41.120 everybody that's not necessarily a
+00:16:42.480 beginner we can see that this was a
+00:16:43.880 liquidity sweep but we can see boom
+00:16:45.959 super long Candlestick Wick to the
+00:16:47.800 upside but then boom we end up closing
+00:16:49.839 all the way back down here and then in
+00:16:51.240 turn we can see price going down further
+00:16:53.759 but again if this is your guys' first
+00:16:55.759 video from me I highly recommend you
+00:16:58.079 guys go back watch the boot camp watch
+00:17:00.480 the trading transformation because
+00:17:01.800 that's pretty much an entire course that
+00:17:03.560 I've put out to the internet for free
+00:17:05.839 for you guys to learn how to trade on
+00:17:07.439 your own and hopefully turn profitable
+00:17:09.039 from it so if this is your very first
+00:17:10.599 video from me I love and appreciate you
+00:17:12.520 guys go watch the boot camp go go watch
+00:17:14.319 the trade and transformation because
+00:17:15.480 there's a lot more beginner videos that
+00:17:17.160 can help you guys help understand price
+00:17:19.400 action more

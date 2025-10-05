@@ -1,0 +1,60 @@
+{
+  "name": "@tjr/strategy",
+  "version": "0.1.0",
+  "description": "TJR trading strategy implementation with session levels, swing detection, BOS, and bias calculation",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./session-levels": {
+      "import": "./dist/session-levels.js",
+      "types": "./dist/session-levels.d.ts"
+    },
+    "./htf-swings": {
+      "import": "./dist/htf-swings.js",
+      "types": "./dist/htf-swings.d.ts"
+    },
+    "./bos": {
+      "import": "./dist/bos.js",
+      "types": "./dist/bos.d.ts"
+    },
+    "./priority": {
+      "import": "./dist/priority.js",
+      "types": "./dist/priority.d.ts"
+    },
+    "./daily-bias": {
+      "import": "./dist/daily-bias.js",
+      "types": "./dist/daily-bias.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "dev": "tsc --watch",
+    "test": "jest --config jest.config.cjs",
+    "test:watch": "jest --config jest.config.cjs --watch",
+    "test:coverage": "jest --config jest.config.cjs --coverage",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier -w .",
+    "format:check": "prettier -c ."
+  },
+  "dependencies": {
+    "@tjr/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.10.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.4",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

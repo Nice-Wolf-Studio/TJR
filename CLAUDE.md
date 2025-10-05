@@ -51,6 +51,20 @@ TJR Suite is a TypeScript monorepo for trading analysis and automation, using pn
 - Test Runner: Node.js built-in test runner (`node --test`)
 - CI/CD: GitHub Actions with matrix builds
 
+## TJR Educational Transcripts
+
+**Location:** `docs/TJR Transcripts/`
+
+This directory contains raw transcripts from TJR's educational videos covering his trading strategy, methodology, and market analysis approach.
+
+**Usage Guidelines:**
+- **Always reference these transcripts** when answering questions about TJR's specific trading strategy, rules, or methodology
+- Use these as the authoritative source for "how TJR would trade" questions
+- Quote specific sections when explaining TJR's approach to bias, entries, exits, or market structure
+- These transcripts provide the foundational knowledge for the AI to give accurate, TJR-aligned trading guidance
+
+**Important:** When users ask questions like "How would TJR trade this?" or "What is TJR's strategy for X?", read the relevant transcripts first before responding to ensure accuracy and alignment with TJR's actual teachings.
+
 ## Common Commands
 
 ### Development Workflow

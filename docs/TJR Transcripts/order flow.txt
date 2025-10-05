@@ -1,0 +1,296 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/z0czA_OSq5M
+
+00:00:00.520 ladies and gentlemen boys and girls welcome to a long awaited orderflow
+00:00:07.640 explained video now everybody has been spamming me in the comments to make this
+00:00:13.200 video so if this video doesn't get a million views I don't know what I'm going to do I might just have to come to
+00:00:20.240 your house and touch you inappropriately so with that being said
+00:00:25.680 hopefully I have some workers at the crib right now that are like drilling holes in my walls and [ __ ] um just to
+00:00:32.320 like try and look at me through a peole so hopefully they're not making too much noise but with that being said let's uh
+00:00:40.480 let's jump right into this let's get into the charts and just break down what orderflow even is how we can use it how
+00:00:47.079 I use it to identify daily bias and on top of that how you guys can
+00:00:54.079 use it to win [ __ ] trades so first thing that we want to do is understand
+00:00:59.320 what is order flow so I talk about this all the time and honestly it's literally just a fancy ass word that people like
+00:01:05.438 me like to use to make you guys confused and think that you need to see another video um but it's literally just
+00:01:14.360 Trends but don't get off the video because I'm going to explain this a lot better and way more in detail than just
+00:01:21.680 it's an uptrend or it's a downtrend um there's a lot of different things like
+00:01:26.960 disrespecting bullish order flow or respecting bullish order flow flow or having a potential change in order flow
+00:01:33.040 and all of these things that we're going to show on the charts but essentially order flow is just what trend we are in
+00:01:40.600 are we in an uptrend or are we in a downtrend okay so how do we identify
+00:01:49.840 it how do we identify bullish order Flow by literally just looking at the most recent break of structure like that that
+00:01:56.119 to me is is super easy just look at most recent break of structure or just look
+00:02:02.399 at I was about to say order flow or just look at the most recent highs and lows that were made or most
+00:02:09.669 [Music] recent or the most recent highs and lows because as we know this is the first
+00:02:15.560 step of order flow bullish order flow or uptrends move in higher highs and higher
+00:02:22.519 lows yay we're literally teaching kindergartener subjects here kindergarten [ __ ] and y'all are asking
+00:02:28.840 for a YouTube video on it ridiculous man anyways bearish order
+00:02:35.000 flow is what lower lows and lower highs and with that being said if you
+00:02:42.200 guys want to learn more about this go ahead and click the link in the bio to get the day trading blueprint where I
+00:02:47.640 teach you guys stuff like this for $1 billion by my course please and thank
+00:02:54.080 you guys subscribe I'll catch you guys in the next one peace I'm just kidding um but but this is the start of it okay
+00:03:03.200 so downtrends move in lower lows and lower highs uptrends move in higher
+00:03:08.319 highs and higher lows so in order to identify bullish order flow or bearish order flow we just look at the most recent highs and lows okay we see boom
+00:03:15.040 we're making higher highs and higher lows what are we in bullish order flow if we're making lower highs and lower lows what are we in bearish order flow
+00:03:21.680 now is when we get into the advanced [ __ ] like how do we identify disrespect
+00:03:28.439 disrespecting bullet order flow or disrespecting bearish order flow and there's three main confluences that I
+00:03:35.560 use um to identify these so let's talk about the confluences to identify
+00:03:41.599 disrespecting order flow
+00:03:48.400 disrespecting order flow I use break of structure I use inverse for Value gaps
+00:03:54.879 and the 79% extension on the FIB okay
+00:04:01.319 so as we know again absolutely kindergartener subjects well no some of you guys are
+00:04:08.560 kindergarteners in that case I will not come over to your house and touch you that is I'm already banned from doing
+00:04:14.799 that I'm kidding that was such a bad joke [ __ ] I don't even have an editor editor editor this so we're just going
+00:04:21.918 to have to leave that one in that was not a good joke bro I'm sorry don't don't clip that or any
+00:04:29.759 anything skip to the next one Indians don't shower and they wkak okay boom that's a perfect one use that one you're
+00:04:36.320 welcome Clippers okay so first one break of structure how do we identify break of structure within an uptrend we find the
+00:04:43.080 most recent low that was made and we need a candle closure underneath it okay if you guys want to learn how to
+00:04:50.479 identify break of structure better I have literally a quadrillion videos on it in my boot camp in my tradeing
+00:04:57.199 transformation okay go watch those to identify break of structure but essentially we see price come down we
+00:05:04.240 close underneath the most recent low boom that is one form of disrespecting
+00:05:10.240 bullish order flow why because we're literally closing underneath the underneath the uptrend okay the next way
+00:05:17.680 that we can disrespect order flow is if we have a bullish fair value Gap right here and we close underneath it causing
+00:05:24.000 an inverse fair value Gap okay and if you guys don't know what an inverse fair value Gap is I'm going to show you guys
+00:05:30.600 some examples on the chart I'm also going to show you guys examples of break of structure on the chart I'm also going to show you guys examples of the 79% FIB
+00:05:37.560 extension but I have videos on both of these in the uh the boot camp and the
+00:05:44.039 day trading transformation okay so if we get an inverse for Value Gap
+00:05:50.680 within an uptrend disrespecting a bullish fair value Gap what are we doing we're disrespecting bullish order flow
+00:05:57.160 why because if we were to respect bullish order flow we would come into that fair value Gap and then we would just move up off of it but when we don't
+00:06:03.479 do that what are we doing we're disrespecting bullish order flow now last but not least we have the 79%
+00:06:08.639 extension of on the Fibonacci so all we do is we draw it out just like we were to draw out equilibrium we see we have
+00:06:15.680 the 79% extension right here if price comes down and moves past the 79%
+00:06:21.520 extension to me that's disrespecting bullish order flow and we are eventually going to come down and break structure
+00:06:28.199 or inverse of fair value Gap if there's anything underneath here okay I rarely use this one I just recently taught this
+00:06:35.120 to the blueprint students um because I used it in one of my trade Recaps and
+00:06:40.360 they were all freaking out about it honestly you guys can like very well do
+00:06:45.840 without this [ __ ] um I just wanted to add this in here because I Ed it in one of my trade Recaps and everybody was
+00:06:51.759 freaking out about it okay so those are the three ways that we can disrespect orderflow now same thing in a Trend how
+00:07:00.400 do we disrespect bearish order flow we get what a break of structure to the upside how do we identify a break of
+00:07:06.759 structure to the upside we see a closure above the most recent high that was made within the downtrend we get an inverse
+00:07:13.759 fair value Gap how do we see that we look for a bearish fair value Gap that
+00:07:18.960 gets closed above by a Candlestick in turn that disrespects bearish order flow
+00:07:24.280 and last but not least we take it from the high down to the low and then
+00:07:32.360 if price pushes past the 79% extension it's pretty safe to assume that bearish
+00:07:37.599 order flow has been disrespected cool cool so now how do we
+00:07:44.280 show that order flow is being respected because not only do we know need to know how to identify bullish and bearish
+00:07:51.120 Order flow we also need to know how it gets disrespected and then also how does it get respected and we're going to put all of
+00:07:57.479 this together onto the charts so that you guys can become profitable Traders but first hold
+00:08:03.879 on I'm getting thirsty let me hit a chug
+00:08:24.210 [Music] jug oh
+00:08:30.360 oh oh yeah God damn it man that bottle's never
+00:08:36.640 getting picked up for like the next 5 years swear to God that shit's way behind my desk I'm never picking that [ __ ] up okay how do we respect bullish
+00:08:44.880 wow I'm wide awake now shout out Santa Cruz medicinals just kidding I didn't use any of his
+00:08:50.839 electrolytes wow we're geeking today jez man okay how do we respect bullish
+00:08:56.040 orderflow let me try and remember hold on I got to watch a YouTube video on
+00:09:02.480 this really
+00:09:10.079 quick hold
+00:09:17.640 on hold on let me find this video just so I can remind myself really quick
+00:09:34.040 yo ever heard of jerkmate this is fun entertaining and addictive as the most popular social network with
+00:09:42.800 hey okay now that we know how to how we how to respect orderflow I'm going to
+00:09:49.640 put this together okay so how do we respect orderflow with fair value gaps with order blocks with breaker blocks
+00:09:56.880 with equilibrium what else that's pretty much it or like OT but we
+00:10:04.160 don't we don't need to do that [ __ ] this is all you need so how do we respect order flow when we're in an uptrend what
+00:10:11.000 are we doing we're respecting order flow we're either hitting equilibrium filling fair value gaps filling order blocks and
+00:10:17.440 breaker blocks all that [ __ ] so how is this useful now that we know
+00:10:25.120 how to and again if you guys don't know what a fair value Gap is an order block is the breaker block is equilibrium go
+00:10:30.880 watch my boot camp I cover all of that and also if you just want to learn from me directly and genuinely like be my
+00:10:36.760 student get coached by me for like two months straight there's a link in the description you guys can become a blueprint student we literally pass we
+00:10:44.360 have like I can show you guys right now on my Discord bro we pass around like we average three to four funded accounts
+00:10:50.639 pass per day from students which is just like [ __ ] berserk I literally dare any other mentor to have that much
+00:10:57.079 success with their students like ever bro it's I like I've never seen that [ __ ] before and I've been in the trading
+00:11:03.480 space for a minute um but anyways if you want to know how to
+00:11:11.360 identify fair value GI order blocks breaker blocks equilibrium okay watch boot camp watch trading transformation
+00:11:16.920 and if you want to learn from me directly there's going to be a link in the description to join the blueprint
+00:11:21.959 But continuing on this now that we know what orderflow is
+00:11:27.240 how to identify it how it can get disrespected and how it can be respected how do we apply this to the actual
+00:11:36.920 charts price action recently has been like actually poopy diaper
+00:11:47.959 but let's just bring up a random ass Market open yo welcome to jerk
+00:11:56.279 mate yo who invented that horny ass
+00:12:01.360 commercial bro yeah let me try and find a good Market
+00:12:11.079 open yeah I've been watching that [ __ ] way
+00:12:17.199 too much literally my favorite show at this point welcome to Jeremy I'm going to
+00:12:25.760 catch you yeah welcome Jer me okay this is
+00:12:32.120 fine Prime Time whine and [ __ ] dine let me delete this actually delete the
+00:12:38.000 macro okay so
+00:12:44.040 orderflow when I'm looking for entries how am I going to use this I'm mainly looking at the F minute time frame five
+00:12:50.399 minute orderflow for the most part dictates like everything for me in terms of where
+00:12:58.560 I'm looking to trade in terms of where I'm entering and then I scale down to the 1 minute time frame to look for a
+00:13:04.160 tra like look for an entry so this isn't my whole strategy but just to keep this
+00:13:09.560 like super dead simple just on orderflow what can we see Market opens
+00:13:15.000 right here okay cool we're in bearish order flow right now because we broke 5 minute structure to the downside right
+00:13:21.440 here on this Candlestick cool but that's like 5 minutes into Market open we obviously want to wait for Market to
+00:13:27.800 move into the macro move into to an optimal time to trade when this happens at around 950
+00:13:34.800 right here we're not really looking to take shorts because it's like okay we're
+00:13:40.120 we're kind of moving up here okay and there's obviously a bunch of other reasons why we wouldn't want to be looking for shorts we're filling in a
+00:13:46.519 high time frame imbalance right here okay and that that's high time frame orderflow and we'll get into that a
+00:13:52.199 little bit later but we see boom 5 minute break of structure at the
+00:13:57.320 downside right here but then following that what do we get we get a 5-minute break of structure to the
+00:14:02.440 upside so what did we just do we formed 5 minute bullish order
+00:14:09.000 flow okay and we disrespected 5 minute bearish order flow
+00:14:14.440 why because we just broke structure to the upside so what is that doing the previous bearish order flow that we were in we just disrespected it and now in
+00:14:22.639 order for me to like 1 million per confirm that we are in bullish order
+00:14:27.759 flow and news flag this is literally how I take trades I look for the previous
+00:14:33.160 order flow to get disrespected then I look for New Order flow to get
+00:14:38.360 respected so previous bearish order flow gets disrespected with a breaking structure of the upside then following
+00:14:44.000 that what are we looking for we're looking for New Order flow to get respected so what do we have we have a fair value Gap here we have we can
+00:14:51.160 literally draw out every single one we have equilibrium that gets hit we have a
+00:14:56.839 breaker block right here that gets hit we have the order block right here that
+00:15:02.399 gets hit literally every single one of our confluences ends up getting hit fair value Gap equilibrium breaker block order block all of that [ __ ] gets hit
+00:15:10.600 and then from there what am I doing I'm scaling down to the 1 minute time frame if it even lets me move over
+00:15:17.959 here and then all I'm doing is I'm looking for one minute order flow
+00:15:23.399 because on a 5-minute retrace again everybody wanted me to make a video on the 5-minute retrace it's orderflow
+00:15:29.880 5 minute retrace okay we wait for the 5 minute retrace 5 minute retrace typically makes the one minute order
+00:15:36.440 flow turn into the other direction okay so if we're look if we're if we
+00:15:42.000 disrespect bearish order flow to the upside and then we're looking to get bullish order flow respected to the
+00:15:47.519 upside on the one minute time frame we're typic typically going to break structure or inverse a gap whatever
+00:15:54.440 we're typically going to have bearish order flow on the one minute time frame when we're looking to respect bullish
+00:16:02.079 order flow on the 5 minute time frame if not it doesn't really matter and we can take the trade regardless but typically
+00:16:07.480 we get a one minute reversal and then all that we're looking for is just boom Another reversal and with this I'm I'm
+00:16:15.839 typically not never really looking um
+00:16:21.000 once we get the break of structure to the upside or an inverse for Value Gap to the upside on the 1 minute time frame
+00:16:26.880 I'm not looking for order flow to get respected on the 1 minute time frame because if the 1 minute time frame is flipping into bullish order flow or
+00:16:33.440 disrespecting bearish order flow and the 5 minute is already in bullish order flow and we're getting one
+00:16:39.959 minute break of structure to the upside off of a one off of a 5 minute
+00:16:47.399 Confluence that's already bullish that's showing us that like we're respecting 5 minute order flow and five minute
+00:16:54.839 confluences then I'm okay taking that trade without needing to wait for a 1 minute fair value Gap or a 1 minute
+00:17:01.000 equilibrium I mean you can see that it it would have worked right we have a fair value Gap right here and then boom it ends up getting filled we would have
+00:17:07.079 been able to take this trade but me personally I don't I don't have to wait for it and then boom take profits hit
+00:17:12.400 whatever Target previous draws on liquidity Target Fair Value gaps whatever boom like that's all it is Bros
+00:17:20.039 like straight up Bros that is literally all it is now how can we use this on the high
+00:17:26.559 time frames to help us so all I'm going to say all I'm going to
+00:17:34.000 say I made a daily bias video last year and everybody was making
+00:17:40.400 fun of me for it saying tjr tjr is such a beginner teacher tjr um tjr is so
+00:17:47.919 beginner okay he doesn't he doesn't teach you everything that you need to learn um you know don't watch or watch
+00:17:54.280 watch his boot camp and that's it I made that daily bias video saying
+00:17:59.520 you want to look at the high time frame Trends and identify what point in time we are in the high time frame Trend
+00:18:05.679 whether we're going to sweep out liquidity or whether we're going to fill in imbalance to continue the trend everybody was making fun of me for that
+00:18:11.960 video saying this is so beginner you need to use this this this this this this this fast forward one year
+00:18:18.520 later here we are and every single person is finding their daily bias using
+00:18:24.840 this [ __ ] called internal and external liquidity which news flash Buckaroo is literally
+00:18:33.000 just orderflow and news flash orderflow is literally just uptrends and [ __ ]
+00:18:41.240 downtrends you got played bro you got played as like as [ __ ]
+00:18:47.679 bro but anyways I'm I'm going to make this daily buys video again in this
+00:18:53.919 video and maybe you guys will [ __ ] listen now
+00:18:59.000 so just like on the lower time frames when we're identifying order flow bullish order
+00:19:06.360 flow and bearish Order flow disrespects all of that high time frames how do they
+00:19:11.520 move they move in Trends they move in higher highs and higher lows lower highs and lower lows cool our job when trying
+00:19:19.000 to identify our daily bias is to be able to identify what point in time are we in
+00:19:27.480 in these high time frame trends Trends are
+00:19:32.720 we sweeping out like hourly liquidity or lower time frame liquidity to go down to
+00:19:38.360 fill a 4our imbalance to move higher or are we in a
+00:19:46.720 4H hour imbalance to sweep out lower time frame liquidity to move higher
+00:19:53.000 okay on the higher time frames your goal is literally just to identify the point
+00:19:58.960 in order flow that we are in so on the 4-Hour time frame right now we were
+00:20:04.080 actually in consolidation so there's three types of orderflow uptrend downtrend
+00:20:09.159 consolidation but we just broke out of this but I already know this because I
+00:20:14.480 mean I told blueprint students I wanted this [ __ ] to be filled told them that [ __ ] literally
+00:20:20.080 yesterday hey man I'm good I'm good at this [ __ ] but anyways on The Daily time frame what are
+00:20:27.440 we in we're in an uptrend okay I know this [ __ ] looks like actual like throw
+00:20:32.559 up on the chart but we're in an uptrend how do I know that because I I'm literally just looking at the order flow
+00:20:38.720 I know it's hard to identify right now but high low higher high soon to make a higher low or we just dump but for the
+00:20:46.159 time being we're in an uptrend so what point of order flow are we in right now
+00:20:51.600 before today we were at the high now we're
+00:20:57.200 going down to make what the higher low in what well we have to respect the
+00:21:03.200 bullish order flow so what confluences do we have Dandy do we have a fair value
+00:21:08.760 Gap we have equilibrium you could probably find like
+00:21:15.279 some sort of 4our order block 4H hour breaker block whatever oh yeah we do boom four hour 4our order block
+00:21:22.120 literally right at equilibrium we have the breaker right
+00:21:27.159 here pretty much same same area as the order block
+00:21:32.840 boom so prior to this what we were what were we assuming that price was going to
+00:21:38.279 do come down because we've already made the extension in an
+00:21:45.240 uptrend we've already made the move up so what comes
+00:21:52.039 next the higher low and then once we made the higher low what comes next the
+00:21:59.120 extension it's crazy that I had to make this video to remind you guys of the absolute beginner Concepts that you guys
+00:22:07.400 seem to have just Lost in Translation through all of these nitty-gritty [ __ ] that you guys have been
+00:22:13.640 studying for the past year it's time for you guys to come back to Daddy and it's time for me to actually put [ __ ] on game
+00:22:19.919 okay because I've been trying to teach you guys the right way in the simple way but you guys didn't want to [ __ ] listen and now here you are trading the
+00:22:27.760 simple way because you realize the way that I trade actually [ __ ] works and now I'm not saying that that
+00:22:34.039 the way that other people trade doesn't work I'm not saying that at all like everybody has their own strategy but I'm
+00:22:40.080 just saying you guys are getting lost in [ __ ] translation with all this YouTube [ __ ] cut the crap stick to
+00:22:46.279 what [ __ ] works stick to the simple [ __ ] y'all are y'all y'all are like your
+00:22:51.679 guys' charts looks like [ __ ] baloney right now bro you guys have [ __ ] written like this on a trend line that's going
+00:22:58.240 up down and sideways y'all have some [ __ ] like that looks like this on your
+00:23:04.640 chart and you label it like this and you're and then you make fun of a video
+00:23:10.120 of me who's literally a profitable Trader who shows every single trade that I take on a daily [ __ ] basis and how
+00:23:15.880 much I make and how much I lose and and y'all are just like well
+00:23:22.039 you didn't account for the low [ __ ] like buddy you are trading on a funded
+00:23:29.960 account and you can't even pass it I am trading on a live account worth
+00:23:36.039 literally your father's net worth probably more like who are we like what are we
+00:23:43.799 doing right now you're telling me I didn't account for whatever you put on the chart maybe the [ __ ] that you put on
+00:23:49.159 the chart it's what's making you lose bro
+00:23:55.919 anyways higher time frames what are we looking for we're just looking for at what point in time we are
+00:24:02.320 at in the order flow do we need to extend to the upside to take out
+00:24:08.360 external liquidity or do we need to make a higher low and seek out internal
+00:24:18.720 liquidity that's how you guys look because I literally put you guys on this exact game a year ago and y'all didn't
+00:24:26.840 want to appreciate it I hope you appreciate it this time cuz this is the last [ __ ] time that I'm making this
+00:24:32.200 damn video higher Time Flame higher time frame order flow how do we how do we
+00:24:38.679 identify our [ __ ] daily bias by literally just looking at what point in time we are in the high time high time
+00:24:45.799 frame order flow so with this right we saw okay boom
+00:24:52.880 literally like if we just come on manate if we just like use
+00:24:59.080 the draw tool remember when I taught you guys how to use the draw tool you guys have moved so far from this [ __ ] it
+00:25:04.200 pisses me off actually it pisses me off how far how far you guys have strayed from simple
+00:25:11.120 [ __ ] simple [ __ ] gets you paid bro I'm telling
+00:25:16.200 you if you guys just draw this [ __ ]
+00:25:21.720 out or we went sideways for a bit boom
+00:25:26.919 boom boom what's
+00:25:34.559 next all right and I can look in uptrend sorry
+00:25:43.640 there there they go in uptrends again it seems like you guys
+00:25:49.880 need a reminder we make a high we make a low we have to what push past this High
+00:25:56.080 to continue the uptrend and then then what after we push past that high what are we going to come down and do we're
+00:26:01.840 going to fill some sort of fair value Gap some sort of equilibrium some sort of breaker block some sort of order block once we fill it what are we going
+00:26:07.080 to do we're going to push past this high again so now what can we use these highs as take [ __ ] profits boom simple
+00:26:13.120 [ __ ] [ __ ] bro it's simple simple simple [ __ ] let me show you guys an example of
+00:26:19.840 this on the high time frame and then we'll get the [ __ ] out of here ready
+00:26:28.559 this is a perfect example okay liquidity sweep then what boom break structure and oh my God it's so good prior God man I
+00:26:37.279 swear to God if you guys can you guys just please listen to Daddy for like the one time for the one time please
+00:26:43.520 bro listen to me look okay we break bearish order flow
+00:26:50.039 right here we disrespect bearish order flow okay cool we get to break structure to the upside okay cool what are we in
+00:26:56.960 now bullet sh flow awesome what do we come down come down to do boom We respect bullish order Flow by filling in
+00:27:02.320 this fair value Gap awesome okay from there we move up we
+00:27:07.360 move up every time we have a low we have a
+00:27:13.000 high we have a higher low what do we do with the following High we push past it once we push pass it what are we going
+00:27:19.480 to do we're going to make a higher low boom we make a higher low how do we need to change
+00:27:26.720 directions what do we need to do in order to change directions in order to change order flow liquidity
+00:27:32.840 sweep so we still end up pushing past this High time frame high but what is it
+00:27:38.000 to do now to sweep out liquidity so regardless if we see this price move
+00:27:43.039 down and let's say that there even though there this wasn't New York Stock Exchange open but let's say that we were
+00:27:48.919 we had an open right here what would we still be in we' still be in bullish OD flow what are we in a fair value Gap
+00:27:55.039 what are we looking to do respect this fair value Gap we look for Longs up to
+00:28:00.080 what boom these highs why because we're in bullish order flow in regardless of if we're going to change directions
+00:28:08.360 here we still take out these highs and we still hit take profit following
+00:28:16.159 that we break 4 Hour order flow to the downside
+00:28:22.519 cool boom we get a move up then once we make that move up once we fill in this
+00:28:28.519 fair value Gap right here which we just did and we see entries where are we targeting the low why because we're in
+00:28:35.279 bar shorter flow oh my God and then what does the low [ __ ] do it floods the [ __ ] face to the
+00:28:42.000 downside pissed me off that you guys didn't listen to me a year ago it really does because I'm making the same exact
+00:28:47.200 [ __ ] video same situation on NASDAQ here okay
+00:28:54.440 what are we doing right now we're filling in high time frame waterlow we're filling in we're respecting High time frame order flow we're filling this
+00:29:00.279 for Value Gap what are we likely going to do in the next coming
+00:29:06.039 days take out this high once we take out that high what are we probably going to do there's probably going to be fair
+00:29:11.519 value gaps made there's probably order blocks whatever different confluences for us to come down and then when we're
+00:29:17.039 in those what do we do when we're in those internal and external draw
+00:29:22.919 liquidities okay all that we're doing is we're going down to the 5minute time frame and
+00:29:28.240 executing based on what I just showed you guys simple [ __ ] [ __ ] bro it's so
+00:29:33.720 it's so simple a [ __ ] baby could do it and that's why I teach you guys the way that I do if you can't teach [ __ ]
+00:29:40.760 like you're if you can't teach something that you're high high highly proficient
+00:29:47.000 at to people as at a kindergarten level then you're not actually good at this
+00:29:52.480 [ __ ] that is like that who [ __ ] said that there's some like famous [ __ ] philosopher that that said that if you
+00:29:59.159 aren't able to dumb down a concept that you're highly proficient at down to like a kindergarten or a third grade level
+00:30:06.519 then you aren't actually good at that skill so everybody that's talking to you in [ __ ] big words and all that [ __ ]
+00:30:12.919 first of all they're not doing you any favors and you're not doing yourselves any favors by trying to listen to these
+00:30:18.279 big words I'm simplying I'm I've been simplifying all of these big words all
+00:30:25.120 of this [ __ ] for you guys so you guys don't have to listen to that bu [ __ ] and here you guys are still listening to the
+00:30:30.559 [ __ ] stop I'm doing it for you I'm the [ __ ] translator okay we
+00:30:38.960 have old ass good good Traders but they don't know how to speak
+00:30:46.360 to people who are beginners with this [ __ ] and they don't know and they don't know how to simplify the [ __ ] I'm the
+00:30:52.120 middleman I can understand them and I also understand you guys because I was in your guys' position
+00:30:58.120 a couple [ __ ] years ago and I was able to make this [ __ ] work so I know
+00:31:03.360 what you guys need in order to make this [ __ ] work so please stop listening to the old ass [ __ ] unks that be using
+00:31:10.399 big ass words to try and explain [ __ ] to make you feel dumb you don't need to listen to that
+00:31:16.120 [ __ ] I'm here to make [ __ ] easy for you let me make [ __ ] easy for you hopefully this video helped again if you
+00:31:23.679 guys want like way more in-depth coaching on this okay there's going to be a link in the description so you guys
+00:31:29.279 can be a student of mine join the tra day trading blueprint again we're averaging literally like three to four
+00:31:35.279 funded accounts past per day in there it's absolutely insane if you guys want to see I have literally three highlights
+00:31:42.720 on my Instagram story that show like literally all the funded that that get
+00:31:48.360 passed on a daily basis follow me on Instagram so you guys can see all those funded accounts getting passed look at my story proof is in the [ __ ] pudding
+00:31:55.399 proof is in my students proof is in the charts I appreciate you guys I'll catch you guys in the next one peace

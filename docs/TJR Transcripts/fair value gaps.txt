@@ -1,0 +1,1326 @@
+# tactiq.io free youtube transcript
+# Fair Value Gaps Explained
+# https://www.youtube.com/watch/xcDOMKaOIsk
+
+00:00:00.560 this is going to be the only fair value
+00:00:02.280 Gap video that you guys need to watch in
+00:00:03.879 order to fully understand fair value
+00:00:05.720 gaps imbalances and inverse fair value
+00:00:08.320 gaps I'm going to be covering how to
+00:00:09.960 identify them how to use them on a chart
+00:00:12.240 and also when we can use them to
+00:00:13.960 actually take trades off of them
+00:00:15.480 obviously we need a lot of other
+00:00:16.720 confluences to actually take these
+00:00:18.680 trades but this is mainly just going to
+00:00:20.800 be going over imbalance as a whole which
+00:00:22.680 is fair value gaps imbalances and
+00:00:25.000 inverse fair value gaps so with that
+00:00:26.640 being said let's jump on the chart let's
+00:00:28.279 talk about how to identify them and then
+00:00:30.160 also make sure you guys stay to the end
+00:00:31.640 so that I can show you guys not only how
+00:00:33.320 to identify them but how to actually
+00:00:34.920 Place trades using this super great
+00:00:37.079 Confluence that I pretty much use every
+00:00:38.879 single day in order to place traits so
+00:00:41.360 let's pull up the chart before we even
+00:00:45.320 start doing anything with candlesticks
+00:00:48.840 or anything we're going to we're going
+00:00:50.280 to do a Picasso drawing okay so a fair
+00:00:53.000 value Gap and something that I like to
+00:00:55.039 do is I like to help people fully
+00:00:58.280 understand the Confluence so we want
+00:01:00.000 want to be able to not only be able to
+00:01:02.079 identify it but know why we're using it
+00:01:04.640 in the first place because we're just
+00:01:05.840 placing on a trade just saying like oh
+00:01:07.799 yeah this happened so I'm going to place
+00:01:09.520 a trade there's not much confidence in
+00:01:11.320 that me personally I like to have s like
+00:01:13.920 a crazy amount of confidence when I'm
+00:01:15.520 going into a trade and in order for me
+00:01:17.400 to have a crazy amount of confidence
+00:01:19.080 going into a trade I need to fully
+00:01:21.280 understand the Confluence that I'm
+00:01:22.479 taking that trade off of or else why the
+00:01:24.360 [ __ ] would I be confident in it I need
+00:01:25.880 to know why price is moving so first I'm
+00:01:28.159 going to show you guys how we can
+00:01:29.479 identify them I'm going to give you guys
+00:01:31.079 a little drawing of it and then we're
+00:01:32.720 going to go ahead and describe why price
+00:01:34.960 moves the way that it does off of these
+00:01:37.240 confluences and then we'll go into
+00:01:39.000 identifying them so a fair value Gap is
+00:01:41.600 a three Candlestick
+00:01:43.759 pattern okay we have one candle and then
+00:01:47.040 we have our expansion
+00:01:49.799 candle and then we have another
+00:01:54.640 candle so as we know anatomy of
+00:01:57.920 candlesticks we have boom this candle
+00:02:01.000 opened right here it had buy orders that
+00:02:03.719 push it up here and then sell orders
+00:02:05.520 push price down here and at one point in
+00:02:07.680 time price came down here at one point
+00:02:09.399 in time price price came up here sell
+00:02:11.520 orders ended up pushing price down and
+00:02:13.480 closing price out right here then
+00:02:15.360 following that we see a boom big move up
+00:02:18.640 so this Candlestick closes up here next
+00:02:21.040 this Candlestick opens right here at one
+00:02:23.519 point in time during this let's say this
+00:02:25.720 is this is on the hourly okay so during
+00:02:28.120 this hour hour price got up to this
+00:02:30.720 point price had sell orders down to this
+00:02:32.599 point and then buy orders push it back
+00:02:34.519 up and then price ended up closing here
+00:02:36.400 so this is a bullish fair value Gap or
+00:02:39.519 where even is the fair value Gap in the
+00:02:41.200 first place well we know that price had
+00:02:44.239 buy orders push it up here and then what
+00:02:46.040 happened sell orders were right here and
+00:02:48.480 caused price to push down okay and ended
+00:02:50.720 up stopping it right here then on top of
+00:02:52.840 that we had sell orders push price down
+00:02:55.159 and then buy orders bought it back up
+00:02:56.760 here so what do we know sell orders stop
+00:02:58.840 here and sell orders orders stop here so
+00:03:01.519 with that in mind what do we know sell
+00:03:04.239 orders stopped here and sell orders
+00:03:06.239 stopped here so what is there a lack of
+00:03:08.040 within this Gap there's a lack of sell
+00:03:10.200 orders so this is part of the reasoning
+00:03:13.560 behind this when we have this gap
+00:03:15.480 between the top Candlestick of the first
+00:03:18.239 candle and the bottom Candlestick of the
+00:03:20.640 third candle we can identify a price
+00:03:23.120 range where there's a lack of sell
+00:03:24.519 orders within the market that if the
+00:03:26.599 market retraces into it and we see buy
+00:03:30.080 orders filled within that price range
+00:03:32.080 where there's a lack of sell orders what
+00:03:33.560 can we assume about price price is more
+00:03:35.560 than likely going to proceed up
+00:03:37.799 especially if we're within an
+00:03:39.519 uptrend okay so that's a bullish fair
+00:03:41.760 value Gap why is it a bullish fair value
+00:03:43.280 Gap well first of all if we're in an
+00:03:44.599 uptrend and we see a price range where
+00:03:46.239 there's a lack of sell orders and price
+00:03:47.799 goes into the price range where there's
+00:03:49.439 a lack of sell orders and we see
+00:03:51.319 candlesticks moving up out of that
+00:03:53.000 confirming that buy orders have been
+00:03:55.079 filled then we can safely assume that
+00:03:57.239 price is going to move higher from there
+00:03:59.519 and on top of that why do we call these
+00:04:01.599 imbalances why do we call Fair Value
+00:04:03.519 gaps imbalances in the first place
+00:04:05.280 because it's imbalance price action we
+00:04:07.439 know that there's a lack of sell orders
+00:04:09.159 within years so what is going to cause
+00:04:11.560 price to balance itself out sell orders
+00:04:15.000 to push price down in here fill in this
+00:04:17.478 lack of sell orders and then from there
+00:04:19.358 we can get buy orders out of that and
+00:04:20.720 that's going to cause price to move
+00:04:21.880 higher and more often than not we see
+00:04:24.199 these imbalances get filled in order to
+00:04:26.400 balance out price action and I'm going
+00:04:27.759 to show you guys how you guys can
+00:04:29.039 identify order flow and how you guys can
+00:04:31.600 identify which fair value gaps are going
+00:04:33.720 to get filled and which ones are going
+00:04:35.600 to be filled more likely than others on
+00:04:38.199 the chart okay so I'm going to be
+00:04:39.759 explaining that later in the video so
+00:04:41.360 make sure you guys stay along for this
+00:04:42.960 next one we are going to be identifying
+00:04:44.680 a bearish fair value Gap bullish means
+00:04:46.759 up bearish means down for all the noobs
+00:04:49.639 okay so bearish fair value Gap we have
+00:04:53.199 boom and also keep in mind these three
+00:04:56.280 Candlestick patterns the first candle
+00:04:58.000 and the third candle it does not matter
+00:04:59.800 matter the color of them we don't see
+00:05:02.039 color we don't care if the candle is red
+00:05:06.479 green
+00:05:08.000 black [ __ ] Indian okay it doesn't
+00:05:11.280 matter it really doesn't matter the
+00:05:13.280 colors of these these these candlesticks
+00:05:16.199 the only color that matters the only
+00:05:18.639 discrimination that we do is on on the
+00:05:20.720 middle one okay so this one can be an
+00:05:22.919 Indian candle stick it doesn't matter
+00:05:25.240 okay it can be up down all around okay
+00:05:27.880 as long as this one is going down and as
+00:05:31.880 long as we make a gap within this is for
+00:05:35.840 bearish the bottom Wick of the first
+00:05:37.720 candle in the top Wick of the third
+00:05:39.160 candle then what do we know about this
+00:05:42.400 price range right here it's imbalance
+00:05:44.319 why because there's a lack of now buy
+00:05:46.520 orders within here so if price wants to
+00:05:49.880 come in and fill in this price range to
+00:05:52.759 balance out that price action to come
+00:05:55.000 into the imbalance price action where
+00:05:56.840 there's a lack of buy orders and then we
+00:05:58.160 see sell orders come out of that what is
+00:05:59.960 price more likely going to do it's
+00:06:01.919 probably going to continue down from
+00:06:03.199 there okay so that is our three
+00:06:05.000 Candlestick pattern okay we know that
+00:06:06.800 there's a lack of sell orders within a
+00:06:08.639 bullish for Value Gap we know that
+00:06:09.919 there's a lack of buy orders within a
+00:06:11.360 bearish for Value Gap cool cool cool
+00:06:13.280 cool cool again we don't care about the
+00:06:15.160 colors of the first Candlestick or the
+00:06:17.000 third Candlestick the only one that we
+00:06:18.400 care about is the middle Candlestick
+00:06:20.080 whether it's going up or whether it's
+00:06:21.360 going down now that's how we identify
+00:06:23.759 what a fair value Gap is what happens
+00:06:26.199 when we're trying to identify if there
+00:06:28.360 isn't a fair value Gap well it's super
+00:06:30.120 simple if the Wicks of the first
+00:06:31.759 Candlestick and the third Candlestick
+00:06:33.199 overlap then we know there's not an
+00:06:35.160 imbalance there so let's say this
+00:06:36.880 candlestick's got a huge Wick up and
+00:06:38.440 this candlestick's got a huge Wick down
+00:06:40.280 is there an imbalance within here no
+00:06:42.160 even though this Candlestick is freaking
+00:06:43.840 huge there's no imbalance within here
+00:06:46.440 why because we know that sell
+00:06:49.000 orders stopped all the way up here buy
+00:06:51.479 orders pushed it up and then sell orders
+00:06:52.919 were able to come in up here and push
+00:06:54.479 price down same thing here on this third
+00:06:56.599 Candlestick sell orders came down here
+00:06:58.319 so these sell orders are overlapping and
+00:07:00.199 now there's not a imbalance and there's
+00:07:01.960 not a price range where there's a lack
+00:07:03.520 of sell orders so in turn there's no
+00:07:05.479 imbalance same thing here on this
+00:07:07.280 bearish fair value Gap if we have buy
+00:07:09.120 orders sell orders push this down buy
+00:07:11.440 orders buy it back up buy orders push
+00:07:13.440 price up if we see something like this
+00:07:15.759 there's no imbalance there's no price
+00:07:17.919 range where there's an in where there's
+00:07:19.879 a lack of buy orders so in turn this is
+00:07:22.319 not a bearish for Value Gap if the Wicks
+00:07:24.000 of the first candle and the third candle
+00:07:25.759 are overlapping there's no fair value
+00:07:27.400 Gap they like just think think of the
+00:07:29.800 name it's a gap we can see the Gap boom
+00:07:32.800 it's right here gaping hole we want to
+00:07:35.199 plunge it okay so now that we know how
+00:07:37.080 to identify fair value gaps let's go
+00:07:38.960 ahead and look at them on the chart
+00:07:40.440 there's this is something that I need
+00:07:42.240 you guys to understand don't just watch
+00:07:44.080 up to this point in the video and be
+00:07:45.560 like boom tjr taught me how to do a fair
+00:07:47.879 value Gap I'm going to place a buy every
+00:07:50.080 time it comes into this fair value Gap
+00:07:52.120 and I'm going to be a qu trillionaire no
+00:07:55.240 Timmy you're actually going to be
+00:07:57.479 [ __ ] and homeless if you do that
+00:07:59.639 that okay we need to use a lot more
+00:08:03.479 confluences combined with this in order
+00:08:06.800 to be good at trading okay so this is
+00:08:08.840 just one of the confluences and later
+00:08:11.639 down the line maybe in like a week or so
+00:08:13.240 I'm going to make a full YouTube video
+00:08:15.280 going over my whole strategy on How I
+00:08:17.800 Look to take trades and it's going to be
+00:08:19.800 like [ __ ] three to four hours long
+00:08:22.080 going over all of this [ __ ] but we need
+00:08:24.879 to understand that we can't just be
+00:08:26.400 buying and selling every single time we
+00:08:28.000 come into a bullish or bearish for Gap
+00:08:29.840 we need a lot more confluences with that
+00:08:31.520 we need daily bias we need liquidity
+00:08:33.399 sweeps we need inverse for Value gaps we
+00:08:35.120 need break of structure we need order
+00:08:36.799 blocks breaker blocks all that good [ __ ]
+00:08:38.919 okay but this is just one piece of the
+00:08:40.640 puzzle so with that being said let's go
+00:08:42.080 ahead and identify it on the chart now
+00:08:44.120 like I said there's a whole bunch of
+00:08:46.399 these things and they're all over the
+00:08:47.720 chart so instantly we need to be like a
+00:08:49.880 [ __ ] tracker Jacker we need to be
+00:08:51.279 able to have Aimbot okay when I get on
+00:08:53.160 the chart instantly what am I seeing I'm
+00:08:55.000 seeing Boom bearish for Value Gap Boom
+00:08:56.800 bearish for Value Gap okay and then and
+00:08:58.959 then within here here what do we have
+00:09:00.040 boom bullish fair value Gap and then
+00:09:02.200 boom okay this is something that I need
+00:09:03.920 to explain to you let me get rid of all
+00:09:05.720 these other fair value gaps sorry I'm
+00:09:07.480 going a little bit too fast but that
+00:09:08.880 just shows how good I am at
+00:09:10.880 trading okay something I want you guys
+00:09:13.399 to understand this is probably the best
+00:09:15.120 analogy that I have ever made in in
+00:09:17.480 trading ever fair value gaps are like
+00:09:21.200 dicks size does not matter we can have
+00:09:25.560 the giri longest biggest fair value in
+00:09:29.920 the world and price will probably want
+00:09:34.000 it you know at the end of the day it's a
+00:09:36.399 big one we probably want that one right
+00:09:38.959 it's a big imbalance we want it but also
+00:09:42.240 a little guy a two incher even a microen
+00:09:47.320 it can do the job as long as we get in
+00:09:51.000 there it's we're making [ __ ] shake and
+00:09:54.880 we got to think from the woman's
+00:09:56.680 perspective a penis is just one piece of
+00:10:00.600 the puzzle a
+00:10:02.480 penis is just one
+00:10:05.880 adaptation to the full romantic
+00:10:09.040 embodiment of a
+00:10:11.040 man so we need to be thinking about not
+00:10:14.560 just the
+00:10:16.079 penis but we need to be thinking about
+00:10:18.560 what lies within the
+00:10:20.839 personality and that's the second piece
+00:10:23.200 of it what lies within a fair value Gap
+00:10:27.720 in imbalance
+00:10:29.760 what lies within a man
+00:10:32.880 personality so they're
+00:10:35.279 seeking not
+00:10:37.720 penuses they're seeking and yearning for
+00:10:40.519 human connection they're
+00:10:43.200 yearning for a personality that they can
+00:10:46.200 bond with and it's the same thing with
+00:10:48.440 fair value gaps when we get on to the
+00:10:50.880 Chart we know that the the chart it's
+00:10:53.160 not just seeking and looking for the
+00:10:55.040 biggest dick out there it's looking for
+00:10:57.320 that imbalance that's all it wants it
+00:11:00.040 just wants a connection so if we see a
+00:11:02.399 little guy versus a big guy we're not
+00:11:06.320 discriminating both of them can be
+00:11:08.240 filled they're both valid why because
+00:11:11.760 it's what lies within it's that
+00:11:13.720 personality it's that imbalance size
+00:11:16.800 does not matter okay so with that being
+00:11:18.839 said let's pull up this example here so
+00:11:20.839 let's look at this this little guy right
+00:11:23.480 here this is an imbalance why you guys
+00:11:25.240 are probably saying tjr you you're so
+00:11:27.680 dumb bro we want the Big Daddy we want
+00:11:30.959 we want Drake this is Drake okay we want
+00:11:34.880 Drake well bro what about little Timmy
+00:11:39.240 what about tjr this little guy can do
+00:11:41.600 the trick
+00:11:42.639 too and we saw we can see he did the
+00:11:45.800 trick this imbalance got filled and we
+00:11:47.880 saw bullish AR we saw bullish reaction
+00:11:51.680 off of it then again Drake comes and
+00:11:54.560 [ __ ] like just leaves a gaping hole in
+00:11:58.360 that [ __ ] but okay wow we're getting
+00:12:00.360 off track here way I'm getting
+00:12:02.600 distracted but you guys get the point
+00:12:05.040 size doesn't matter if even if it's the
+00:12:07.399 littlest fair value Gap it still matters
+00:12:10.560 okay so this is a good example of a
+00:12:11.920 bullish fair value Gap where is our
+00:12:13.480 three Candlestick pattern we have our
+00:12:14.760 first Candlestick where's the top Wick
+00:12:16.600 right here third Candlestick move up
+00:12:18.839 again the color we don't see color Okay
+00:12:21.519 the third candlesticks Wick is right
+00:12:23.440 here these two Wicks don't overlap we
+00:12:25.279 leave a bullish for Value Gap right here
+00:12:27.040 price comes in fills the bullish for
+00:12:28.600 Value Gap and we get a bullish reaction
+00:12:30.040 out of it obviously if we had went long
+00:12:32.320 off of this we like Drake's coming
+00:12:34.600 through and Swinging his [ __ ] on top of
+00:12:36.399 our forehead but again that's why we
+00:12:38.959 need several other confluences all we
+00:12:41.120 want to do right now is just be to be
+00:12:42.560 able to identify them so again where's
+00:12:44.760 our fair value Gap first candle second
+00:12:47.399 candle third candle these Wicks they
+00:12:49.320 don't overlap this is a bearish for
+00:12:51.320 Value Gap first candle second candle
+00:12:53.920 third candle this third candle doesn't
+00:12:56.320 even have a wick but it's still
+00:12:57.720 considered as a fair value Gap boom
+00:13:00.199 first candle boom this is a bearish fair
+00:13:02.760 value Gap let's Show an example of what
+00:13:04.279 a fair value Gap is not um okay let's
+00:13:07.279 see price right here we have first
+00:13:08.920 candle second candle third candle what
+00:13:11.399 do we see the top Wick of the first
+00:13:13.160 candle the bottom Wick of the third
+00:13:16.000 candle these two Wicks are overlapping
+00:13:18.519 this is not a fair value Gap okay it's
+00:13:20.800 pretty simple like we literally just see
+00:13:22.639 the gaps on the chart it's like bet fair
+00:13:24.519 value
+00:13:25.480 Gap bet is this a fair value Gap right
+00:13:28.320 here no no these Wicks they overlap
+00:13:31.160 first Wick third Wick overlaps this is
+00:13:33.880 this a fair value Gap right here no
+00:13:35.480 first Wick third Wick overlaps is this a
+00:13:38.079 fair value Gap right here yes first Wick
+00:13:40.079 third Wick doesn't overlap it's a fair
+00:13:42.000 value Gap but as we can see without
+00:13:43.720 context these things kind of [ __ ]
+00:13:45.600 suck again getting [ __ ] down okay we
+00:13:49.040 might have to move off from this but
+00:13:50.639 last analogy getting [ __ ] down without
+00:13:53.079 any personality or human interaction
+00:13:55.560 you're pretty much just like you're
+00:13:57.199 begging for an STD you're begging for a
+00:13:59.279 stop loss okay and that's pretty much
+00:14:01.639 what you're going to get if you're not
+00:14:03.199 seeking and understanding that there's
+00:14:05.240 more to an imbalance all right so now
+00:14:08.839 that we identified how to identify fair
+00:14:10.880 value gaps it's pretty simple we talked
+00:14:12.920 about how we can identify these let's
+00:14:15.320 talk about when we can use these and
+00:14:17.519 when they are best used so if you guys
+00:14:19.839 have seen that my previous videos on
+00:14:22.240 liquidity you guys are going to need to
+00:14:24.000 know what a liquidity sweep is so if you
+00:14:26.480 guys haven't seen those videos I highly
+00:14:28.680 recommend after this video because I
+00:14:30.759 want to cover make sure you guys aren't
+00:14:32.320 just jumping from idea to idea to go
+00:14:34.560 watch that so you guys can have this in
+00:14:36.480 your back pocket so the first thing that
+00:14:38.199 we need to be able to identify and help
+00:14:41.560 us to be able to use fair value gaps is
+00:14:44.240 understanding where the liquidity sweep
+00:14:46.399 is and where price is going okay I
+00:14:48.880 haven't really made a full video on how
+00:14:50.639 to understand daily bias I should and I
+00:14:53.320 will eventually there's a lot of trading
+00:14:55.560 videos that I need to make going into
+00:14:57.160 2025 but essentially if we can see a
+00:15:00.040 liquidity sweep and then a break of
+00:15:01.440 structure the main thing that we want to
+00:15:02.839 identify is order flow so super easy if
+00:15:05.279 we can just see that we are in an
+00:15:07.279 uptrend awesome we know that this is
+00:15:09.120 bullish order flow if we can see that
+00:15:10.639 we're in a downtrend awesome then we can
+00:15:12.880 see that that is bearish order flow and
+00:15:15.079 more often than not the earlier we are
+00:15:17.839 into bullish or bearish order flow the
+00:15:20.399 higher Confluence and the more the more
+00:15:22.320 trust I have in Fair Value Gap so if we
+00:15:24.320 see a liquidity sweep and then boom we
+00:15:26.839 start forming bullish order flow and
+00:15:28.319 like we're Within the second like
+00:15:30.160 retracement that that's super solid like
+00:15:32.600 okay cool I'll be looking for a fair
+00:15:33.800 value gap for price to fill and then
+00:15:35.319 boom we can take trades off of that
+00:15:37.240 however if we're like all the way up
+00:15:39.360 here and it's like all right bro we've
+00:15:40.880 made one two three four five six seven
+00:15:44.480 freaking retracements at this point we
+00:15:47.560 probably shouldn't be looking to enter
+00:15:49.720 into Longs there one because prices
+00:15:51.560 already overextended but also we've
+00:15:53.639 probably already seeked out all of the
+00:15:55.160 other draws on liquidity that price was
+00:15:56.839 looking to take out within that bullish
+00:15:58.319 order flow in the first place same thing
+00:15:59.839 with bearish order flow boom if we sweep
+00:16:02.560 out liquidity the first the first
+00:16:04.839 retracement is always going to be ideal
+00:16:06.560 if we can find a fair value Gap within
+00:16:08.079 there especially if we break structure
+00:16:10.319 or get an inverse fair value gap which
+00:16:11.920 I'm going to talk to you guys about a
+00:16:13.600 little bit later in this video if we can
+00:16:15.240 get a liquidity sweep break of structure
+00:16:16.880 then get a fair value Gap to get filled
+00:16:18.399 oh my like boom we're we're going
+00:16:20.920 absolutely berserk okay and then we're
+00:16:23.680 looking to enter off of that and then
+00:16:25.240 second retracement awesome still
+00:16:27.160 cranking cranking my [ __ ] okay third
+00:16:29.839 retracement okay maybe a slow stroke
+00:16:32.519 maybe a slow stroke if we haven't taken
+00:16:34.319 out our full takeprofit yet maybe you
+00:16:36.519 know maybe we get a little bust but you
+00:16:38.600 know we're not trying to go too crazy if
+00:16:40.279 we've already taken out our full
+00:16:41.440 takeprofit there's no reason to even
+00:16:42.839 jork our [ __ ] okay because full take
+00:16:44.959 profit has been hit our bias has been
+00:16:46.360 completed for the day Okay cool so now
+00:16:47.880 let's show this I know that sounded
+00:16:49.639 crazy but let let's show this as an
+00:16:51.440 example within Market open and as you
+00:16:53.160 guys know most like my strategy is is
+00:16:55.680 pretty pretty simple and if you guys
+00:16:57.319 want to learn how
+00:16:59.480 I actually put everything together and
+00:17:01.519 if you guys want to get coached by me I
+00:17:03.279 have a full mentorship where I go over
+00:17:05.000 literally every single Confluence that I
+00:17:07.599 have ever talked about and [ __ ] that I
+00:17:09.760 haven't talked about on YouTube talking
+00:17:11.799 about order flow talking about liquidity
+00:17:13.319 sweeps talking about daily buys talking
+00:17:14.760 about fair value gaps talking about
+00:17:15.880 inverse fair value gaps talking about
+00:17:17.079 breaker blocks equilibrium order blocks
+00:17:19.160 all of that stuff and there's a link in
+00:17:20.880 the description for you guys to sign up
+00:17:22.520 to that if you guys want to learn more
+00:17:24.119 from me be mentored by me for literally
+00:17:25.959 like get on coaching calls with me and
+00:17:28.480 for me to be able to actually walk you
+00:17:30.320 step by step through this stuff
+00:17:31.799 unfortunately on YouTube videos I can
+00:17:34.080 just get a brief little understanding of
+00:17:37.520 what you guys may need but within the
+00:17:39.640 mentorship it's like you guys can
+00:17:40.960 literally tell me like help I don't
+00:17:43.720 understand this and then I can come in
+00:17:45.280 and I can fix it straight away so if you
+00:17:47.360 guys want to sign up to that or have the
+00:17:48.960 potential because this is an application
+00:17:51.080 process okay not everybody's going to be
+00:17:53.000 allowed to get in because we only want
+00:17:54.760 to take real people that are actually
+00:17:56.799 trying to do this there's going to be a
+00:17:58.360 link in the Des description so let's go
+00:18:01.080 ahead and talk about how we can actually
+00:18:04.080 start applying this so let's go into uh
+00:18:07.679 yesterday's price action wasn't the best
+00:18:09.760 let's look for let's look at Thursday's
+00:18:11.880 price action see if Thursday had a good
+00:18:14.080 fair value Gap
+00:18:15.440 setup so oh yes no Thursday did have a
+00:18:18.840 perfect F Gap setup so I'm not going to
+00:18:20.840 walk through like the full strategy the
+00:18:23.000 main thing that we want to look for is
+00:18:24.880 fair Ral gaps here and then after this
+00:18:26.520 I'm going to be talking about inverse
+00:18:27.799 Fair gaps so to keep it short we're
+00:18:29.840 going to speed run through the majority
+00:18:31.200 of my strategy okay Market opens
+00:18:33.320 liquidity sweep following that break of
+00:18:35.520 structure right here what do we see
+00:18:38.720 following the break of structure okay so
+00:18:40.720 we know if we get a liquidity sweep to
+00:18:42.240 the upside we're going to be looking for
+00:18:43.520 shorts to the downside and we get a
+00:18:45.240 break of structure so what like we got
+00:18:47.320 two of our steps in we see a liquidity
+00:18:49.520 sweep and then a break of bullish order
+00:18:51.600 flow into bearish order flow so that's
+00:18:53.480 that should be ringing in our heads like
+00:18:55.200 holy [ __ ] we should get ready to look
+00:18:57.200 for a dick o o holy [ __ ] we should get
+00:19:00.720 ready to look for a dick ready we're
+00:19:02.600 looking for Drake's [ __ ] on the chart
+00:19:05.039 okay because if we see a liquidity sweep
+00:19:06.840 break of structure we're looking for
+00:19:08.159 dicks okay and what do we have boom
+00:19:10.760 Drake is all over the chart we have one
+00:19:12.520 bearish for Value Gap here we have
+00:19:14.200 another bearish fair value Gap here okay
+00:19:16.640 again we take it from the first Wicks
+00:19:18.640 bottom candle down to the third Wicks
+00:19:20.799 top candle or sorry the first the first
+00:19:24.280 candle's bottom Wick to the third
+00:19:26.440 candle's top Wick when it's a bearish f
+00:19:28.720 value Gap okay then we have another one
+00:19:31.280 right here what do we see price do it
+00:19:33.640 comes in it fills that imbalance and
+00:19:36.760 then we see selling pressure out of it
+00:19:38.480 and then what do we see price do boom
+00:19:40.320 Royal [ __ ] Rumble to the
+00:19:44.120 downside and then price ends up going to
+00:19:46.440 seek out whatever a bunch of different
+00:19:48.760 draws on liquidity like right here come
+00:19:51.760 on bro whatever my magnet's tweaking but
+00:19:55.000 price ends up going all the way down to
+00:19:56.640 hit like literally a 1 to 2.8 reward
+00:19:59.120 ratio okay perfect example we also have
+00:20:01.760 had a perfect example of that on
+00:20:03.880 Thursday on ES so let's talk about that
+00:20:06.120 one as well and then we'll find a
+00:20:07.280 bullish example for fair value gaps as
+00:20:08.919 well so again similar situation Market
+00:20:11.280 opens liquidity sweep break of structure
+00:20:15.080 what are we doing we're looking for
+00:20:17.400 Drake okay we have this small one again
+00:20:21.159 the little ones matter too we have this
+00:20:22.760 small bearish for a value Gap right here
+00:20:25.159 then we have this bearish for a value
+00:20:27.200 Gap right here what do we see price
+00:20:29.159 comes in fills the bearish for Value Gap
+00:20:31.679 boom we get a little selloff okay short
+00:20:35.159 work and then what does price do it goes
+00:20:38.000 seeks out draws on liquidity down here
+00:20:40.679 okay and again this is just talking
+00:20:42.640 about fair value gaps there's a lot of
+00:20:43.919 other videos where I talk about how to
+00:20:45.320 set takee profits how to set stop losses
+00:20:47.200 and I also talk about that in the
+00:20:48.520 mentorship and obviously help you guys
+00:20:50.120 learn how to put all of these pieces
+00:20:51.720 together but today we're just talking
+00:20:53.039 about fair value gaps but we can see
+00:20:54.600 liquidity sweep break of structure this
+00:20:56.360 is the first retracement after we start
+00:20:58.799 forming bearish order flow on that break
+00:21:00.600 of structure this is a retrace
+00:21:02.880 Confluence okay what I like to call Fair
+00:21:04.919 Value gaps are continuation confluences
+00:21:07.039 why because when we're within an uptrend
+00:21:09.039 what are we looking for the trend to do
+00:21:10.520 it's looking to continue and how do we
+00:21:12.279 continue that Trend typically by filling
+00:21:14.440 in Fair Value gaps these are
+00:21:16.320 continuation confluences when price
+00:21:18.240 retraces more often than not it's going
+00:21:20.039 to fill a fair value Gap so these are
+00:21:22.039 continuation confluences okay now let's
+00:21:24.440 find a bullish example let's see if we
+00:21:26.760 can uh go back and let's look at at
+00:21:28.880 Wednesday's price action I think
+00:21:31.120 Wednesday was pretty bad price action oh
+00:21:33.960 I think NASDAQ had a good bullish setup
+00:21:36.039 on Tuesday if I remember correctly
+00:21:38.520 NASDAQ NASDAQ smoking on that gas pack
+00:21:41.600 oh wait no it wasn't a fair value Gap it
+00:21:43.360 was a order block okay let's look at
+00:21:45.400 Monday see if Monday had a good bullish
+00:21:48.440 example I want you guys to be able to
+00:21:50.840 get to this level like you see how I'm
+00:21:53.159 literally able to just scroll to the
+00:21:55.559 days that the [ __ ] happens on and I'm
+00:21:57.640 able to in ly identify whether we have
+00:22:00.360 an example of that or not like I want
+00:22:02.960 you guys to be soon to be at that level
+00:22:06.440 this has got to be one hell yeah there
+00:22:08.320 is one movie okay bullish example right
+00:22:12.960 here look at this [ __ ] look at it it's
+00:22:16.279 literally perfect okay hopefully you
+00:22:19.200 guys already see this if you guys don't
+00:22:20.919 it's okay Daddy's going to hold your
+00:22:22.159 hand okay what do we see liquidity sweep
+00:22:26.600 okay liquidity sweep break of
+00:22:30.159 structure then what are we looking for
+00:22:32.080 continuation Confluence where's our fair
+00:22:34.120 value Gap oh
+00:22:36.960 my
+00:22:38.919 God for Value Gap boom gets filled ball
+00:22:43.200 run [ __ ] to the upside okay I
+00:22:44.840 literally took this trade on Wednesday
+00:22:46.400 liquidity sweep break of structure
+00:22:49.120 retrace into the fair value Gap boom rip
+00:22:52.480 stick to the upside they're easily going
+00:22:54.440 to be able to catch trades off of this I
+00:22:55.880 would go to NASDAQ I know it was the
+00:22:57.279 same exact setup let's try and find one
+00:22:59.279 more bullish setup let's see Tuesday
+00:23:01.640 nope Tuesday did not have anything let's
+00:23:03.480 go to Monday Monday looks like there was
+00:23:05.880 high impact news yeah if we don't have
+00:23:09.400 anything on here then I'll just go
+00:23:10.679 straight into inverse value G okay yeah
+00:23:13.120 not worth it okay cool but anyways you
+00:23:15.760 guys get how we're supposed to use these
+00:23:17.520 okay we're looking for three Candlestick
+00:23:19.360 pattern we're mainly going to be looking
+00:23:21.600 for liquidity sweep break of structure
+00:23:23.640 following that fair value
+00:23:25.640 Gap pull out the sniper take the [ __ ]
+00:23:28.520 shot Bull Run [ __ ] or bare cycle
+00:23:31.600 [ __ ] okay now let's talk about
+00:23:35.000 inverse fair value gaps so inverse fair
+00:23:37.159 value gaps are different than fair value
+00:23:40.120 gaps because we're actually not really
+00:23:42.240 looking for these to get filled and they
+00:23:44.159 give us like a different perspective on
+00:23:47.480 where price is going to go and what
+00:23:49.120 price is going to do so what I like to
+00:23:51.799 say is fair value gaps are continuation
+00:23:56.640 continuation confluence es inverse fair
+00:24:00.240 value gaps are
+00:24:03.080 confirmation confluences and are equal
+00:24:07.880 to break of structure okay so inverse
+00:24:10.159 for Value gaps in my eyes are equal to
+00:24:13.080 break of structure now why is that so
+00:24:15.240 the first thing that we need to do to
+00:24:17.039 understand inverse fair value gaps is
+00:24:18.440 understand fair value gaps luckily we
+00:24:19.720 just talked about fair value gaps we
+00:24:21.000 fully understand these now what do we
+00:24:22.520 know about fair value gaps well like I
+00:24:24.200 was saying they are continuation
+00:24:26.080 confluences so when fair value gaps get
+00:24:27.919 filled
+00:24:29.840 and then price moves up because of them
+00:24:32.720 like that shows bullish order flow being
+00:24:34.840 maintained and then the same thing to
+00:24:36.120 the downside it shows bearish order flow
+00:24:37.840 being maintained but what happens if we
+00:24:42.520 disrespect a fair value Gap okay what
+00:24:46.039 happens if we inverse a fair value Gap
+00:24:49.240 so let's say we have a move up right
+00:24:52.360 here move down we fill this fair value
+00:24:54.840 Gap and then we move up we come down we
+00:24:56.919 fill this fair value Gap we move up and
+00:24:59.159 then we have another fair value Gap
+00:25:00.600 right here but then uh-oh price closes
+00:25:04.240 underneath that fair value Gap pretty
+00:25:06.000 much disrespecting this fair value Gap
+00:25:08.200 right here well because we know fair
+00:25:10.440 value gaps are used to identify
+00:25:12.600 continuations in uptrends and
+00:25:15.360 continuations in downtrends if we see
+00:25:19.200 this price range that is supposed to be
+00:25:22.520 respected while within an uptrend get
+00:25:25.760 disrespected what can we start start
+00:25:28.679 crafting in our heads what can we start
+00:25:30.799 thinking about okay this uptrend might
+00:25:34.440 be over and more often than not it ends
+00:25:38.679 up being over and that's what actually
+00:25:40.880 ends up making a inverse fair value Gap
+00:25:42.919 so let's say we have a fair value Gap
+00:25:44.600 right here and we are within an
+00:25:48.440 uptrend and then price comes down and
+00:25:51.679 closes underneath this bullish fair
+00:25:54.000 value Gap to me that is showing that we
+00:25:57.120 are disrespecting the bullish order flow
+00:25:59.279 because if bullish order flow wanted to
+00:26:00.679 be maintained it would have just filled
+00:26:02.440 this and continued higher but price
+00:26:04.399 didn't do that so it's disrespecting
+00:26:06.440 bullish order flow so then once we see
+00:26:08.760 the inverse fair value Gap then what can
+00:26:10.480 we look in the other direction just like
+00:26:13.039 how we look for liquidity sweep break of
+00:26:15.760 structure fair value Gap now we can also
+00:26:19.600 look for liquidity sweep and or break of
+00:26:24.360 structure or inverse fair value Gap so
+00:26:27.760 inverse value gaps are essentially equal
+00:26:29.919 to break of structure and me personally
+00:26:31.679 I just use which whichever comes first
+00:26:33.679 So within this we have this bullish Sur
+00:26:35.799 value Gap that gets closed underneath so
+00:26:38.640 now I I say okay we just broke structure
+00:26:42.840 to the downside even if we don't close
+00:26:44.760 underneath a low if we inverse a fair
+00:26:46.679 value Gap that's supposed to be
+00:26:48.000 respected to the upside I'm going to be
+00:26:50.520 looking for bearish fair value gaps now
+00:26:52.760 to potentially get filled to continue
+00:26:54.840 the trend down because we just
+00:26:56.640 disrespected bullish order flow that's
+00:26:58.440 why order flow is so important I and
+00:26:59.919 I'll make a video on this later in the
+00:27:01.360 future but that explains inverse fair
+00:27:03.360 value gaps and I think the best way to
+00:27:05.360 show you guys this is just to show it to
+00:27:06.960 you guys on the chart okay and there was
+00:27:08.640 a perfect example that we went over on
+00:27:11.440 Thursday so let's go back to Thursday
+00:27:13.720 the setup is the exact same so we have a
+00:27:15.640 liquidity
+00:27:16.760 sweep and this is the power of fair
+00:27:18.919 value gaps because they can go in either
+00:27:20.399 direction we have this bullish fair
+00:27:22.799 value Gap right here yeah price comes in
+00:27:24.880 but we don't see any buy pressure out of
+00:27:26.320 it and then what happens this candle Sit
+00:27:27.919 Close closes underneath it so that ends
+00:27:30.559 up inversing this fair value Gap so that
+00:27:32.760 tells us bullish order flow is now no
+00:27:35.679 longer being maintained so even if we
+00:27:37.799 didn't break structure here which we did
+00:27:39.840 even if we didn't break structure here
+00:27:42.039 if we just saw this fair value Gap get
+00:27:44.039 disrespected I would be willing to start
+00:27:46.519 looking for a bearish fair value Gap to
+00:27:49.120 get filled because I know that this fair
+00:27:51.679 value Gap should have gotten filled and
+00:27:53.760 should have moved price higher what do
+00:27:55.640 we see inverse fair value Gap this new
+00:27:58.240 bearish fair value Gap gets filled and
+00:28:00.399 then price ends up going lower something
+00:28:02.080 that a lot of people like doing is they
+00:28:04.200 like saying hey inverse fair value gaps
+00:28:07.000 need to be filled [ __ ] no they don't
+00:28:09.000 inverse fair value gaps do not need to
+00:28:10.919 be filled at all inverse fair value gaps
+00:28:13.000 are one thing they are not fair value
+00:28:14.679 gaps once they have been inverse and
+00:28:16.200 once they have been disrespected how do
+00:28:17.720 we know a fair value Gap has been
+00:28:19.000 disrespected when we have a gap whether
+00:28:20.880 it's bullish or bearish and we close
+00:28:22.760 either above or below it so if this is a
+00:28:25.159 bullish fair value Gap and we see a
+00:28:26.600 candle that closes is underneath the
+00:28:28.880 bullish fair value Gap that has then
+00:28:30.919 turned into an inverse fair value Gap
+00:28:33.120 and that bullish fair value Gap has been
+00:28:34.679 disrespected same thing to the downside
+00:28:36.519 if we see a bearish fair value Gap right
+00:28:39.120 here and we see a candle close above it
+00:28:43.159 that bearish fair value Gap has now been
+00:28:45.120 invalidated and now that is is an
+00:28:47.559 inverse fair value Gap that is telling
+00:28:49.240 us that hey price will likely move
+00:28:50.960 higher from here now this is a little
+00:28:52.480 tip that a lot of people get confused
+00:28:54.120 when they're talking and learning about
+00:28:55.840 fair value gaps and something that I
+00:28:57.399 feel like I should share with you guys
+00:28:58.679 let me go to a uh a different example
+00:29:00.799 here a lot of people ask hey tjr when we
+00:29:03.720 have a bunch of fair value gaps stacked
+00:29:05.559 on top of each other what do we do well
+00:29:07.519 first of all we want to be able to
+00:29:08.799 identify all of them so we have this
+00:29:10.559 fair value Gap right
+00:29:12.000 here one and then we have another one
+00:29:15.679 right here and then let's say we even
+00:29:17.360 form another one down here what happens
+00:29:19.640 if we inverse this fair value Gap but we
+00:29:22.640 have another one above it will this say
+00:29:26.000 will we be looking for boom reverse from
+00:29:28.600 that
+00:29:29.519 no within a stack of fair value gaps in
+00:29:33.519 order for me to classify it as an
+00:29:36.799 inverse for Value Gap so we have one Gap
+00:29:39.240 here another Gap here all stacked up
+00:29:41.960 right and I need to show you guys an
+00:29:43.120 example of this where it it doesn't
+00:29:45.960 apply but essentially we have one Gap
+00:29:48.840 here and then the very next the very
+00:29:50.720 next three candle pattern another Gap
+00:29:52.440 here for me to be able to say okay price
+00:29:55.039 has inversed these gaps and I'm looking
+00:29:58.039 to classify this as a break of structure
+00:30:00.039 and I'm looking for price to move to the
+00:30:01.200 upside we have to understand if we close
+00:30:03.120 Above This price still can be
+00:30:05.720 maintaining bullish order flow because
+00:30:07.519 it could just fill this and then move
+00:30:09.080 lower it could just be looking to fill
+00:30:10.799 this fair value Gap and then move lower
+00:30:12.519 right so when I'm looking to look for an
+00:30:15.039 inverse fair value Gap if there's
+00:30:16.720 multiple stacked on top of each other
+00:30:18.679 like this I need the top one or in the
+00:30:21.840 bullish scenario I need the bottom one
+00:30:24.360 to be inversed so let me find a bullish
+00:30:26.679 scenario of this
+00:30:28.720 example same thing here so like look we
+00:30:31.440 have this bearish fair value Gap just
+00:30:33.200 because we closed above it right here
+00:30:35.200 doesn't matter because we have all of
+00:30:37.480 these fair value gaps just stacked on
+00:30:39.919 top of each other on top of each
+00:30:43.159 other on top of each other and the only
+00:30:47.440 time that we end up
+00:30:49.399 getting a real true inverse for Value
+00:30:53.240 Gap is when this very top one gets
+00:30:56.679 inverse off this C Candlestick right
+00:30:58.720 here so yes this one gets inverse yes
+00:31:01.679 this one gets inverse but since all of
+00:31:03.440 these are stacked up on top of each
+00:31:05.360 other without a retrace in between
+00:31:08.760 that's a huge emphasis on that without a
+00:31:10.639 retrace in between we have to wait for
+00:31:13.320 this
+00:31:14.159 one okay we have to get wait for this
+00:31:16.840 one to get inverse and at that point we
+00:31:19.000 might as well just look for a break of
+00:31:20.159 structure and we ended up breaking
+00:31:21.320 structure right here okay so let me find
+00:31:23.240 an example of the bullish scenario of
+00:31:26.480 this let's look for a a bunch of bullish
+00:31:28.919 fair value
+00:31:31.639 gaps okay so this is a good example we
+00:31:34.159 have this bullish fair value Gap right
+00:31:36.080 here we see that price closed underneath
+00:31:38.960 it but what was it trying to do do we
+00:31:42.360 instantly want to look for shorts off of
+00:31:44.039 that no because we have another bullish
+00:31:45.480 fair value Gap right here that price was
+00:31:47.039 actually looking to fill before wanting
+00:31:49.639 to move higher so that's why we always
+00:31:52.080 need to be looking at the last fair
+00:31:53.760 value Gap within the stack and actually
+00:31:55.399 this one would be the last fair value
+00:31:56.840 Gap within the stack
+00:31:58.399 okay um Let me let me give you guys
+00:32:01.720 another example and another tip that is
+00:32:04.360 super important for fair value gaps I
+00:32:06.799 know this video is long but it's super
+00:32:08.279 helpful next thing that we need to know
+00:32:09.880 about fair value gaps okay we need to
+00:32:11.600 know about balanced price action and
+00:32:13.639 where price has been balanced and
+00:32:15.799 understanding what fair value gaps are
+00:32:17.039 going to get filled versus which ones
+00:32:18.600 are not going to get filled and which
+00:32:20.000 ones we can disregard this is super
+00:32:21.720 important so stick with me whenever we
+00:32:23.559 are in an uptrend or a downtrend once we
+00:32:26.000 get a retrace and and then let me just
+00:32:28.639 draw this out so if we're in an uptrend
+00:32:30.559 right and we see price retrace into a
+00:32:32.399 fair value Gap fill it and then move
+00:32:34.399 past this High we have balanced all
+00:32:36.679 price action from this low and under now
+00:32:40.240 all price action from this low and
+00:32:42.320 underneath is fully balanced out so we
+00:32:44.679 do not care about a order block down
+00:32:47.399 here we do not care about a fair value
+00:32:49.279 gap down here we do not care about a
+00:32:50.679 breaker block down here because price
+00:32:52.159 has already pushed past this high and
+00:32:53.799 continued the uptrend following that
+00:32:56.039 when price comes down if we have a fair
+00:32:58.200 value Gap right here and it gets filled
+00:33:00.720 and then we push past this High even if
+00:33:03.240 we have a fair value Gap right here that
+00:33:05.159 did not get filled because we pushed
+00:33:07.360 past this high and we continued the
+00:33:08.960 uptrend all price underneath this low
+00:33:11.360 has been balanced out so we no longer
+00:33:13.399 care about this fair value Gap we no
+00:33:14.840 longer care about the other fair value
+00:33:16.279 gaps that are down here we don't care
+00:33:17.760 about anything from Price underneath
+00:33:20.240 this within this uptrend because we
+00:33:23.000 pushed past this high and we've
+00:33:24.080 continued the uptrend so if we push up
+00:33:27.000 and then we have a fair value Gap here
+00:33:29.240 and then a fair value Gap here let's say
+00:33:31.000 we push down past this fair value Gap
+00:33:32.919 and then end up filling this fair value
+00:33:35.360 Gap and then pushing up past this high
+00:33:37.880 now even if we have a fair value Gap
+00:33:39.720 here we don't care about it we only care
+00:33:42.480 about
+00:33:45.080 price from here and above now once we
+00:33:49.399 push past this High same thing in a
+00:33:51.159 downtrend and I'm going to show you guys
+00:33:52.519 this on the chart and you guys will
+00:33:53.840 understand it a little bit better
+00:33:55.200 downtrend so let's say boom we break
+00:33:57.799 structure we fill a fair value Gap right
+00:33:59.399 here let's say we have another fair
+00:34:00.720 value Gap up here but it doesn't matter
+00:34:02.639 this fair value Gap gets filled we no
+00:34:04.519 longer care about this fair value Gap
+00:34:06.200 that didn't get filled why because we
+00:34:07.720 took out this low and we're continuing
+00:34:09.239 the downtrend okay so we filled this
+00:34:11.560 fair value Gap we push past this low we
+00:34:13.760 no longer care about anything any
+00:34:16.119 confluences Above This high price comes
+00:34:18.918 down let's say there's a little fair
+00:34:20.119 value Gap right here and there's like
+00:34:21.520 three more fair value gaps all up here
+00:34:23.760 we fill this fair value Gap and then we
+00:34:25.239 push past this low we no longer care
+00:34:27.800 about any of these fair value gaps up
+00:34:29.679 here why because we pushed past this low
+00:34:31.359 and we continued the downtrend okay let
+00:34:33.440 me show you guys this on the chart now
+00:34:34.839 so you guys can get a better picture and
+00:34:36.320 better idea of this let me go to that
+00:34:38.359 what was it it was Wednesday this one
+00:34:40.760 yeah Okay cool
+00:34:43.520 so uh I mean this whatever but we can we
+00:34:46.679 can understand the point of this so
+00:34:48.760 again we see the liquidity sweep we see
+00:34:51.079 the break of structure we have this fair
+00:34:53.599 value Gap it gets filled and then after
+00:34:56.879 this fair value Gap gets filled I know
+00:34:58.480 we can't see the high but on like the
+00:34:59.720 one minute we push past this High here
+00:35:01.240 once this fair value Gap gets filled we
+00:35:02.960 no longer care we have this order block
+00:35:05.119 right here even though it got filled we
+00:35:06.480 don't care about it anymore we have this
+00:35:07.760 breaker block that got filled we don't
+00:35:09.000 care about it anymore everything from
+00:35:11.480 this low and underneath we no longer
+00:35:13.800 care about those confluences now this is
+00:35:15.920 like mainly applicable for like a bunch
+00:35:17.800 of fair value Gap stacks on top of each
+00:35:19.520 other so I just want to find a good
+00:35:20.839 example of that so I can uh I can show
+00:35:23.280 this well let me use this this stack of
+00:35:25.920 fair value gaps for an example so we
+00:35:27.760 have this fair value Gap right here and
+00:35:30.400 then this fair value Gap right here so
+00:35:31.599 we have two fair value gaps stacked up
+00:35:33.480 on top of each other let's say price
+00:35:35.680 opens on Sunday and we come up we fill
+00:35:38.119 this imbalance and then we come down and
+00:35:39.880 we take out this low now even though
+00:35:42.599 there is this Gap up here we no longer
+00:35:46.079 care about it why because we have
+00:35:47.599 continued the downtrend we have filled
+00:35:49.160 an imbalance and we have pushed past
+00:35:51.040 this low so now the only confluences
+00:35:53.240 that we're looking for if we see price
+00:35:55.240 retracing we should not be we should
+00:35:57.359 never never be thinking okay we're going
+00:35:59.480 to come up and fill this fair value Gap
+00:36:01.119 no [ __ ] no we're going to be looking for
+00:36:02.880 confluences within this leg down why
+00:36:05.760 because this leg down is the one that
+00:36:07.200 took out this low and now we're looking
+00:36:09.480 because think about it think about how
+00:36:11.280 Trends work they move up they fill a
+00:36:13.680 Confluence and then they move down and
+00:36:14.960 once they take out a low they're going
+00:36:16.560 to move up again and they never push
+00:36:18.920 past these highs or else that will be a
+00:36:20.720 break of structure and then the then the
+00:36:22.520 trend will change right so we're now
+00:36:25.560 only going to be looking for confluences
+00:36:27.240 Within here whether there's like
+00:36:28.520 multiple fair value gaps within here
+00:36:29.960 cool we see a fair value Gap it gets
+00:36:31.319 filled then we push underneath this low
+00:36:33.079 now we don't care about if there's a
+00:36:34.680 fair value Gap up here if there's an
+00:36:36.119 order Block Breaker block we don't care
+00:36:37.599 about it because we filled this fair
+00:36:39.480 value Gap and then we took out this low
+00:36:40.760 and we continued the downtrend now this
+00:36:43.079 the reason why I brought this up is not
+00:36:44.560 only for fair value gaps but also for
+00:36:46.640 inverse fair value gaps so if we come
+00:36:49.319 through we fill this fair value Gap this
+00:36:51.920 bearish fair value Gap and then we come
+00:36:53.240 down and we take out this low now we
+00:36:54.599 have this bearish fair value Gap right
+00:36:56.240 here or let's just say we form a bearish
+00:36:59.680 fair value Gap right here a bearish fair
+00:37:01.240 value Gap right here if we're looking
+00:37:03.079 for a bearish fair value Gap and we
+00:37:05.319 haven't made a retracement yet which
+00:37:07.160 fair value Gap are we going to have to
+00:37:09.000 wait for in order for us to inverse this
+00:37:11.440 downtrend or get an inverse fair value
+00:37:13.079 Gap are we going to have to wait for
+00:37:14.440 this one no now I know what you're
+00:37:17.079 probably saying I thought you said if
+00:37:18.160 it's stacked up yes if it's stacked up
+00:37:20.400 within the same leg down so when we get
+00:37:23.359 a retrace it pretty much resets the fair
+00:37:25.560 value Gap cycle so we come come up we
+00:37:27.960 fill this fair value Gap then we get a
+00:37:29.400 move down now we have two fair value
+00:37:30.800 gaps so in order for me to see an
+00:37:33.280 inverse fair value Gap or for me to
+00:37:34.920 inverse and look for a trend reversal
+00:37:37.160 I'm going to need to see this fair value
+00:37:39.240 Gap to get inversed why because we
+00:37:41.000 haven't made a retracement yet okay but
+00:37:43.480 I don't need to wait for this one I just
+00:37:45.319 need to wait for the top one within this
+00:37:46.920 leg down now let's say we come up we
+00:37:49.119 fill in this imbalance and then boom we
+00:37:50.839 push past this leg and then we form
+00:37:53.400 another imbalance right here and there's
+00:37:54.720 only one which fair value Gap am I going
+00:37:57.760 to have to wait for for me to see an
+00:37:59.720 inverse for Value gap for me to want to
+00:38:01.560 look for Longs or for me to want to look
+00:38:03.440 for now a bullish fair value Gap to take
+00:38:05.079 longs to the upside am I going to have
+00:38:06.920 to wait for this one because it's
+00:38:08.200 stacked up no why because we already
+00:38:11.599 filled a fair value Gap and then moves
+00:38:13.680 moved past a new low so now we already
+00:38:16.680 have a new leg down that we're
+00:38:18.280 considering so if we inverse this I'm
+00:38:20.599 not going to have to wait for this fair
+00:38:22.400 value Gap to get inverse I'm not going
+00:38:24.119 to have to wait for this fair value Gap
+00:38:25.599 to get inverse why because price from
+00:38:29.000 this move up and then down everything
+00:38:31.599 Above This High has already been
+00:38:32.760 balanced out even though there's this
+00:38:34.079 fair value Gap here we no longer care
+00:38:35.680 about it then from here even though we
+00:38:37.640 have this fair value Gap here everything
+00:38:39.400 from this high and above has been
+00:38:41.280 balanced out so we no longer care about
+00:38:43.240 that but everything from this high and
+00:38:46.280 Below hasn't been balanced out yet so we
+00:38:48.800 do care about these fair value gaps so
+00:38:50.480 if we end up inversing this then we do
+00:38:53.240 care about it and say Okay order flow is
+00:38:55.359 probably going to change to the upside
+00:38:56.960 then from the there we can look for
+00:38:58.119 bullish fair value gaps to get filled to
+00:39:00.240 then look for Longs let me show you guys
+00:39:01.800 an example of this on the chart and
+00:39:03.599 again if this is confusing I completely
+00:39:06.119 understand but I'm really trying to put
+00:39:07.440 this [ __ ] together for you guys we're
+00:39:08.880 going like we're going really deep into
+00:39:11.079 this and hopefully this is starting to
+00:39:12.240 make sense for you so let's Show an
+00:39:13.920 example of let's show the inverse fair
+00:39:16.240 value Gap example okay this is a perfect
+00:39:18.839 example actually no it's not because the
+00:39:20.760 fair value Gap wasn't
+00:39:23.079 fil okay this is like a semi example but
+00:39:26.119 there's not an inverse per value yet but
+00:39:28.400 if this makes sense to you guys so
+00:39:30.319 within this 5minute trend down we're in
+00:39:32.280 a downtrend right we end up taking out
+00:39:34.280 this low then we get a retracement yes
+00:39:36.440 we don't fill these fair value gaps but
+00:39:38.880 what do we end up doing even though we
+00:39:40.560 didn't fill these fair value gaps these
+00:39:41.880 fair value gaps that are stacked on top
+00:39:43.160 of each other what do we end up doing
+00:39:44.520 this was the new low that was formed we
+00:39:45.960 get a little retrace up and then boom we
+00:39:47.800 take out this new low so now we don't
+00:39:51.040 care about these fair value gaps that
+00:39:53.160 are above this High why because price
+00:39:55.440 already moved up and then took out this
+00:39:57.079 low continuing the downtrend so now even
+00:40:00.079 though there's no confluences within
+00:40:02.560 here to be able to push price down
+00:40:04.560 further price from this high and above
+00:40:07.680 we don't care about it we're not looking
+00:40:09.319 for price to retrace into these fair
+00:40:10.920 value gaps then continue down why
+00:40:12.920 because we already retraced and then we
+00:40:14.720 already took out this low showing that
+00:40:16.319 this downtrend should continue so when
+00:40:18.760 we get this break of structure to the
+00:40:22.160 upside on this Candlestick right here
+00:40:25.480 some people might be like well we still
+00:40:27.079 have this bearish for Value Gap we might
+00:40:28.760 be able to go lower no because we
+00:40:31.920 already broke structure to the upside
+00:40:34.119 and we already established that
+00:40:36.119 everything Above This High we no longer
+00:40:37.960 care about why because it took out this
+00:40:39.440 low on the downtrend so this inverse for
+00:40:41.359 Value Gap we or this for Value Gap we
+00:40:43.000 don't care about this for Value Gap we
+00:40:44.400 don't care about we only care about the
+00:40:45.800 break of structure then literally oh
+00:40:48.160 it's right in front of your faces we get
+00:40:50.160 a break of structure then what boom
+00:40:52.599 bullish for Value Gap right here sorry
+00:40:55.000 I'm spazzing bullish for Value Gap right
+00:40:56.839 here fills boom price Bull Run [ __ ]
+00:41:00.720 [ __ ] it goes higher yes are you
+00:41:04.240 seeing it
+00:41:06.040 now hopefully you are let me let me find
+00:41:09.599 a better example of this um so we can
+00:41:12.280 try and put this together I want to find
+00:41:14.119 a good example of like uh
+00:41:19.920 imbalances okay this is another good
+00:41:22.119 example unfortunately there's no inverse
+00:41:24.280 for Value Gap but look here okay so
+00:41:26.640 we're within an up Trend this is at a
+00:41:28.240 like a random ass time okay so again we
+00:41:31.400 don't have all of our confluences we
+00:41:32.760 don't have like liquidity sweep breaking
+00:41:34.079 structure whatever but I just want to
+00:41:35.440 show you guys this for context we have a
+00:41:37.359 bullish fair value Gap right here we
+00:41:38.880 have a bullish fair value Gap right here
+00:41:40.520 price comes down fills this bullish fair
+00:41:42.079 value Gap and then what does it do it
+00:41:43.520 continues the uptrend by taking out this
+00:41:45.119 high so now we no longer care about this
+00:41:48.119 bullish for Value Gap why because we
+00:41:49.960 already showed and confirmed that
+00:41:51.680 everything that from this low and Below
+00:41:53.319 we shouldn't care about because it
+00:41:54.480 filled this fair value Gap and then
+00:41:55.760 ended up continuing the trend by taking
+00:41:57.240 taking out this High cool so when price
+00:41:59.400 ends up breaking 5 minute structure
+00:42:01.640 right here to the downside we shouldn't
+00:42:03.880 be worried about this fair value Gap
+00:42:06.079 right here needing or getting filled to
+00:42:08.760 then move up higher why because we
+00:42:11.000 already established that this move down
+00:42:14.040 and then up balanced out price action
+00:42:16.640 from here and everything below it okay
+00:42:20.359 now obviously we don't know the overall
+00:42:21.960 trend we don't know the overall bias so
+00:42:23.760 this is kind of taken out of context but
+00:42:25.440 that's another good example I want to
+00:42:27.680 find an example with an inverse fair
+00:42:29.760 value Gap oh this is yes I finally found
+00:42:32.760 one okay so again this is at a random
+00:42:35.040 time it's during London session but this
+00:42:36.480 is like the one example that I was able
+00:42:37.839 to find So currently right here on the 5
+00:42:40.599 minute time frame we're within a
+00:42:41.760 downtrend right obviously we're going to
+00:42:43.520 want to wait for like liquidity s break
+00:42:45.800 INF structure and at the right time dur
+00:42:47.559 during New York session all of these
+00:42:48.920 things but let's just use this example
+00:42:50.400 here so we know that price came up and
+00:42:54.280 it filled this fair value Gap and then
+00:42:57.240 moved down and took out this low and on
+00:42:59.400 top of that we also have fair value gaps
+00:43:01.800 right here we also have a fair value Gap
+00:43:04.200 up here okay this fair value Gap and
+00:43:06.839 this fair value Gap they haven't been
+00:43:08.319 filled yet but after we'll start it from
+00:43:11.920 all the way up here we come down then we
+00:43:14.040 get a retracement up and we don't even
+00:43:16.640 fill this for Value Gap why can we
+00:43:18.839 disregard it or when can we disregard it
+00:43:21.599 once we take out this low and continue
+00:43:23.960 the downtrend once we take out this low
+00:43:26.160 we can say every everything from this
+00:43:28.359 high and above we don't care about those
+00:43:31.000 confluences anymore why because we
+00:43:32.760 continued the downtrend underneath this
+00:43:34.599 low so now we know we can literally
+00:43:37.280 remove this fair value Gap we should
+00:43:39.040 never think about it again literally
+00:43:41.119 never think about it again because it's
+00:43:42.720 only applicable within this downtrend in
+00:43:44.720 this downtrend we showed that hey we
+00:43:46.559 balanced out price action and now we're
+00:43:47.960 continuing it so we shouldn't care about
+00:43:49.480 this it should no longer be marked out
+00:43:51.200 we can fully forget it then following
+00:43:53.040 that on this leg down we have boom fair
+00:43:55.000 value Gap here fair value Gap here we
+00:43:57.319 price form a low right here we push up
+00:44:00.599 we only fill this fair value Gap and
+00:44:02.280 then what happens we continue the
+00:44:03.559 downtrend by taking out this low so what
+00:44:05.760 do we do we no longer care about this fa
+00:44:08.440 value Gap and we no longer care about
+00:44:10.319 any confluences from this high and
+00:44:12.680 higher so we don't care about this fair
+00:44:14.839 value Gap we don't care about this fair
+00:44:16.240 value Gap we don't care about any of
+00:44:18.000 those now what fair value gaps are we
+00:44:20.800 considering we were not even considering
+00:44:22.800 this one anymore because it's been
+00:44:24.040 filled price action has been balanced
+00:44:26.160 because we took out this
+00:44:27.760 now we are going to see the power of an
+00:44:29.640 inverse for Value Gap that happens
+00:44:31.280 before a break of structure finally I
+00:44:33.040 was able to find an example because we
+00:44:35.720 took out this low we have this bearish
+00:44:37.880 imbalance we are expecting price to fill
+00:44:40.640 this bearish imbalance and then move
+00:44:42.000 lower and we know that if price pushes
+00:44:44.440 past this bearish imbalance and
+00:44:45.920 disrespects it there's no other
+00:44:47.839 confluences that we're looking to
+00:44:49.200 consider up here why because prior to
+00:44:51.359 that price has already balanced out
+00:44:53.240 those legs why because it took out those
+00:44:54.920 lows so we don't care about this fair
+00:44:56.839 value again because price even if price
+00:44:58.599 is moving up it's not going to it's not
+00:45:00.359 going to do anything off of that it's
+00:45:01.599 going to be off of a different
+00:45:02.680 Confluence on a different time frame we
+00:45:04.280 don't care about that anymore so once we
+00:45:06.200 see this candle disrespect this fair
+00:45:08.520 value Gap
+00:45:09.880 awesome that's when when we could say
+00:45:12.160 boom the trend has changed we're going
+00:45:14.079 to end up moving higher now obviously
+00:45:15.960 and unfortunately in this example this
+00:45:17.880 is at a random ass time during like
+00:45:19.760 going into London session coming in a
+00:45:21.680 New York session so price is going to be
+00:45:23.280 moving weird but using this at the right
+00:45:25.599 time and in the right right place is
+00:45:27.559 just it's it it works like a freaking
+00:45:30.440 charm let's see here I think this might
+00:45:33.160 actually be a good example too okay this
+00:45:35.240 is perfect this is another example
+00:45:37.640 within this leg up what are we in we're
+00:45:39.960 in an uptrend and since we know we
+00:45:41.839 retrace down and then we took out this
+00:45:43.800 High we can disregard every single
+00:45:45.960 Confluence that's under this low right
+00:45:47.760 luckily there's there's not really any
+00:45:49.440 confluences underneath this low but
+00:45:51.240 we're only considering the fair value
+00:45:52.880 gaps within this extension up now or the
+00:45:54.800 confluences within this extension up so
+00:45:56.400 what do we have we have a fair value Gap
+00:45:58.079 right here and then we also have a fair
+00:46:00.280 value Gap right here the tiniest one but
+00:46:02.319 again Size Doesn't Matter on this down
+00:46:04.119 candle right here we end up breaking
+00:46:05.559 structure too but just for example
+00:46:07.240 purposes this down candle right here
+00:46:09.119 what do we get we inverse both these
+00:46:10.800 fair value gaps so boom we know that we
+00:46:14.480 should be looking for shorts now then
+00:46:16.839 following that what does price do it
+00:46:18.359 comes up and it fills in this bearish
+00:46:19.880 for Value Gap and then ends up
+00:46:21.800 continuing lower boom price ends up
+00:46:23.440 rumbling on down taking out this draw in
+00:46:25.680 liquidity so to
+00:46:28.119 recap fair value gaps are imbalanced
+00:46:31.079 price action that are used as
+00:46:32.559 continuation confluences within uptrends
+00:46:34.720 and downtrends inverse fair value gaps
+00:46:37.760 are used as confirmation confluences
+00:46:41.359 that we are confirming that price is
+00:46:43.920 disrespecting current order flow and
+00:46:46.359 will more than likely reverse the
+00:46:48.920 current Trend that we are in and again
+00:46:50.720 there's a reason why it's fair value
+00:46:52.119 gaps and inverse fair value gaps fair
+00:46:53.480 value gaps are showing us that hey we
+00:46:55.599 are continuing the trend
+00:46:57.800 inverse fair value gaps are showing us
+00:47:00.000 that hey we are going against the trend
+00:47:03.480 okay and we're probably going to reverse
+00:47:05.520 hopefully you guys learned a lot from
+00:47:07.319 this video hopefully you guys can take
+00:47:09.359 this and apply this within your own
+00:47:10.839 trading I know this was a long video but
+00:47:13.079 hey man I had to get all this [ __ ] off
+00:47:14.599 my chest hopefully you guys learned more
+00:47:15.839 about order flow hopefully you guys
+00:47:17.319 learned more about fair value gaps and
+00:47:18.880 inverse fa value gaps when to use them
+00:47:21.480 when to not use them which ones you guys
+00:47:23.200 can learn to identify and which ones not
+00:47:25.040 to I appreciate you guys I'll catch you
+00:47:27.160 guys in the next one peace out

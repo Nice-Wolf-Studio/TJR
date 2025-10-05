@@ -1,0 +1,484 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/_Fkofoggjv4
+
+00:00:00.080 i want you guys to picture this you guys place a trade you guys have your daily bias fully planned out okay you place
+00:00:06.720 your trade you think it's going to go in your direction because your daily bias is just so freaking perfect right and then boom the trade starts going in your
+00:00:13.599 direction and then bow your trade gets stopped out and then immediately reverses and hits every single take
+00:00:18.960 profit i know that this has happened to the majority of you guys and guess what it happened to me all the freaking time back when I was an unprofitable trader
+00:00:25.439 and you guys are probably trying to figure out hey what the freak went wrong my daily bias was completely correct but what happened with my execution and
+00:00:32.000 that's what I want to talk to you guys about in this video today this is going to be going over liquidity sweeps because that move that stopped you out
+00:00:39.040 is part of the whole concept of a liquidity sweep you were being used as exit liquidity this is a huge joke in
+00:00:46.239 the trading community where people say like "Oh you were my exit liquidity." That is very much the case and I was
+00:00:51.760 used as exit liquidity back when I was an unprofitable trader and I'm sure a lot of you guys are being used as exit
+00:00:56.800 liquidity so today I want to go over probably the biggest concept in trading the biggest and honestly like most
+00:01:02.960 foundational point of my strategy that I use on a daily basis which is liquidity sweeps i want to break it all down for
+00:01:09.600 you guys show you guys how to identify them show you guys different examples of draws on liquidity because there's
+00:01:15.520 examples of high time frame liquidity there's low time frame liquidity there's high resistance liquidity there's low
+00:01:21.520 resistance liquidity and then show you guys a couple examples of how we can use it on a day-to-day basis and as well as
+00:01:28.240 our strategy so that we can actually take executions off of these liquidity sweeps and no this isn't going to be
+00:01:33.600 super confusing it's actually one of the easiest concepts to learn and understand but again with trading everything just
+00:01:40.079 comes with time when we first learn something at the start that's just how all high barrier of entry skill sets
+00:01:45.680 work okay so when you guys are first getting into this you guys are probably going to be thinking "Hey this is a liquidity sweep." But it's actually not
+00:01:51.680 okay but don't worry it's going to take some time and we're going to get some repetitions in in this video and then
+00:01:56.799 after this I want you guys to go practice that so with that being said I'm going to give you guys a complete like beginner breakdown at the start and
+00:02:03.600 then we'll get more advanced as this video moves on and yeah with that being said let's get on to the charts the
+00:02:09.038 first thing that we need to do is just even understand what liquidity is in the first place a lot of people throw this
+00:02:14.239 word around and some people just aren't really using it correctly so what I like
+00:02:19.280 to do whenever I'm teaching a new confluence or teaching a confluence or even trading off of any confluence I
+00:02:25.520 want to understand why price is moving off of certain levels or why I'm even using the confluence in the first place
+00:02:31.760 because if I'm just copying a random ass strategy from some dumbass YouTuber and I don't know why price is moving then
+00:02:38.560 you're never going to make it in trading if you're just copying and pasting it because you don't know why price is moving so ideally we understand why
+00:02:45.040 price is moving off of every single confluence so that's what I want to break down right now so again what is liquidity liquidity is pending and
+00:02:52.640 resting orders what is a liquidity sweep a liquidity sweep is when we go and take
+00:02:58.560 out and fill those pending orders to be able to move price in the opposite direction so with that being said we
+00:03:04.959 need to be able to know and be able to identify where liquidity lies on the chart so we're going to do a quick
+00:03:10.080 little breakdown this is super super beginner and I know you guys are probably going to think "Oh I I already
+00:03:15.599 know this." But just bear with me when we are in an uptrend what is an uptrend we move in higher highs and higher lows
+00:03:22.319 right so as an absolute beginner when we see that we're in an uptrend what do
+00:03:27.920 most retail beginner traders do they see a high get pushed above in an uptrend so what are they probably going to do
+00:03:34.159 they're probably going to press buy right here on top of that when we see this little move down even though we're
+00:03:39.519 in an uptrend there's going to be some people that are trying to predict a reversal so there's people that are
+00:03:44.640 pressing sell on this move down so not only do we have people buying when we push above these highs but we also have
+00:03:50.640 people trying to enter into sells on this move down we don't really want to care about the sell orders that are
+00:03:55.680 being placed on this move down but what we do want to care about is where their buy orders are going to be and you're
+00:04:01.439 probably saying "Well they're in sells why would they have buy orders?" Well just like with any trade we have to have
+00:04:06.480 an exit point if they're in sells here where is their stop-loss going to be well thinking in retail trader fashion
+00:04:13.920 their stop loss is probably going to be above these highs so what does that mean if they get stopped out of this trade
+00:04:20.959 what do they have to do they have to buy back those sell positions for a higher price and in turn lose their trade so
+00:04:28.240 there's two forms of buy orders sitting above highs in the market there's people entering into long positions when these
+00:04:35.280 highs get pushed above and then there's also people who were in sell positions down here and if these highs get pushed
+00:04:41.600 above they have to exit that trade because they got stopped out so there's two forms of buy orders sitting above
+00:04:47.919 highs so again what is liquidity liquidity is pending orders so we know
+00:04:53.680 that there's going to be pending buy orders above these highs for people trying to go long or trying to buy
+00:04:59.199 within this uptrend and then we also know that there's people who are going to be getting out of their trades from
+00:05:04.560 their sell positions so there's going to be pending buy orders above these highs as well now it's the same thing in a
+00:05:10.560 downtrend okay just a little bit opposite so we move in lower highs and
+00:05:16.639 lower lows what do we know about lows well again if we're trying to follow the trend most retail traders they're
+00:05:23.199 probably going to be pressing sell once these lows get pushed underneath right and then same thing with these uptrends
+00:05:30.080 there's people that are going to be trying to predict a reversal so when they see this little move up they're probably trying to buy it okay so what
+00:05:36.720 does that cause them to do they're going to put their stop-loss or their sell
+00:05:41.759 orders their pending sell orders underneath these lows so again if they're trying to buy on this little
+00:05:47.440 retracement up where are they going to put their stop-loss underneath this low where they're going to have to sell
+00:05:53.039 those buy positions back for a loss so what do we have we have two forms of sell orders underneath lows in the
+00:06:00.320 market so you're probably saying "Okay that's great and all but how does this relate to us trying to catch the top and
+00:06:06.880 bottom of moves how is this going to help us predict?" Well as we know liquidity is pending orders so we've
+00:06:13.360 just gone ahead and identified where the majority of pending orders are going to be within the market very rarely are we
+00:06:20.240 going to have pending orders on a move that's already going up most of the time we're going to have pending orders
+00:06:26.160 underneath lows and above highs why because that's where people are trying to catch trades they're trying to top
+00:06:32.000 tick and they're trying to bottom tick so by identifying where pending orders are within the market we are now able to
+00:06:38.400 identify where liquidity lies where does liquidity lie above highs and below lows
+00:06:44.479 so that's the first thing that we need to understand liquidity where is it above highs and below lows
+00:06:54.160 boom so now that we know where liquidity is that's awesome but that doesn't really tell us when and where to buy or
+00:07:01.919 sell within the market that just shows us and tells us that hey we have pending orders above highs and below lows and
+00:07:07.599 again if we were to just go off of this and we're in an uptrend if we just tried to press sell once we push above every
+00:07:14.080 single high we would probably lose because we know that uptrends move in higher highs and higher lows so you're
+00:07:19.520 probably saying "Well TJR how the [ __ ] are we supposed to predict when price pushes above a high how do we know that
+00:07:24.720 it's going to be a liquidity sweep how do we know that those buy orders are going to get filled for price to move in the opposite direction?" It's exactly
+00:07:31.039 what I'm going to teach you guys later in this video so now that we know where liquidity lies it's above highs and
+00:07:37.120 below lows we also want to be able to figure out okay when we're within a market setting we know that there's
+00:07:43.440 three different sessions okay there's London session there's Asian session and there's New York session we need to
+00:07:48.720 think about each one of these sessions almost like their own like character their own avatar so we have the Asians
+00:07:55.120 we have the British and then we have the all-Americans okay and every single
+00:08:01.440 session there's new traders and new money coming into the market me personally I trade US indexes so the S&P
+00:08:08.560 500 and NASDAQ but this still applies to foreign exchange and I'll show you guys examples of this happening as well we
+00:08:14.639 need to think of every single session as new traders coming into the market new money coming into the market so when
+00:08:19.919 Asian session starts we need to think okay there's new traders coming into the market there's new market makers coming
+00:08:26.639 in what are they trying to do they are trying to push the market in the direction that they want price to go so
+00:08:31.919 with that in mind what do they need to do in order to push price in the direction that they want to go they need
+00:08:37.120 to fill their massive orders because again they can't just press buy and then boom that would cause the chart to just
+00:08:42.880 boom go up and what do we know about the market makers they're really greedy so if we are in an uptrend for for example
+00:08:49.839 if they just press buy on their massive massive amounts of orders and they would get filled right here and then price
+00:08:55.760 would move up because why there's not enough pending sell orders to just fill them at the price that they want so
+00:09:01.040 price is going to move up higher and then maybe they get filled again here and then it moves higher they get filled again here they get filled again here
+00:09:06.640 they get filled again here and that's not ideal for them they want to get the best price possible so what do they have
+00:09:13.120 to do in order to fill their massive amounts of buy orders well they have to sweep out liquidity why does this have
+00:09:20.000 to happen because underneath lows what are there massive amounts of sell orders
+00:09:26.240 so let's say Asian session opens and again we're going to put all this together okay so Asian session is not
+00:09:32.000 really the best example let's say New York session or London session because there's just a lot more volume during those sessions
+00:09:38.399 let's say London session opens and we have a high time frame low right here boom there's new traders that are coming
+00:09:44.880 into the market they want to be able to push price in the direction that they want the session to go if they want price to move higher what are they more
+00:09:51.760 likely going to do they need to seek out sell orders they're probably saying that doesn't make sense if they want to fill
+00:09:57.760 buy orders yes it does because this is going to be a little throwback to maybe your high school economics class okay
+00:10:05.040 back in the day when people were just doing the stock exchange back when that [ __ ] was first [ __ ] founded if I
+00:10:10.880 wanted to buy one share of Apple what did I have to do i had to pick up the phone I'd call the broker and I would
+00:10:16.160 say "Hey I want to buy one share of Apple." They say "Okay cool we're going to try and find someone that's willing
+00:10:21.760 to sell it to you." It's the same thing today when I'm trying to buy a share of
+00:10:27.440 whether it be the S&P 500 or NASDAQ there has to be someone willing to sell it to me okay this has all become
+00:10:33.839 digitalized through brokerage and through exchanges so it's no longer exchanging pieces of paper it's no
+00:10:39.200 longer taking weeks to be able to do this but the same thing applies so when these new market makers come into the
+00:10:46.560 market via London session Asian session and New York session when they're trying to fill massive amounts of buy orders
+00:10:53.040 and I'm saying massive amounts they need people willing to sell them okay to be
+00:10:59.519 able to sell to them for them to be able to buy so what do they do they will push price down to an area where there's a
+00:11:07.120 massive amount of pending sell orders and then what are they able to do there they're able to fill their buy positions
+00:11:14.000 and once they are able to fill their buy positions it doesn't cause price to just move up and then they get filled all the
+00:11:20.079 way on the way up up up no they're able to fill all of their buy positions right
+00:11:25.120 down here why because there's a massive amount of pending sell orders because let's say that we were in a downtrend
+00:11:31.519 here when we push underneath these lows what are people doing they're pressing sell on top of that there's people all
+00:11:37.839 throughout this leg up that were trying to buy that were trying to catch this reversal and where is their stop loss
+00:11:43.040 underneath here so when they get stopped out they have to press sell there's also people that are trying to press sell to
+00:11:49.120 try and catch this downtrend so what does that give the market makers the ability to do fill their massive buy
+00:11:55.200 orders and then boom when they fill their massive buy orders what does that give price the opportunity to do change
+00:12:01.360 direction and move higher and higher and reverse the trend and that's exactly what liquidity sweeps are so let's show
+00:12:08.800 this in the other direction again if we're in an uptrend
+00:12:14.480 what do we know is resting above highs massive amounts of buy orders and again
+00:12:20.880 you're probably saying well how do how do we know when we're supposed to press sell because if we're in an uptrend uptrends move in higher highs and higher
+00:12:27.040 lows do I just press sell every time we push above a high no that's not the case and again this is going to go from more
+00:12:32.160 beginner to advance right now we're just talking about identifying them and how we can see these on the chart and I'm
+00:12:37.440 going to go from this to showing this on the candlestick charts and then from there we're going to get into how we can
+00:12:42.800 actually predict when we're going to get these liquidity sweeps and when is the most opportune time to be able to
+00:12:48.959 execute on these sweeps or being able to actually identify what highs hold more
+00:12:54.160 value and what lows hold more value so let's say New York session is opening right here we push above these above
+00:13:00.240 these highs what is above highs massive amounts of buy orders why because retail traders are buying within the uptrend
+00:13:06.800 and then also the people that are pressing sell throughout this move down what do they have to do they have their
+00:13:13.040 stop loss above these highs so they have to boom get stopped out of their trade so there's two forms of buy orders above
+00:13:19.600 here new money comes into the market via New York session new York session traders want to move price in the
+00:13:25.120 direction that they want it to go and when I say New York traders I'm talking about the market makers okay so I'm talking about massive in institutions
+00:13:31.279 the people that are actually moving the market me personally I can't just press [ __ ] buy and then cause price to move
+00:13:36.639 up i don't have the capital to do that no no retail trader has the capital to do that okay so just bear that in mind
+00:13:42.880 okay i don't want you guys getting on here and thinking that you guys can manipulate the markets with your orders so new money comes into the market
+00:13:49.120 they're saying "Okay we want to move price down." So if they want to move price down what do they have to do they
+00:13:54.320 have to be able to execute a whole bunch of buy orders in order to what fill their massive amounts of sell orders and
+00:14:00.880 again when they push above these highs because all of these buy orders are getting executed they're able to get
+00:14:05.920 filled at the tippy top and then boom cause price to reverse and go back down and this is
+00:14:13.040 probably the exact situation that a lot of you guys are getting stuck in where you guys are pressing buy above highs because you think it's breaking out and
+00:14:19.440 you think price is going to go higher and then boom you get stopped out or you guys are pressing sell within here and
+00:14:25.440 then you guys are getting stopped out and then boom price goes down to hit all of your takeprofits all the way down
+00:14:30.720 here and you're just thinking man I can't seem to win whether it's price just literally going in the opposite
+00:14:36.720 direction of me I'm getting stopped out or I get stopped out and then boom price moves in the direction that I wanted it
+00:14:42.720 to go so that being said we're going to go ahead and show these liquidity sweeps
+00:14:47.839 live now on the candlestick chart and then from there we're going to go deeper into the candlestick chart of how we can
+00:14:53.680 actually be able to predict where these liquidity sweeps are going to happen because again uptrends we move in higher
+00:14:59.440 highs and higher lows so more often than not when we push above highs it's not going to be a liquidity sweep it's just the trend continuing so how are we able
+00:15:06.320 to actually spot these and when are these going to happen that's what I'm going to explain later in this video but
+00:15:11.680 first let's go on to the chart and show you guys this happening in real time this is something else that I want to mention really awesome thing about all
+00:15:17.440 the confluences that I use whether it be fair value gaps whether it be liquidity sweeps these happen on every single time
+00:15:23.279 frame so there's high time frame draws on liquidity there's low time frame draws on liquidity liquidity is
+00:15:28.880 necessary for the market to move why because that's where orders are filled orders are filled by liquidity getting
+00:15:34.560 swept so no matter what time frame you're trading on this is applicable okay this isn't no fiveinut S&P 500 copy
+00:15:42.320 and paste strategy okay the majority of those are [ __ ] this is actually the reason why price is moving on a daily
+00:15:48.639 basis on every single time frame it's literally how the market moves so again I'll literally show you guys examples on
+00:15:54.560 literally every single time frame we can literally show an example from today let's look right here this is I mean
+00:15:59.759 this is a perfect example this was New York market open what do we see price do right when market opens we come down and
+00:16:07.759 then what we take out this low and we take out this low and now what is price
+00:16:12.880 doing boom it goes up obviously this is in hindsight so it's going to take time for us to be able to figure out like how
+00:16:19.600 can we actually predict that price wants to go up off of this but this is just the first step it's just like being able to identify these on the chart and this
+00:16:25.920 is something that I want you guys to do it's a super easy exercise for you guys to do is literally just go onto any time
+00:16:31.440 frame chart and just start identifying liquidity sweeps so you can see where a high gets pushed above and then boom
+00:16:37.440 price reverses off of it and again this happens on every single time frame so we can see uh market opened new money comes
+00:16:43.199 into the market what does price do it comes down pushes underneath one low and two low so what's underneath these lows
+00:16:49.839 sell orders there's sell orders right here there's sell orders right here what did that give the market makers the
+00:16:54.880 opportunity to do fill their buy orders underneath these lows to cause price to do what boom move higher okay so that
+00:17:02.959 was on 30 minute time frame let's show an example on the 4hour time frame let's
+00:17:08.000 see here this is a good example right here boom what are we in we're in a downtrend price is moving down okay so
+00:17:15.679 again retail traders they're saying "Hey we made a high we made a low we made a lower high we made a lower low what do
+00:17:22.240 we think price is going to do we're in a downtrend it's going to go lower what is there underneath these lows a whole
+00:17:27.919 bunch of sell orders boom price comes down sweeps out these sell orders to give market the opportunity to do what
+00:17:34.960 fill their massive buy orders and then boom price moves higher just like that
+00:17:41.360 okay same thing right here boom what do we have sell orders underneath this low
+00:17:46.640 this low and this low what does price do sweeps all of them out and this is actually a good example of something
+00:17:52.960 that I'm going to get into later of this video which is low resistance liquidity and how we can actually identify what
+00:17:58.960 draws on liquidity are better than others there's a couple different forms there's like three different forms of liquidity that are much higher
+00:18:05.360 confluence and we're going to explain what highs and lows hold more value than others just don't worry we're going to
+00:18:10.880 get into that a little bit later but we can see boom what does price do comes down takes out these boom execute sell
+00:18:17.200 orders execute sell orders execute sell orders what does that give the market makers the opportunity to do fill a
+00:18:23.200 massive amount of buy orders against all these sell orders to make price do what boom move higher let's show an example
+00:18:29.679 in the opposite direction to the downside we actually have a good example right here so again let's look at this
+00:18:36.160 we see what does price do boom we move up this is another good example of low resistance liquidity we have a high
+00:18:41.840 right here we have a high right here a lot of people would see this massive up move and what are they probably thinking
+00:18:47.600 they're probably thinking "Oh my goodness it's a breakout it's a breakout." There's a whole bunch of buy orders above these highs what does that
+00:18:53.840 give the market makers the opportunity to do place their massive amount of sell orders after taking out all of these
+00:18:59.760 highs to cause price to do what move lower okay so now that we've done that
+00:19:06.160 little example I want you guys to do that on your own charts of not trying to predict where a liquidity sweep is going
+00:19:11.200 to happen because we're going to get into how to do that later in this video but I just want you guys to go on a
+00:19:16.640 couple different time frames and just go and identify price moving underneath a low sweeping out liquidity and then
+00:19:24.000 changing direction from there and then same thing to the upside i want you guys to be able to go in there see and
+00:19:29.280 identify price moving above a high sweeping liquidity and then moving lower from there okay so once you guys have
+00:19:36.000 done that then come back to this video okay so now that we know liquidity lies
+00:19:41.520 above highs and below lows that's step one step two is being able to identify
+00:19:47.039 the better or I guess uh how how should I explain this like the higher quality
+00:19:52.720 draws on liquidity because like I said there's draws on liquidity on every single time frame if we go to the one minute time frame I can show you guys
+00:19:59.440 liquidity sweeps as well so let's find a super quick example of this boom this is a good example right here look at this
+00:20:05.919 we have a low right here what does price do it comes down it sweeps out this low and then boom price moves higher same
+00:20:11.440 thing right here boom what do we do we come underneath these lows to sweep out
+00:20:16.880 liquidity and then boom price moves higher okay this happens on every single time frame but are we going to try and
+00:20:23.120 catch liquidity sweeps on the one minute time frame is that really optimal for us
+00:20:28.480 probably not right because this is one minute movements do we really want to be catching a move off of one minute orders
+00:20:35.760 getting filled no ideally we're catching moves off of high time frame orders getting filled why because high time
+00:20:42.000 frames hold higher power if we're looking at the high time frames that's going to dictate where the big candles
+00:20:47.600 are going so again we're not trying to catch one minute moves and for the most part if you're trying to take a
+00:20:52.880 liquidity sweep off the one minute by the time price moves in the direction it's it's already said and done okay so
+00:20:58.640 that's why we want to be looking at the high time frames to find our draws on liquidity so with that being said we're
+00:21:03.840 going to go back to my little Picasso drawings here and we're going to talk about the three forms or there's like
+00:21:09.760 fourish draws on liquidity that hold more value than others okay so the first
+00:21:15.120 draw on liquidity that is going to be better than others and again draws on liquidity are highs and lows within the
+00:21:20.880 market let's not forget that so the first form of liquidity that's high
+00:21:26.240 confluence are session highs jeez and lows okay so just like I was
+00:21:33.840 telling you guys earlier in this video the sessions Asian session London session and New York session when these
+00:21:39.600 open there's new traders coming into the market and again it's high confluence for the new traders to take out the old
+00:21:46.480 traders because why there's probably a whole bunch of orders to be filled above those session highs and below those
+00:21:51.600 session lows because that's where stop- losses are going to be okay and that's also where new orders are going to get filled so I have a nice little indicator
+00:21:59.360 that already does this for me and today was actually a perfect example of this if we go in here we can actually see
+00:22:05.200 this literally get perfectly executed if we go down under the fiveminute we can see boom New York market opens right
+00:22:11.440 here at 9:30 this bro it's freaking perfect okay New York opens at 9:30 this
+00:22:17.120 blue line is London session highs this red line is Asian session highs what do
+00:22:22.159 we see right when New York market opens we push up we take out London session highs we take out Asian session highs
+00:22:28.640 and then what does that cause price to do boom rotate straight down okay what was happening above these highs high
+00:22:35.039 orders were getting filled what did that give the market the opportunity to do fill their massive sell orders to cause
+00:22:40.400 price to go down super easy super simple those are high confluence highs it goes
+00:22:45.440 for either session as well so I'll show a quick example on foreign exchange let's just pull up
+00:22:52.960 EuroUSD really quick and we can show examples of this so I mean like right now it's literally happening in front of
+00:22:59.120 our eyes so let's put on boom this is New York market open it's awesome because this [ __ ] happens literally
+00:23:05.520 every single day new York market opens again new traders are coming into the market what do the new traders want to
+00:23:11.200 do they want to be able to fill their orders to push price in the direction that they want price to go what happens when New York market opens boom they
+00:23:17.919 push price up here not to move price higher but to do what to fulfill their
+00:23:23.520 objective of filling their sell orders they push price above what are these these are London session highs
+00:23:31.679 we push above London session highs fill boom all of these buy orders to do what
+00:23:38.400 fill the market makers massive amounts of sell orders and what can we literally see in real time price doing reversing
+00:23:45.200 off of that so that's a quick example of session highs being high confluence now
+00:23:51.919 what is another form of liquidity that is high confluence it is going to be
+00:23:57.039 relative equal highs and lows what does this mean
+00:24:02.240 you ever see on the chart when we make a high like this and then there's another high that doesn't quite go above this
+00:24:08.960 high but it's super freaking close why is this a super good draw on liquidity
+00:24:14.640 well because now instead of just one set of buy orders being above a high now we
+00:24:21.600 have two sets of buy orders sitting right next to each other so when we see
+00:24:28.400 this the market makers are going to see this and be like "Oh holy [ __ ] we can go up here and we can sweep out these buy
+00:24:34.640 orders and these buy orders without having to like do too much okay because imagine we have highs like this
+00:24:44.159 what probably makes more sense for the market makers to go after it would probably want to go after these highs right compared to these highs obviously
+00:24:51.120 we're only permitted to what price action gives us but when we have highs like this this is a super strong draw in
+00:24:57.279 liquidity why because there's a whole bunch of buy orders sitting above these highs why because they're pretty much at
+00:25:03.679 the same level so if the market makers want to move price lower what are they going to do they're probably saying
+00:25:09.039 "Holy [ __ ] this is a super juicy area where there's a whole bunch of buy orders that are going to get executed so
+00:25:14.720 what can we do?" We can push price above these highs fill all of our sell orders and then cause price to go in the
+00:25:20.240 opposite direction and this doesn't even have to be two highs it can even be three highs that are stacked up like
+00:25:25.760 this boom okay and this is an example of low
+00:25:32.480 resistance liquidity or we'll just put highs and lows because
+00:25:38.400 liquidity is above highs and lows so relative equal highs and lows are an
+00:25:43.600 example of low resistance highs and lows so why is it low resistance because if
+00:25:49.440 we have or I'll explain low resistance and high resistance liquidity in a minute but relative equal highs and lows
+00:25:55.520 again if there's three highs that are just stacked up like this that haven't swept out any of these orders yet
+00:26:01.120 there's so many pending buy orders right here that it's super easy for price to just go up here sweep it out and then move down okay same thing to the
+00:26:08.320 downside if we have boom lows that are just stacked up like this
+00:26:15.360 there's a whole bunch of sell orders that are pending that are sitting right underneath here super juicy looking
+00:26:21.760 really freaking good for price to come down sweep out those sell orders fill their massive buy orders to push price
+00:26:26.960 higher so low resistance highs and lows are essentially just stacked up highs
+00:26:32.320 and lows so similar to this relative equal highs and lows because these are relatively equal but they haven't swept
+00:26:37.919 out the buy orders okay so they're just buy orders buy orders stacked up with each other low resistance highs and lows
+00:26:43.440 i like to call it trend line liquidity so again like we were mentioning when we're within an uptrend what are we
+00:26:49.120 moving in higher highs and higher lows so let's say we have a trend like this what is resting underneath all of these
+00:26:54.720 lows a whole bunch of sell orders okay this is low resistance liquidity why
+00:27:00.559 because when price wants to go down and sweep all of this out what would it make
+00:27:06.480 sense for price to do would it make sense for price to just go down and only fill one set of those sell orders or
+00:27:13.120 would it be super freaking easy for price to just say "Hey we could literally get four times the amount of
+00:27:18.799 sell orders by just taking out all of these lows that are stacked up really freaking close to each other just like
+00:27:25.919 these relative equal highs and lows take out all of them and then fill literally four times the amount of their buy
+00:27:31.360 orders to push price in the direction that it wants to go that's low resistance liquidity it's when we're within an uptrend or a downtrend and we
+00:27:38.480 have lows or highs that are stacked up against each other where it's super easy for price to just come down take out all
+00:27:43.760 of them and then push price in the opposite direction so we showed you guys example of session
+00:27:49.200 highs and lows now we'll go on the chart and show you guys an example of relatively cool highs and lows and low
+00:27:55.120 resistance highs and lows because they're pretty much the same thing there was a really good example of this on the
+00:28:00.960 4 hour uh two weeks ago so I'll show you guys that example and I think I already mentioned it go ahead and take this
+00:28:06.399 indicator off and again if you guys want those session high and low indicators I'll leave a little link in the uh
+00:28:12.000 description if you guys want that boom this was the example that I was talking about so let's look right here again
+00:28:18.960 we're trying to find liquidity on the high time frames what do we have right here we have a pretty healthy uptrend we're moving in higher highs and higher
+00:28:25.200 lows so we have a low right here that's one we have a low right here that's two
+00:28:30.480 we have a low right here that's three we have a low right here that's four when the market wants to move higher is it
+00:28:36.000 just going to sweep out this low and then move all the way up or would it make sense for price to want to come
+00:28:41.520 down and take out one two three four of these lows because they're all stacked up relatively close to each other and
+00:28:49.120 can offer literally four times the amount of pending orders that can be filled by price coming down and sweeping
+00:28:54.799 it out so literally like such a perfect example of this price comes down sweeps
+00:29:01.200 out all of those orders and then what does price end up doing boom moving higher okay this is a perfect example of
+00:29:09.279 trend line low resistance liquidity that ends up boom getting swept out and then
+00:29:15.840 price reacting off of it okay let's go ahead and find an example of this to the
+00:29:22.799 downside we actually had a pretty good example of this the other day yes this
+00:29:29.120 is exactly what I was talking about boom so again look right here it really starts up here we have a high right here
+00:29:36.799 and then what do we have a high right here look look how close these highs are boom buy orders resting above these
+00:29:42.399 highs buy orders resting above these highs buy orders resting above these highs buy orders resting above these
+00:29:48.000 highs buy orders resting above these highs look how close and juicy and how stacked up every single one of these
+00:29:55.279 highs are this is just boom buy order [ __ ] central retail traders are going
+00:30:01.039 to see price close above these highs and just be like "Holy [ __ ] it's a breakout price is going to move higher." But what
+00:30:07.840 did this give the market makers the opportunity to do boom stop out all the people who are pressing sell on this
+00:30:14.159 little downtrend that we made and on top of that get everybody who thought that this was a breakout to enter into a buy
+00:30:20.159 positions to just give price the opportunity to do what boom absolutely tank the market and go lower okay so
+00:30:27.520 this is another good example of lowresistance liquidity low resistance liquidity it's essentially just trend
+00:30:33.919 line liquidity it's stacked up highs and lows where we have boom high high
+00:30:41.120 all stacked up together this is a super high confluence and a good draw on
+00:30:46.320 liquidity okay so the other good um I
+00:30:51.360 don't even want to mention mention that in this video because it doesn't really even happen that often these are really
+00:30:57.039 the main really good really solid draws on liquidity that we want to focus on
+00:31:02.640 coming into market opens on a daily basis we want to be able to identify session highs and lows within the market
+00:31:08.320 we want to be able to identify the relative equal highs and lows why because there's a whole bunch of buy orders and sell orders when there's
+00:31:14.960 highs and lows that are pretty much equal together oh and then this we'll do 2A when we have dead ass like dead equal
+00:31:23.120 highs and lows as well that's super super good draw on
+00:31:28.320 liquidity so just like how relative equal highs and lows are good draws on liquidity equal highs and lows are just
+00:31:35.120 are just as good if not better so let's say and again this doesn't happen too often but I figured I'd mention it let's
+00:31:41.039 say on the S&P 500 boom we have two highs that are literally dead equal the same exact price this is a super good
+00:31:47.120 draw on liquidity why it's the same reason for why relative equal highs and lows why low resistance highs and lows
+00:31:52.799 is a good draw on liquidity why because there's just a massive amount of buy orders above here same thing to the
+00:31:58.240 downside if we have equal lows right here what is there again as long as
+00:32:03.600 these are the same exact price even if this one's a little bit higher then that makes it a relative equal higher low
+00:32:09.360 what is resting underneath these lows a whole bunch of sell orders that have the potential to get filled for price to do
+00:32:15.600 what bang sweep it out and then move price in the other direction okay so these are the three draws on liquidity
+00:32:23.120 that are going to be honestly our like main focus going into market opens and
+00:32:28.399 why do we want to focus on market and session opens because there's new traders coming into the market that want
+00:32:34.880 to push price in the direction that it wants to go so that leads me into number two now that we know how to identify
+00:32:41.919 draws and liquidity now that we know what draws and liquidity are we want to be able to identify hey when and where
+00:32:47.519 can we execute on these because it's one thing to just say "Okay I know how to identify draws on liquidity i'm just
+00:32:53.279 going to mark out every single one and I'm just going to take a trade whenever one happens." That's probably not going
+00:32:58.480 to be the best idea because time plays a huge part in the market so for me time
+00:33:05.120 timing is pretty much everything and as you guys know I pretty much only trade session open so I only trade US market
+00:33:11.919 open i'm really never going to be trading an hour after New York market opens because there's almost always
+00:33:19.279 going to be a form of manipulation taking out either session highs and lows relative equal highs and lows equal
+00:33:26.559 highs and lows or low resistance highs and lows within the market at session and market opens why because there's new
+00:33:34.080 traders coming into the market that need their orders to be filled to push price in the direction that it wants to go
+00:33:39.679 there needs to be a form of manipulation in order to fill orders to push price in
+00:33:44.799 the direction that it wants to go so every single market open what do I know is going to happen there's going to be some form of manipulation and that's
+00:33:51.679 what we're going to go talk about right now so timing is a huge huge huge thing
+00:33:56.880 within liquidity sweeps because again I already mentioned this when sessions open that's when new money's coming into
+00:34:02.799 the market it's going to want to move price in the direction that it wants to go so we need to be able to identify when new money comes into the market so
+00:34:09.280 I'm on Eastern time you guys can apply this to whatever time zone that you guys are on but I'm going to do it on Eastern
+00:34:15.679 time you guys can figure it out for everything else so Asian session starts
+00:34:20.800 i wouldn't I would suggest against trading Asian session just because there's not that much volume but Asian session starts at 1,800 Eastern time
+00:34:29.040 london session starts at 3 a.m and then New York session opens at 9:30 okay so
+00:34:39.199 on every single one of these session opens right around these times market is going to be actively trying to seek out
+00:34:46.560 some form of these draws on liquidity to move price in the direction that it wants to go just like how I showed you
+00:34:52.399 guys with Euro USD market opened what did it do it sought out those London session highs again that's one of our
+00:34:58.800 forms of draws and liquidity and then price reversed off of it today what did we do on the S&P 500 let's go ahead and
+00:35:05.119 put market open on right here market opened right here what did we do we moved above London session highs Asian
+00:35:10.800 session highs and then we reversed down we actually had two liquidity sweeps today during New York session we came up
+00:35:17.280 and we swept out London session highs let's go ahead and put these back on here we took out London session highs
+00:35:23.359 and Asian session highs we made a reversal down and then we also came down and took out boom these lows right here
+00:35:30.720 which were actually forms of low resistance liquidity on the low time frame so we can see there's a low right
+00:35:36.880 here there's a low right here these two are low resistance draws on liquidity there's lows on the fivem minute time
+00:35:42.800 frame pretty much all the way down throughout here look at this look at this boom and then if I just remove this
+00:35:48.480 so you guys can see it better look all of these lows are stacked up what is that low resistance draws and liquidity
+00:35:55.520 market opened we come down boom we get two forms of liquidity sweeps we come up
+00:36:01.359 we sweep London session high and Asian session high and then boom we come back down we sweep out low resistance draws
+00:36:07.520 on liquidity and then boom we rotate right back up orders filled here orders filled here and we move on every single
+00:36:14.079 one of those now that I feel like you guys have a pretty good gist of identifying these draws on liquidity
+00:36:20.320 what draws on liquidity hold higher power than others when we should be looking for draws on liquidity again
+00:36:25.920 we're looking for draws on liquidity to get hit not right when market opens okay it's not always going to happen like
+00:36:31.520 right when New York market opens is like boom liquidity sweep sometimes it takes time okay just like how we identified
+00:36:36.960 with EuroUSD right here we can see that market opened and then we didn't sweep out this liquidity until 30 minutes into
+00:36:43.440 market open why because we were a little bit underneath these highs here these were London session highs market opened
+00:36:48.880 it wanted to manipulate to the downside what did they have to do they had to push price up sweep out this liquidity
+00:36:54.640 and then boom send price lower now that we know how to identify draws and liquidity and when we're trying to see
+00:37:00.720 liquidity get swept let's talk about how we can actually find executions to be able to take winning trades off of this
+00:37:08.320 okay so I have full in-depth YouTube videos going over my full execution so I
+00:37:15.040 don't want to go like really super crazy in depth on all the confluences that I use and stuff like that if you guys want
+00:37:21.599 to learn about fair value gaps break of structure inverse fair value gaps and stuff like that I'll leave a little link
+00:37:27.359 in the description to my free course that goes over literally every single thing that you guys need to go it goes
+00:37:33.359 in super super depth of going over fair value gaps breakup structure every single thing that you guys need to know
+00:37:39.280 and on top of that if you guys want like just even more in-depth like personal
+00:37:45.280 questions cuz I know that I can only do so much on these YouTube videos of you guys getting on here and then like
+00:37:51.760 thinking like "Oh man I have a personal question on liquidity sweeps that he didn't answer you guys can sign up to be
+00:37:57.520 one of my students where I can personally get on phone calls with you guys and answer literally every single trading question that you guys need i'll
+00:38:03.119 leave a link in the description for that but if you guys are just getting into trading for the first time you guys don't need to just like immediately jump
+00:38:09.599 in and just be like "Hey I want to be coached by you." By all means if you guys want to do that that's fine but I
+00:38:14.720 would highly suggest you guys start with my YouTube videos first start with a free course and then from there if you guys have more questions if you guys are
+00:38:21.119 still struggling and want to learn from me and other profitable traders I'll leave a little link in the description
+00:38:26.400 to the blueprint which is where I do my private mentorship with that being said how can we actually take executions off
+00:38:33.119 this this is a good example let's go ahead and put on our session highs and lows right here so again this is what
+00:38:39.440 we're looking at new York market opens at 9:30 a.m how could we have executed on something like this well we have
+00:38:45.520 London session highs we have Asian session highs these are our key levels one of our key levels got hit boom from
+00:38:52.079 there what can I do i can scale down to the lower time frames this was actually a really good example of this we push
+00:38:58.320 above London highs we push above Asian session highs then from there what do we get we get boom
+00:39:05.440 a one minute break of structure right here and then from there what else
+00:39:11.119 am I going to wait for i'm going to wait for a fair value gap to get filled boom this fair value gap gets filled we get a
+00:39:16.240 down candle closing out of that what can we do we can take a short position there we can put our stop loss above these
+00:39:21.280 highs and then from there what are we going to target how can we exit off of
+00:39:26.560 these trades by simply targeting other draws on liquidity why because other draws on liquidity have potential to
+00:39:33.599 move price in the other direction so it's a super awesome point to take profit at so again what else did we
+00:39:40.000 identify we identified on the 5minute that there's low resistance draws and liquidity all throughout here so this
+00:39:46.560 can be your take-profit one boom perfect a 1:1 risk-to-reward ratio boom this can be take profit two boom low resistance
+00:39:53.680 oops low resistance draw and liquidity gets hit i mean we don't have to mark out literally every single one of these
+00:40:00.079 but you guys get the point all of this is low resistance liquidity that has the potential to change prices direction so
+00:40:07.200 again when we're taking trades off of liquidity sweeps just like how we're entering off of liquidity sweeps we want
+00:40:13.599 to be exiting when we're taking out draws on liquidity why because that gives price the opportunity to reverse
+00:40:20.240 it's a profit- takingaking area where price has the opportunity to be able to
+00:40:25.520 fill orders to push price in the other direction okay so this was a really good example of this literally today of this
+00:40:32.079 happening where we get liquidity sweeps of one of our really key draws on liquidity which is session highs and
+00:40:38.079 session lows we get a one minute break of structure we get a fair value gap that gets filled we can execute off of
+00:40:43.359 that and then where do we exit on the other forms of liquidity why because that is where price has the potential to
+00:40:50.240 be able to take profits and change in the other direction okay we're not just taking profits off of random draws okay
+00:40:58.160 we're not we're not just taking profits off of Fibonacci extensions again I like to have reasoning for why price is
+00:41:04.960 moving in the direction that it's going okay just like how I like executing on
+00:41:10.240 like smart and sound reasoning of why price is going to be moving in the way that it does I like to exit on areas
+00:41:17.200 where hey there's going to be profits getting taken or an area where price is
+00:41:22.240 going to reverse off of so just like how we enter on liquidity sweeps I'm exiting on liquidity sweeps as well so this is a
+00:41:29.760 prime time example of how we could have ex executed today let's show one or two
+00:41:34.880 more examples of this this is a pretty decent example even though this is on a US index this is a good example of how
+00:41:41.839 every sing you'll you'll see this bro this is a good example of how every single session they are trying to
+00:41:47.280 actively seek out draws on liquidity to push price in the in their direction so what is this this is London session open
+00:41:53.920 on a Thursday what is this this is Asian session high okay so let's look here
+00:42:02.000 london session opens where do we immediately go we immediately go up to
+00:42:07.280 do what sweep out Asian session highs why because there's a whole bunch of buy orders right here what does London
+00:42:13.520 session want to do it wants to push price in the direction that it wants to go when we get above these highs what
+00:42:18.560 does price immediately end up doing it starts reversing so let's see if we can find any form of entry within here okay
+00:42:24.800 so boom price comes up sweeps out these highs we're able to fill these sell
+00:42:30.720 orders when do we get a break of structure we get a break of structure right here and then from there again
+00:42:36.480 because this is a US index not really too many confluences but we do come up and we fill equilibrium
+00:42:44.079 and then boom we get a down candle out of that can put our stops above these
+00:42:49.920 highs right here and then boom what can we do as our targets we can target look
+00:42:55.680 at this what are these relative equal lows these lows are super close to each other what is this a high confluence
+00:43:02.240 draw on liquidity this is obviously pretty un not
+00:43:08.160 unrealistic but ideally we're taking profits as price is going down because ideally our first take profit isn't like
+00:43:14.640 a 1:9 risk-to-reward ratio obviously that would be nice but I don't want to sell you guys on a freaking dream here
+00:43:20.079 and say that you're going to be able to hit trades like that every single freaking day but this is a good example of this okay we also have a low right
+00:43:26.960 here that we could take out we also have low resistance liquidity all stacked up throughout this one minute time frame okay so we have a low right here low
+00:43:33.280 right here low right here low right here what is this this is an uptrend this is low resistance liquidity that price is
+00:43:40.240 going to want to actively seek out to do what to take out and this is a potential
+00:43:45.680 point where price has the opportunity again emphasis on opportunity and potential just because price has the
+00:43:53.359 opportunity to reverse and this is the last thing that I'm going to get into on this video just because it's a high
+00:43:59.920 confluence draw on liquidity just because London session open and we push above Asian session highs doesn't mean
+00:44:06.079 we can just press sell up here we need to wait for these other confluences to tell us that price wants to move lower
+00:44:13.119 okay so just because we're moving above a session high doesn't mean we can just boom instantly press sell just because
+00:44:19.040 we move underneath low resistance draws on liquidity doesn't mean we can press buy we have to wait for confirmation and
+00:44:26.400 that's why I told you guys to go watch the free course that's why I told you guys to sign up for the mentorship because all of those things are covered
+00:44:32.720 in depth and show you guys exactly how to be able to identify these things okay but this is just a liquidity sweep video
+00:44:39.520 so just like how we're executing on liquidity getting swept we are exiting
+00:44:45.119 on liquidity getting swept why because price has the opportunity and the potential to reverse off of these lows
+00:44:52.000 why why does they have the opportunity to reverse because there's pending sell orders underneath here and again this is
+00:44:58.560 why I [ __ ] love trading bro everything makes sense when you do things with confluences that make sense you actually understand why the market
+00:45:04.880 moves we know why we're entering sell positions here why because there's a massive amount of buy orders here we
+00:45:10.880 know why we're exiting our positions here why because there's massive amounts
+00:45:16.240 of sell orders here that have the opportunity to get filled for price to move in the opposite direction so if
+00:45:22.240 we're in sells wouldn't we want to buy back our positions when people are
+00:45:27.440 willing to sell it to us just like the market makers so if the market makers have the opportunity to buy back
+00:45:34.000 positions here wouldn't we want to buy back partial profits on our short
+00:45:39.359 position here yes obviously we would that's why liquidity is such an
+00:45:44.960 important concept okay and the very last thing that I want to talk about in today's video is just knowing and
+00:45:51.440 identifying when we're going to sweep out liquidity it's one thing just to mark out every single high and low the
+00:45:57.280 market is going to move how it wants to move it does not have any sort of obligation to listen to our daily bias
+00:46:05.200 it's one thing for me to sit on this computer and be like "Hey market you
+00:46:10.400 have to go above this high and when you go above this high you have to fill those buy orders you or you have to fill
+00:46:16.319 those buy orders so you can fill your sell orders to go lower no you're probably saying "How do we know what
+00:46:22.560 draw what high or what low price is going to reverse off of?" That's the thing we do not know i know I you're
+00:46:31.119 probably saying "Well what the [ __ ] is this video all about then?" It's being able to identify what highs and lows
+00:46:37.520 have the potential to fill those buy and sell orders to cause price to reverse so
+00:46:44.480 again this is like a perfect blueprint here we know these highs and lows have
+00:46:50.160 super high confluence to be able to cause a reversal these highs and lows have a super high confluence to cause a
+00:46:56.160 reversal equal highs and lows have a super high confluence to cause a reversal low resistance highs and lows
+00:47:01.760 have a super high confluence to cause a reversal also we know what time those
+00:47:06.880 highs and lows have a high confluence to cause a reversal so now we have a high
+00:47:12.640 probability of being able to mark out high probability highs and lows also at the right time to be able to identify
+00:47:19.599 and say okay a new session just opened we push above a high confluence high or
+00:47:25.200 low or push above or below a high confluence high or low and I know that
+00:47:30.560 hey the market has a high probability of filling orders right now but does that
+00:47:35.839 mean the market has to fill those orders and has to move in the direction that you want it to go in no so within every
+00:47:41.760 single day that's why you guys will see me in my trade recaps marking out multiple highs and lows on every single
+00:47:49.359 session open why because I don't know the exact high that's going that's going
+00:47:54.480 to get swept i don't know the exact low that's going to get swept to cause reversals but I know that I can mark out
+00:48:01.920 all of these highs and lows and I know that all of these are going to have a high probability of potentially getting
+00:48:09.040 orders filled and that's all that we need because when we can mark out those high potential highs and lows from there
+00:48:17.280 we just sit back and we wait for those levels to get hit we're not pressing buy and sell right when those levels get hit
+00:48:23.119 we wait for our other confluences that show and tell us that orders have been
+00:48:29.200 filled via break of structure via inverse fair value gap via fair value
+00:48:34.319 gaps getting filled equilibrium breaker blocks order blocks okay and then when we see those confluences then we can
+00:48:41.760 make a high confidence decision saying that hey we took out a area where
+00:48:47.359 there's a lot of draws on the or there's a lot of orders that have the potential to get filled it's at a time that a lot
+00:48:53.680 of orders would want to get filled and I'm seeing confluences on a lower time frame off of this key level that are
+00:49:01.040 saying "Hey price is changing direction and this is probably a liquidity sweep."
+00:49:06.079 And that's when we enter that is liquidity sweeps explained i love and appreciate you guys again if you guys
+00:49:11.760 want to learn about all those confluences I was just talking about there's a link in the description for the free course and yeah I love you guys
+00:49:18.319 i'll catch you guys in the next one hopefully you guys enjoyed peace the [ __ ] out

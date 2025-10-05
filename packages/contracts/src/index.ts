@@ -36,3 +36,64 @@ export {
   isInsufficientBarsError,
   isSymbolResolutionError,
 } from './errors.js';
+
+// Session types
+export type {
+  SessionName,
+  SessionBoundary,
+  SessionWindow,
+  SymbolSessionsConfig,
+  SessionLevels,
+  SessionLevelsSnapshot,
+} from './sessions.js';
+
+// Swing detection types
+export type {
+  HTF,
+  BaseTF,
+  OhlcBar,
+  SwingPoint,
+  SwingConfig,
+  SwingSeries,
+  HtfSwingsSnapshot,
+  RingBuffer,
+  HtfSwingsConfig,
+  SwingMetrics,
+} from './swings.js';
+
+export { DEFAULT_SWING_CONFIG } from './swings.js';
+
+// BOS (Break of Structure) types
+export type {
+  BarData,
+  PivotPoint,
+  PivotCandidate,
+  LtfPivotState,
+  ILtfPivotTracker,
+  BosWindow,
+  BosSignal,
+  BosEngineState,
+  IBosReversalEngine,
+  PivotConfig,
+  WindowConfig,
+  SignalConfig,
+  PerformanceConfig,
+  BosConfig,
+  BosPerformanceMetrics,
+} from './bos.js';
+
+export { DEFAULT_BOS_CONFIG, BosError } from './bos.js';
+
+// Daily Bias Planning types
+export type {
+  KeyLevelSource,
+  LevelKind,
+  KeyLevel,
+  PlanDirection,
+  PlanTargetStatus,
+  LevelBand,
+  PlanTarget,
+  Plan,
+  PriorityConfig,
+  ScoringContext,
+} from './bias.js';

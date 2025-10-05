@@ -8,6 +8,9 @@ import type { Logger } from '@tjr/logger';
 import type { IContainer } from '../container/types.js';
 import { ClaudePromptProcessor } from '../services/claude-prompt-processor.js';
 import { McpClientService } from '../services/mcp-client.service.js';
+import { IntentClassifierService } from '../services/intent-classifier.service.js';
+import { QueryLoggerService } from '../services/query-logger.service.js';
+import { createClient } from '@supabase/supabase-js';
 import { connect } from '@tjr-suite/db-simple';
 import { MarketDataCacheWrapper } from '../services/market-data-cache-integration.js';
 
@@ -18,13 +21,17 @@ export interface HttpServerConfig {
   container: IContainer;
   databaseUrl?: string;
   anthropicApiKey?: string;
+  openaiApiKey?: string;
   mcpConfigPath?: string;
+  supabaseUrl?: string;
+  supabaseKey?: string;
 }
 
 export interface AskRequest {
   prompt: string;
   userId?: string;
   channelId?: string;
+  model?: 'claude' | 'openai';
 }
 
 export interface AskResponse {
@@ -41,10 +48,12 @@ export class HttpServer {
   private logger: Logger;
   private promptProcessor?: ClaudePromptProcessor;
   private mcpClient?: McpClientService;
+  private intentClassifier: IntentClassifierService;
   private server?: ReturnType<Express['listen']>;
 
   constructor(private config: HttpServerConfig) {
     this.logger = config.logger;
+    this.intentClassifier = new IntentClassifierService();
     // Note: promptProcessor and mcpClient will be initialized in start()
     this.app = express();
     this.setupMiddleware();
@@ -81,7 +90,7 @@ export class HttpServer {
     // Ask endpoint
     this.app.post('/api/ask', async (req: Request, res: Response) => {
       try {
-        const { prompt, userId, channelId } = req.body as AskRequest;
+        const { prompt, userId, channelId, model = 'claude' } = req.body as AskRequest;
 
         if (!prompt || typeof prompt !== 'string') {
           res.status(400).json({
@@ -91,10 +100,40 @@ export class HttpServer {
           return;
         }
 
+        // Validate model parameter
+        if (model !== 'claude' && model !== 'openai') {
+          res.status(400).json({
+            success: false,
+            error: 'Invalid model: must be "claude" or "openai"',
+          } satisfies AskResponse);
+          return;
+        }
+
+        // Validate prompt intent (Phase 1C security validation)
+        const validation = this.intentClassifier.validatePrompt(prompt);
+        if (!validation.valid) {
+          this.logger.warn('Rejected prompt due to invalid intent', {
+            prompt: prompt.substring(0, 100),
+            reason: validation.reason,
+            userId,
+            channelId,
+            model,
+            blockedKeywords: this.intentClassifier.getBlockedKeywords(prompt),
+          });
+
+          res.status(403).json({
+            success: false,
+            error: validation.reason || 'Prompt validation failed',
+          } satisfies AskResponse);
+          return;
+        }
+
         this.logger.info('Processing ask request', {
           prompt: prompt.substring(0, 100),
           userId,
           channelId,
+          model,
+          tradingKeywords: this.intentClassifier.getTradingKeywords(prompt),
         });
 
         if (!this.promptProcessor) {
@@ -105,11 +144,14 @@ export class HttpServer {
           return;
         }
 
-        const response = await this.promptProcessor.process(prompt, { userId, channelId });
+        const response = await this.promptProcessor.process(prompt, { userId, channelId, model });
+
+        // Echo the prompt at the beginning of the response
+        const formattedResponse = `**Question:** ${prompt}\n\n${response}`;
 
         res.json({
           success: true,
-          response,
+          response: formattedResponse,
         } satisfies AskResponse);
       } catch (error) {
         this.logger.error('Error processing ask request', { error });
@@ -132,6 +174,26 @@ export class HttpServer {
    */
   async start(): Promise<void> {
     try {
+      // Initialize Supabase client and query logger
+      let queryLoggerService: QueryLoggerService | undefined;
+
+      if (this.config.supabaseUrl && this.config.supabaseKey) {
+        this.logger.info('Initializing Supabase client', {
+          supabaseUrl: this.config.supabaseUrl,
+        });
+
+        const supabase = createClient(this.config.supabaseUrl, this.config.supabaseKey);
+
+        queryLoggerService = new QueryLoggerService(
+          supabase,
+          this.logger.child({ service: 'query-logger' })
+        );
+
+        this.logger.info('Query logger service initialized');
+      } else {
+        this.logger.warn('No SUPABASE_URL or SUPABASE_KEY provided, query logging disabled');
+      }
+
       // Initialize MCP client service
       if (this.config.anthropicApiKey) {
         this.logger.info('Initializing MCP client service');
@@ -142,14 +204,18 @@ export class HttpServer {
 
         await this.mcpClient.initialize(this.config.mcpConfigPath);
 
-        // Initialize Claude prompt processor with MCP tools
+        // Initialize Claude prompt processor with MCP tools, query logger, and OpenAI fallback
         this.promptProcessor = new ClaudePromptProcessor({
           logger: this.logger.child({ service: 'claude-prompt-processor' }),
           mcpClientService: this.mcpClient,
           anthropicApiKey: this.config.anthropicApiKey,
+          openaiApiKey: this.config.openaiApiKey,
+          queryLoggerService,
         });
 
-        this.logger.info('Claude prompt processor initialized with MCP tools');
+        this.logger.info('Claude prompt processor initialized with MCP tools', {
+          hasOpenAIFallback: !!this.config.openaiApiKey,
+        });
       } else {
         this.logger.warn('No ANTHROPIC_API_KEY provided, /ask endpoint will not work');
       }

@@ -132,6 +132,9 @@ async function start(): Promise<void> {
         container,
         databaseUrl: config.database.url,
         anthropicApiKey: process.env['ANTHROPIC_API_KEY'],
+        openaiApiKey: process.env['OPENAI_API_KEY'],
+        supabaseUrl: process.env['SUPABASE_URL'],
+        supabaseKey: process.env['SUPABASE_KEY'],
       });
       await httpServer.start();
     }

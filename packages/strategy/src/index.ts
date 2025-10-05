@@ -34,3 +34,16 @@ export {
   sortTargetsDeterministic,
   validatePriorityConfig,
 } from './priority.js';
+
+// Equilibrium analysis (Premium/Discount)
+export {
+  calculateEquilibrium,
+  calculateEquilibriumFromRange,
+  batchCalculateEquilibrium,
+  validateEquilibriumConfig,
+  isPremium,
+  isDiscount,
+  isAtEquilibrium,
+  createSwingRange,
+  DEFAULT_EQUILIBRIUM_CONFIG,
+} from './equilibrium.js';

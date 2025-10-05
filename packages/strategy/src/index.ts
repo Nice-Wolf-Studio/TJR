@@ -6,6 +6,13 @@
  * @module @tjr/strategy
  */
 
+// Session utilities
+export {
+  getExchangeTimezone,
+  materializeSessionBoundaries,
+  isWithin,
+} from './session-utils.js';
+
 // Session levels
 export { SessionLevelsEngine } from './session-levels.js';
 
